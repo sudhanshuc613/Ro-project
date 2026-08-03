@@ -313,8 +313,8 @@ async function main() {
   // otherwise Google truncates them in search results. These DB rows OVERRIDE
   // the code fallbacks, so length discipline matters most here.
   const pages = [
-    { path: '/', metaTitle: 'RO Purifiers Online India | RO Service Patna ₹100',
-      metaDescription: 'Buy RO purifiers, commercial plants & spare parts delivered across India. Expert RO repair in Patna, ₹100 visit charge. Call 8969821440.' },
+    { path: '/', metaTitle: 'RO Service in Patna — ₹100 Visit | Same-Day Repair',
+      metaDescription: 'Expert RO repair & installation across Patna at ₹100 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.' },
     { path: '/service-patna', metaTitle: 'RO Service in Patna — ₹100 Visit | Same-Day Repair',
       metaDescription: 'RO repair, installation & AMC across Patna. ₹100 visit charge, same-day service, 30-day warranty. All brands. Call 8969821440.' },
   ];

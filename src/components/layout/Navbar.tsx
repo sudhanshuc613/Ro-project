@@ -9,7 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { BRAND, CONTACT, PRODUCT_TYPES, SHIPPING } from '@/lib/constants';
+import { BRAND, CONTACT, PRODUCT_TYPES } from '@/lib/constants';
 import { useCartStore } from '@/store/cart';
 import SearchAutosuggest from './SearchAutosuggest';
 
@@ -86,9 +86,9 @@ export default function Navbar() {
       <div className="bg-navy-700 text-white">
         <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs">
           <p className="hidden sm:block">
-            🚚 Free delivery across India on orders above ₹{SHIPPING.freeAbove.toLocaleString('en-IN')}
+            🔧 RO Service in Patna — Visit charge only ₹100 · Same-day visit
           </p>
-          <p className="sm:hidden">Free delivery above ₹{SHIPPING.freeAbove}</p>
+          <p className="sm:hidden">RO Service Patna — ₹100 visit</p>
           <div className="flex items-center gap-4">
             <a href={CONTACT.primaryTel} className="font-semibold hover:text-aqua-300">
               📞 {CONTACT.primaryPhone}
@@ -159,8 +159,14 @@ export default function Navbar() {
       {/* ── Tier 3: category bar with mega-menus ── */}
       <nav className="hidden border-b border-navy-50 bg-white lg:block" aria-label="Product categories">
         <div className="container mx-auto flex items-center gap-1 px-4">
+          <Link href="/service-patna" className="px-4 py-3 text-sm font-bold text-cta-green hover:text-cta-greenDark">
+            🔧 RO Service Patna
+          </Link>
+          <Link href="/amc-plans" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
+            AMC Plans
+          </Link>
           <Link href="/products" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
-            All Products
+            Shop Products
           </Link>
 
           {Object.keys(MEGA_MENU).map((key) => (
@@ -203,12 +209,6 @@ export default function Navbar() {
             </div>
           ))}
 
-          <Link href="/service-patna" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
-            RO Service Patna
-          </Link>
-          <Link href="/amc-plans" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
-            AMC Plans
-          </Link>
 
           <span className="ml-auto flex items-center gap-2 py-3 text-xs font-semibold text-cta-orange">
             <SparkIcon /> Same-day service in Patna

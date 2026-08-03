@@ -169,6 +169,19 @@ export default function AreaServicePage({ params }: { params: { area: string } }
               <h2 className="font-display text-2xl font-bold text-navy-700 md:text-3xl">
                 Water Quality in {area.name} — What We See on Site
               </h2>
+
+              {/* Area-specific data: this is what makes each page genuinely unique */}
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-aqua-100 bg-aqua-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-aqua-700">Typical TDS here</p>
+                  <p className="mt-1 font-display text-2xl font-extrabold text-navy-700">{area.tdsRange}</p>
+                </div>
+                <div className="rounded-xl border border-orange-100 bg-orange-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-orange-700">Most common repair</p>
+                  <p className="mt-1 text-sm font-bold text-navy-700">{area.commonRepair}</p>
+                </div>
+              </div>
+
               <p className="mt-4 leading-relaxed text-navy-600">{area.waterProfile}</p>
 
               <h3 className="mt-8 font-display text-xl font-bold text-navy-700">Areas We Cover Around {area.name}</h3>
