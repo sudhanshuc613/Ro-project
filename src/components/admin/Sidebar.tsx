@@ -52,7 +52,14 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: 'Service Requests', href: '/admin/service-requests', icon: '🔧', badgeKey: 'pendingServices' },
       { label: 'AMC Contracts',    href: '/admin/amc',              icon: '📋' },
+      { label: 'Technicians',      href: '/admin/technicians',      icon: '👷' },
 
+    ],
+  },
+  {
+    title: 'Customers',
+    items: [
+      { label: 'CRM / Customers', href: '/admin/customers', icon: '👥' },
     ],
   },
   {

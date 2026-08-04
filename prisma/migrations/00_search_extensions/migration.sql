@@ -90,3 +90,33 @@ WHERE c.status IN ('ACTIVE','ABANDONED')
   AND c.subtotal > 0
 GROUP BY c.id, u.full_name, u.phone
 ORDER BY c.subtotal DESC;
+
+-- ============================================================================
+--  updated_at DEFAULTS — fixes "null value in column updated_at ... violates
+--  not-null constraint" (SQLSTATE 23502) when writing rows with raw SQL.
+--
+--  WHY: Prisma's @updatedAt is enforced in the CLIENT, not the database. So
+--  `prisma db push` creates `updated_at TIMESTAMPTZ NOT NULL` with NO DEFAULT.
+--  Prisma queries always supply the value, but hand-written SQL in the Neon
+--  console does not — and the INSERT is rejected.
+--
+--  Adding a DB-level DEFAULT now() makes raw SQL work without changing any
+--  Prisma behaviour (Prisma still sends its own value, which wins).
+--
+--  Idempotent — safe to run any number of times.
+-- ============================================================================
+DO $$
+DECLARE t text;
+BEGIN
+  FOREACH t IN ARRAY ARRAY[
+    'users','addresses','categories','products','pincodes','carts',
+    'orders','service_requests','seo_metadata','site_settings'
+  ] LOOP
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema = 'public' AND table_name = t AND column_name = 'updated_at'
+    ) THEN
+      EXECUTE format('ALTER TABLE %I ALTER COLUMN updated_at SET DEFAULT now()', t);
+    END IF;
+  END LOOP;
+END $$;

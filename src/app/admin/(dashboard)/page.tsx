@@ -5,6 +5,7 @@
  */
 import { Suspense } from 'react';
 import Link from 'next/link';
+import LiveFeed from '@/components/admin/LiveFeed';
 import StatCard from '@/components/admin/StatCard';
 import RevenueChart from '@/components/admin/RevenueChart';
 import ServicePipeline from '@/components/admin/ServicePipeline';
@@ -40,6 +41,9 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Live activity — auto-updates without refresh */}
+      <LiveFeed initialPending={a.pendingServices} initialToShip={a.ordersToShip} />
 
       {/* KPI row */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

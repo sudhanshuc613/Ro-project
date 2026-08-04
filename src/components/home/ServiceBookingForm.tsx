@@ -121,6 +121,13 @@ export default function ServiceBookingForm() {
           Our team will call you within 30 minutes to confirm the technician visit.
           A confirmation has been sent to your WhatsApp.
         </p>
+
+        <a
+          href={`/track/${ticket}`}
+          className="mt-4 inline-block rounded-xl bg-aqua-500 px-6 py-3 font-bold text-white transition hover:bg-aqua-600"
+        >
+          📍 Track this request live
+        </a>
         <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <a href={CONTACT.primaryTel} className="rounded-xl bg-cta-green px-6 py-3 font-bold text-white transition hover:bg-cta-greenDark">
             Call {CONTACT.primaryPhone}
