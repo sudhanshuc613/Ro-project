@@ -51,7 +51,14 @@ export const NAV_SECTIONS: NavSection[] = [
     title: 'Service (Patna)',
     items: [
       { label: 'Service Requests', href: '/admin/service-requests', icon: '🔧', badgeKey: 'pendingServices' },
+      { label: 'AMC Contracts',    href: '/admin/amc',              icon: '📋' },
 
+    ],
+  },
+  {
+    title: 'Growth',
+    items: [
+      { label: 'SEO Manager', href: '/admin/seo', icon: '🔍', roles: ['ADMIN', 'SUPER_ADMIN'] },
     ],
   },
   {

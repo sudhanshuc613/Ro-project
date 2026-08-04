@@ -43,6 +43,7 @@ export default async function AdminProductsPage() {
                 <th className="pb-2.5 font-semibold">Price</th>
                 <th className="pb-2.5 font-semibold">Stock</th>
                 <th className="pb-2.5 font-semibold">Status</th>
+                <th className="pb-2.5 text-right font-semibold">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -82,6 +83,14 @@ export default async function AdminProductsPage() {
                       <span className={`rounded-md px-2 py-1 text-[11px] font-bold ${p.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
                         {p.status}
                       </span>
+                    </td>
+                    <td className="py-3 text-right">
+                      <Link
+                        href={`/admin/products/${p.id}`}
+                        className="rounded-lg bg-aqua-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-aqua-600"
+                      >
+                        Edit
+                      </Link>
                     </td>
                   </tr>
                 );

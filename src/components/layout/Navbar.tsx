@@ -127,7 +127,7 @@ export default function Navbar() {
               <WrenchIcon /> Book Service
             </Link>
 
-            <Link href="/account" className="flex items-center gap-2 rounded-xl px-3 py-2 text-navy-700 transition hover:bg-navy-50">
+            <Link href="/login" className="flex items-center gap-2 rounded-xl px-3 py-2 text-navy-700 transition hover:bg-navy-50">
               <UserIcon />
               <span className="hidden text-left text-xs leading-tight lg:block">
                 <span className="block text-muted">Account</span>

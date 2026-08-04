@@ -3,6 +3,7 @@
   "framework": "nextjs",
   "regions": ["bom1"],
   "crons": [
+    { "path": "/api/cron/amc-reminders", "schedule": "0 4 * * *" },
     { "path": "/api/cron/abandoned-cart", "schedule": "0 5 * * *" }
   ]
 }

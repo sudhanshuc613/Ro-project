@@ -90,7 +90,7 @@ const createProductSchema = z.object({
   slug: z.string().optional(),
   type: z.enum(['NEW_RO','SPARE_PART','COMMERCIAL_PLANT','ACCESSORY','AMC_PLAN']),
   categoryId: z.string().uuid(),
-  brandId: z.string().uuid().optional().nullable(),
+  brandId: z.string().uuid().optional().nullable().or(z.literal('')),
   shortDescription: z.string().max(500).optional(),
   description: z.string().optional(),
   mrp: z.number().positive(),
@@ -104,13 +104,17 @@ const createProductSchema = z.object({
   storageLitres: z.number().optional(),
   capacityLph: z.number().int().optional(),
   warrantyMonths: z.number().int().optional(),
+  isFeatured: z.boolean().default(false),
   isPanIndia: z.boolean().default(true),
   requiresInstallation: z.boolean().default(false),
   freeShipping: z.boolean().default(false),
   status: z.enum(['DRAFT','ACTIVE','OUT_OF_STOCK','ARCHIVED']).default('DRAFT'),
+  // Accept both a relative path (/products/x.jpg) and a full CDN URL
   images: z.array(z.object({
-    url: z.string().url(), thumbUrl: z.string().url().optional(),
-    zoomUrl: z.string().url().optional(), altText: z.string().max(200),
+    url: z.string().min(1, 'Image path required'),
+    thumbUrl: z.string().optional(),
+    zoomUrl: z.string().optional(),
+    altText: z.string().max(200),
     isPrimary: z.boolean().default(false),
   })).min(2, 'Add at least 2 product images').max(5, 'Maximum 5 images allowed'),
   specifications: z.array(z.object({
@@ -148,7 +152,7 @@ export async function POST(req: NextRequest) {
       const created = await tx.product.create({
         data: {
           name: d.name, sku: d.sku, slug, type: d.type,
-          categoryId: d.categoryId, brandId: d.brandId ?? null,
+          categoryId: d.categoryId, brandId: d.brandId || null,
           shortDescription: d.shortDescription, description: d.description,
           mrp: d.mrp, sellingPrice: d.sellingPrice, costPrice: d.costPrice,
           taxRate: d.taxRate, hsnCode: d.hsnCode,
@@ -157,11 +161,11 @@ export async function POST(req: NextRequest) {
           storageLitres: d.storageLitres, capacityLph: d.capacityLph,
           warrantyMonths: d.warrantyMonths,
           isPanIndia: d.isPanIndia, requiresInstallation: d.requiresInstallation,
-          freeShipping: d.freeShipping, status: d.status,
+          freeShipping: d.freeShipping, isFeatured: d.isFeatured, status: d.status,
           createdBy: session.user.id,
           images: {
             create: d.images.map((img, i) => ({
-              url: img.url, thumbUrl: img.thumbUrl, zoomUrl: img.zoomUrl,
+              url: img.url, thumbUrl: img.thumbUrl ?? img.url, zoomUrl: img.zoomUrl ?? img.url,
               altText: img.altText, displayOrder: i,
               isPrimary: img.isPrimary || i === 0,
             })),

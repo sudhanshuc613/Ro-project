@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CONTACT, SERVICE } from '@/lib/constants';
 import { faqSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
+import AmcPurchaseForm from '@/components/home/AmcPurchaseForm';
 
 export const revalidate = 86400;
 
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 
 const PLANS = [
   {
+    key: 'BASIC',
     name: 'Basic',
     price: 1499,
     popular: false,
@@ -30,6 +32,7 @@ const PLANS = [
     excludes: ['RO membrane', 'Pump / SMPS'],
   },
   {
+    key: 'GOLD',
     name: 'Gold',
     price: 2799,
     popular: true,
@@ -46,6 +49,7 @@ const PLANS = [
     excludes: ['RO membrane'],
   },
   {
+    key: 'PLATINUM',
     name: 'Platinum',
     price: 4499,
     popular: false,
@@ -152,18 +156,13 @@ export default function AmcPlansPage() {
                     ))}
                   </ul>
 
-                  <a
-                    href={CONTACT.whatsappLink(`Hi, I want the ${p.name} AMC plan (₹${p.price}/year).`)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`mt-6 block rounded-xl py-3 text-center font-bold ${
-                      p.popular
-                        ? 'bg-cta-orange text-white hover:bg-cta-orangeDark'
-                        : 'border border-navy-200 text-navy-700 hover:bg-navy-50'
-                    }`}
-                  >
-                    Choose {p.name}
-                  </a>
+                  <AmcPurchaseForm
+                    planKey={p.key}
+                    planName={`${p.name} AMC`}
+                    price={p.price}
+                    visits={p.visits}
+                    popular={p.popular}
+                  />
                 </div>
               ))}
             </div>

@@ -308,6 +308,41 @@ async function main() {
   });
   console.log('  ✓ coupons');
 
+  /* ── Dynamic site settings (admin-editable, no redeploy needed) ── */
+  const settings: [string, object, string][] = [
+    ['contact', {
+      primaryPhone: '8969821440',
+      secondaryPhone: '9661288308',
+      tertiaryPhone: '9534037266',
+      whatsapp: '918969821440',
+      email: 'support@rokadoctor.in',
+      hours: 'Mon–Sun 08:00–21:00',
+    }, 'Public contact channels'],
+    ['service', {
+      visitCharge: 100,
+      emergencyCharge: 299,
+      responseTime: '90 minutes',
+      warrantyDays: 30,
+      city: 'Patna',
+      state: 'Bihar',
+    }, 'Local service configuration'],
+    ['banner', {
+      heroHeadline: 'RO Service in Patna',
+      heroSubline: 'Visit Charge Only ₹100',
+      heroImage: '/banners/service-tech.png',
+      announcementText: 'RO Service in Patna — Visit charge only ₹100 · Same-day visit',
+      announcementActive: true,
+    }, 'Homepage banner content'],
+  ];
+  for (const [key, value, description] of settings) {
+    await prisma.siteSetting.upsert({
+      where: { key },
+      update: { value: value as never },
+      create: { key, value: value as never, description },
+    });
+  }
+  console.log(`  ✓ ${settings.length} dynamic settings (3 phone numbers)`);
+
   /* ── Static page SEO ── */
   // SEO note: keep meta_title ≤ 60 chars and meta_description ≤ 155 chars,
   // otherwise Google truncates them in search results. These DB rows OVERRIDE
