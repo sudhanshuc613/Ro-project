@@ -86,9 +86,9 @@ export default function Navbar() {
       <div className="bg-navy-700 text-white">
         <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs">
           <p className="hidden sm:block">
-            🔧 RO Service in Patna — Visit charge only ₹100 · Same-day visit
+            🔧 RO Service in Patna — Visit charge only ₹200 · Same-day visit
           </p>
-          <p className="sm:hidden">RO Service Patna — ₹100 visit</p>
+          <p className="sm:hidden">RO Service Patna — ₹200 visit</p>
           <div className="flex items-center gap-4">
             <a href={CONTACT.primaryTel} className="font-semibold hover:text-aqua-300">
               📞 {CONTACT.primaryPhone}
@@ -230,7 +230,7 @@ export default function Navbar() {
 
             <Link href="/#book-service" onClick={() => setMobileOpen(false)}
               className="mb-5 flex items-center justify-center gap-2 rounded-xl bg-cta-green py-3.5 font-bold text-white">
-              <WrenchIcon /> Book RO Service — ₹100
+              <WrenchIcon /> Book RO Service — ₹200
             </Link>
 
             {PRODUCT_TYPES.map((t) => (

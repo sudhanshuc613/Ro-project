@@ -266,7 +266,7 @@ CREATE TABLE pincodes (
     is_delivery_available BOOLEAN NOT NULL DEFAULT TRUE,
     -- Local Patna service network flag  → drives "Book Service" eligibility
     is_service_available BOOLEAN NOT NULL DEFAULT FALSE,
-    visit_charge         NUMERIC(8,2) NOT NULL DEFAULT 100.00,
+    visit_charge         NUMERIC(8,2) NOT NULL DEFAULT 200.00,
     standard_eta_days    SMALLINT NOT NULL DEFAULT 5,
     express_eta_days     SMALLINT,
     shipping_zone_rate   NUMERIC(8,2) NOT NULL DEFAULT 0,
@@ -502,7 +502,7 @@ CREATE TABLE service_requests (
     started_at          TIMESTAMPTZ,
     completed_at        TIMESTAMPTZ,
     -- Money
-    visit_charge        NUMERIC(8,2)  NOT NULL DEFAULT 100.00,
+    visit_charge        NUMERIC(8,2)  NOT NULL DEFAULT 200.00,
     parts_charge        NUMERIC(10,2) NOT NULL DEFAULT 0,
     labour_charge       NUMERIC(10,2) NOT NULL DEFAULT 0,
     total_charge        NUMERIC(10,2) NOT NULL DEFAULT 0,
@@ -773,22 +773,22 @@ ORDER BY c.subtotal DESC;
 -- 13. SEED — Patna serviceable pincodes + core settings
 -- ---------------------------------------------------------------------------
 INSERT INTO pincodes (pincode, city, district, state, zone, is_service_available, visit_charge, standard_eta_days) VALUES
-  ('800001','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800002','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800003','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800004','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800005','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800006','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800007','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800008','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800013','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800014','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800020','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800023','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800024','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800025','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('800026','Patna','Patna','Bihar','EAST',TRUE,100.00,2),
-  ('801503','Patna','Patna','Bihar','EAST',TRUE,150.00,3),
+  ('800001','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800002','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800003','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800004','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800005','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800006','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800007','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800008','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800013','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800014','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800020','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800023','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800024','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800025','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('800026','Patna','Patna','Bihar','EAST',TRUE,200.00,2),
+  ('801503','Patna','Patna','Bihar','EAST',TRUE,250.00,3),
   ('110001','New Delhi','New Delhi','Delhi','NORTH',FALSE,0,4),
   ('400001','Mumbai','Mumbai','Maharashtra','WEST',FALSE,0,5),
   ('560001','Bengaluru','Bengaluru','Karnataka','SOUTH',FALSE,0,5),
@@ -797,13 +797,13 @@ ON CONFLICT (pincode) DO NOTHING;
 
 INSERT INTO site_settings (key, value, description) VALUES
   ('contact', '{"primary_phone":"8969821440","secondary_phone":"9661288308","whatsapp":"918969821440","email":"support@rokadoctor.in"}', 'Public contact channels'),
-  ('service', '{"visit_charge":100,"city":"Patna","state":"Bihar","hours":"08:00-21:00","same_day_cutoff":"17:00"}', 'Local service config'),
+  ('service', '{"visit_charge":200,"city":"Patna","state":"Bihar","hours":"08:00-21:00","same_day_cutoff":"17:00"}', 'Local service config'),
   ('shipping', '{"free_above":1999,"flat_rate":99,"cod_charge":49,"cod_max":15000}', 'Pan-India shipping rules'),
   ('abandoned_cart', '{"stage1_minutes":60,"stage2_hours":24,"stage3_hours":72,"stage3_coupon":"COMEBACK10"}', 'Recovery cadence')
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO service_areas (area_name, slug, pincodes, hero_heading, display_order) VALUES
-  ('Kankarbagh','ro-service-in-kankarbagh-patna','{800020,800026}','RO Service in Kankarbagh, Patna — ₹100 Visit Charge',1),
+  ('Kankarbagh','ro-service-in-kankarbagh-patna','{800020,800026}','RO Service in Kankarbagh, Patna — ₹200 Visit Charge',1),
   ('Boring Road','ro-service-in-boring-road-patna','{800001,800013}','RO Repair in Boring Road, Patna — Same-Day Visit',2),
   ('Patliputra Colony','ro-service-in-patliputra-patna','{800013}','RO Service in Patliputra Colony, Patna',3),
   ('Rajendra Nagar','ro-service-in-rajendra-nagar-patna','{800016}','RO Repair in Rajendra Nagar, Patna',4),

@@ -2,7 +2,7 @@
 
 Dual-model water business platform:
 1. **Pan-India e-commerce** — RO purifiers, commercial plants, spare parts
-2. **Patna local service** — RO repair & installation, ₹100 visit charge
+2. **Patna local service** — RO repair & installation, ₹200 visit charge
 
 **Stack:** Next.js 14 (App Router) · TypeScript · PostgreSQL · Prisma · Redis · Tailwind · Razorpay · WhatsApp Cloud API
 

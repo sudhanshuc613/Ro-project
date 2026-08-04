@@ -59,11 +59,11 @@ async function main() {
   for (const p of patnaPincodes) {
     await prisma.pincode.upsert({
       where: { pincode: p },
-      update: { isServiceAvailable: true, visitCharge: 100 },
+      update: { isServiceAvailable: true, visitCharge: 200 },
       create: {
         pincode: p, city: 'Patna', district: 'Patna', state: 'Bihar', zone: 'EAST',
         isServiceAvailable: true, isDeliveryAvailable: true, isCodAvailable: true,
-        visitCharge: 100, standardEtaDays: 2,
+        visitCharge: 200, standardEtaDays: 2,
       },
     });
   }
@@ -71,11 +71,11 @@ async function main() {
   for (const p of ['801503', '801505', '801506']) {
     await prisma.pincode.upsert({
       where: { pincode: p },
-      update: { isServiceAvailable: true, visitCharge: 150 },
+      update: { isServiceAvailable: true, visitCharge: 250 },
       create: {
         pincode: p, city: 'Danapur', district: 'Patna', state: 'Bihar', zone: 'EAST',
         isServiceAvailable: true, isDeliveryAvailable: true, isCodAvailable: true,
-        visitCharge: 150, standardEtaDays: 3,
+        visitCharge: 250, standardEtaDays: 3,
       },
     });
   }
@@ -319,7 +319,7 @@ async function main() {
       hours: 'Mon–Sun 08:00–21:00',
     }, 'Public contact channels'],
     ['service', {
-      visitCharge: 100,
+      visitCharge: 200,
       emergencyCharge: 299,
       responseTime: '90 minutes',
       warrantyDays: 30,
@@ -328,9 +328,9 @@ async function main() {
     }, 'Local service configuration'],
     ['banner', {
       heroHeadline: 'RO Service in Patna',
-      heroSubline: 'Visit Charge Only ₹100',
+      heroSubline: 'Visit Charge Only ₹200',
       heroImage: '/banners/service-tech.png',
-      announcementText: 'RO Service in Patna — Visit charge only ₹100 · Same-day visit',
+      announcementText: 'RO Service in Patna — Visit charge only ₹200 · Same-day visit',
       announcementActive: true,
     }, 'Homepage banner content'],
   ];
@@ -348,10 +348,10 @@ async function main() {
   // otherwise Google truncates them in search results. These DB rows OVERRIDE
   // the code fallbacks, so length discipline matters most here.
   const pages = [
-    { path: '/', metaTitle: 'RO Service in Patna — ₹100 Visit | Same-Day Repair',
-      metaDescription: 'Expert RO repair & installation across Patna at ₹100 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.' },
-    { path: '/service-patna', metaTitle: 'RO Service in Patna — ₹100 Visit | Same-Day Repair',
-      metaDescription: 'RO repair, installation & AMC across Patna. ₹100 visit charge, same-day service, 30-day warranty. All brands. Call 8969821440.' },
+    { path: '/', metaTitle: 'RO Service in Patna — ₹200 Visit | Same-Day Repair',
+      metaDescription: 'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.' },
+    { path: '/service-patna', metaTitle: 'RO Service in Patna — ₹200 Visit | Same-Day Repair',
+      metaDescription: 'RO repair, installation & AMC across Patna. ₹200 visit charge, same-day service, 30-day warranty. All brands. Call 8969821440.' },
   ];
   for (const pg of pages) {
     await prisma.seoMetadata.upsert({

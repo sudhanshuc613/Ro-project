@@ -29,7 +29,7 @@ aana hai. Aur 27–72 reviews wale competitors ko 3–4 mahine mein pakda ja sak
 
 ---
 
-## Aapka sabse bada hathiyar — ₹100
+## Aapka sabse bada hathiyar — ₹200
 
 Competitors ke **published rates**:
 
@@ -38,10 +38,10 @@ Competitors ke **published rates**:
 | Mr Service Expert | ₹399 se |
 | RO Care India | ₹399 repair, ₹599 install |
 | Aapki purani PHP site | ₹299 |
-| **AquaNexa (nayi)** | **₹100** |
+| **AquaNexa (nayi)** | **₹200** |
 
 Ye **3–4x sasta** hai. Ye sirf pricing nahi — ye aapka poora marketing message hai.
-Isliye maine homepage pe ₹100 ko **33 baar** rakha hai, aur competitor rate ke saath
+Isliye maine homepage pe ₹200 ko **33 baar** rakha hai, aur competitor rate ke saath
 side-by-side comparison table banaya hai.
 
 ---
@@ -72,7 +72,7 @@ Ab: **service hero sabse upar**, shop bilkul neeche
 
 | Position | Section |
 |---|---|
-| 1 | Service hero — ₹100 + call/WhatsApp |
+| 1 | Service hero — ₹200 + call/WhatsApp |
 | 2 | Trust bar |
 | 3 | **Booking form** |
 | 4 | Services (6 cards) |
@@ -87,9 +87,9 @@ Ab: **service hero sabse upar**, shop bilkul neeche
 ### Verified numbers
 
 ```
-✅ H1: "RO Service in Patna — Visit Charge Only ₹100"  (1 H1, sahi)
+✅ H1: "RO Service in Patna — Visit Charge Only ₹200"  (1 H1, sahi)
 ✅ Title: 50 chars — Google truncate nahi karega
-✅ ₹100 mentions: 33
+✅ ₹200 mentions: 33
 ✅ Call links: 15 (dono numbers)
 ✅ WhatsApp links: 7
 ✅ Competitor anchor ₹299: present
@@ -102,7 +102,7 @@ Ab: **service hero sabse upar**, shop bilkul neeche
 
 ### Naye components
 
-- `ServiceHero` — ₹100 hook, price anchor, 4 one-tap issue buttons (WhatsApp pe direct)
+- `ServiceHero` — ₹200 hook, price anchor, 4 one-tap issue buttons (WhatsApp pe direct)
 - `PriceComparison` — 8 services, aapka rate vs competitor rate side-by-side
 - `AreaCoverage` — 6 area cards + 26 extra area names (keyword coverage)
 - `ShopStrip` — e-commerce, deliberately neeche
@@ -226,7 +226,7 @@ Har blog ke end mein service CTA.
 | Month 4–6 | 50+ reviews → top-3 ke liye competitive |
 | Month 6+ | Brand pages + blog se organic traffic |
 
-**Beech mein Google Ads chalao.** ₹100 visit charge ek bahut strong ad hook hai
+**Beech mein Google Ads chalao.** ₹200 visit charge ek bahut strong ad hook hai
 jab competitor ₹299–₹399 dikha raha hai. Daily ₹200–300 se shuru karo.
 
 ---

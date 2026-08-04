@@ -3,7 +3,7 @@
 /**
  * HeroCarousel — the dual-message hero.
  *  Slide 1: "India's Best RO Purifiers — Deliver Anywhere"   (e-commerce)
- *  Slide 2: "Expert RO Service in Patna — Visit Charge ₹100" (local service)
+ *  Slide 2: "Expert RO Service in Patna — Visit Charge ₹200" (local service)
  *
  * Auto-advances every 6s, pauses on hover/focus, respects prefers-reduced-motion,
  * fully keyboard + swipe navigable. Slide 1 image is priority-loaded for LCP.

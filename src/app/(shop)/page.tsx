@@ -5,7 +5,7 @@
  * orders are a small minority. So the page is ordered by money, not by
  * feature parity:
  *
- *   1. Service hero (₹100 hook + call/WhatsApp)
+ *   1. Service hero (₹200 hook + call/WhatsApp)
  *   2. Trust bar
  *   3. Booking form            ← primary conversion
  *   4. Services we provide
@@ -46,9 +46,9 @@ export async function generateMetadata(): Promise<Metadata> {
     entityType: 'STATIC_PAGE',
     path: '/',
     fallback: {
-      title: 'RO Service in Patna — ₹100 Visit Charge | Same-Day Repair',
+      title: 'RO Service in Patna — ₹200 Visit Charge | Same-Day Repair',
       description:
-        'Expert RO repair & installation across Patna at ₹100 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.',
+        'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.',
       keywords: [
         'RO service in Patna', 'RO repair Patna', 'water purifier service Patna',
         'RO service near me', 'RO technician Patna', 'RO installation Patna',

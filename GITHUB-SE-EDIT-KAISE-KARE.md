@@ -55,7 +55,7 @@ hours: 'Mon–Sun 08:00–21:00',
 visitCharge: 100,
 ```
 
-> Ye badla to poori site pe ₹100 badal jayega. **Par** `PriceComparison.tsx`
+> Ye badla to poori site pe ₹200 badal jayega. **Par** `PriceComparison.tsx`
 > aur `ProblemSolver.tsx` mein alag se likha hai — wo bhi badalna padega.
 
 ## Line 41-42 — Response time aur warranty
@@ -89,7 +89,7 @@ consistency ranking factor hai.
 Line 14 se shuru hoti hai list:
 
 ```typescript
-{ service: 'Technician visit & diagnosis', us: '₹100', them: '₹299 – ₹399', highlight: true },
+{ service: 'Technician visit & diagnosis', us: '₹200', them: '₹299 – ₹399', highlight: true },
 { service: 'Sediment / carbon filter change', us: '₹350 – ₹900', them: '₹500 – ₹1,200' },
 { service: 'RO membrane (75 GPD)', us: '₹1,200 – ₹1,800', them: '₹1,500 – ₹2,500' },
 ```
@@ -231,8 +231,8 @@ Phir Vercel pe **Redeploy** karna padega.
 ### 2. Comma mat bhoolna
 
 ```typescript
-✅ { service: 'X', us: '₹100' },   ← last mein comma
-❌ { service: 'X', us: '₹100' }    ← comma missing
+✅ { service: 'X', us: '₹200' },   ← last mein comma
+❌ { service: 'X', us: '₹200' }    ← comma missing
 ```
 
 ### 3. Bracket mat hatao

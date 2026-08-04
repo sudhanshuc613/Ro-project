@@ -83,12 +83,12 @@ export const TITLE_TEMPLATES = {
   product: (name: string, brand?: string) => `${fit(name, 43)} | Buy Online`,
   category: (name: string) => `${fit(name, 40)} — Best Price in India`,
   serviceArea: (area: string) =>
-    `RO Service in ${area}, Patna — ₹100 Visit Charge | Same-Day Repair | ${BRAND.name}`,
+    `RO Service in ${area}, Patna — ₹200 Visit Charge | Same-Day Repair | ${BRAND.name}`,
 } as const;
 
 export const DESC_TEMPLATES = {
   product: (name: string, price: number) =>
     `Buy ${name} online at ₹${price.toLocaleString('en-IN')}. Genuine product, free delivery across India, easy EMI & 7-day returns. Expert installation support available.`,
   serviceArea: (area: string) =>
-    `Expert RO repair & installation in ${area}, Patna. Visit charge only ₹100. Same-day service, 30-day warranty, genuine spare parts. Call 8969821440 now.`,
+    `Expert RO repair & installation in ${area}, Patna. Visit charge only ₹200. Same-day service, 30-day warranty, genuine spare parts. Call 8969821440 now.`,
 } as const;

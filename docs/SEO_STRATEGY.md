@@ -37,11 +37,11 @@ Each page needs **genuinely unique content** — never spun templates. Include:
 
 ### Title & description patterns
 ```
-RO Service in Kankarbagh, Patna — ₹100 Visit Charge | Same-Day Repair | AquaNexa
-Expert RO repair & installation in Kankarbagh, Patna. Visit charge only ₹100.
+RO Service in Kankarbagh, Patna — ₹200 Visit Charge | Same-Day Repair | AquaNexa
+Expert RO repair & installation in Kankarbagh, Patna. Visit charge only ₹200.
 Same-day service, 30-day warranty, genuine parts. Call 8969821440 now.
 ```
-`₹100` and the phone number in the meta description lift CTR measurably — the price objection is answered before the click.
+`₹200` and the phone number in the meta description lift CTR measurably — the price objection is answered before the click.
 
 ### Off-page essentials (higher impact than on-page here)
 1. **Google Business Profile** — the single highest-ROI action. Complete every field, add the service area, post weekly, upload real job photos.
@@ -115,4 +115,4 @@ Wire up from day one, not after launch:
 - **Rank tracking** — a fixed keyword set: `ro service in patna`, `ro repair patna`, `water purifier service patna`, plus your top 20 product terms
 
 ### Realistic timeline
-Local Map Pack results typically appear in **4–8 weeks** with an active GBP and steady reviews. Product-page organic rankings take **4–6 months** to mature. Budget for paid search on service keywords in the interim — the ₹100 visit charge is a strong ad hook.
+Local Map Pack results typically appear in **4–8 weeks** with an active GBP and steady reviews. Product-page organic rankings take **4–6 months** to mature. Budget for paid search on service keywords in the interim — the ₹200 visit charge is a strong ad hook.

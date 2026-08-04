@@ -5,7 +5,7 @@
  *
  * Strategy: the money is in Patna service calls, not spare-part orders.
  * So the hero sells ONE thing — book a technician — and leads with the
- * strongest competitive weapon: ₹100 visit charge when every competitor
+ * strongest competitive weapon: ₹200 visit charge when every competitor
  * in Patna charges ₹299–₹399.
  *
  * The e-commerce side is still reachable (nav + a strip lower down) but it

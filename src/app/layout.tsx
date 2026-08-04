@@ -27,11 +27,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.url),
   title: {
-    default: 'AquaNexa — Buy RO Water Purifiers Online India | RO Service in Patna ₹100',
+    default: 'AquaNexa — Buy RO Water Purifiers Online India | RO Service in Patna ₹200',
     template: `%s | ${BRAND.name}`,
   },
   description:
-    'Shop RO water purifiers, commercial RO plants & genuine spare parts with delivery across India. Expert RO repair & installation in Patna at just ₹100 visit charge.',
+    'Shop RO water purifiers, commercial RO plants & genuine spare parts with delivery across India. Expert RO repair & installation in Patna at just ₹200 visit charge.',
   applicationName: BRAND.name,
   authors: [{ name: BRAND.legalName }],
   formatDetection: { telephone: true },

@@ -8,16 +8,16 @@ import { CONTACT, SERVICE } from '@/lib/constants';
  *   RO Care India      — repair ₹399, install ₹599, AMC ₹999
  *   Most local shops   — ₹299–₹399 visit charge
  *
- * Leading with the ₹100 gap converts better than any adjective.
+ * Leading with the ₹200 gap converts better than any adjective.
  */
 const ROWS = [
-  { service: 'Technician visit & diagnosis', us: '₹100', them: '₹299 – ₹399', highlight: true },
-  { service: 'Sediment / carbon filter change', us: '₹350 – ₹900', them: '₹500 – ₹1,200' },
+  { service: 'Technician visit & diagnosis', us: '₹200', them: '₹299 – ₹399', highlight: true },
+  { service: 'Sediment / carbon filter change', us: '₹450 – ₹600', them: '₹500 – ₹1,200' },
   { service: 'RO membrane (75 GPD)', us: '₹1,200 – ₹1,800', them: '₹1,500 – ₹2,500' },
   { service: 'RO membrane (100 GPD)', us: '₹1,600 – ₹2,400', them: '₹2,000 – ₹3,000' },
-  { service: 'Booster pump replacement', us: '₹1,100 – ₹2,000', them: '₹1,500 – ₹2,500' },
+  { service: 'Booster pump replacement', us: '₹1,500 – ₹2,000', them: '₹1,500 – ₹2,500' },
   { service: 'SMPS / adaptor', us: '₹700 – ₹1,300', them: '₹900 – ₹1,600' },
-  { service: 'New RO installation', us: '₹500 – ₹900', them: '₹599 – ₹1,000' },
+  { service: 'New RO installation', us: '₹350 – ₹600', them: '₹599 – ₹1,000' },
   { service: 'Annual Maintenance (AMC)', us: '₹1,499 – ₹4,499', them: '₹2,499 – ₹6,999' },
 ];
 

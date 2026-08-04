@@ -101,7 +101,7 @@ Ye chhota feature hai par **word-of-mouth** bahut banata hai.
 
 **Kyun:** Koi bhi Patna competitor guaranteed timing nahi deta.
 
-**Kya:** ₹100 normal visit, **₹299 mein 2-ghante guarantee**. Late hue to visit free.
+**Kya:** ₹200 normal visit, **₹299 mein 2-ghante guarantee**. Late hue to visit free.
 
 Log urgency ke liye paisa dete hain. Aur ye aapka average ticket badhata hai.
 

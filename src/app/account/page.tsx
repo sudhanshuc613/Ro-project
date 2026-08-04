@@ -98,7 +98,7 @@ export default async function AccountPage() {
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <Stat label="Total Orders" value={String(orders.length)} icon="📦" />
         <Stat label="Service Requests" value={String(services.length)} icon="🔧" />
-        <Stat label="Visit Charge" value="₹100" icon="💰" sub="Your rate in Patna" />
+        <Stat label="Visit Charge" value="₹200" icon="💰" sub="Your rate in Patna" />
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
@@ -115,7 +115,7 @@ export default async function AccountPage() {
             <Empty
               icon="🔧"
               title="No service requests yet"
-              body="Book a technician for your RO — ₹100 visit charge in Patna."
+              body="Book a technician for your RO — ₹200 visit charge in Patna."
               ctaLabel="Book Service"
               ctaHref="/#book-service"
             />

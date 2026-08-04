@@ -112,8 +112,8 @@ Homepage ka SEO title database mein save hai. Purana title abhi bhi wahan hai.
 
 ```sql
 UPDATE seo_metadata
-SET meta_title = 'RO Service in Patna — ₹100 Visit | Same-Day Repair',
-    meta_description = 'Expert RO repair & installation across Patna at ₹100 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.'
+SET meta_title = 'RO Service in Patna — ₹200 Visit | Same-Day Repair',
+    meta_description = 'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.'
 WHERE path = '/';
 ```
 
@@ -125,7 +125,7 @@ WHERE path = '/';
 SELECT meta_title FROM seo_metadata WHERE path = '/';
 ```
 
-`RO Service in Patna — ₹100 Visit | Same-Day Repair` dikhna chahiye ✅
+`RO Service in Patna — ₹200 Visit | Same-Day Repair` dikhna chahiye ✅
 
 ### Phir Vercel pe redeploy
 
@@ -141,8 +141,8 @@ Apna Vercel URL kholo:
 
 | Kya check karo | Hona chahiye |
 |---|---|
-| Hero heading | "RO Service in Patna — Visit Charge Only ₹100" |
-| Price anchor | "Others charge ₹299–₹399 · We charge ₹100" |
+| Hero heading | "RO Service in Patna — Visit Charge Only ₹200" |
+| Price anchor | "Others charge ₹299–₹399 · We charge ₹200" |
 | Scroll neeche | 6 problem cards Hindi mein (पानी नहीं आ रहा) |
 | Card pe click | Cost + cause + "free mein ye try karo" |
 | Aur neeche | 3 asli photos |

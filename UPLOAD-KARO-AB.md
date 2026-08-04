@@ -2,38 +2,39 @@
 
 **Total: ~12 minute**
 
+> ✅ Aapke ₹200 wale changes is zip mein **already daal diye hain**.
+> Merge conflict ka jhanjhat khatam — bas force push karna hai.
+
 ---
 
-## ⚠️ Pehle 2 baatein
+## Is update mein kya hai
 
-### 1. Delete MAT karna — overwrite karna
+### Aapke changes (GitHub se liye)
+| Kya | Ab |
+|---|---|
+| Visit charge | **₹200** (poori site pe — 34 jagah) |
+| Danapur/Khagaul | **₹250** (base se upar) |
+| Filter change | ₹450 – ₹600 |
+| Booster pump | ₹1,500 – ₹2,000 |
+| New installation | ₹350 – ₹600 |
 
-Zip mein ye 2 cheezein **nahi** hain (jaan-boojh kar):
-
-| Cheez | Kyun nahi | Delete kiya to |
-|---|---|---|
-| `.env` | Secrets zip mein nahi daalte | Neon string udd jayegi |
-| `node_modules` | 400 MB | `npm install` dobara, 10 min |
-
-**Overwrite karne se dono bach jayenge.**
-
-### 2. Is baar database change NAHI chahiye
-
-Maine check kiya — **koi naya table nahi bana**. Sirf ek chhota seed update hai
-(teesra phone number). Wo Neon SQL Editor se 1 line mein ho jayega.
+### Naye features
+- AMC engine (purchase form + auto-schedule + WhatsApp reminders + admin panel)
+- Product add/edit form (5 tabs)
+- SEO Manager (har page ka meta edit)
+- Site Settings (phone/charge/banner — code chhue bina)
+- Customer login/register + real account dashboard
 
 ---
 
 # STEP 1 — Zip replace (3 min)
 
 ### 1.1 Node band karo
-
 ```cmd
 taskkill /F /IM node.exe
 ```
 
 ### 1.2 `.env` backup
-
 ```cmd
 cd C:\Users\SUDHA\Downloads\ro-Project\Ro-project
 copy .env ..\env-backup.txt
@@ -43,32 +44,22 @@ copy .env ..\env-backup.txt
 
 1. Naya `aquanexa-project.zip` download karo
 2. Right-click → **Extract All**
-3. Destination bilkul yahi:
+3. Destination:
    ```
    C:\Users\SUDHA\Downloads\ro-Project\Ro-project
    ```
-4. Windows poochhega → **"Replace the files in the destination"** chuno
+4. **"Replace the files in the destination"** chuno
 
-### 1.4 Verify (30 second)
-
+### 1.4 Verify
 ```cmd
 type .env | findstr DATABASE_URL
 ```
-Neon string dikhni chahiye. Nahi dikhi to:
-```cmd
-copy ..\env-backup.txt .env
-```
-
-Nayi files aayin?
-```cmd
-dir src\components\admin
-```
-Ye 3 nayi dikhni chahiye: `ProductForm.tsx`, `SeoEditor.tsx`, `SettingsForm.tsx`
+Neon string dikhni chahiye. Nahi to: `copy ..\env-backup.txt .env`
 
 ```cmd
-dir src\server\services
+findstr "visitCharge" src\lib\constants.ts
 ```
-`amc.service.ts` dikhni chahiye.
+`visitCharge: 200,` dikhna chahiye ✅
 
 ---
 
@@ -77,35 +68,34 @@ dir src\server\services
 ```cmd
 git add .
 ```
-
 ```cmd
-git commit -m "AMC engine, product CRUD form, SEO manager, customer login"
+git commit -m "Visit charge Rs200, AMC engine, product CRUD, SEO manager"
 ```
 
 ### 🛑 Safety check
-
 ```cmd
 git remote -v
 ```
-
-Dikhna chahiye:
-```
-origin  https://github.com/sudhanshuc613/Ro-project.git (fetch)
-origin  https://github.com/sudhanshuc613/Ro-project.git (push)
-```
-
-### 🛑 `.env` leak check
+`sudhanshuc613/Ro-project.git` dikhna chahiye.
 
 ```cmd
 git status
 ```
-`.env` list mein **nahi** hona chahiye.
+`.env` **nahi** hona chahiye.
 
-### Push
+### Push — force lagega
 
 ```cmd
-git push
+git push --force
 ```
+
+> **Force kyun?** GitHub pe aapke 2 purane commits hain (`Update constants.ts`,
+> `Update PriceComparison.tsx`). Wo changes maine **already is zip mein daal diye**
+> hain — ₹200, ₹450-600, ₹1500-2000, ₹350-600 sab. Isliye unhe overwrite karna
+> safe hai, kuch loss nahi hoga.
+>
+> Verify karna ho to pehle `findstr "450" src\components\home\PriceComparison.tsx`
+> chala lo — `₹450 – ₹600` dikhega.
 
 ---
 
@@ -113,102 +103,90 @@ git push
 
 vercel.com → `ro-project` → **Deployments** → Building → Ready
 
-> Build fail ho to live site nahi tootegi — Vercel purana version chalata rahega.
-> Failed build pe click → **Build Logs** → screenshot bhejna.
+> Build fail ho to live site nahi tootegi. Failed build → **Build Logs** → screenshot bhejna.
 
 ---
 
-# STEP 4 — Database mein 1 line (1 min)
+# STEP 4 — Database update (1 min) ⚠️
 
-Teesra phone number (`9534037266`) DB mein daalna hai.
-
-1. console.neon.tech → `aquanexa` → **SQL Editor**
-2. Jo likha hai saaf karo (`Ctrl+A` → `Delete`)
-3. Ye paste karo:
+Neon SQL Editor mein ye chalao (₹200 ke saath):
 
 ```sql
 INSERT INTO site_settings (key, value, description) VALUES
 ('contact', '{"primaryPhone":"8969821440","secondaryPhone":"9661288308","tertiaryPhone":"9534037266","whatsapp":"918969821440","email":"support@rokadoctor.in","hours":"Mon–Sun 08:00–21:00"}', 'Public contact channels'),
-('service', '{"visitCharge":100,"emergencyCharge":299,"responseTime":"90 minutes","warrantyDays":30,"city":"Patna","state":"Bihar"}', 'Local service config'),
-('banner', '{"heroHeadline":"RO Service in Patna","heroSubline":"Visit Charge Only ₹100","heroImage":"/banners/service-tech.png","announcementText":"RO Service in Patna — Visit charge only ₹100 · Same-day visit","announcementActive":true}', 'Homepage banner')
+('service', '{"visitCharge":200,"emergencyCharge":399,"responseTime":"90 minutes","warrantyDays":30,"city":"Patna","state":"Bihar"}', 'Local service config'),
+('banner', '{"heroHeadline":"RO Service in Patna","heroSubline":"Visit Charge Only ₹200","heroImage":"/banners/service-tech.png","announcementText":"RO Service in Patna — Visit charge only ₹200 · Same-day visit","announcementActive":true}', 'Homepage banner')
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
+
+UPDATE pincodes SET visit_charge = 200 WHERE is_service_available = true AND city = 'Patna';
+UPDATE pincodes SET visit_charge = 250 WHERE pincode IN ('801503','801505','801506','801105');
+
+UPDATE seo_metadata SET
+  meta_title = 'RO Service in Patna — ₹200 Visit | Same-Day Repair',
+  meta_description = 'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.'
+WHERE path = '/';
 ```
 
-4. **Run** → `INSERT 0 3` aana chahiye
+**Run** dabao.
 
-> Ye safe hai — `ON CONFLICT DO UPDATE` hai, purana data corrupt nahi hoga.
+### Verify
+```sql
+SELECT visit_charge, count(*) FROM pincodes
+WHERE is_service_available = true GROUP BY visit_charge;
+```
+₹200 aur ₹250 dikhne chahiye.
 
 ---
 
-# STEP 5 — Environment variable add karo (1 min)
-
-AMC reminder cron ke liye ek secret chahiye.
+# STEP 5 — CRON_SECRET add karo (1 min) ⚠️
 
 1. Vercel → `ro-project` → **Settings** → **Environment Variables**
 2. **Add New**:
 
 | Name | Value |
 |---|---|
-| `CRON_SECRET` | koi bhi lamba random text, jaise `aqn_cron_2026_xk9m2p` |
+| `CRON_SECRET` | `aqn_cron_2026_xk9m2p` (ya koi bhi random) |
 
-3. **Save**
-4. **Deployments** → latest → **⋯** → **Redeploy**
-
-> Ye nahi kiya to cron 401 dega aur AMC reminders nahi jayenge.
+3. Save → **Deployments** → latest → **⋯** → **Redeploy**
 
 ---
 
-# STEP 6 — Test karo (3 min)
+# STEP 6 — Test (3 min)
 
-Apna Vercel URL kholo:
-
-## Customer side
-
-| URL | Kya check karo |
+## ₹200 check
+| URL | Kya dikhna chahiye |
 |---|---|
-| `/register` | Account banao, apna number daalo |
-| `/login` | Wahi number + password se login |
-| `/account` | Ab **real dashboard** dikhega (placeholder nahi) |
-| `/amc-plans` | "Choose Gold" dabao → **form khulega** (WhatsApp nahi) |
+| `/` | "Visit Charge Only ₹200" |
+| `/service-patna/danapur` | ₹200 (Danapur pincode pe ₹250) |
+| `/amc-plans` | ₹200 mentions |
 
-**AMC test:** form bharo → submit → "Gold AMC Activated" + first visit date dikhna chahiye.
+Kahin bhi ₹200 dikhe → Step 4 skip hua hai.
 
-## Admin side
-
-`/admin/login` → `8969821440` / `ChangeMe@123`
-
-| Page | Kya check karo |
+## Naye features
+| URL | Test |
 |---|---|
-| `/admin/products/new` | 5 tabs — Basic, Pricing, Images, Specs, SEO |
-| `/admin/amc` | Jo AMC abhi banaya wo dikhega + "Mark visit done" button |
-| `/admin/seo` | Har page ka meta edit, live Google preview |
-| `/admin/settings` | Phone numbers, visit charge — **yahan se badal sakte ho** |
-
-**Product test:** `/admin/products/new` → Basic tab bharo → Pricing → Images mein
-`/products/ro-domestic.png` daalo (2 baar) → Status **Active** → Create.
-
-Phir `/products` pe jaake dekho, naya product dikhna chahiye.
+| `/register` | Account banao |
+| `/account` | Real dashboard (placeholder nahi) |
+| `/amc-plans` | "Choose Gold" → **form khulega** |
+| `/admin/products/new` | 5 tabs wala form |
+| `/admin/amc` | AMC contracts + "Mark visit done" |
+| `/admin/settings` | Phone/charge yahan se badlo |
 
 ## 🛑 Aur ye zaroor
-
-**rokadoctor.in** kholo — purani PHP site chal rahi hai? ✅
-Chalni chahiye, DNS ko haath nahi lagaya.
+**rokadoctor.in** — purani PHP site chal rahi hai? ✅
 
 ---
 
-# Password badlo (zaroori)
+# ⚠️ Aage se: daam kaise badlein
 
-Admin password abhi `ChangeMe@123` hai — public guide mein likha hai.
+Ab **code chhune ki zaroorat nahi**. Admin panel se:
 
-Neon SQL Editor mein:
-```sql
--- Pehle apna naya password bcrypt hash karo:
--- https://bcrypt-generator.com pe jaake rounds=12 rakho
-UPDATE users SET password_hash = 'YAHAN_NAYA_HASH'
-WHERE phone = '8969821440';
+```
+/admin/settings → Visit Charge field → badlo → Save
 ```
 
-Ya mujhe bolo, main hash bana ke de dunga.
+Turant poori site pe badal jayega. `PriceComparison` table abhi code mein hai —
+wo GitHub se badalni padegi (`src/components/home/PriceComparison.tsx`).
 
 ---
 
@@ -217,19 +195,17 @@ Ya mujhe bolo, main hash bana ke de dunga.
 - [ ] `taskkill /F /IM node.exe`
 - [ ] `.env` backup
 - [ ] Zip extract — **Replace** mode
-- [ ] `type .env | findstr DATABASE_URL` → Neon string
-- [ ] `dir src\components\admin` → 3 nayi files
+- [ ] `findstr "visitCharge" src\lib\constants.ts` → 200
 - [ ] `git add .` + `commit`
 - [ ] `git remote -v` 🛑
 - [ ] `git status` → `.env` nahi
-- [ ] `git push`
+- [ ] `git push --force`
 - [ ] Vercel → Ready
-- [ ] Neon SQL → 3 settings insert ⚠️
-- [ ] Vercel → `CRON_SECRET` env var ⚠️
+- [ ] Neon SQL chalao ⚠️
+- [ ] `CRON_SECRET` add ⚠️
 - [ ] Redeploy
-- [ ] `/register` + `/amc-plans` test
-- [ ] `/admin/products/new` test
-- [ ] rokadoctor.in → purani site chal rahi hai?
+- [ ] ₹200 dikh raha hai?
+- [ ] rokadoctor.in chal rahi hai?
 - [ ] Admin password badlo
 
 ---
@@ -241,16 +217,14 @@ Ya mujhe bolo, main hash bana ke de dunga.
 taskkill /F /IM node.exe
 rmdir /s /q node_modules\.prisma
 ```
-Phir dobara try. Ya OneDrive pause karo.
 
-### ❌ Vercel build fail
-Build Logs ka screenshot bhejo.
+### ❌ Site pe abhi bhi ₹200
+Step 4 ka SQL nahi chala. Chalao → Vercel Redeploy.
 
 ### ❌ AMC form submit pe error
-Neon SQL wala step (Step 4) skip ho gaya. Chalao phir Redeploy.
+Step 4 skip hua. `site_settings` table khaali hai.
 
-### ❌ `/admin/settings` khaali dikh raha
-Same — Step 4 chalao.
-
-### ❌ Product create pe "Add at least 2 images"
-Images tab mein dono slots mein path daalo, jaise `/products/ro-domestic.png`
+### ❌ Push phir bhi reject
+```cmd
+git push --force origin main
+```

@@ -35,7 +35,7 @@ export const CONTACT = {
 } as const;
 
 export const SERVICE = {
-  visitCharge: 100,
+  visitCharge: 200,
   city: 'Patna',
   state: 'Bihar',
   responseTime: '90 minutes',

@@ -1,7 +1,7 @@
 const REVIEWS = [
   {
     stars: 5,
-    body: 'Called at 11 AM, technician reached Kankarbagh by 12:30. Replaced the membrane and explained everything. Only ₹100 visit charge as promised — no hidden costs.',
+    body: 'Called at 11 AM, technician reached Kankarbagh by 12:30. Replaced the membrane and explained everything. Only ₹200 visit charge as promised — no hidden costs.',
     name: 'Rajesh Kumar',
     place: 'Kankarbagh, Patna',
     initials: 'RK',

@@ -160,7 +160,7 @@ function SeoRow({ entry, isOpen, onToggle }: { entry: SeoEntry; isOpen: boolean;
             <input
               value={title}
               onChange={(e) => { setTitle(e.target.value); setSaved(false); }}
-              placeholder="RO Service in Patna — ₹100 Visit"
+              placeholder="RO Service in Patna — ₹200 Visit"
               className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-aqua-500 focus:outline-none focus:ring-2 focus:ring-aqua-100"
             />
           </label>
@@ -174,7 +174,7 @@ function SeoRow({ entry, isOpen, onToggle }: { entry: SeoEntry; isOpen: boolean;
               rows={3}
               value={desc}
               onChange={(e) => { setDesc(e.target.value); setSaved(false); }}
-              placeholder="Expert RO repair in Patna at ₹100 visit charge. All brands, same-day service."
+              placeholder="Expert RO repair in Patna at ₹200 visit charge. All brands, same-day service."
               className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-aqua-500 focus:outline-none focus:ring-2 focus:ring-aqua-100"
             />
           </label>
