@@ -73,7 +73,7 @@ export default function ServicePatnaPillar() {
       />
 
       <main className="bg-white">
-        <section className="relative overflow-hidden bg-[linear-gradient(115deg,#0B2545_0%,#13315C_45%,#0E7490_100%)]">
+        <section className="relative overflow-hidden bg-hero-deep">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_28%,rgba(255,255,255,.14),transparent_60%)]" />
           <div className="container relative mx-auto grid gap-10 px-4 py-14 lg:grid-cols-[1.1fr,.9fr] lg:py-20">
             <div className="text-white">

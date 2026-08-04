@@ -163,6 +163,7 @@ model User {
   auditLogs        AuditLog[]
   technician       Technician?
   searchQueries    SearchQuery[]
+  mediaAssets      MediaAsset[]
 
   @@index([phone])
   @@index([role])
@@ -896,4 +897,39 @@ model SiteSetting {
   updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   @@map("site_settings")
+}
+
+/// Uploaded images from the admin panel.
+///
+/// WHY BYTES IN POSTGRES: Vercel's filesystem is read-only at runtime, so we
+/// physically cannot write into public/. The two real options are an object
+/// store (Vercel Blob / S3 / Cloudinary — all need an account + token) or the
+/// database. We support BOTH and pick automatically:
+///   - BLOB_READ_WRITE_TOKEN set  → file goes to Vercel Blob, `externalUrl` filled
+///   - no token                   → bytes live here, served by /api/media/[id]
+/// This way uploads work on day one with zero configuration, and moving to a
+/// CDN later needs no code change and no re-linking of existing products.
+///
+/// Images are converted to WebP before storing, so a 4 MB phone photo lands at
+/// roughly 150-250 KB. The admin can opt out per upload.
+model MediaAsset {
+  id          String   @id @default(uuid()) @db.Uuid
+  filename    String   @db.VarChar(255)
+  mimeType    String   @map("mime_type") @db.VarChar(64)
+  bytes       Int
+  width       Int?
+  height      Int?
+  data        Bytes?
+  thumbData   Bytes?   @map("thumb_data")
+  externalUrl String?  @map("external_url")
+  altText     String?  @map("alt_text") @db.VarChar(200)
+  folder      String   @default("products") @db.VarChar(40)
+  checksum    String   @unique @db.VarChar(64)
+  uploadedBy  String?  @map("uploaded_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  uploader User? @relation(fields: [uploadedBy], references: [id], onDelete: SetNull)
+
+  @@index([folder, createdAt])
+  @@map("media_assets")
 }

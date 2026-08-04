@@ -23,29 +23,30 @@ const ROWS = [
 
 export default function PriceComparison() {
   return (
-    <section className="py-14 md:py-16">
+    <section className="bg-sand-100 py-16 md:py-20">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+          <p className="eyebrow">Transparent rates</p>
+          <h2 className="text-h2 mt-2 font-extrabold text-navy-700 text-balance">
             Honest Pricing — Compare Before You Call
           </h2>
-          <p className="mt-2 text-muted">
+          <p className="mt-3 text-muted text-pretty">
             We publish our rates openly. Every cost is confirmed on site before any work starts.
           </p>
         </div>
 
-        <div className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-2xl border border-navy-100">
+        <div className="mx-auto mt-9 max-w-3xl overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-navy-100">
           <table className="w-full text-sm">
-            <thead className="bg-navy-50">
+            <thead className="border-b border-navy-100 bg-sand-200">
               <tr>
-                <th className="px-4 py-3 text-left font-bold text-navy-700">Service</th>
-                <th className="px-4 py-3 text-right font-bold text-aqua-700">AquaNexa</th>
-                <th className="px-4 py-3 text-right font-bold text-muted">Others in Patna</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-navy-600">Service</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-aqua-700">AquaNexa</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-muted">Others in Patna</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-navy-50">
+            <tbody className="divide-y divide-navy-100/70">
               {ROWS.map((r) => (
-                <tr key={r.service} className={r.highlight ? 'bg-emerald-50/60' : ''}>
+                <tr key={r.service} className={`transition-colors ${r.highlight ? 'bg-emerald-50/70' : 'hover:bg-sand-50'}`}>
                   <td className="px-4 py-3 text-navy-700">
                     {r.service}
                     {r.highlight && (
@@ -54,8 +55,8 @@ export default function PriceComparison() {
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right font-bold text-cta-green">{r.us}</td>
-                  <td className="px-4 py-3 text-right text-muted line-through">{r.them}</td>
+                  <td className="tnum px-4 py-3.5 text-right font-bold text-cta-green">{r.us}</td>
+                  <td className="tnum px-4 py-3.5 text-right text-muted line-through decoration-navy-300">{r.them}</td>
                 </tr>
               ))}
             </tbody>
@@ -70,7 +71,7 @@ export default function PriceComparison() {
         <div className="mt-7 text-center">
           <a
             href={CONTACT.primaryTel}
-            className="inline-flex items-center gap-2 rounded-xl bg-cta-green px-7 py-4 font-bold text-white shadow-lg transition hover:bg-cta-greenDark"
+            className="inline-flex items-center gap-2 rounded-xl bg-cta-green px-7 py-4 font-bold text-white shadow-call transition-all duration-200 hover:bg-cta-greenDark hover:shadow-lift active:translate-y-px"
           >
             📞 Book at ₹{SERVICE.visitCharge} — Call {CONTACT.primaryPhone}
           </a>

@@ -36,7 +36,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { label: 'Products',   href: '/admin/products',   icon: '📦' },
       { label: 'Categories', href: '/admin/categories', icon: '🗂️' },
       { label: 'Inventory',  href: '/admin/inventory',  icon: '🏷️', badgeKey: 'lowStock' },
-      
+      { label: 'Images',     href: '/admin/media',      icon: '🖼️' },
     ],
   },
   {

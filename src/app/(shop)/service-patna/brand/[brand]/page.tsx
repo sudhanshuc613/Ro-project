@@ -101,7 +101,7 @@ export default function BrandServicePage({ params }: { params: { brand: string }
           </ol>
         </nav>
 
-        <section className="bg-[linear-gradient(115deg,#0B2545_0%,#13315C_50%,#0E7490_100%)]">
+        <section className="bg-hero-deep">
           <div className="container mx-auto px-4 py-14 text-white lg:py-16">
             <span className="inline-flex rounded-full bg-cta-orange/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-orange-200 ring-1 ring-cta-orange/40">
               All Patna areas covered

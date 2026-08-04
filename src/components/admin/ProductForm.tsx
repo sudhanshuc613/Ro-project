@@ -3,16 +3,17 @@
 /**
  * ProductForm — full create/edit UI for the catalog.
  *
- * Images are entered as URLs rather than file uploads: the owner puts photos
- * in public/products/ via GitHub (or any CDN) and pastes the path. This avoids
- * needing S3/Cloudinary credentials on day one, and the same field accepts a
- * full CDN URL later without any code change.
+ * Images can be uploaded directly from the admin's computer or phone camera
+ * (drag-drop, file picker, or Ctrl+V). They are compressed to WebP and stored
+ * via media.service.ts — Vercel Blob when a token exists, otherwise Postgres.
+ * Pasting an existing path or CDN URL still works for anything already hosted.
  */
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { FILTER_FACETS } from '@/lib/constants';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 interface Option { id: string; name: string }
 
@@ -296,14 +297,36 @@ export default function ProductForm({
         {/* ── IMAGES ── */}
         {tab === 'Images' && (
           <div className="space-y-4">
-            <div className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
-              <p className="font-bold">How to add images</p>
-              <p className="mt-1">
-                Upload your photo to <code className="rounded bg-white px-1.5">public/products/</code> on
-                GitHub, then paste the path here — e.g. <code className="rounded bg-white px-1.5">/products/kent-grand.jpg</code>.
-                A full CDN URL works too. Minimum 2 images, maximum 5.
+            {/* Upload straight from the computer / phone camera */}
+            <ImageUploader
+              folder="products"
+              multiple
+              onUploaded={(uploaded) => {
+                setF((p) => {
+                  const filled = p.images.filter((x) => x.url.trim());
+                  const incoming = uploaded.map((u) => ({
+                    url: u.url,
+                    altText: p.name ? `${p.name} — product photo` : '',
+                    isPrimary: false,
+                  }));
+                  const merged = [...filled, ...incoming].slice(0, 5);
+                  if (merged.length && !merged.some((x) => x.isPrimary)) merged[0].isPrimary = true;
+                  // Keep at least two slots visible so the form still guides them
+                  while (merged.length < 2) merged.push({ url: '', altText: '', isPrimary: false });
+                  return { ...p, images: merged };
+                });
+              }}
+            />
+
+            <details className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+              <summary className="cursor-pointer text-xs font-bold text-navy-700">
+                Or paste an image link instead
+              </summary>
+              <p className="mt-2 text-xs text-muted">
+                A path like <code className="rounded bg-white px-1.5">/products/kent-grand.jpg</code>{' '}
+                (file already in the repo) or a full CDN URL both work. Edit the boxes below.
               </p>
-            </div>
+            </details>
 
             {f.images.map((img, i) => (
               <div key={i} className="rounded-xl border border-slate-200 p-4">

@@ -55,7 +55,7 @@ export default async function TrackPage({ params }: { params: { ticket: string }
       {/* Auto-refresh so the customer sees status changes without reloading */}
       <TrackingRefresher intervalMs={20000} />
 
-      <div className="rounded-2xl bg-[linear-gradient(115deg,#0B2545_0%,#13315C_55%,#0E7490_100%)] p-6 text-white">
+      <div className="rounded-2xl bg-hero-deep p-6 text-white">
         <p className="text-xs font-bold uppercase tracking-wider text-aqua-200">Service Request</p>
         <h1 className="mt-1 font-display text-2xl font-extrabold">{request.ticketNumber}</h1>
         <p className="mt-2 text-sm text-navy-100">

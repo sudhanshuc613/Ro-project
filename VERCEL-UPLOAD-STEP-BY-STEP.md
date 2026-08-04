@@ -1,427 +1,390 @@
-# Vercel pe Upload — Step by Step (Aaj ka Guide)
+# Upload Karo — Step by Step
 
-Total time: **~15 minute**
+Total: **~15 minute**
 
 ---
 
-# Part A — Pehle sawaal ka jawab: "login nahi chahiye" ka matlab kya?
+# Is update mein kya hai
 
-## Chhota jawab
-
-Customer ko **account banane ki zaroorat nahi** hai apni service ki status dekhne ke liye.
-
-## Lamba jawab (kaise kaam karta hai)
-
-```
-Customer form bharta hai (naam, phone, area, problem)
-          ↓
-Website turant ek TICKET NUMBER deti hai → SRV-2026-00001
-          ↓
-Uska link: rokadoctor.in/track/SRV-2026-00001
-          ↓
-Wo link kabhi bhi kholo → status dikhega
-```
-
-**Us page pe login screen nahi aayegi.** Na email, na password, na OTP. Bas link kholo, status saamne.
-
-## Jo dikhta hai us page pe
-
-| Cheez | Detail |
-|---|---|
-| 5-step progress bar | Request received → Confirmed by phone → Technician assigned → Work in progress → Completed |
-| Technician card | Naam, rating (★), kitne jobs kiye, aur **📞 Call button** |
-| Charges | Visit ₹200 + parts + labour = total |
-| "What we fixed" | Kaam poora hone ke baad technician ka note + 30-day warranty |
-| Activity log | Har status change ka time-stamp |
-| Auto-refresh | Har **20 second** mein page khud update ho jaata hai — customer ko refresh nahi dabana padta |
-
-## Ye feature kyun business ke liye zaroori hai
-
-Patna mein RO service ki **sabse badi complaint** yahi hai:
-
-> "bola tha aa raha hoon, 4 ghanta ho gaya, koi phone nahi utha raha"
-
-Aapke customer ko wo feeling nahi aayegi. Wo khud dekh lega ki technician assign ho gaya hai. **Aapke phone pe "kahan ho aap" wale calls 70% kam ho jayenge.**
-
-## Security ka sawaal — koi aur to nahi dekh lega?
-
-| Cheez | Kya hai |
-|---|---|
-| Ticket number guess karna | `SRV-2026-00001` sequential hai — theory mein guess ho sakta hai |
-| Kya dikhega agar koi guess kar le | Customer ka naam nahi dikhta, sirf ticket + status + technician ka naam |
-| Google pe index hoga? | ❌ Nahi — page pe `robots: noindex` laga hua hai |
-| Order invoice bhi aise khulti hai? | ❌ Nahi — **invoice ke liye login zaroori hai** (usme address + phone hota hai) |
-
-**Design decision:** Service tracking = public (convenience jeetti hai), Invoice/Address = login-protected (privacy jeetti hai).
-
-## Do alag cheezein confuse mat karna
-
-| Page | Login chahiye? | Kis liye |
+| # | Kya | Detail |
 |---|---|---|
-| `/track/SRV-2026-00001` | ❌ Nahi | Service status — sabse zyada use hoga |
-| `/track-order` | ❌ Nahi | Purana WhatsApp/call wala page |
-| `/account` | ✅ Haan | Customer dashboard |
-| `/account/orders` | ✅ Haan | Order history |
-| `/account/orders/AQN-.../invoice` | ✅ Haan | **GST invoice (aaj naya bana)** |
-| `/admin/...` | ✅ Haan | Aapka admin panel |
+| 1 | 🆕 **Image upload — computer se** | Aapki shikayat sahi thi. Ab drag-drop, file picker, phone camera, Ctrl+V — sab chalta hai |
+| 2 | 🆕 **Premium UI** | Poora colour system badla — deep navy + refined teal + gold accent + warm off-white |
+| 3 | 🆕 **Media Library page** | `/admin/media` — saari photos ek jagah, copy link, delete |
+| 4 | 🆕 **GST Invoice** | `/account/orders/.../invoice` — pehle 404 tha |
+| 5 | 🔧 **`updated_at` error permanent fix** | Wo Neon wala error dobara kabhi nahi aayega |
 
 ---
 
-# Part B — Is update mein naya kya hai
+# Part 1 — Image upload (aapki shikayat)
 
-| Kya | Detail |
+## Aapki baat bilkul sahi thi
+
+Purane form mein sirf **URL paste karne ka box** tha. Matlab aapko GitHub pe file
+daalni padti, commit karna padta, redeploy ka wait karna padta, phir path copy karke
+paste karna padta. **Ye developer ka tareeka hai, dukaandaar ka nahi.** Meri galti.
+
+## Ab kya hai
+
+**`/admin/media`** — naya page, sidebar mein "🖼️ Images" ke naam se.
+Product form ke **Images tab** mein bhi wahi uploader lagaya hai.
+
+Chaar tareeke se photo daal sakte ho:
+
+| Tareeka | Kaise |
 |---|---|
-| 🆕 **GST Invoice page** | Pehle "📄 Invoice" button 404 deta tha. Ab poori invoice banti hai — CGST/SGST (Bihar) ya IGST (bahar), amount-in-words, print/PDF button |
-| 🆕 Print button | Browser ka apna "Save as PDF" — koi extra library nahi, isliye site slow nahi hoti |
-| 🆕 Ownership check | Customer sirf apni invoice dekh sakta hai, admin sabki |
+| **Drag-drop** | Desktop se photo utha ke box mein chhod do |
+| **Click** | Box pe click → file chuno |
+| **📷 Camera** | Phone pe button dikhta hai — seedha camera khulta hai |
+| **Ctrl+V** | Screenshot copy karke paste kar do |
 
-Baaki sab pehle jaisa hai.
+## Ek zaroori baat — Vercel ki technical majboori
+
+Vercel pe **`public/` folder mein likhna possible hi nahi hai**. Next.js team ne khud
+likha hai: *"you cannot dynamically add more images to the public folder and have them
+accessible to the end user"*. File save hoti dikhti hai, phir 404 de deti hai.
+
+Isliye maine do raste banaye, code khud chunta hai:
+
+| Situation | Kya hota hai |
+|---|---|
+| **Abhi (kuch setup nahi)** | Photo database mein jaati hai, `/api/media/<id>` se serve hoti hai. **Aaj se kaam karta hai** |
+| **Baad mein (Blob token add karo)** | Nayi photos CDN pe jaati hain. Purani chalti rehti hain, kuch nahi tootta |
+
+Blob chahiye to: Vercel → Storage → Create → Blob → Connect. Bas. Code mein kuch nahi badalna.
+
+## Compression — aur aapki purani shikayat ka permanent hal
+
+Pichli baar maine bina pooche images chhoti kar di thi. **Ab aisa nahi hoga.**
+
+Uploader mein ek **checkbox** hai — *"Make web-ready (recommended)"*:
+
+| Checkbox | Kya hota hai | Test result |
+|---|---|---|
+| ✅ On (default) | 1600px + WebP | **1.64 MB → 111 KB (94% kam)** |
+| ⬜ **Off** | Kuch nahi chhedta | **1716569 bytes → 1716569 bytes, 4000×3000 as-is** |
+
+Off wala maine byte-by-byte verify kiya — **ek bhi byte nahi badla**. Faisla aapka hai, code ka nahi.
+
+Aur upload ke baad screen pe saaf likha aata hai: `4.2 MB → 210 KB (95% smaller)`. Chhupa kuch nahi.
+
+## Testing jo maine ki
+
+| Test | Result |
+|---|---|
+| 1.64 MB / 4000×3000 photo upload | ✅ 111 KB, 1600×1200 |
+| compress off | ✅ byte-for-byte identical |
+| Image publicly load hoti hai | ✅ 200, `image/webp`, 1-year cache |
+| Thumbnail | ✅ 15 KB |
+| Bina login upload | ✅ 401 blocked |
+| Customer account se upload | ✅ 401 blocked |
+| **Nakli image** (text file ko .jpg naam diya) | ✅ *"That file is not a readable image"* |
+| Wahi photo dobara | ✅ pehchan li, storage waste nahi |
+| 3 photo ek saath | ✅ teeno |
+| Upload → product banao → storefront | ✅ poora chain kaam karta hai |
 
 ---
 
-# Part C — Upload karo (Step by Step)
+# Part 2 — Premium UI
 
-## ⚠️ Pehle ye padho
+## Purane design ki dikkat
 
-Aapne GitHub website se do baar direct edit kiya tha. Isliye `git push` reject hoga. Solution: **`git push --force`**.
+Purana colour tha `#06B6D4` — ye Tailwind ka **default cyan** hai. Har sasta
+RO/plumber template yahi use karta hai. Dekhne wale ko turant lagta hai
+"template se bani hai". Aur aapke business mein customer ko **ghar mein ajnabi
+aadmi bulana hai** — wahan trust sabse pehle chahiye.
 
-Force safe hai **kyunki aapke saare changes (₹200, ₹450-600, ₹1500-2000, ₹350-600) is code mein pehle se hain.** Kuch loss nahi hoga.
+## Naya palette — aur har colour ka reason
+
+| Colour | Hex | Kyun |
+|---|---|---|
+| **Navy** | `#0A1F3C` | Authority. Purane se gehra — white text pe 14:1 contrast, WCAG AA se kaafi upar |
+| **Teal** | `#1590A5` | Paani ka feel, par neon nahi. Cyan se 35% desaturated — **premium palettes hamesha mute karte hain, saturate nahi** |
+| **Gold** | `#C09A3E` | Sirf trust marks pe — rating, warranty seal. Poori site pe **sirf 2 jagah**. Kam use hi isse mehnga dikhata hai |
+| **Sand** | `#FAF8F5` | Warm off-white. Pura `#FFF` sabse bada "template" signal hai |
+
+## Colour ke alawa jo badla
+
+1. **Layered depth** — hero mein ab 4 layers: gradient + radial light + teal glow + SVG grain. Grain isliye ki sasta Android screen pe bade gradient mein **stripes** dikhte hain
+2. **Typography** — fluid sizing (screen ke saath badhta hai), tight `-0.022em` tracking bade headings pe. Default tracking hi amateur lagta hai
+3. **Coloured shadows** — navy-tinted, kaala nahi. Kaala shadow light UI pe **gandagi** jaisa lagta hai
+4. **Price anchor upgrade** — ab framed card with gold hairline. Wahi ek cheez hai jo job dilati hai, to weight bhi usi ko
+5. **SVG icons** — TrustBar mein emoji hata diye. Emoji har phone pe alag dikhte hain (Samsung ≠ Apple ≠ Windows), isliye ek "designed set" kabhi nahi lag sakte
+6. **Rings, not borders** — hard grey border spreadsheet jaisa lagta hai; hairline ring layered lagta hai
+7. **Tabular numbers** — price update pe width nahi hilti
+
+**Verify:** purane palette ke hex ab code mein **0 baar** hain. Poori site consistent.
 
 ---
 
-## STEP 1 — Node band karo (10 second)
+# Part 3 — Upload steps
 
-Command Prompt kholo, ye paste karo:
+## ⚠️ Pehle padho
+
+GitHub pe aapke direct edits hain, isliye `git push` reject hoga. **`git push --force`** karna hai.
+Safe hai — aapke saare changes (₹200, ₹450-600, ₹1500-2000, ₹350-600) is code mein pehle se hain.
+
+---
+
+## STEP 1 — Node band karo
 
 ```cmd
 taskkill /F /IM node.exe
 ```
 
-> Error aaye "not found" to koi baat nahi — matlab pehle se band tha.
-
----
-
-## STEP 2 — `.env` ka backup (20 second)
+## STEP 2 — `.env` backup
 
 ```cmd
 cd C:\Users\SUDHA\Downloads\ro-Project\Ro-project
 ```
-
 ```cmd
 copy .env ..\env-backup.txt
 ```
 
-> `.env` mein aapka Neon database password hai. Ye file GitHub pe **kabhi nahi** jaati. Backup isliye ki zip extract karte waqt galti se delete na ho.
+## STEP 3 — Zip extract — REPLACE mode
 
----
+1. `aquanexa-project.zip` download karo
+2. Right-click → **Extract All**
+3. Destination: `C:\Users\SUDHA\Downloads\ro-Project\Ro-project`
+4. **"Replace the files in the destination"** chuno
 
-## STEP 3 — Zip extract karo — REPLACE mode (2 min)
-
-1. Naya `aquanexa-project.zip` download karo
-2. Right-click → **Extract All…**
-3. Destination box mein exactly ye likho:
-   ```
-   C:\Users\SUDHA\Downloads\ro-Project\Ro-project
-   ```
-4. **Extract** dabao
-5. Windows poochhega → **"Replace the files in the destination"** chuno
-
-> ⚠️ "Skip these files" mat chunna. Replace hi karna hai.
-
----
-
-## STEP 4 — Verify (30 second)
+## STEP 4 — Verify
 
 ```cmd
 type .env | findstr DATABASE_URL
 ```
-Neon ki string dikhni chahiye. **Agar kuch nahi dikha:**
-```cmd
-copy ..\env-backup.txt .env
-```
+Nahi dikha to → `copy ..\env-backup.txt .env`
 
 ```cmd
-dir src\app\account\orders
+dir src\components\admin\ImageUploader.tsx
 ```
-`[orderNumber]` naam ka folder dikhna chahiye ✅ (yahi naya invoice page hai)
+File milni chahiye ✅
 
 ```cmd
-findstr "visitCharge" src\lib\constants.ts
+dir src\app\admin\(dashboard)\media
 ```
-`visitCharge: 200,` dikhna chahiye ✅
+Folder milna chahiye ✅
 
----
+## STEP 5 — ⚠️ npm install — IS BAAR ZAROORI
 
-## STEP 5 — GitHub pe push (2 min)
+Naya package add hua hai (`@vercel/blob`). **Ye step skip mat karna warna build fail hoga.**
+
+```cmd
+npm install
+```
+
+## STEP 6 — Push
 
 ```cmd
 git add .
 ```
-
 ```cmd
-git commit -m "GST invoice page, print to PDF"
+git commit -m "Image upload from computer, premium UI, GST invoice"
 ```
 
-### 🛑 Safety check 1 — sahi repo?
-
+### 🛑 Safety check
 ```cmd
 git remote -v
 ```
-
-Dikhna chahiye:
-```
-origin  https://github.com/sudhanshuc613/Ro-project.git (fetch)
-origin  https://github.com/sudhanshuc613/Ro-project.git (push)
-```
-
-**Agar koi doosra naam dikhe — RUKO, mujhe batao.** Aapka doosra Vercel project hai, usme galti se push nahi karna.
-
-### 🛑 Safety check 2 — `.env` leak nahi ho raha?
+`sudhanshuc613/Ro-project.git` dikhna chahiye. Doosra naam dikhe to **RUKO**.
 
 ```cmd
 git status
 ```
-
-Is list mein `.env` **nahi** hona chahiye. Agar dikh raha hai:
-```cmd
-git rm --cached .env
-git commit -m "remove env"
-```
-
-### Push karo
+`.env` **nahi** hona chahiye.
 
 ```cmd
 git push --force
 ```
 
-> Username poochhega → `sudhanshuc613`
-> Password poochhega → **GitHub password nahi chalega.** Personal Access Token chahiye.
-> Token nahi hai to: github.com → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → `repo` tick karo → copy karke paste karo.
+## STEP 7 — Vercel build (4 min)
 
----
+vercel.com → `ro-project` → Deployments → Building → **Ready**
 
-## STEP 6 — Vercel khud build karega (4 min)
+Fail ho to Build Logs ka screenshot bhejo. Live site nahi tootegi.
 
-1. `vercel.com` kholo
-2. **Choudhary** team → `ro-project` project
-3. **Deployments** tab
-4. Sabse upar wali entry: **Building** (yellow dot) → **Ready** (green dot)
+## STEP 8 — ⚠️ Neon SQL — naya table
 
-### ✅ Ready ho gaya
-Aage badho.
-
-### ❌ Failed ho gaya
-**Ghabrao mat — live site nahi tooti.** Vercel purana working version chalata rehta hai.
-
-Failed deployment pe click → **Build Logs** → jo laal error dikhe uska screenshot mujhe bhejo.
-
----
-
-## STEP 7 — Neon database SQL (1 min) ⚠️ ZAROORI
-
-Pehle aapko ye error aaya tha:
-```
-ERROR: null value in column "updated_at" of relation "site_settings"
-violates not-null constraint (SQLSTATE 23502)
-```
-
-Ye **theek kar diya gaya SQL** hai. Isme `updated_at = now()` add hai:
-
-1. `console.neon.tech` kholo
-2. Apna project → **SQL Editor**
-3. Jo likha ho wo saaf karo (`Ctrl+A` → `Delete`)
-4. Ye **poora** paste karo:
+Naya `media_assets` table chahiye. Neon SQL Editor mein ye chalao:
 
 ```sql
-INSERT INTO site_settings (key, value, description, updated_at) VALUES
-('contact', '{"primaryPhone":"8969821440","secondaryPhone":"9661288308","tertiaryPhone":"9534037266","whatsapp":"918969821440","email":"support@rokadoctor.in","hours":"Mon-Sun 08:00-21:00"}', 'Public contact channels', now()),
-('service', '{"visitCharge":200,"emergencyCharge":399,"responseTime":"90 minutes","warrantyDays":30,"city":"Patna","state":"Bihar"}', 'Local service config', now()),
-('banner', '{"heroHeadline":"RO Service in Patna","heroSubline":"Visit Charge Only 200","heroImage":"/banners/service-tech.png","announcementText":"RO Service in Patna - Visit charge only Rs.200 - Same-day visit","announcementActive":true}', 'Homepage banner', now())
-ON CONFLICT (key) DO UPDATE
-  SET value = EXCLUDED.value,
-      updated_at = now();
+CREATE TABLE IF NOT EXISTS media_assets (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    filename     VARCHAR(255) NOT NULL,
+    mime_type    VARCHAR(64)  NOT NULL,
+    bytes        INTEGER      NOT NULL,
+    width        INTEGER,
+    height       INTEGER,
+    data         BYTEA,
+    thumb_data   BYTEA,
+    external_url TEXT,
+    alt_text     VARCHAR(200),
+    folder       VARCHAR(40)  NOT NULL DEFAULT 'products',
+    checksum     VARCHAR(64)  NOT NULL UNIQUE,
+    uploaded_by  UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at   TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
 
-UPDATE pincodes SET visit_charge = 200, updated_at = now()
-  WHERE is_service_available = true AND city = 'Patna';
+CREATE INDEX IF NOT EXISTS idx_media_folder ON media_assets(folder, created_at DESC);
 
-UPDATE pincodes SET visit_charge = 250, updated_at = now()
-  WHERE pincode IN ('801503','801505','801506','801105');
+-- Wo "updated_at null" error ka PERMANENT fix.
+-- Prisma ka @updatedAt code mein chalta hai, database mein nahi — isliye
+-- Neon console se raw SQL likhne pe reject hota tha. Ab nahi hoga.
+DO $$
+DECLARE t text;
+BEGIN
+  FOREACH t IN ARRAY ARRAY[
+    'users','addresses','categories','products','pincodes','carts',
+    'orders','service_requests','seo_metadata','site_settings'
+  ] LOOP
+    IF EXISTS (SELECT 1 FROM information_schema.columns
+               WHERE table_schema='public' AND table_name=t AND column_name='updated_at') THEN
+      EXECUTE format('ALTER TABLE %I ALTER COLUMN updated_at SET DEFAULT now()', t);
+    END IF;
+  END LOOP;
+END $$;
 
-UPDATE seo_metadata SET
-  meta_title = 'RO Service in Patna - Rs.200 Visit | Same-Day Repair',
-  meta_description = 'Expert RO repair & installation across Patna at Rs.200 visit charge. All brands, 90-min response, 30-day warranty. Call 8969821440.',
-  updated_at = now()
-WHERE path = '/';
+-- Settings (ab updated_at ke bina bhi chal jayega)
+INSERT INTO site_settings (key, value, description) VALUES
+('contact', '{"primaryPhone":"8969821440","secondaryPhone":"9661288308","tertiaryPhone":"9534037266","whatsapp":"918969821440","email":"support@rokadoctor.in","hours":"Mon-Sun 08:00-21:00"}', 'Contact'),
+('service', '{"visitCharge":200,"emergencyCharge":399,"responseTime":"90 minutes","warrantyDays":30,"city":"Patna","state":"Bihar"}', 'Service'),
+('banner',  '{"heroHeadline":"RO Service in Patna","heroSubline":"Visit Charge Only 200","heroImage":"/banners/service-tech.png","announcementText":"RO Service in Patna - Visit charge only Rs.200 - Same-day visit","announcementActive":true}', 'Banner')
+ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now();
+
+UPDATE pincodes SET visit_charge = 200 WHERE is_service_available = true AND city = 'Patna';
+UPDATE pincodes SET visit_charge = 250 WHERE pincode IN ('801503','801505','801506','801105');
 ```
 
-5. **Run** dabao
-
-> **Kya badla:** har statement ke aakhir mein `updated_at = now()` hai. Pehle wo missing tha, isliye database ne reject kar diya tha.
+**Run** dabao.
 
 ### Verify
-
 ```sql
-SELECT key, updated_at FROM site_settings;
+SELECT count(*) FROM media_assets;
 ```
-3 rows dikhne chahiye: `contact`, `service`, `banner` ✅
+`0` aana chahiye (table ban gaya, khaali hai) ✅
 
-```sql
-SELECT visit_charge, count(*) FROM pincodes
-WHERE is_service_available = true GROUP BY visit_charge;
-```
-`200` aur `250` dono dikhne chahiye ✅
+## STEP 9 — CRON_SECRET (agar pehle nahi kiya)
 
----
-
-## STEP 8 — CRON_SECRET add karo (1 min) ⚠️
-
-Iske bina AMC reminders aur abandoned-cart emails nahi chalenge.
-
-1. Vercel → `ro-project` → **Settings** tab
-2. Left menu → **Environment Variables**
-3. **Add New**:
+Vercel → Settings → Environment Variables → Add New
 
 | Name | Value |
 |---|---|
 | `CRON_SECRET` | `aqn_cron_2026_xk9m2p` |
 
-4. Environments: **Production, Preview, Development** — teeno tick karo
-5. **Save**
+## STEP 10 — Redeploy
+
+Deployments → latest → **⋯** → **Redeploy** → "Use existing Build Cache" ka tick **hatao**
 
 ---
 
-## STEP 9 — Redeploy (1 min)
+# STEP 11 — Test
 
-Environment variable add karne ke baad **redeploy zaroori hai** — warna naya variable use nahi hoga.
+## Image upload (sabse important)
 
-1. Vercel → **Deployments** tab
-2. Sabse upar wali (Ready wali) → right side **⋯** (teen dot) → **Redeploy**
-3. "Use existing Build Cache" ka tick **hata do**
-4. **Redeploy** dabao → 3-4 min
+```
+1. /admin/media kholo
+2. Koi photo drag karke box mein daalo
+3. Progress bar chalega
+4. Neeche result: "2.1 MB → 180 KB (91% smaller)"
+5. Grid mein photo dikhegi
+6. "Copy link" dabao
+```
 
----
+Phir product mein:
+```
+1. /admin/products/new
+2. Basic tab → naam, SKU, category bharo
+3. Pricing tab → MRP, selling price
+4. Images tab → photo drag karo (2 chahiye)
+5. Save
+6. /products pe photo dikhni chahiye
+```
 
-## STEP 10 — Test karo (3 min)
+## Compression off test
 
-`https://ro-project.vercel.app` kholo.
+Uploader mein *"Make web-ready"* ka tick **hatao** → photo daalo →
+result mein original aur final size **same** hone chahiye.
 
-### Pehle basic check
+## Naya UI
 
-| Kahan | Kya dikhna chahiye |
+| Kahan | Kya dikhega |
 |---|---|
-| Homepage top | "Visit Charge Only ₹200" |
-| Price anchor | "Others charge ₹299–₹399" |
-| Scroll neeche | 6 Hindi problem cards (पानी नहीं आ रहा…) |
-| Aur neeche | 3 asli photos |
-| Area section | 16 areas + TDS levels |
-| Sabse neeche | Shop strip |
+| Homepage hero | Gehra navy-teal gradient, gold "You save ₹99" strip |
+| Price anchor | Do-column card — ₹299-399 kata hua vs ₹200 |
+| TrustBar | Line icons (emoji nahi) |
+| Photo ke neeche | Caption bar + gold warranty seal |
+| Top strip | Gold hairline neeche |
+| Scroll karo | Header blur ho jaata hai |
 
-### Naya invoice test — ye sabse important hai aaj
-
-```
-1. /register  → account banao (apna phone number)
-2. /products  → koi bhi product → Add to Cart
-3. /cart      → Checkout
-4. Address bharo → Review → Payment → COD chuno → Place Order
-5. /account/orders kholo
-6. "📄 Invoice" button dabao
-```
-
-Dikhna chahiye:
-- AquaNexa Water Solutions ka header + aapka Kankarbagh address
-- Bill To / Ship To
-- Item table with **CGST + SGST** (kyunki Bihar mein ho)
-- Grand Total
-- "Two Thousand Five Hundred Rupees Only" type line
-- **🖨️ Print / Save as PDF** button
-
-Print button dabao → Chrome ka print dialog khulega → Destination mein **"Save as PDF"** chuno → file save ho jayegi.
-
-### Tracking test (login ke bina)
+## Invoice
 
 ```
-1. Homepage → booking form bharo
-2. Ticket number milega: SRV-2026-00001
-3. "📍 Track this request live" dabao
+/account/orders → "📄 Invoice" → CGST+SGST + Print/PDF button
 ```
 
-Ab **logout karke ya incognito window mein** wahi link kholo:
-```
-https://ro-project.vercel.app/track/SRV-2026-00001
-```
-Login screen **nahi** aani chahiye. Direct status dikhna chahiye ✅
-
-### 🛑 Aur ye zaroor
-
-**rokadoctor.in** kholo — purani PHP site chal rahi hai na? ✅
-Chalni chahiye. DNS ko haath nahi lagaya gaya.
+## 🛑 Aur ye zaroor
+**rokadoctor.in** — purani PHP site chal rahi hai? ✅
 
 ---
 
 # Checklist
 
 - [ ] `taskkill /F /IM node.exe`
-- [ ] `copy .env ..\env-backup.txt`
-- [ ] Zip extract — **Replace** mode
-- [ ] `type .env | findstr DATABASE_URL` → dikha?
-- [ ] `dir src\app\account\orders` → `[orderNumber]` folder
-- [ ] `git add .` + `git commit`
-- [ ] 🛑 `git remote -v` → sudhanshuc613/Ro-project
+- [ ] `.env` backup
+- [ ] Zip extract — **Replace**
+- [ ] `dir src\components\admin\ImageUploader.tsx`
+- [ ] ⚠️ **`npm install`** ← is baar zaroori
+- [ ] `git add .` + commit
+- [ ] 🛑 `git remote -v`
 - [ ] 🛑 `git status` → `.env` nahi
 - [ ] `git push --force`
-- [ ] Vercel → **Ready**
-- [ ] ⚠️ Neon SQL (`updated_at = now()` wala)
-- [ ] ⚠️ `CRON_SECRET` add
+- [ ] Vercel → Ready
+- [ ] ⚠️ Neon SQL (media_assets table)
+- [ ] `CRON_SECRET`
 - [ ] Redeploy (cache off)
-- [ ] Invoice test
-- [ ] Tracking test incognito mein
+- [ ] `/admin/media` pe photo upload karke dekho
 - [ ] rokadoctor.in chal rahi hai
 
 ---
 
 # Troubleshooting
 
-### ❌ `EPERM: operation not permitted` (extract ke waqt)
+### ❌ Build fail: `Cannot find module '@vercel/blob'`
+STEP 5 skip hua. `npm install` chalao, commit, push.
+
+### ❌ `/admin/media` pe 500 error
+STEP 8 ka SQL nahi chala. `media_assets` table nahi bana.
+
+### ❌ Upload pe "Failed to fetch"
+Photo 12 MB se badi hai. Chhoti karo ya phone pe quality kam karke kheencho.
+
+### ❌ Photo upload ho gayi par product page pe nahi dikhti
+Product **Save** nahi hua. Images tab ke baad Save dabana zaroori hai.
+
+### ❌ `EPERM: operation not permitted`
 ```cmd
 taskkill /F /IM node.exe
 rmdir /s /q node_modules\.prisma
 ```
-Phir dobara extract.
 
-### ❌ `! [rejected] main -> main (non-fast-forward)`
+### ❌ Push reject
 ```cmd
 git push --force origin main
 ```
 
-### ❌ Site pe abhi bhi purana ₹100 / purana title
-STEP 7 ka SQL nahi chala. Chalao → phir STEP 9 redeploy.
-
-### ❌ Invoice pe 404
-STEP 3 mein "Skip" chun liya tha. Dobara extract karo — **Replace** chuno.
-
-### ❌ Invoice pe "Page not found" jabki order exist karta hai
-Aap us order ke owner nahi ho. Jis account se order kiya tha usi se login karo.
-
-### ❌ Build fail — `Module not found: @/components/account/PrintButton`
-Zip poori extract nahi hui. Check:
-```cmd
-dir src\components\account
-```
-`PrintButton.tsx` aur `SignOutButton.tsx` dono hone chahiye.
-
 ---
 
-# ⚠️ Ab bhi jo pending hai (honest list)
+# ⚠️ Ab bhi pending (sach)
 
-| # | Kya | Kyun matter karta hai |
+| # | Kya | Kyun important |
 |---|---|---|
-| 1 | **Google Business Profile nahi bana** | Local ranking ka **32%** yahi hai. Sabse bada gap. Competitor ke 5,117 reviews hain, aapke 0 |
-| 2 | **Razorpay mock mode mein hai** | Checkout chalta hai par **asli paisa nahi aata**. Keys chahiye |
-| 3 | **Admin password `ChangeMe@123` hai** | Guide files mein publicly likha hai. Badlo |
-| 4 | **Vercel Hobby plan** | Payment gateway = commercial use. Hobby pe allowed nahi. Pro ₹1,700/mo ya VPS ₹700/mo |
-| 5 | **AI-generated photos** | `public/service/*.jpg` — Google Business Profile suspend kar sakta hai. Apne asli kaam ki photo daalo (same filename) |
-| 6 | **Domain connect nahi hua** | `rokadoctor.in` abhi purani PHP site pe hai |
+| 1 | **Google Business Profile nahi bana** | Local ranking ka **32%**. Competitor ke 5,117 reviews, aapke 0. **Free hai, aaj ban sakta hai** |
+| 2 | **AI photos** `public/service/*.jpg` | GBP suspend kar sakta hai. **Ab aap khud upload kar sakte ho** — `/admin/media` se |
+| 3 | **Admin password `ChangeMe@123`** | Guide files mein publicly likha hai |
+| 4 | **Razorpay mock mode** | Checkout chalta hai, asli paisa nahi aata |
+| 5 | **Vercel Hobby** | Payment gateway = commercial use, Hobby pe allowed nahi |
 
-**Priority order (mera suggestion):** 1 → 5 → 3 → 2 → 4 → 6
+Priority: **1 → 2 → 3**. Teeno free hain aur aaj ho sakte hain.
 
-Google Business Profile pehle isliye ki wo **free** hai, **aaj** ban sakta hai, aur ranking ka sabse bada hissa hai. Website perfect ho aur GBP na ho to Patna mein koi nahi dhundhega.
+> Point 2 ab aasan ho gaya — apne kaam ki 3 photo kheencho, `/admin/media` pe daalo,
+> "Copy link" karo, `/admin/settings` mein banner image badal do. GitHub ki zaroorat nahi.

@@ -115,8 +115,8 @@ export default function HeroCarousel() {
               className={[
                 'absolute inset-0 -z-10',
                 isService
-                  ? 'bg-[linear-gradient(115deg,#0B2545_0%,#13315C_45%,#0E7490_100%)]'
-                  : 'bg-[linear-gradient(115deg,#0B2545_0%,#0891B2_60%,#06B6D4_100%)]',
+                  ? 'bg-hero-deep'
+                  : 'bg-aqua-gradient',
               ].join(' ')}
             />
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_70%_30%,rgba(255,255,255,.14),transparent_60%)]" />

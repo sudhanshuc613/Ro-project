@@ -105,7 +105,7 @@ export default function AmcPlansPage() {
           </ol>
         </nav>
 
-        <section className="bg-[linear-gradient(115deg,#0B2545_0%,#13315C_50%,#0E7490_100%)] py-14">
+        <section className="bg-hero-deep py-14">
           <div className="container mx-auto px-4 text-center text-white">
             <h1 className="font-display text-3xl font-extrabold sm:text-4xl">
               RO Annual Maintenance Plans

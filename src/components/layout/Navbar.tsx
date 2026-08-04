@@ -81,20 +81,32 @@ export default function Navbar() {
   const hoverClose = () => { closeTimer.current = setTimeout(() => setOpenMenu(null), 160); };
 
   return (
-    <header className={`sticky top-0 z-50 bg-white transition-shadow ${scrolled ? 'shadow-nav' : ''}`}>
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/92 shadow-nav backdrop-blur-md supports-[backdrop-filter]:bg-white/80'
+          : 'bg-white'
+      }`}
+    >
       {/* ── Tier 1: announcement strip ── */}
-      <div className="bg-navy-700 text-white">
+      <div className="relative bg-navy-gradient text-white">
+        {/* Hairline gold rule — the one metallic cue in the chrome */}
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-500/45 to-transparent" />
         <div className="container mx-auto flex h-9 items-center justify-between px-4 text-xs">
-          <p className="hidden sm:block">
-            🔧 RO Service in Patna — Visit charge only ₹200 · Same-day visit
+          <p className="hidden items-center gap-2 sm:flex">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ripple rounded-full bg-emerald-400" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            </span>
+            RO Service in Patna — Visit charge only ₹200 · Same-day visit
           </p>
           <p className="sm:hidden">RO Service Patna — ₹200 visit</p>
           <div className="flex items-center gap-4">
-            <a href={CONTACT.primaryTel} className="font-semibold hover:text-aqua-300">
+            <a href={CONTACT.primaryTel} className="font-semibold transition-colors hover:text-gold-300">
               📞 {CONTACT.primaryPhone}
             </a>
-            <span className="hidden text-navy-200 md:inline">|</span>
-            <Link href="/track-order" className="hidden hover:text-aqua-300 md:inline">Track Order</Link>
+            <span className="hidden text-navy-300 md:inline">|</span>
+            <Link href="/track-order" className="hidden transition-colors hover:text-gold-300 md:inline">Track Order</Link>
           </div>
         </div>
       </div>
@@ -157,7 +169,7 @@ export default function Navbar() {
       </div>
 
       {/* ── Tier 3: category bar with mega-menus ── */}
-      <nav className="hidden border-b border-navy-50 bg-white lg:block" aria-label="Product categories">
+      <nav className="hidden border-b border-navy-100 bg-sand-100 lg:block" aria-label="Product categories">
         <div className="container mx-auto flex items-center gap-1 px-4">
           <Link href="/service-patna" className="px-4 py-3 text-sm font-bold text-cta-green hover:text-cta-greenDark">
             🔧 RO Service Patna

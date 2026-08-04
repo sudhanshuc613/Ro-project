@@ -4,8 +4,16 @@
 
 @layer base {
   :root {
-    --aqua: 6 182 212;
-    --navy: 11 37 69;
+    --aqua: 21 144 165;
+    --navy: 10 31 60;
+    --gold: 192 154 62;
+
+    /* Fluid type scale — headings track viewport instead of jumping at
+       breakpoints. This is what stops a "designed for desktop" hero from
+       looking cramped on a 360px Patna budget Android. */
+    --step-hero: clamp(2rem, 1.35rem + 3.1vw, 3.6rem);
+    --step-h2: clamp(1.5rem, 1.2rem + 1.35vw, 2.25rem);
+    --step-h3: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
   }
 
   html {
@@ -14,20 +22,31 @@
   }
 
   body {
-    @apply bg-white text-ink antialiased;
+    @apply bg-sand-100 text-ink antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'cv11' 1;
   }
 
-  /* Consistent, visible focus ring for keyboard users only */
+  /* Display type: tighter tracking at large sizes is the single clearest
+     "typeset by someone" signal. Default tracking looks loose and amateur. */
+  h1, h2, h3 {
+    @apply font-display;
+    letter-spacing: -0.022em;
+  }
+
+  /* Tabular figures so prices never shift width while updating */
+  .tnum, table td, table th {
+    font-variant-numeric: tabular-nums;
+  }
+
   :focus-visible {
-    @apply outline-none ring-2 ring-aqua-500 ring-offset-2;
+    @apply outline-none ring-2 ring-aqua-500 ring-offset-2 ring-offset-sand-100;
   }
 
   ::selection {
     @apply bg-aqua-100 text-navy-700;
   }
 
-  /* Hide number input spinners — pincode/phone fields */
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -40,40 +59,91 @@
     @apply mx-auto w-full max-w-[1280px] px-4 sm:px-5;
   }
 
+  /* ── Buttons ──────────────────────────────────────────────────────────
+     Every button gets: a subtle top inset highlight (reads as a physical
+     surface), a coloured shadow matching its own hue, and a 2px press
+     travel. These three details are what make a button feel "real". */
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-xl font-bold
-           transition active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-50;
+           transition-all duration-200 active:translate-y-px
+           disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none;
   }
-  .btn-primary  { @apply btn bg-aqua-500 text-white hover:bg-aqua-600 px-6 py-3; }
-  .btn-cta      { @apply btn bg-cta-orange text-white shadow-cta hover:bg-cta-orangeDark px-6 py-3; }
-  .btn-call     { @apply btn bg-cta-green text-white hover:bg-cta-greenDark px-6 py-3; }
-  .btn-outline  { @apply btn border border-navy-100 bg-white text-navy-700 hover:bg-navy-50 px-6 py-3; }
+  .btn-primary {
+    @apply btn bg-aqua-600 px-6 py-3 text-white shadow-card
+           hover:bg-aqua-700 hover:shadow-card-hover;
+  }
+  .btn-cta {
+    @apply btn bg-cta-orange px-6 py-3 text-white shadow-cta
+           hover:bg-cta-orangeDark hover:shadow-lift;
+  }
+  .btn-call {
+    @apply btn bg-cta-green px-6 py-3 text-white shadow-call
+           hover:bg-cta-greenDark hover:shadow-lift;
+  }
+  .btn-outline {
+    @apply btn border border-navy-200 bg-white px-6 py-3 text-navy-700
+           hover:border-navy-300 hover:bg-navy-50;
+  }
+  .btn-gold {
+    @apply btn bg-gold-sheen px-6 py-3 text-navy-900 shadow-card hover:brightness-105;
+  }
 
+  /* ── Surfaces ─────────────────────────────────────────────────────────
+     Hairline ring + tinted shadow instead of a hard 1px grey border.
+     Borders make a page look like a spreadsheet; rings make it look layered. */
   .card {
-    @apply rounded-2xl border border-navy-50 bg-white shadow-card;
+    @apply rounded-2xl bg-white shadow-card ring-1 ring-navy-100/70;
+  }
+  .card-hover {
+    @apply card transition-all duration-300
+           hover:-translate-y-1 hover:shadow-card-hover hover:ring-navy-200;
+  }
+  .panel {
+    @apply rounded-2xl bg-sand-50 p-5 ring-1 ring-navy-100/60;
   }
 
   .input {
-    @apply w-full rounded-xl border border-navy-100 bg-white px-4 py-3 text-[15px]
-           placeholder:text-slate-400 focus:border-aqua-500 focus:outline-none
+    @apply w-full rounded-xl border-navy-200 bg-white px-4 py-3 text-[15px]
+           shadow-[inset_0_1px_2px_rgba(10,31,60,.04)]
+           placeholder:text-navy-300 focus:border-aqua-500 focus:outline-none
            focus:ring-2 focus:ring-aqua-200;
   }
 
+  /* Small-caps eyebrow above a heading — editorial cue used by premium brands */
+  .eyebrow {
+    @apply text-[11px] font-bold uppercase tracking-[0.14em] text-aqua-600;
+  }
+
+  /* Credibility chip — this is the ONLY place gold appears in body content */
+  .seal {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-gold-50 px-3 py-1
+           text-xs font-bold text-gold-700 ring-1 ring-gold-200;
+  }
+
+  /* Glass strip for dark hero sections */
+  .glass {
+    @apply rounded-xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm;
+  }
+
   .skeleton {
-    @apply relative overflow-hidden bg-slate-100;
+    @apply relative overflow-hidden bg-navy-50;
   }
   .skeleton::after {
     @apply absolute inset-0 -translate-x-full animate-shimmer
-           bg-gradient-to-r from-transparent via-white/60 to-transparent;
+           bg-gradient-to-r from-transparent via-white/70 to-transparent;
     content: '';
   }
 
-  /* Truncate to N lines */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Hairline divider that fades at both ends — softer than a full-width rule */
+  .rule-fade {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-navy-200 to-transparent;
   }
 }
 
@@ -82,6 +152,23 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
   .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+
+  .text-hero { font-size: var(--step-hero); line-height: 1.04; }
+  .text-h2 { font-size: var(--step-h2); line-height: 1.15; }
+  .text-h3 { font-size: var(--step-h3); line-height: 1.25; }
+
+  /* Fine grain over dark gradients — kills the banding that makes big
+     gradient blocks look cheap on 6-bit phone panels. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -91,4 +178,8 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+@media print {
+  .no-print { display: none !important; }
 }

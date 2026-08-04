@@ -18,12 +18,12 @@ export default function RevenueChart({ data }: { data: Point[] }) {
       <AreaChart data={data} margin={{ top: 5, right: 5, left: -18, bottom: 0 }}>
         <defs>
           <linearGradient id="gEcom" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.35} />
-            <stop offset="95%" stopColor="#06B6D4" stopOpacity={0} />
+            <stop offset="5%" stopColor="#1590A5" stopOpacity={0.35} />
+            <stop offset="95%" stopColor="#1590A5" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="gSvc" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#F97316" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="#F97316" stopOpacity={0} />
+            <stop offset="5%" stopColor="#EA580C" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="#EA580C" stopOpacity={0} />
           </linearGradient>
         </defs>
 
@@ -39,8 +39,8 @@ export default function RevenueChart({ data }: { data: Point[] }) {
           wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
           formatter={(v) => (v === 'ecommerce' ? 'E-commerce (Pan-India)' : 'Service (Patna)')}
         />
-        <Area type="monotone" dataKey="ecommerce" stroke="#06B6D4" strokeWidth={2.5} fill="url(#gEcom)" />
-        <Area type="monotone" dataKey="service" stroke="#F97316" strokeWidth={2.5} fill="url(#gSvc)" />
+        <Area type="monotone" dataKey="ecommerce" stroke="#1590A5" strokeWidth={2.5} fill="url(#gEcom)" />
+        <Area type="monotone" dataKey="service" stroke="#EA580C" strokeWidth={2.5} fill="url(#gSvc)" />
       </AreaChart>
     </ResponsiveContainer>
   );

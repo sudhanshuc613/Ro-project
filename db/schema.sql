@@ -697,6 +697,29 @@ CREATE TABLE site_settings (
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Admin-uploaded images. Vercel's filesystem is read-only at runtime, so
+-- uploads cannot be written into public/. Bytes live here (served by
+-- /api/media/[id]) unless BLOB_READ_WRITE_TOKEN is set, in which case the
+-- file goes to Vercel Blob and only external_url is populated.
+CREATE TABLE media_assets (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    filename     VARCHAR(255) NOT NULL,
+    mime_type    VARCHAR(64)  NOT NULL,
+    bytes        INTEGER      NOT NULL,
+    width        INTEGER,
+    height       INTEGER,
+    data         BYTEA,
+    thumb_data   BYTEA,
+    external_url TEXT,
+    alt_text     VARCHAR(200),
+    folder       VARCHAR(40)  NOT NULL DEFAULT 'products',
+    checksum     VARCHAR(64)  NOT NULL UNIQUE,
+    uploaded_by  UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at   TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    CONSTRAINT chk_media_has_payload CHECK (data IS NOT NULL OR external_url IS NOT NULL)
+);
+CREATE INDEX idx_media_folder ON media_assets(folder, created_at DESC);
+
 -- Deferred FKs that reference later-created tables
 ALTER TABLE carts               ADD CONSTRAINT fk_cart_coupon  FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE SET NULL;
 ALTER TABLE carts               ADD CONSTRAINT fk_cart_order   FOREIGN KEY (converted_order_id) REFERENCES orders(id) ON DELETE SET NULL;
