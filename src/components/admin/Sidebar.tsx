@@ -51,6 +51,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: 'Service (Patna)',
     items: [
       { label: 'Service Requests', href: '/admin/service-requests', icon: '🔧', badgeKey: 'pendingServices' },
+      { label: 'Service Due',      href: '/admin/service-due',      icon: '⏰' },
       { label: 'AMC Contracts',    href: '/admin/amc',              icon: '📋' },
       { label: 'Technicians',      href: '/admin/technicians',      icon: '👷' },
 

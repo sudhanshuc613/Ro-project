@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db/prisma';
 import { formatINR, formatDateIN, relativeTime } from '@/lib/utils/format';
+import { SectionHeader, EmptyState } from '@/components/account/ui';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'My Orders', robots: { index: false } };
@@ -26,25 +27,30 @@ export default async function MyOrdersPage() {
     include: { items: true },
   });
 
+  const spent = orders.reduce((s, o) => s + Number(o.totalAmount), 0);
+
   return (
-    <main className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/account" className="text-sm font-semibold text-aqua-600 hover:underline">← My Account</Link>
-          <h1 className="mt-2 font-display text-2xl font-extrabold text-navy-700">My Orders</h1>
-        </div>
-      </div>
+    <div>
+      <SectionHeader
+        title="My Orders"
+        subtitle={orders.length ? `${orders.length} order${orders.length === 1 ? '' : 's'} · ${formatINR(spent)} total` : undefined}
+        action={
+          <Link href="/products" className="rounded-xl bg-cta-orange px-5 py-2.5 text-sm font-bold text-white shadow-cta transition hover:bg-cta-orangeDark">
+            Shop now
+          </Link>
+        }
+      />
 
       {orders.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-navy-200 py-16 text-center">
-          <p className="text-4xl">📦</p>
-          <p className="mt-3 font-semibold text-navy-700">No orders yet</p>
-          <Link href="/products" className="mt-4 inline-block rounded-xl bg-cta-orange px-6 py-3 font-bold text-white">
-            Start Shopping
-          </Link>
-        </div>
+        <EmptyState
+          icon="📦"
+          title="No orders yet"
+          body="Browse RO purifiers, spare parts and commercial plants — delivered across India."
+          ctaLabel="Start shopping"
+          ctaHref="/products"
+        />
       ) : (
-        <div className="mt-6 space-y-5">
+        <div className="space-y-5">
           {orders.map((o) => {
             const activeIdx = STEPS.indexOf(o.status as (typeof STEPS)[number]);
             const cancelled = o.status === 'CANCELLED';
@@ -149,6 +155,6 @@ export default async function MyOrdersPage() {
           })}
         </div>
       )}
-    </main>
+    </div>
   );
 }

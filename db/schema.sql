@@ -536,6 +536,39 @@ CREATE TABLE service_status_history (
     created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- A customer's actual RO unit. This is the retention mechanic: knowing the
+-- machine (brand, model, filter ages) lets us call the customer BEFORE the
+-- water goes bad, instead of waiting for them to ring whoever answers first.
+CREATE TABLE customer_machines (
+    id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id            UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    nickname           VARCHAR(80),
+    brand              VARCHAR(80) NOT NULL,
+    model              VARCHAR(120),
+    serial_number      VARCHAR(80),
+    purchase_date      DATE,
+    installed_date     DATE,
+    warranty_ends_on   DATE,
+    address_id         UUID REFERENCES addresses(id) ON DELETE SET NULL,
+    capacity_litres    NUMERIC(6,2),
+    purification_tech  TEXT[] NOT NULL DEFAULT '{}',
+    inlet_tds          SMALLINT,
+    outlet_tds         SMALLINT,
+    tds_checked_on     DATE,
+    sediment_changed_on DATE,
+    carbon_changed_on   DATE,
+    membrane_changed_on DATE,
+    uv_changed_on       DATE,
+    next_service_due   DATE,
+    notes              TEXT,
+    is_active          BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT chk_machine_tds CHECK (inlet_tds IS NULL OR inlet_tds BETWEEN 0 AND 5000)
+);
+CREATE INDEX idx_machines_user ON customer_machines(user_id);
+CREATE INDEX idx_machines_due  ON customer_machines(next_service_due) WHERE is_active;
+
 CREATE TABLE amc_subscriptions (
     id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id           UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,

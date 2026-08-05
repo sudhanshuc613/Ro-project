@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCartStore } from '@/store/cart';
 import { formatINR, discountPercent } from '@/lib/utils/format';
 import { toast } from 'sonner';
+import WishlistButton from './WishlistButton';
 
 export interface ProductCardData {
   id: string;
@@ -81,6 +82,15 @@ export default function ProductCard({
               Bestseller
             </span>
           )}
+
+          {/* Wishlist heart — stops the parent Link from firing on tap */}
+          <span className={`absolute ${product.isBestseller ? 'right-3 top-12' : 'right-3 top-3'}`}>
+            <WishlistButton
+              productId={product.id}
+              productSlug={product.slug}
+              className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-navy-500 shadow-card ring-1 ring-navy-100 transition hover:text-red-500"
+            />
+          </span>
         </div>
 
         {/* Body */}

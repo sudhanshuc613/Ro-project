@@ -6,127 +6,142 @@ Total: **~15 minute**
 
 # Is update mein kya hai
 
-| # | Kya | Detail |
-|---|---|---|
-| 1 | 🆕 **Image upload — computer se** | Aapki shikayat sahi thi. Ab drag-drop, file picker, phone camera, Ctrl+V — sab chalta hai |
-| 2 | 🆕 **Premium UI** | Poora colour system badla — deep navy + refined teal + gold accent + warm off-white |
-| 3 | 🆕 **Media Library page** | `/admin/media` — saari photos ek jagah, copy link, delete |
-| 4 | 🆕 **GST Invoice** | `/account/orders/.../invoice` — pehle 404 tha |
-| 5 | 🔧 **`updated_at` error permanent fix** | Wo Neon wala error dobara kabhi nahi aayega |
+| # | Kya |
+|---|---|
+| 1 | 🆕 **Poora account section** — 10 pages, sidebar navigation, Flipkart/Amazon jaisa |
+| 2 | 🆕 **My RO Machines** — filter age tracking (ye koi competitor ke paas nahi hai) |
+| 3 | 🆕 **Admin "Service Due"** — kis customer ko aaj call karna hai, ready list |
+| 4 | 🆕 Wishlist, Reviews, Addresses, Profile, Notifications |
+| 5 | 🗑️ **Hata diya** — coins, gift card, plus zone, coupons, card details |
+| 6 | 🆕 Navbar account dropdown |
 
 ---
 
-# Part 1 — Image upload (aapki shikayat)
+# Part 1 — Account section
 
-## Aapki baat bilkul sahi thi
+## Jo aapne hatane ko bola, hata diya
 
-Purane form mein sirf **URL paste karne ka box** tha. Matlab aapko GitHub pe file
-daalni padti, commit karna padta, redeploy ka wait karna padta, phir path copy karke
-paste karna padta. **Ye developer ka tareeka hai, dukaandaar ka nahi.** Meri galti.
-
-## Ab kya hai
-
-**`/admin/media`** — naya page, sidebar mein "🖼️ Images" ke naam se.
-Product form ke **Images tab** mein bhi wahi uploader lagaya hai.
-
-Chaar tareeke se photo daal sakte ho:
-
-| Tareeka | Kaise |
-|---|---|
-| **Drag-drop** | Desktop se photo utha ke box mein chhod do |
-| **Click** | Box pe click → file chuno |
-| **📷 Camera** | Phone pe button dikhta hai — seedha camera khulta hai |
-| **Ctrl+V** | Screenshot copy karke paste kar do |
-
-## Ek zaroori baat — Vercel ki technical majboori
-
-Vercel pe **`public/` folder mein likhna possible hi nahi hai**. Next.js team ne khud
-likha hai: *"you cannot dynamically add more images to the public folder and have them
-accessible to the end user"*. File save hoti dikhti hai, phir 404 de deti hai.
-
-Isliye maine do raste banaye, code khud chunta hai:
-
-| Situation | Kya hota hai |
-|---|---|
-| **Abhi (kuch setup nahi)** | Photo database mein jaati hai, `/api/media/<id>` se serve hoti hai. **Aaj se kaam karta hai** |
-| **Baad mein (Blob token add karo)** | Nayi photos CDN pe jaati hain. Purani chalti rehti hain, kuch nahi tootta |
-
-Blob chahiye to: Vercel → Storage → Create → Blob → Connect. Bas. Code mein kuch nahi badalna.
-
-## Compression — aur aapki purani shikayat ka permanent hal
-
-Pichli baar maine bina pooche images chhoti kar di thi. **Ab aisa nahi hoga.**
-
-Uploader mein ek **checkbox** hai — *"Make web-ready (recommended)"*:
-
-| Checkbox | Kya hota hai | Test result |
+| Cheez | Status | Kyun sahi decision hai |
 |---|---|---|
-| ✅ On (default) | 1600px + WebP | **1.64 MB → 111 KB (94% kam)** |
-| ⬜ **Off** | Kuch nahi chhedta | **1716569 bytes → 1716569 bytes, 4000×3000 as-is** |
+| SuperCoin / coins | ❌ Hataya | Points ka matlab tabhi hai jab lakhon customer ho. Khaali counter dekhke lagta hai dukaan chhoti hai |
+| Gift Card | ❌ Hataya | Prepaid instrument — RBI compliance lagti hai |
+| Plus Zone | ❌ Hataya | Membership tier bina scale ke bekaar |
+| Coupons section | ❌ Hataya | Coupon checkout pe lagta hai, alag page ki zaroorat nahi |
+| **Card details** | ❌ Hataya | **Sabse important** — card store karne pe PCI-DSS compliance aa jaati. Razorpay apne side pe safe rakhta hai, humein zaroorat hi nahi |
 
-Off wala maine byte-by-byte verify kiya — **ek bhi byte nahi badla**. Faisla aapka hai, code ka nahi.
+## Jo add kiya
 
-Aur upload ke baad screen pe saaf likha aata hai: `4.2 MB → 210 KB (95% smaller)`. Chhupa kuch nahi.
+**Sidebar mein 4 group:**
 
-## Testing jo maine ki
+```
+Overview   → Dashboard
+Service    → Service History · My RO Machines · AMC Plans
+Shopping   → My Orders · Wishlist · My Reviews
+Account    → Addresses · Profile · Notifications
+```
+
+Har item pe count badge. Mobile pe scrollable chips (sidebar 360px phone pe content 2 screen neeche push kar deta).
+
+## 🚰 My RO Machines — ye aapka asli hathiyaar hai
+
+**Problem:** Customer ko yaad nahi rehta filter kab badla tha. Paani kharab hone pe Google pe search karta hai, jo pehle aaya usko call karta hai. **Har baar rishta zero se shuru.**
+
+**Solution:** Customer apni machine add karta hai — brand, model, kab install hui, kaun sa filter kab badla. Website khud calculate karti hai:
+
+| Part | Normal | Patna high-TDS mein |
+|---|---|---|
+| Sediment filter | 6 mahine | **4 mahine** (TDS 600+) / 3 mahine (TDS 900+) |
+| Carbon filter | 8 mahine | 5-6 mahine |
+| RO membrane | 24 mahine | 18 mahine |
+| UV lamp | 12 mahine | 12 mahine |
+
+Patna ka borewell paani 400-900 ppm TDS pe hota hai — isliye filter jaldi kharab hote hain. Ye code mein built-in hai.
+
+Customer ko health score dikhta hai (100 mein se) + progress bar har filter ka. Overdue ho to laal + seedha "Book technician" button.
+
+**Ek zaroori baat:** agar date pata nahi hai to **"Not recorded"** dikhta hai — jhoota alarm nahi. Galat warning se bharosa tootta hai.
+
+## ⏰ Admin → Service Due — ye paisa banata hai
+
+Naya page: `/admin/service-due`
+
+Baaki poora admin panel **reactive** hai (customer aata hai, aap respond karte ho). Ye ek page **khud se paisa banata hai**.
+
+Dikhta hai:
+- Kis customer ka kaun sa filter kitne mahine overdue hai
+- Uska phone number + address
+- Us kaam ka daam (₹450-600 etc.)
+- **📞 Call** aur **WA** button — WhatsApp message Hinglish mein khud ban jaata hai
+- Upar: kitna revenue table pe pada hai
+
+Test mein ye message auto-bana:
+> *"Namaste Prince ji, AquaNexa se. Aapke Kent RO ka Sediment filter aur RO membrane change karne ka time ho gaya hai..."*
+
+**Competitor ye copy nahi kar sakta** — pehle unhe har customer ka machine data collect karna padega, jisme mahine lagenge.
+
+---
+
+# Part 2 — Testing (28 test, sab pass)
+
+## Machine health
 
 | Test | Result |
 |---|---|
-| 1.64 MB / 4000×3000 photo upload | ✅ 111 KB, 1600×1200 |
-| compress off | ✅ byte-for-byte identical |
-| Image publicly load hoti hai | ✅ 200, `image/webp`, 1-year cache |
-| Thumbnail | ✅ 15 KB |
-| Bina login upload | ✅ 401 blocked |
-| Customer account se upload | ✅ 401 blocked |
-| **Nakli image** (text file ko .jpg naam diya) | ✅ *"That file is not a readable image"* |
-| Wahi photo dobara | ✅ pehchan li, storage waste nahi |
-| 3 photo ek saath | ✅ teeno |
-| Upload → product banao → storefront | ✅ poora chain kaam karta hai |
+| Sediment 9 mahine purana, TDS 650 | Interval auto 4 mahine hua → **5 mahine overdue** ✓ |
+| Health score | **28/100 "Overdue"** ✓ |
+| Dashboard pe alert | "Needs your attention" + Book visit ✓ |
+| Admin Service Due | 1 customer, **₹2,350 revenue** (450+1200+700) ✓ |
+| Date nahi di to | "Not recorded" — fake alarm nahi ✓ |
 
----
+## 🔒 Security (sabse important)
 
-# Part 2 — Premium UI
+Doosra customer bana ke Prince ka data chhune ki koshish ki:
 
-## Purane design ki dikkat
+| Attack | Result |
+|---|---|
+| Uski machine edit | **404 blocked** ✓ |
+| Uski machine delete | **404 blocked** ✓ |
+| Uska address edit | **404 blocked** ✓ |
+| Uska address delete | **404 blocked** ✓ |
+| Default address hijack | **404 blocked** ✓ |
 
-Purana colour tha `#06B6D4` — ye Tailwind ka **default cyan** hai. Har sasta
-RO/plumber template yahi use karta hai. Dekhne wale ko turant lagta hai
-"template se bani hai". Aur aapke business mein customer ko **ghar mein ajnabi
-aadmi bulana hai** — wahan trust sabse pehle chahiye.
+Prince ka data check kiya — **bilkul intact**.
 
-## Naya palette — aur har colour ka reason
+## Review integrity
 
-| Colour | Hex | Kyun |
-|---|---|---|
-| **Navy** | `#0A1F3C` | Authority. Purane se gehra — white text pe 14:1 contrast, WCAG AA se kaafi upar |
-| **Teal** | `#1590A5` | Paani ka feel, par neon nahi. Cyan se 35% desaturated — **premium palettes hamesha mute karte hain, saturate nahi** |
-| **Gold** | `#C09A3E` | Sirf trust marks pe — rating, warranty seal. Poori site pe **sirf 2 jagah**. Kam use hi isse mehnga dikhata hai |
-| **Sand** | `#FAF8F5` | Warm off-white. Pura `#FFF` sabse bada "template" signal hai |
+| Test | Result |
+|---|---|
+| Bina khareede review | **403 blocked** — "only after delivered" ✓ |
+| Delivered order ke baad | Ban gaya, `verified: true` ✓ |
+| Do baar review | **409 blocked** ✓ |
+| Unapproved review rating badalta hai? | **Nahi** — 0.00 hi raha ✓ |
 
-## Colour ke alawa jo badla
+## Validation
 
-1. **Layered depth** — hero mein ab 4 layers: gradient + radial light + teal glow + SVG grain. Grain isliye ki sasta Android screen pe bade gradient mein **stripes** dikhte hain
-2. **Typography** — fluid sizing (screen ke saath badhta hai), tight `-0.022em` tracking bade headings pe. Default tracking hi amateur lagta hai
-3. **Coloured shadows** — navy-tinted, kaala nahi. Kaala shadow light UI pe **gandagi** jaisa lagta hai
-4. **Price anchor upgrade** — ab framed card with gold hairline. Wahi ek cheez hai jo job dilati hai, to weight bhi usi ko
-5. **SVG icons** — TrustBar mein emoji hata diye. Emoji har phone pe alag dikhte hain (Samsung ≠ Apple ≠ Windows), isliye ek "designed set" kabhi nahi lag sakte
-6. **Rings, not borders** — hard grey border spreadsheet jaisa lagta hai; hairline ring layered lagta hai
-7. **Tabular numbers** — price update pe width nahi hilti
+| Test | Message |
+|---|---|
+| Future date | "Date cannot be in the future" ✓ |
+| TDS 99999 | "must be ≤ 5000" ✓ |
+| Brand missing | "Required" ✓ |
+| Khaali date `""` | Crash nahi, handle ho gaya ✓ |
+| Galat password | "Current password is incorrect" ✓ |
+| Duplicate email | "That email is already in use" ✓ |
+| Address: 4 field galat | Chaaron ka alag message ✓ |
+| Sirf ek default address | DB mein verify kiya ✓ |
 
-**Verify:** purane palette ke hex ab code mein **0 baar** hain. Poori site consistent.
+## Regression
+
+**29 pages → sab 200** ✓ · TypeScript clean ✓ · Invoice print clean ✓
+
+## Hatai gayi cheezein — verify
+
+5 pages scan kiye "supercoin", "gift card", "plus zone", "saved card", "coupon" ke liye → **sab CLEAN** ✓
 
 ---
 
 # Part 3 — Upload steps
 
-## ⚠️ Pehle padho
-
-GitHub pe aapke direct edits hain, isliye `git push` reject hoga. **`git push --force`** karna hai.
-Safe hai — aapke saare changes (₹200, ₹450-600, ₹1500-2000, ₹350-600) is code mein pehle se hain.
-
----
-
-## STEP 1 — Node band karo
+## STEP 1 — Node band
 
 ```cmd
 taskkill /F /IM node.exe
@@ -143,31 +158,16 @@ copy .env ..\env-backup.txt
 
 ## STEP 3 — Zip extract — REPLACE mode
 
-1. `aquanexa-project.zip` download karo
-2. Right-click → **Extract All**
-3. Destination: `C:\Users\SUDHA\Downloads\ro-Project\Ro-project`
-4. **"Replace the files in the destination"** chuno
+Right-click → Extract All → destination `C:\Users\SUDHA\Downloads\ro-Project\Ro-project` → **"Replace the files in the destination"**
 
 ## STEP 4 — Verify
 
 ```cmd
-type .env | findstr DATABASE_URL
+dir src\app\account
 ```
-Nahi dikha to → `copy ..\env-backup.txt .env`
+Ye folders dikhne chahiye: `addresses  amc  machines  notifications  orders  profile  reviews  services  wishlist` ✅
 
-```cmd
-dir src\components\admin\ImageUploader.tsx
-```
-File milni chahiye ✅
-
-```cmd
-dir src\app\admin\(dashboard)\media
-```
-Folder milna chahiye ✅
-
-## STEP 5 — ⚠️ npm install — IS BAAR ZAROORI
-
-Naya package add hua hai (`@vercel/blob`). **Ye step skip mat karna warna build fail hoga.**
+## STEP 5 — ⚠️ npm install
 
 ```cmd
 npm install
@@ -179,19 +179,19 @@ npm install
 git add .
 ```
 ```cmd
-git commit -m "Image upload from computer, premium UI, GST invoice"
+git commit -m "Full account section, RO machine tracking, service due admin"
 ```
 
-### 🛑 Safety check
+### 🛑 Safety
 ```cmd
 git remote -v
 ```
-`sudhanshuc613/Ro-project.git` dikhna chahiye. Doosra naam dikhe to **RUKO**.
+`sudhanshuc613/Ro-project.git` — doosra naam dikhe to **RUKO**
 
 ```cmd
 git status
 ```
-`.env` **nahi** hona chahiye.
+`.env` nahi dikhna chahiye
 
 ```cmd
 git push --force
@@ -199,130 +199,87 @@ git push --force
 
 ## STEP 7 — Vercel build (4 min)
 
-vercel.com → `ro-project` → Deployments → Building → **Ready**
-
-Fail ho to Build Logs ka screenshot bhejo. Live site nahi tootegi.
+vercel.com → `ro-project` → Deployments → **Ready**
 
 ## STEP 8 — ⚠️ Neon SQL — naya table
 
-Naya `media_assets` table chahiye. Neon SQL Editor mein ye chalao:
-
 ```sql
-CREATE TABLE IF NOT EXISTS media_assets (
-    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    filename     VARCHAR(255) NOT NULL,
-    mime_type    VARCHAR(64)  NOT NULL,
-    bytes        INTEGER      NOT NULL,
-    width        INTEGER,
-    height       INTEGER,
-    data         BYTEA,
-    thumb_data   BYTEA,
-    external_url TEXT,
-    alt_text     VARCHAR(200),
-    folder       VARCHAR(40)  NOT NULL DEFAULT 'products',
-    checksum     VARCHAR(64)  NOT NULL UNIQUE,
-    uploaded_by  UUID REFERENCES users(id) ON DELETE SET NULL,
-    created_at   TIMESTAMPTZ  NOT NULL DEFAULT now()
+CREATE TABLE IF NOT EXISTS customer_machines (
+    id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id            UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    nickname           VARCHAR(80),
+    brand              VARCHAR(80) NOT NULL,
+    model              VARCHAR(120),
+    serial_number      VARCHAR(80),
+    purchase_date      DATE,
+    installed_date     DATE,
+    warranty_ends_on   DATE,
+    address_id         UUID REFERENCES addresses(id) ON DELETE SET NULL,
+    capacity_litres    NUMERIC(6,2),
+    purification_tech  TEXT[] NOT NULL DEFAULT '{}',
+    inlet_tds          SMALLINT,
+    outlet_tds         SMALLINT,
+    tds_checked_on     DATE,
+    sediment_changed_on DATE,
+    carbon_changed_on   DATE,
+    membrane_changed_on DATE,
+    uv_changed_on       DATE,
+    next_service_due   DATE,
+    notes              TEXT,
+    is_active          BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_media_folder ON media_assets(folder, created_at DESC);
-
--- Wo "updated_at null" error ka PERMANENT fix.
--- Prisma ka @updatedAt code mein chalta hai, database mein nahi — isliye
--- Neon console se raw SQL likhne pe reject hota tha. Ab nahi hoga.
-DO $$
-DECLARE t text;
-BEGIN
-  FOREACH t IN ARRAY ARRAY[
-    'users','addresses','categories','products','pincodes','carts',
-    'orders','service_requests','seo_metadata','site_settings'
-  ] LOOP
-    IF EXISTS (SELECT 1 FROM information_schema.columns
-               WHERE table_schema='public' AND table_name=t AND column_name='updated_at') THEN
-      EXECUTE format('ALTER TABLE %I ALTER COLUMN updated_at SET DEFAULT now()', t);
-    END IF;
-  END LOOP;
-END $$;
-
--- Settings (ab updated_at ke bina bhi chal jayega)
-INSERT INTO site_settings (key, value, description) VALUES
-('contact', '{"primaryPhone":"8969821440","secondaryPhone":"9661288308","tertiaryPhone":"9534037266","whatsapp":"918969821440","email":"support@rokadoctor.in","hours":"Mon-Sun 08:00-21:00"}', 'Contact'),
-('service', '{"visitCharge":200,"emergencyCharge":399,"responseTime":"90 minutes","warrantyDays":30,"city":"Patna","state":"Bihar"}', 'Service'),
-('banner',  '{"heroHeadline":"RO Service in Patna","heroSubline":"Visit Charge Only 200","heroImage":"/banners/service-tech.png","announcementText":"RO Service in Patna - Visit charge only Rs.200 - Same-day visit","announcementActive":true}', 'Banner')
-ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now();
-
-UPDATE pincodes SET visit_charge = 200 WHERE is_service_available = true AND city = 'Patna';
-UPDATE pincodes SET visit_charge = 250 WHERE pincode IN ('801503','801505','801506','801105');
+CREATE INDEX IF NOT EXISTS idx_machines_user ON customer_machines(user_id);
+CREATE INDEX IF NOT EXISTS idx_machines_due  ON customer_machines(next_service_due) WHERE is_active;
 ```
+
+**Agar pichhli baar `media_assets` wala SQL nahi chalaya tha**, to wo bhi chalao (pichhle guide mein hai) — warna `/admin/media` 500 dega.
 
 **Run** dabao.
 
 ### Verify
 ```sql
-SELECT count(*) FROM media_assets;
+SELECT count(*) FROM customer_machines;
 ```
-`0` aana chahiye (table ban gaya, khaali hai) ✅
+`0` aayega — table ban gaya ✅
 
-## STEP 9 — CRON_SECRET (agar pehle nahi kiya)
+## STEP 9 — Redeploy
 
-Vercel → Settings → Environment Variables → Add New
-
-| Name | Value |
-|---|---|
-| `CRON_SECRET` | `aqn_cron_2026_xk9m2p` |
-
-## STEP 10 — Redeploy
-
-Deployments → latest → **⋯** → **Redeploy** → "Use existing Build Cache" ka tick **hatao**
+Deployments → latest → **⋯** → Redeploy → cache tick **hatao**
 
 ---
 
-# STEP 11 — Test
+# STEP 10 — Test
 
-## Image upload (sabse important)
-
+## Account section
 ```
-1. /admin/media kholo
-2. Koi photo drag karke box mein daalo
-3. Progress bar chalega
-4. Neeche result: "2.1 MB → 180 KB (91% smaller)"
-5. Grid mein photo dikhegi
-6. "Copy link" dabao
+1. /register → account banao
+2. /account → sidebar dikhega (10 sections)
+3. Har section click karke dekho — koi 404 nahi
+4. Coins/gift card/plus zone kahin nahi dikhna chahiye
 ```
 
-Phir product mein:
+## Machine tracking (sabse important)
 ```
-1. /admin/products/new
-2. Basic tab → naam, SKU, category bharo
-3. Pricing tab → MRP, selling price
-4. Images tab → photo drag karo (2 chahiye)
-5. Save
-6. /products pe photo dikhni chahiye
+1. /account/machines → "Add your first machine"
+2. Brand: Kent
+3. Sediment filter changed on: 9 mahine pehle ki date daalo
+4. Inlet TDS: 650
+5. Add machine
 ```
+Dikhna chahiye: laal "Overdue" bar, health score kam, "Book a technician" button.
 
-## Compression off test
+Phir `/account` kholo → **"Needs your attention"** box upar dikhega.
 
-Uploader mein *"Make web-ready"* ka tick **hatao** → photo daalo →
-result mein original aur final size **same** hone chahiye.
-
-## Naya UI
-
-| Kahan | Kya dikhega |
-|---|---|
-| Homepage hero | Gehra navy-teal gradient, gold "You save ₹99" strip |
-| Price anchor | Do-column card — ₹299-399 kata hua vs ₹200 |
-| TrustBar | Line icons (emoji nahi) |
-| Photo ke neeche | Caption bar + gold warranty seal |
-| Top strip | Gold hairline neeche |
-| Scroll karo | Header blur ho jaata hai |
-
-## Invoice
-
+## Admin Service Due
 ```
-/account/orders → "📄 Invoice" → CGST+SGST + Print/PDF button
+/admin/service-due
 ```
+Wahi customer list mein dikhega, phone number ke saath, ₹ amount ke saath, Call aur WA button ke saath. **WA button daba ke dekho** — Hinglish message ready milega.
 
-## 🛑 Aur ye zaroor
+## 🛑 Aur
 **rokadoctor.in** — purani PHP site chal rahi hai? ✅
 
 ---
@@ -332,40 +289,38 @@ result mein original aur final size **same** hone chahiye.
 - [ ] `taskkill /F /IM node.exe`
 - [ ] `.env` backup
 - [ ] Zip extract — **Replace**
-- [ ] `dir src\components\admin\ImageUploader.tsx`
-- [ ] ⚠️ **`npm install`** ← is baar zaroori
+- [ ] `dir src\app\account` → 9 folders
+- [ ] ⚠️ `npm install`
 - [ ] `git add .` + commit
 - [ ] 🛑 `git remote -v`
 - [ ] 🛑 `git status` → `.env` nahi
 - [ ] `git push --force`
 - [ ] Vercel → Ready
-- [ ] ⚠️ Neon SQL (media_assets table)
-- [ ] `CRON_SECRET`
+- [ ] ⚠️ Neon SQL (`customer_machines`)
 - [ ] Redeploy (cache off)
-- [ ] `/admin/media` pe photo upload karke dekho
-- [ ] rokadoctor.in chal rahi hai
+- [ ] `/account` test
+- [ ] `/account/machines` pe machine add karke dekho
+- [ ] `/admin/service-due` check
 
 ---
 
 # Troubleshooting
 
-### ❌ Build fail: `Cannot find module '@vercel/blob'`
-STEP 5 skip hua. `npm install` chalao, commit, push.
+### ❌ `/account/machines` pe 500
+STEP 8 ka SQL nahi chala.
 
-### ❌ `/admin/media` pe 500 error
-STEP 8 ka SQL nahi chala. `media_assets` table nahi bana.
+### ❌ `/admin/media` pe 500
+Pichhle update ka `media_assets` SQL nahi chala.
 
-### ❌ Upload pe "Failed to fetch"
-Photo 12 MB se badi hai. Chhoti karo ya phone pe quality kam karke kheencho.
-
-### ❌ Photo upload ho gayi par product page pe nahi dikhti
-Product **Save** nahi hua. Images tab ke baad Save dabana zaroori hai.
-
-### ❌ `EPERM: operation not permitted`
+### ❌ Build fail: `Property 'customerMachine' does not exist`
+`npm install` ke baad Prisma client regenerate nahi hua:
 ```cmd
-taskkill /F /IM node.exe
-rmdir /s /q node_modules\.prisma
+npx prisma generate
+git add . && git commit -m "regen" && git push
 ```
+
+### ❌ Sidebar nahi dikh raha
+Mobile pe sidebar nahi hota — upar scrollable chips hote hain. Desktop pe hi sidebar aata hai.
 
 ### ❌ Push reject
 ```cmd
@@ -376,15 +331,22 @@ git push --force origin main
 
 # ⚠️ Ab bhi pending (sach)
 
-| # | Kya | Kyun important |
+| # | Kya | Kyun |
 |---|---|---|
-| 1 | **Google Business Profile nahi bana** | Local ranking ka **32%**. Competitor ke 5,117 reviews, aapke 0. **Free hai, aaj ban sakta hai** |
-| 2 | **AI photos** `public/service/*.jpg` | GBP suspend kar sakta hai. **Ab aap khud upload kar sakte ho** — `/admin/media` se |
+| 1 | **Google Business Profile** | Local ranking ka **32%**. Competitor ke 5,117 review, aapke 0. Free hai |
+| 2 | **AI photos** `public/service/*.jpg` | GBP suspend kar sakta hai. Ab `/admin/media` se khud badal sakte ho |
 | 3 | **Admin password `ChangeMe@123`** | Guide files mein publicly likha hai |
-| 4 | **Razorpay mock mode** | Checkout chalta hai, asli paisa nahi aata |
-| 5 | **Vercel Hobby** | Payment gateway = commercial use, Hobby pe allowed nahi |
+| 4 | **Razorpay mock mode** | Asli paisa nahi aata |
+| 5 | **Vercel Hobby** | Payment gateway = commercial use, allowed nahi |
 
-Priority: **1 → 2 → 3**. Teeno free hain aur aaj ho sakte hain.
+---
 
-> Point 2 ab aasan ho gaya — apne kaam ki 3 photo kheencho, `/admin/media` pe daalo,
-> "Copy link" karo, `/admin/settings` mein banner image badal do. GitHub ki zaroorat nahi.
+# 💡 Machine tracking ka poora fayda kaise uthayein
+
+Ye feature tabhi kaam karta hai jab **data ho**. Isliye:
+
+1. **Har visit ke baad** — technician se bolo customer ki machine `/admin` se add kare, ya customer ko bolo khud add kare
+2. **Purane customers ko** — ek WhatsApp broadcast: *"apni RO ki detail add kar dijiye, hum aapko filter change ka reminder bhej denge"*
+3. **3 mahine baad** — `/admin/service-due` khud bharne lagega, aur aapke paas har din call karne ki ready list hogi
+
+Yahi wo cheez hai jo Eureka Forbes ko 23% market share deti hai — product nahi, **service relationship**.

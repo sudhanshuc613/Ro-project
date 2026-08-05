@@ -16,6 +16,7 @@ import { Suspense } from 'react';
 import ImageZoomGallery from '@/components/product/ImageZoomGallery';
 import PincodeChecker from '@/components/product/PincodeChecker';
 import AddToCartBar from '@/components/product/AddToCartBar';
+import WishlistButton from '@/components/product/WishlistButton';
 import SpecTable from '@/components/product/SpecTable';
 import ReviewSummary from '@/components/product/ReviewSummary';
 import RelatedProducts from '@/components/product/RelatedProducts';
@@ -214,15 +215,23 @@ export default async function ProductPage({ params }: Props) {
               </div>
 
               {/* ── Desktop CTAs (mobile version is the sticky bar) ── */}
-              <div className="mt-6 hidden gap-3 lg:flex">
-                <AddToCartBar
+              <div className="mt-6 hidden items-stretch gap-3 lg:flex">
+                <div className="flex-1">
+                  <AddToCartBar
+                    productId={product.id}
+                    name={product.name}
+                    price={price}
+                    image={product.images[0]?.url ?? ''}
+                    slug={product.slug}
+                    inStock={inStock}
+                    maxQty={Math.max(product.stockQuantity, 1)}
+                  />
+                </div>
+                <WishlistButton
                   productId={product.id}
-                  name={product.name}
-                  price={price}
-                  image={product.images[0]?.url ?? ''}
-                  slug={product.slug}
-                  inStock={inStock}
-                  maxQty={Math.max(product.stockQuantity, 1)}
+                  productSlug={product.slug}
+                  showLabel
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-white px-5 text-sm font-bold text-navy-600 ring-1 ring-navy-200 transition hover:text-red-500 hover:ring-red-200"
                 />
               </div>
 

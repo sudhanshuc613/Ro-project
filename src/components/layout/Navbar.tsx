@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { BRAND, CONTACT, PRODUCT_TYPES } from '@/lib/constants';
 import { useCartStore } from '@/store/cart';
 import SearchAutosuggest from './SearchAutosuggest';
+import AccountMenu from './AccountMenu';
 
 const MEGA_MENU: Record<string, { heading: string; links: { label: string; href: string }[] }[]> = {
   'New RO': [
@@ -139,13 +140,7 @@ export default function Navbar() {
               <WrenchIcon /> Book Service
             </Link>
 
-            <Link href="/login" className="flex items-center gap-2 rounded-xl px-3 py-2 text-navy-700 transition hover:bg-navy-50">
-              <UserIcon />
-              <span className="hidden text-left text-xs leading-tight lg:block">
-                <span className="block text-muted">Account</span>
-                <span className="block font-bold">Sign In</span>
-              </span>
-            </Link>
+            <AccountMenu />
 
             <Link href="/cart" className="relative flex items-center gap-2 rounded-xl px-3 py-2 text-navy-700 transition hover:bg-navy-50" aria-label={`Cart, ${itemCount} items`}>
               <CartIcon />
@@ -276,7 +271,6 @@ export default function Navbar() {
 /* ── Icons ──────────────────────────────────────────────────────────────── */
 const Burger = () => <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" /></svg>;
 const CloseIcon = () => <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>;
-const UserIcon = () => <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a8.25 8.25 0 0115 0" /></svg>;
 const CartIcon = () => <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.4c.5 0 .94.35 1.05.84L5.4 6m0 0l1.7 7.9c.11.5.55.85 1.06.85h8.3c.5 0 .93-.34 1.05-.83l1.6-6.6a.75.75 0 00-.73-.93H5.4zM8.25 19.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm10.5 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>;
 const WrenchIcon = () => <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M14.5 2a4.5 4.5 0 00-4.24 6L3.3 14.96a1.5 1.5 0 002.12 2.12l6.96-6.96A4.5 4.5 0 1014.5 2z" clipRule="evenodd" /></svg>;
 const SparkIcon = () => <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 1l2.2 5.3L18 8l-5.8 1.7L10 15l-2.2-5.3L2 8l5.8-1.7L10 1z" /></svg>;

@@ -164,6 +164,7 @@ model User {
   technician       Technician?
   searchQueries    SearchQuery[]
   mediaAssets      MediaAsset[]
+  machines         CustomerMachine[]
 
   @@index([phone])
   @@index([role])
@@ -192,6 +193,7 @@ model Address {
 
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   amcSubscriptions AmcSubscription[]
+  machines         CustomerMachine[]
 
   @@index([userId])
   @@index([pincode])
@@ -713,6 +715,57 @@ model ServiceStatusHistory {
   request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   @@map("service_status_history")
+}
+
+/// A customer's actual RO unit at home.
+///
+/// WHY THIS EXISTS — this is the retention feature, not a vanity one.
+/// Eureka Forbes wins ~23% market share on service network, not product specs.
+/// The mechanic that locks a customer in is knowing their machine: brand,
+/// model, install date, and when each filter was last changed.
+///
+/// Once we hold that, we can say "your sediment filter is 7 months old, due
+/// now" instead of waiting for the customer to notice bad taste and call
+/// whoever answers first. No RO shop in Patna does this — they all work off
+/// a WhatsApp history and memory.
+///
+/// Filter dates are stored as plain dates because that is how a technician
+/// records them on site, and nextServiceDue is computed, never guessed.
+model CustomerMachine {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  nickname       String?   @db.VarChar(80)
+  brand          String    @db.VarChar(80)
+  model          String?   @db.VarChar(120)
+  serialNumber   String?   @map("serial_number") @db.VarChar(80)
+  purchaseDate   DateTime? @map("purchase_date") @db.Date
+  installedDate  DateTime? @map("installed_date") @db.Date
+  warrantyEndsOn DateTime? @map("warranty_ends_on") @db.Date
+  addressId      String?   @map("address_id") @db.Uuid
+  capacityLitres Decimal?  @map("capacity_litres") @db.Decimal(6, 2)
+  purificationTech String[] @map("purification_tech")
+  inletTds       Int?      @map("inlet_tds") @db.SmallInt
+  outletTds      Int?      @map("outlet_tds") @db.SmallInt
+  tdsCheckedOn   DateTime? @map("tds_checked_on") @db.Date
+
+  // Consumable ages — the whole point of the feature
+  sedimentChangedOn DateTime? @map("sediment_changed_on") @db.Date
+  carbonChangedOn   DateTime? @map("carbon_changed_on") @db.Date
+  membraneChangedOn DateTime? @map("membrane_changed_on") @db.Date
+  uvChangedOn       DateTime? @map("uv_changed_on") @db.Date
+
+  nextServiceDue DateTime? @map("next_service_due") @db.Date
+  notes          String?
+  isActive       Boolean   @default(true) @map("is_active")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address Address? @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([nextServiceDue])
+  @@map("customer_machines")
 }
 
 model AmcSubscription {

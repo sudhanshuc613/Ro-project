@@ -1,264 +1,371 @@
 /**
- * Customer dashboard — REAL data, replaces the earlier placeholder.
+ * Account dashboard.
  *
- * Shows live order history, service ticket history with status, and profile.
- * Guests are redirected to /login with a callback so they land back here.
+ * ── WHAT THIS PAGE IS FOR ─────────────────────────────────────────────────
+ * One question: "is anything happening with my stuff right now, and is
+ * anything about to need my attention?"
+ *
+ * So the order is:
+ *   1. LIVE things (service in progress, order out for delivery) — pinned top
+ *   2. DUE things (filter overdue, AMC expiring, order awaiting review)
+ *   3. Recent history, summarised
+ *
+ * Notably absent: reward points, coin balance, referral banners. Those are
+ * engagement theatre. A customer opening this page has a working or broken
+ * water purifier on their mind.
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db/prisma';
 import { formatINR, formatDateIN, relativeTime } from '@/lib/utils/format';
-import { getContactSettings, telLink, waLink } from '@/lib/settings';
-import SignOutButton from '@/components/account/SignOutButton';
+import { getServiceSettings } from '@/lib/settings';
+import { computeMachineHealth } from '@/server/services/machine.service';
+import { SectionHeader, EmptyState, StatCard, Badge, ORDER_TONE, SERVICE_TONE } from '@/components/account/ui';
 
-export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'My Account',
   robots: { index: false, follow: false },
 };
 
-const ORDER_STYLE: Record<string, string> = {
-  PENDING: 'bg-slate-100 text-slate-700',
-  CONFIRMED: 'bg-blue-100 text-blue-700',
-  PACKED: 'bg-indigo-100 text-indigo-700',
-  SHIPPED: 'bg-violet-100 text-violet-700',
-  OUT_FOR_DELIVERY: 'bg-amber-100 text-amber-700',
-  DELIVERED: 'bg-emerald-100 text-emerald-700',
-  CANCELLED: 'bg-red-100 text-red-700',
-};
+const LIVE_SERVICE = ['NEW', 'CONTACTED', 'SCHEDULED', 'ASSIGNED', 'IN_PROGRESS', 'ON_HOLD_PARTS'];
+const LIVE_ORDER = ['PENDING', 'CONFIRMED', 'PACKED', 'SHIPPED', 'OUT_FOR_DELIVERY'];
 
-const SERVICE_STYLE: Record<string, string> = {
-  NEW: 'bg-blue-100 text-blue-700',
-  CONTACTED: 'bg-indigo-100 text-indigo-700',
-  SCHEDULED: 'bg-violet-100 text-violet-700',
-  ASSIGNED: 'bg-cyan-100 text-cyan-700',
-  IN_PROGRESS: 'bg-amber-100 text-amber-700',
-  COMPLETED: 'bg-emerald-100 text-emerald-700',
-  CANCELLED: 'bg-slate-100 text-slate-600',
-};
-
-export default async function AccountPage() {
+export default async function AccountDashboard() {
   const session = await getServerSession(authOptions);
-  if (!session?.user) redirect('/login?callbackUrl=/account');
+  const userId = session!.user.id;
 
-  const [user, orders, services, contact] = await Promise.all([
-    prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: {
-        fullName: true, phone: true, email: true,
-        totalOrders: true, totalServices: true, createdAt: true,
-      },
-    }),
-    prisma.order.findMany({
-      where: { userId: session.user.id },
-      orderBy: { placedAt: 'desc' },
-      take: 10,
-      select: {
-        id: true, orderNumber: true, status: true, paymentStatus: true,
-        totalAmount: true, placedAt: true, trackingNumber: true,
-        courierPartner: true, _count: { select: { items: true } },
-      },
-    }),
-    prisma.serviceRequest.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: 'desc' },
-      take: 10,
-      select: {
-        id: true, ticketNumber: true, status: true, serviceType: true,
-        issueDescription: true, totalCharge: true, visitCharge: true,
-        createdAt: true, scheduledAt: true,
-        assignedTechnician: { select: { fullName: true, phone: true } },
-      },
-    }),
-    getContactSettings(),
-  ]);
+  const [liveServices, liveOrders, machines, amc, recentServices, recentOrders, reviewable, svc] =
+    await Promise.all([
+      prisma.serviceRequest.findMany({
+        where: { userId, status: { in: LIVE_SERVICE as never[] } },
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true, ticketNumber: true, status: true, serviceType: true,
+          createdAt: true, scheduledAt: true, visitCharge: true,
+          assignedTechnician: { select: { fullName: true, phone: true, ratingAvg: true } },
+        },
+      }),
+      prisma.order.findMany({
+        where: { userId, status: { in: LIVE_ORDER as never[] } },
+        orderBy: { placedAt: 'desc' },
+        select: {
+          id: true, orderNumber: true, status: true, totalAmount: true,
+          placedAt: true, estimatedDelivery: true, trackingNumber: true,
+          courierPartner: true, trackingUrl: true, _count: { select: { items: true } },
+        },
+      }),
+      prisma.customerMachine.findMany({
+        where: { userId, isActive: true },
+        orderBy: { createdAt: 'asc' },
+      }),
+      prisma.amcSubscription.findMany({
+        where: { userId, isActive: true },
+        orderBy: { endsOn: 'asc' },
+      }),
+      prisma.serviceRequest.findMany({
+        where: { userId, status: { notIn: LIVE_SERVICE as never[] } },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+        select: {
+          id: true, ticketNumber: true, status: true, serviceType: true,
+          totalCharge: true, visitCharge: true, createdAt: true, customerRating: true,
+        },
+      }),
+      prisma.order.findMany({
+        where: { userId, status: { notIn: LIVE_ORDER as never[] } },
+        orderBy: { placedAt: 'desc' },
+        take: 3,
+        select: {
+          id: true, orderNumber: true, status: true, totalAmount: true,
+          placedAt: true, _count: { select: { items: true } },
+        },
+      }),
+      // Delivered items the customer has NOT reviewed yet
+      prisma.orderItem.findMany({
+        where: {
+          order: { userId, status: 'DELIVERED' },
+          productId: { not: null },
+          product: { reviews: { none: { userId } } },
+        },
+        take: 4,
+        select: {
+          id: true, productName: true, productImageUrl: true,
+          product: { select: { slug: true } },
+        },
+      }),
+      getServiceSettings(),
+    ]);
 
-  if (!user) redirect('/login');
+  const health = machines.map(computeMachineHealth);
+  const overdue = health.filter((h) => h.dueItems.some((d) => d.state === 'overdue'));
+  const dueSoon = health.filter(
+    (h) => !overdue.includes(h) && h.dueItems.some((d) => d.state === 'due-soon'),
+  );
+
+  const expiringAmc = amc.filter(
+    (a) => (new Date(a.endsOn).getTime() - Date.now()) / 864e5 <= 45,
+  );
+
+  const nothingLive =
+    liveServices.length === 0 && liveOrders.length === 0;
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-extrabold text-navy-700">
-            Namaste, {user.fullName.split(' ')[0]} 👋
-          </h1>
-          <p className="mt-1 text-sm text-muted">
-            +91 {user.phone}
-            {user.email ? ` · ${user.email}` : ''} · Member since {formatDateIN(user.createdAt)}
-          </p>
-        </div>
-        <SignOutButton />
+    <div className="space-y-8">
+      {/* ── Quick stats ── */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatCard label="Live service" value={String(liveServices.length)} sub="in progress" href="/account/services" tone={liveServices.length ? 'good' : 'default'} />
+        <StatCard label="Live orders" value={String(liveOrders.length)} sub="on the way" href="/account/orders" tone={liveOrders.length ? 'good' : 'default'} />
+        <StatCard label="My machines" value={String(machines.length)} sub={overdue.length ? `${overdue.length} need attention` : 'all healthy'} href="/account/machines" tone={overdue.length ? 'warn' : 'default'} />
+        <StatCard label="Visit charge" value={formatINR(svc.visitCharge)} sub={`Your rate in ${svc.city}`} tone="gold" />
       </div>
 
-      {/* Stats */}
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <Stat label="Total Orders" value={String(orders.length)} icon="📦" />
-        <Stat label="Service Requests" value={String(services.length)} icon="🔧" />
-        <Stat label="Visit Charge" value="₹200" icon="💰" sub="Your rate in Patna" />
-      </div>
+      {/* ── Needs attention ── */}
+      {(overdue.length > 0 || expiringAmc.length > 0) && (
+        <section className="rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">
+          <h2 className="font-display text-lg font-bold text-amber-900">Needs your attention</h2>
+          <ul className="mt-3 space-y-2.5">
+            {overdue.map((h) => (
+              <li key={h.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white p-3.5">
+                <span className="text-sm">
+                  <strong className="text-navy-700">{h.title}</strong>
+                  <span className="block text-muted">
+                    {h.dueItems
+                      .filter((d) => d.state === 'overdue')
+                      .map((d) => `${d.label} overdue by ${d.overdueByMonths} month${d.overdueByMonths === 1 ? '' : 's'}`)
+                      .join(' · ')}
+                  </span>
+                </span>
+                <Link href="/#book-service" className="shrink-0 rounded-lg bg-cta-green px-4 py-2 text-sm font-bold text-white">
+                  Book visit
+                </Link>
+              </li>
+            ))}
+            {expiringAmc.map((a) => {
+              const days = Math.max(0, Math.ceil((new Date(a.endsOn).getTime() - Date.now()) / 864e5));
+              return (
+                <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white p-3.5">
+                  <span className="text-sm">
+                    <strong className="text-navy-700">{a.planName} AMC</strong>
+                    <span className="block text-muted">
+                      Expires in {days} day{days === 1 ? '' : 's'} · {formatDateIN(a.endsOn)}
+                    </span>
+                  </span>
+                  <Link href="/account/amc" className="shrink-0 rounded-lg bg-navy-700 px-4 py-2 text-sm font-bold text-white">
+                    Renew
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-2">
-        {/* ── Service history ── */}
+      {/* ── Live service ── */}
+      {liveServices.length > 0 && (
         <section>
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-lg font-bold text-navy-700">Service History</h2>
-            <Link href="/#book-service" className="text-sm font-bold text-aqua-600 hover:underline">
-              + Book new
-            </Link>
-          </div>
-
-          {services.length === 0 ? (
-            <Empty
-              icon="🔧"
-              title="No service requests yet"
-              body="Book a technician for your RO — ₹200 visit charge in Patna."
-              ctaLabel="Book Service"
-              ctaHref="/#book-service"
-            />
-          ) : (
-            <ul className="space-y-3">
-              {services.map((s) => (
-                <li key={s.id} className="rounded-2xl border border-navy-100 p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-display font-bold text-aqua-600">{s.ticketNumber}</span>
-                        <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${SERVICE_STYLE[s.status] ?? 'bg-slate-100'}`}>
-                          {s.status.replace(/_/g, ' ')}
+          <SectionHeader
+            title="Happening now"
+            subtitle="Live updates — no need to call and ask"
+            action={<Link href="/account/services" className="text-sm font-bold text-aqua-600 hover:underline">View all →</Link>}
+          />
+          <ul className="space-y-3">
+            {liveServices.map((s) => (
+              <li key={s.id} className="card p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-display font-bold text-aqua-600">{s.ticketNumber}</span>
+                      <Badge tone={SERVICE_TONE[s.status]}>{s.status.replace(/_/g, ' ')}</Badge>
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
+                        <span className="relative flex h-1.5 w-1.5">
+                          <span className="absolute inline-flex h-full w-full animate-ripple rounded-full bg-emerald-500" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
                         </span>
-                      </div>
-                      <p className="mt-1.5 text-sm font-semibold text-navy-700">
+                        live
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-sm font-semibold text-navy-700">
+                      {s.serviceType.replace(/_/g, ' ')}
+                    </p>
+                    {s.assignedTechnician ? (
+                      <p className="mt-1 text-sm text-emerald-700">
+                        👷 {s.assignedTechnician.fullName} · {Number(s.assignedTechnician.ratingAvg).toFixed(1)}★
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-sm text-muted">Technician being assigned…</p>
+                    )}
+                  </div>
+                  <Link
+                    href={`/track/${s.ticketNumber}`}
+                    className="shrink-0 rounded-xl bg-navy-700 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-navy-600"
+                  >
+                    Track live →
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* ── Live orders ── */}
+      {liveOrders.length > 0 && (
+        <section>
+          <SectionHeader
+            title="On the way"
+            action={<Link href="/account/orders" className="text-sm font-bold text-aqua-600 hover:underline">View all →</Link>}
+          />
+          <ul className="space-y-3">
+            {liveOrders.map((o) => (
+              <li key={o.id} className="card p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-display font-bold text-aqua-600">{o.orderNumber}</span>
+                      <Badge tone={ORDER_TONE[o.status]}>{o.status.replace(/_/g, ' ')}</Badge>
+                    </div>
+                    <p className="mt-1.5 text-sm text-muted">
+                      {o._count.items} item{o._count.items === 1 ? '' : 's'} · {formatINR(Number(o.totalAmount))}
+                      {o.estimatedDelivery && ` · arriving ${formatDateIN(o.estimatedDelivery)}`}
+                    </p>
+                    {o.trackingNumber && (
+                      <p className="mt-1 text-sm text-navy-600">
+                        🚚 {o.courierPartner} · <span className="font-mono text-xs">{o.trackingNumber}</span>
+                      </p>
+                    )}
+                  </div>
+                  <Link href="/account/orders" className="shrink-0 rounded-xl bg-navy-50 px-4 py-2.5 text-sm font-bold text-navy-700 transition hover:bg-navy-100">
+                    Details
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {nothingLive && (
+        <EmptyState
+          icon="✅"
+          title="Nothing pending right now"
+          body="No live service requests or orders. Book a technician or browse the shop whenever you need us."
+          ctaLabel="Book a service"
+          ctaHref="/#book-service"
+          secondary={
+            <Link href="/products" className="text-sm font-bold text-aqua-600 hover:underline">
+              or browse products →
+            </Link>
+          }
+        />
+      )}
+
+      {/* ── Rate what you bought ── */}
+      {reviewable.length > 0 && (
+        <section>
+          <SectionHeader title="Rate your purchases" subtitle="Helps other Patna customers decide" />
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {reviewable.map((it) => (
+              <li key={it.id} className="card flex items-center gap-3 p-4">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-sand-200 text-xl">
+                  💧
+                </span>
+                <span className="min-w-0 flex-1 text-sm font-semibold text-navy-700 line-clamp-2">
+                  {it.productName}
+                </span>
+                <Link
+                  href={it.product?.slug ? `/products/${it.product.slug}#review` : '/account/reviews'}
+                  className="shrink-0 rounded-lg bg-gold-50 px-3 py-2 text-xs font-bold text-gold-700 ring-1 ring-gold-200"
+                >
+                  ★ Rate
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* ── Recent history ── */}
+      {(recentServices.length > 0 || recentOrders.length > 0) && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          {recentServices.length > 0 && (
+            <section>
+              <SectionHeader
+                title="Past services"
+                action={<Link href="/account/services" className="text-sm font-bold text-aqua-600 hover:underline">All →</Link>}
+              />
+              <ul className="space-y-2.5">
+                {recentServices.map((s) => (
+                  <li key={s.id} className="card flex items-center justify-between gap-3 p-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-navy-700">
                         {s.serviceType.replace(/_/g, ' ')}
                       </p>
-                      <p className="mt-0.5 line-clamp-2 text-sm text-muted">{s.issueDescription}</p>
-
-                      {s.assignedTechnician && (
-                        <p className="mt-2 text-sm text-emerald-700">
-                          👷 {s.assignedTechnician.fullName} ·{' '}
-                          <a href={telLink(s.assignedTechnician.phone)} className="font-semibold hover:underline">
-                            {s.assignedTechnician.phone}
-                          </a>
-                        </p>
-                      )}
+                      <p className="text-xs text-muted">
+                        {s.ticketNumber} · {relativeTime(s.createdAt)}
+                      </p>
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="font-bold text-navy-700">
+                      <p className="tnum text-sm font-bold text-navy-700">
                         {formatINR(Number(s.totalCharge) || Number(s.visitCharge))}
                       </p>
-                      <p className="mt-0.5 text-xs text-muted">{relativeTime(s.createdAt)}</p>
+                      <Badge tone={SERVICE_TONE[s.status]}>{s.status.replace(/_/g, ' ')}</Badge>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
-        </section>
 
-        {/* ── Order history ── */}
-        <section>
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-display text-lg font-bold text-navy-700">My Orders</h2>
-            <Link href="/products" className="text-sm font-bold text-aqua-600 hover:underline">
-              Shop now
-            </Link>
-          </div>
-
-          {orders.length === 0 ? (
-            <Empty
-              icon="📦"
-              title="No orders yet"
-              body="Browse RO purifiers, spare parts and commercial plants."
-              ctaLabel="Browse Products"
-              ctaHref="/products"
-            />
-          ) : (
-            <ul className="space-y-3">
-              {orders.map((o) => (
-                <li key={o.id} className="rounded-2xl border border-navy-100 p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-display font-bold text-aqua-600">{o.orderNumber}</span>
-                        <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${ORDER_STYLE[o.status] ?? 'bg-slate-100'}`}>
-                          {o.status.replace(/_/g, ' ')}
-                        </span>
-                      </div>
-                      <p className="mt-1.5 text-sm text-muted">
+          {recentOrders.length > 0 && (
+            <section>
+              <SectionHeader
+                title="Past orders"
+                action={<Link href="/account/orders" className="text-sm font-bold text-aqua-600 hover:underline">All →</Link>}
+              />
+              <ul className="space-y-2.5">
+                {recentOrders.map((o) => (
+                  <li key={o.id} className="card flex items-center justify-between gap-3 p-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-navy-700">{o.orderNumber}</p>
+                      <p className="text-xs text-muted">
                         {o._count.items} item{o._count.items === 1 ? '' : 's'} · {formatDateIN(o.placedAt)}
                       </p>
-                      {o.trackingNumber && (
-                        <p className="mt-1.5 text-sm text-navy-600">
-                          🚚 {o.courierPartner} · <span className="font-mono">{o.trackingNumber}</span>
-                        </p>
-                      )}
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="font-bold text-navy-700">{formatINR(Number(o.totalAmount))}</p>
-                      <p className={`mt-0.5 text-xs font-semibold ${o.paymentStatus === 'PAID' ? 'text-emerald-600' : 'text-amber-600'}`}>
-                        {o.paymentStatus}
-                      </p>
+                      <p className="tnum text-sm font-bold text-navy-700">{formatINR(Number(o.totalAmount))}</p>
+                      <Badge tone={ORDER_TONE[o.status]}>{o.status.replace(/_/g, ' ')}</Badge>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
+        </div>
+      )}
+
+      {/* ── Machines nudge ── */}
+      {machines.length === 0 && (
+        <section className="rounded-2xl bg-navy-gradient p-6 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="max-w-lg">
+              <p className="eyebrow text-aqua-300">Free · takes 30 seconds</p>
+              <h2 className="mt-1.5 font-display text-xl font-extrabold">Add your RO machine</h2>
+              <p className="mt-1.5 text-sm text-navy-100 text-pretty">
+                Tell us the brand and when filters were last changed. We&apos;ll remind you
+                before the water goes bad — instead of you finding out the hard way.
+              </p>
+            </div>
+            <Link
+              href="/account/machines"
+              className="shrink-0 rounded-xl bg-white px-6 py-3 text-sm font-bold text-navy-700 transition hover:bg-sand-100"
+            >
+              Add machine →
+            </Link>
+          </div>
         </section>
-      </div>
-
-      {/* Help */}
-      <div className="mt-8 rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-100">
-        <p className="font-bold text-emerald-900">Need help with an order or service?</p>
-        <p className="mt-1 text-sm text-emerald-800">
-          Our team is available {contact.hours}, all 7 days.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <a href={telLink(contact.primaryPhone)} className="rounded-xl bg-cta-green px-5 py-2.5 text-sm font-bold text-white hover:bg-cta-greenDark">
-            📞 {contact.primaryPhone}
-          </a>
-          <a
-            href={waLink(contact.whatsapp, `Hi, this is ${user.fullName}. I need help with my account.`)}
-            target="_blank" rel="noopener noreferrer"
-            className="rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100"
-          >
-            💬 WhatsApp
-          </a>
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function Stat({ label, value, icon, sub }: { label: string; value: string; icon: string; sub?: string }) {
-  return (
-    <div className="rounded-2xl border border-navy-100 p-5">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</p>
-          <p className="mt-1 font-display text-2xl font-extrabold text-navy-700">{value}</p>
-          {sub && <p className="mt-0.5 text-xs text-muted">{sub}</p>}
-        </div>
-        <span className="text-2xl">{icon}</span>
-      </div>
-    </div>
-  );
-}
-
-function Empty({
-  icon, title, body, ctaLabel, ctaHref,
-}: { icon: string; title: string; body: string; ctaLabel: string; ctaHref: string }) {
-  return (
-    <div className="rounded-2xl border border-dashed border-navy-200 py-10 text-center">
-      <p className="text-3xl">{icon}</p>
-      <p className="mt-2 font-semibold text-navy-700">{title}</p>
-      <p className="mx-auto mt-1 max-w-xs text-sm text-muted">{body}</p>
-      <Link href={ctaHref} className="mt-4 inline-block rounded-xl bg-cta-orange px-5 py-2.5 text-sm font-bold text-white hover:bg-cta-orangeDark">
-        {ctaLabel}
-      </Link>
+      )}
     </div>
   );
 }

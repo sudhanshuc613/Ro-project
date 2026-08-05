@@ -120,3 +120,13 @@ BEGIN
     END IF;
   END LOOP;
 END $$;
+
+-- customer_machines was added after the original schema; make sure its
+-- updated_at also defaults, for consistency with every other table.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_schema='public' AND table_name='customer_machines' AND column_name='updated_at') THEN
+    ALTER TABLE customer_machines ALTER COLUMN updated_at SET DEFAULT now();
+  END IF;
+END $$;
