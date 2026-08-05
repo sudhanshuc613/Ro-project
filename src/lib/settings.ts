@@ -55,6 +55,25 @@ export interface PaymentSettings {
   paymentNote: string;
 }
 
+/**
+ * Phone verification config — owner-controlled from /admin/settings.
+ *
+ * Deliberately scoped: verification is applied where the business actually
+ * loses money (COD stock, technician trips), not on every interaction. A
+ * prepaid order needs no verification — the money already arrived.
+ */
+export interface OtpSettings {
+  /** DEV | WHATSAPP_REVERSE | WHATSAPP | SMS */
+  channel: 'DEV' | 'WHATSAPP_REVERSE' | 'WHATSAPP' | 'SMS';
+  requireForLogin: boolean;
+  requireForCod: boolean;
+  requireForService: boolean;
+  /** Skip re-verifying a number that has already been proven once. */
+  skipIfAlreadyVerified: boolean;
+  /** COD orders under this value skip verification — not worth the friction. */
+  codThreshold: number;
+}
+
 export interface BannerSettings {
   heroHeadline: string;
   heroSubline: string;
@@ -93,6 +112,18 @@ const FALLBACK_PAYMENT: PaymentSettings = {
   bankTransferEnabled: false,
   bankDetails: '',
   paymentNote: '',
+};
+
+const FALLBACK_OTP: OtpSettings = {
+  // Off-by-default in the sense that DEV verifies nothing; the owner picks a
+  // real channel once they have decided between free-but-manual (reverse)
+  // and paid-but-smooth (WhatsApp/SMS).
+  channel: 'DEV',
+  requireForLogin: false,
+  requireForCod: false,
+  requireForService: false,
+  skipIfAlreadyVerified: true,
+  codThreshold: 0,
 };
 
 const FALLBACK_BANNER: BannerSettings = {
@@ -137,6 +168,12 @@ export const getBannerSettings = unstable_cache(
   { tags: ['settings'], revalidate: 3600 },
 );
 
+export const getOtpSettings = unstable_cache(
+  () => fetchSetting<OtpSettings>('otp', FALLBACK_OTP),
+  ['settings:otp'],
+  { tags: ['settings'], revalidate: 3600 },
+);
+
 export const getPaymentSettings = unstable_cache(
   () => fetchSetting<PaymentSettings>('payment', FALLBACK_PAYMENT),
   ['settings:payment'],
@@ -145,13 +182,14 @@ export const getPaymentSettings = unstable_cache(
 
 /** Everything at once — used by layouts that need all of them. */
 export async function getAllSettings() {
-  const [contact, service, banner, payment] = await Promise.all([
+  const [contact, service, banner, payment, otp] = await Promise.all([
     getContactSettings(),
     getServiceSettings(),
     getBannerSettings(),
     getPaymentSettings(),
+    getOtpSettings(),
   ]);
-  return { contact, service, banner, payment, shipping: SHIPPING };
+  return { contact, service, banner, payment, otp, shipping: SHIPPING };
 }
 
 /**

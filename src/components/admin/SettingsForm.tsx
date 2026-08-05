@@ -2,24 +2,202 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { ContactSettings, ServiceSettings, BannerSettings, PaymentSettings } from '@/lib/settings';
+import type { ContactSettings, ServiceSettings, BannerSettings, PaymentSettings, OtpSettings } from '@/lib/settings';
 
 interface Props {
   contact: ContactSettings;
   service: ServiceSettings;
   banner: BannerSettings;
   payment: PaymentSettings;
+  otp: OtpSettings;
   razorpayConfigured: boolean;
+  smsConfigured: boolean;
+  whatsappConfigured: boolean;
 }
 
-export default function SettingsForm({ contact, service, banner, payment, razorpayConfigured }: Props) {
+export default function SettingsForm({
+  contact, service, banner, payment, otp,
+  razorpayConfigured, smsConfigured, whatsappConfigured,
+}: Props) {
   return (
     <div className="space-y-6">
+      <OtpCard initial={otp} smsConfigured={smsConfigured} whatsappConfigured={whatsappConfigured} />
       <PaymentCard initial={payment} razorpayConfigured={razorpayConfigured} />
       <ContactCard initial={contact} />
       <ServiceCard initial={service} />
       <BannerCard initial={banner} />
     </div>
+  );
+}
+
+/* ── Phone verification ───────────────────────────────────────────────────
+   Verification is applied where money is actually at risk, not everywhere.
+   A prepaid order needs none — the payment already cleared. COD stock and
+   technician trips are the real exposure. */
+function OtpCard({
+  initial, smsConfigured, whatsappConfigured,
+}: { initial: OtpSettings; smsConfigured: boolean; whatsappConfigured: boolean }) {
+  const [f, setF] = useState(initial);
+  const [saving, setSaving] = useState(false);
+
+  async function submit() {
+    setSaving(true);
+    try {
+      await saveSettings('otp', f);
+      toast.success('Verification settings updated');
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Failed');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const isDev = f.channel === 'DEV';
+  const anyRequired = f.requireForLogin || f.requireForCod || f.requireForService;
+
+  const CHANNELS = [
+    {
+      id: 'DEV' as const,
+      title: 'Test mode — code shown on screen',
+      cost: 'Free',
+      desc: 'Verifies NOTHING. Anyone can type back the code they were just shown. For your own testing only — the live site refuses to run this.',
+      ok: true,
+      warn: true,
+    },
+    {
+      id: 'WHATSAPP_REVERSE' as const,
+      title: 'WhatsApp — customer sends us the code',
+      cost: '₹0 per verification',
+      desc: 'Code appears on screen, customer sends it to us from their WhatsApp. Real proof, because the message can only come from their own number. Needs the webhook set up once.',
+      ok: whatsappConfigured,
+      warn: false,
+    },
+    {
+      id: 'WHATSAPP' as const,
+      title: 'WhatsApp — we send the code',
+      cost: '₹0.115 per verification',
+      desc: 'Normal OTP delivered on WhatsApp, customer types it back. Smoothest experience. Needs an approved authentication template (~24 hours).',
+      ok: whatsappConfigured,
+      warn: false,
+    },
+    {
+      id: 'SMS' as const,
+      title: 'SMS (MSG91)',
+      cost: '₹0.15 per verification + ₹5,900 DLT one-time',
+      desc: 'Reaches every phone, including people without WhatsApp. Needs DLT registration and template approval before it works.',
+      ok: smsConfigured,
+      warn: false,
+    },
+  ];
+
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5">
+      <h2 className="font-display text-lg font-bold text-navy-700">🔐 Phone Verification</h2>
+      <p className="mt-0.5 text-sm text-muted">
+        Stops fake numbers being used for COD orders and technician visits.
+      </p>
+
+      {isDev && anyRequired && (
+        <p className="mt-4 rounded-xl bg-red-50 p-3.5 text-sm font-semibold text-red-800 ring-1 ring-red-200">
+          ⚠️ Test mode cannot be combined with a live requirement — pick WhatsApp or SMS first.
+        </p>
+      )}
+
+      <div className="mt-4 space-y-2.5">
+        {CHANNELS.map((c) => (
+          <label
+            key={c.id}
+            className={`flex cursor-pointer gap-3 rounded-xl border-2 p-4 transition ${
+              f.channel === c.id ? 'border-aqua-500 bg-aqua-50' : 'border-slate-200 hover:border-slate-300'
+            } ${!c.ok ? 'opacity-60' : ''}`}
+          >
+            <input
+              type="radio"
+              checked={f.channel === c.id}
+              onChange={() => setF({ ...f, channel: c.id })}
+              className="mt-1 h-4 w-4 text-aqua-500"
+            />
+            <span className="min-w-0 flex-1">
+              <span className="flex flex-wrap items-center gap-2">
+                <span className="font-bold text-navy-700">{c.title}</span>
+                <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
+                  c.cost.startsWith('₹0 ') || c.cost === 'Free'
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                  {c.cost}
+                </span>
+                {c.warn && (
+                  <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-700">
+                    NOT SECURE
+                  </span>
+                )}
+              </span>
+              <span className="mt-0.5 block text-xs text-muted">{c.desc}</span>
+              {!c.ok && (
+                <span className="mt-1 block text-[11px] font-semibold text-amber-800">
+                  Not configured yet — see the setup guide.
+                </span>
+              )}
+            </span>
+          </label>
+        ))}
+      </div>
+
+      <div className="mt-5 space-y-3 border-t border-slate-200 pt-4">
+        <p className="text-xs font-bold uppercase tracking-wider text-muted">Where to require it</p>
+
+        <Toggle
+          checked={f.requireForLogin}
+          onChange={(v) => setF({ ...f, requireForLogin: v })}
+          title="Signup and login"
+          desc="Every account is tied to a real number."
+          disabled={isDev}
+        />
+        <Toggle
+          checked={f.requireForCod}
+          onChange={(v) => setF({ ...f, requireForCod: v })}
+          title="Cash on Delivery orders"
+          desc="Your stock ships out before any money arrives — this is the highest-risk point."
+          disabled={isDev}
+        />
+        <Toggle
+          checked={f.requireForService}
+          onChange={(v) => setF({ ...f, requireForService: v })}
+          title="Service bookings"
+          desc="A fake booking costs you a technician's trip, fuel and an hour. Booking needs no account today, so this is your only check."
+          disabled={isDev}
+        />
+
+        <div className="rounded-xl bg-slate-50 p-3.5 ring-1 ring-slate-200">
+          <Toggle
+            checked={f.skipIfAlreadyVerified}
+            onChange={(v) => setF({ ...f, skipIfAlreadyVerified: v })}
+            title="Don't re-verify a known number"
+            desc="Repeat customers sail through. Strongly recommended — re-asking every time is what makes people abandon."
+          />
+        </div>
+
+        {f.requireForCod && (
+          <Field label="Skip COD verification below this order value (₹)" hint="0 = always verify. A ₹300 filter is not worth the friction; a ₹12,000 purifier is.">
+            <input
+              type="number"
+              value={f.codThreshold}
+              onChange={(e) => setF({ ...f, codThreshold: Number(e.target.value) })}
+              className="input"
+            />
+          </Field>
+        )}
+      </div>
+
+      <button
+        onClick={submit}
+        disabled={saving}
+        className="mt-5 rounded-xl bg-cta-orange px-6 py-3 font-bold text-white disabled:opacity-60"
+      >
+        {saving ? 'Saving…' : 'Save verification settings'}
+      </button>
+    </section>
   );
 }
 

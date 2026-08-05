@@ -9,10 +9,12 @@ export const metadata = { title: 'Site Settings' };
  * text live, without editing code or redeploying.
  */
 export default async function AdminSettingsPage() {
-  const { contact, service, banner, payment } = await getAllSettings();
+  const { contact, service, banner, payment, otp } = await getAllSettings();
   // Read on the server: the client must never see whether secrets exist by
   // probing, and process.env is not available in the browser anyway.
   const razorpayConfigured = Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
+  const smsConfigured = Boolean(process.env.MSG91_AUTH_KEY && process.env.MSG91_TEMPLATE_ID);
+  const whatsappConfigured = Boolean(process.env.WHATSAPP_ACCESS_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID);
 
   return (
     <div className="space-y-6">
@@ -36,7 +38,10 @@ export default async function AdminSettingsPage() {
         service={service}
         banner={banner}
         payment={payment}
+        otp={otp}
         razorpayConfigured={razorpayConfigured}
+        smsConfigured={smsConfigured}
+        whatsappConfigured={whatsappConfigured}
       />
     </div>
   );

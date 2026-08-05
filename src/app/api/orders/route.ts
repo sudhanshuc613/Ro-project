@@ -12,10 +12,11 @@ import { z } from 'zod';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { rateLimit } from '@/lib/db/redis';
-import { createOrder, confirmOrderPaid, releaseOrderStock, OrderError } from '@/server/services/order.service';
+import { createOrder, confirmOrderPaid, releaseOrderStock, quoteCart, OrderError } from '@/server/services/order.service';
 import { createGatewayOrder, buildCheckoutOptions } from '@/lib/payments/razorpay';
 import { prisma } from '@/lib/db/prisma';
-import { getAvailablePaymentMethods } from '@/lib/settings';
+import { getAvailablePaymentMethods, getOtpSettings } from '@/lib/settings';
+import { consumeVerification, isPhoneVerified } from '@/server/services/otp.service';
 import { notifyAdmins } from '@/lib/integrations/whatsapp';
 
 const addressSchema = z.object({
@@ -43,6 +44,8 @@ const schema = z.object({
   guestEmail: z.string().email().optional().or(z.literal('')),
   /** UTR the customer typed after paying by UPI — verified by the admin. */
   paymentReference: z.string().trim().max(40).optional(),
+  /** Proof-of-phone token from /api/auth/otp, required for COD when enabled. */
+  verificationToken: z.string().trim().max(80).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -65,6 +68,47 @@ export async function POST(req: NextRequest) {
     }
 
     const session = await getServerSession(authOptions);
+
+    /* ── COD phone verification ──────────────────────────────────────────
+       COD is the only path where stock leaves the building before any money
+       arrives, so it is the only order type worth gating. Prepaid orders are
+       deliberately NOT gated — the payment already cleared, and adding a step
+       there would cost conversions for zero protection. */
+    if (d.paymentMethod === 'COD') {
+      const otpCfg = await getOtpSettings();
+      const phone = d.shipping.contactPhone;
+
+      // Quote first so the threshold is checked against the real total.
+      const provisional = await quoteCart(d.lines, d.shipping.pincode, 'COD');
+      const overThreshold = provisional.total >= otpCfg.codThreshold;
+
+      if (otpCfg.requireForCod && otpCfg.channel !== 'DEV' && overThreshold) {
+        const known = otpCfg.skipIfAlreadyVerified && (await isPhoneVerified(phone));
+
+        if (!known) {
+          const ok = d.verificationToken
+            ? await consumeVerification(d.verificationToken, phone, 'ORDER_COD')
+            : false;
+
+          if (!ok) {
+            return NextResponse.json(
+              {
+                needsVerification: true,
+                message: 'Please verify your mobile number to place a Cash on Delivery order.',
+              },
+              { status: 428 },
+            );
+          }
+
+          // Guests have no user row at verification time, so stamp whichever
+          // row exists now (registered users) — guests get stamped when they
+          // later register and their orders are claimed.
+          await prisma.user
+            .updateMany({ where: { phone }, data: { phoneVerifiedAt: new Date() } })
+            .catch(() => null);
+        }
+      }
+    }
 
     // Refuse a method the admin has switched off. Without this a stale browser
     // tab could place an order through a channel we no longer accept.

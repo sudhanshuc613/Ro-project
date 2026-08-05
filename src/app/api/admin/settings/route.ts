@@ -32,6 +32,22 @@ const SCHEMAS = {
     city: z.string().min(2).max(60),
     state: z.string().min(2).max(60),
   }),
+  otp: z.object({
+    channel: z.enum(['DEV', 'WHATSAPP_REVERSE', 'WHATSAPP', 'SMS']),
+    requireForLogin: z.boolean(),
+    requireForCod: z.boolean(),
+    requireForService: z.boolean(),
+    skipIfAlreadyVerified: z.boolean(),
+    codThreshold: z.number().int().min(0).max(500000),
+  }).refine(
+    // DEV shows the code on screen, so it verifies nothing. Allowing it to be
+    // saved alongside an active requirement would give false confidence.
+    (d) => d.channel !== 'DEV' || (!d.requireForLogin && !d.requireForCod && !d.requireForService),
+    {
+      message: 'Test mode shows the code on screen and verifies nothing. Pick WhatsApp or SMS before switching any requirement on.',
+      path: ['channel'],
+    },
+  ),
   payment: z.object({
     codEnabled: z.boolean(),
     codMaxOrder: z.number().int().min(0).max(500000),

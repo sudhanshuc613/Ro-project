@@ -89,15 +89,54 @@ export async function cached<T>(key: string, ttl: number, fetcher: () => Promise
  * Fixed-window limiter. Returns true if the action is allowed.
  * Fails OPEN so a Redis outage never blocks a customer from booking service.
  */
+/**
+ * In-process fallback counter.
+ *
+ * WHY THIS EXISTS: rateLimit() previously returned `true` whenever Redis was
+ * absent — and REDIS_URL is not set on this deployment, so every rate limit
+ * in the app (orders, service bookings, OTP sends, login attempts) was
+ * silently disabled. Anyone could have submitted ten thousand bookings.
+ *
+ * This Map is per-instance, so on serverless it only limits within one warm
+ * function. That is materially weaker than Redis — but it is the difference
+ * between "some limit" and "no limit at all", and it costs nothing.
+ *
+ * Endpoints that must be strict also enforce limits in the database (see
+ * otp.service.ts counting challenge rows), which survives across instances.
+ */
+const memoryBuckets = new Map<string, { count: number; resetAt: number }>();
+
+function memoryRateLimit(key: string, limit: number, windowSeconds: number): boolean {
+  const now = Date.now();
+  const hit = memoryBuckets.get(key);
+
+  if (!hit || hit.resetAt <= now) {
+    memoryBuckets.set(key, { count: 1, resetAt: now + windowSeconds * 1000 });
+
+    // Opportunistic sweep so the Map cannot grow without bound.
+    if (memoryBuckets.size > 5000) {
+      for (const [k, v] of memoryBuckets) if (v.resetAt <= now) memoryBuckets.delete(k);
+    }
+    return true;
+  }
+
+  hit.count += 1;
+  return hit.count <= limit;
+}
+
 export async function rateLimit(identifier: string, limit: number, windowSeconds: number): Promise<boolean> {
-  if (!redis) return true;
+  const key = `rl:${identifier}`;
+
+  if (!redis) return memoryRateLimit(key, limit, windowSeconds);
+
   try {
-    const key = `rl:${identifier}`;
     const count = await redis.incr(key);
     if (count === 1) await redis.expire(key, windowSeconds);
     return count <= limit;
   } catch {
-    return true;
+    // Redis reachable at boot but failing now — degrade to memory rather
+    // than opening the gates completely.
+    return memoryRateLimit(key, limit, windowSeconds);
   }
 }
 

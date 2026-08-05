@@ -10,6 +10,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getServerSession } from 'next-auth';
+import { getOtpSettings } from '@/lib/settings';
+import { consumeVerification, isPhoneVerified } from '@/server/services/otp.service';
 import { prisma } from '@/lib/db/prisma';
 import { authOptions } from '@/lib/auth';
 import { rateLimit } from '@/lib/db/redis';
@@ -21,6 +23,8 @@ import { CONTACT, SERVICE } from '@/lib/constants';
 const serviceRequestSchema = z.object({
   customerName:     z.string().trim().min(2).max(120),
   customerPhone:    z.string().regex(/^[6-9]\d{9}$/, 'Invalid Indian mobile number'),
+  /** Proof-of-phone token from /api/auth/otp, when verification is enabled. */
+  verificationToken: z.string().trim().max(80).optional(),
   altPhone:         z.string().regex(/^[6-9]\d{9}$/).optional().or(z.literal('')),
   customerEmail:    z.string().email().optional().or(z.literal('')),
   addressLine:      z.string().trim().min(10).max(320),
@@ -60,6 +64,40 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    /* ── Phone verification ──────────────────────────────────────────────
+       A fake booking costs a real technician trip — fuel, an hour, and a slot
+       another customer could have had. Booking needs no account, so this is
+       the only check standing between the business and that loss.
+
+       Enforced server-side: hiding the form field client-side would stop
+       nobody who can open devtools. */
+    const otpCfg = await getOtpSettings();
+    let phoneWasVerified = false;
+
+    if (otpCfg.requireForService && otpCfg.channel !== 'DEV') {
+      const known = otpCfg.skipIfAlreadyVerified && (await isPhoneVerified(data.customerPhone));
+
+      if (!known) {
+        const ok = data.verificationToken
+          ? await consumeVerification(data.verificationToken, data.customerPhone, 'SERVICE_BOOKING')
+          : false;
+
+        if (!ok) {
+          return NextResponse.json(
+            {
+              success: false,
+              needsVerification: true,
+              message: 'Please verify your mobile number so our technician reaches the right person.',
+            },
+            { status: 428 }, // Precondition Required
+          );
+        }
+        phoneWasVerified = true;
+      } else {
+        phoneWasVerified = true; // already-known number
+      }
+    }
+
     // ── Serviceability (soft gate: we still capture out-of-area leads) ──
     const pin = await prisma.pincode.findUnique({ where: { pincode: data.pincode } });
     const visitCharge = pin?.visitCharge ?? SERVICE.visitCharge;
@@ -69,7 +107,13 @@ export async function POST(req: NextRequest) {
     // ── CRM upsert: every service lead becomes a customer record ──
     const user = await prisma.user.upsert({
       where:  { phone: data.customerPhone },
-      update: { fullName: data.customerName, totalServices: { increment: 1 } },
+      update: {
+        fullName: data.customerName,
+        totalServices: { increment: 1 },
+        // Verification may have completed before this user row existed (a
+        // first-time guest). Stamp it now so we never re-ask this number.
+        ...(phoneWasVerified ? { phoneVerifiedAt: new Date() } : {}),
+      },
       create: {
         phone: data.customerPhone,
         fullName: data.customerName,
@@ -77,6 +121,7 @@ export async function POST(req: NextRequest) {
         role: 'CUSTOMER',
         acquisitionSource: data.source,
         totalServices: 1,
+        ...(phoneWasVerified ? { phoneVerifiedAt: new Date() } : {}),
       },
     });
 

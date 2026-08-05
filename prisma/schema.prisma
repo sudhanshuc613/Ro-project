@@ -943,6 +943,39 @@ model AuditLog {
   @@map("audit_logs")
 }
 
+/// Phone verification challenge.
+///
+/// WHY IN POSTGRES AND NOT REDIS: the original OTP code used
+/// `redis?.setex(...)`. With no REDIS_URL that optional-chain silently does
+/// nothing — the code is never stored, so verification always fails and the
+/// whole login is dead with no error anywhere. Postgres is already required
+/// for the app to run at all, so storing challenges here removes an entire
+/// class of "works on my machine" failure.
+///
+/// Rows are short-lived; expired ones are cleaned on each new challenge.
+model OtpChallenge {
+  id        String   @id @default(uuid()) @db.Uuid
+  phone     String   @db.VarChar(15)
+  /// bcrypt hash — a DB leak must not hand out working codes.
+  codeHash  String   @map("code_hash")
+  /// LOGIN | ORDER_COD | SERVICE_BOOKING — what the code unlocks.
+  purpose   String   @default("LOGIN") @db.VarChar(24)
+  /// SMS | WHATSAPP | WHATSAPP_REVERSE | DEV
+  channel   String   @default("DEV") @db.VarChar(24)
+  attempts  Int      @default(0) @db.SmallInt
+  /// Set when the customer's WhatsApp message arrives (reverse flow).
+  verifiedAt DateTime? @map("verified_at") @db.Timestamptz
+  /// Random token the browser polls with — never exposes the phone number.
+  pollToken String   @unique @map("poll_token") @db.VarChar(64)
+  expiresAt DateTime @map("expires_at") @db.Timestamptz
+  ip        String?  @db.VarChar(45)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([phone, purpose])
+  @@index([expiresAt])
+  @@map("otp_challenges")
+}
+
 model SiteSetting {
   key         String   @id @db.VarChar(80)
   value       Json
