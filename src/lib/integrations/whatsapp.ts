@@ -6,6 +6,7 @@
  *
  * Templates must be pre-approved in Meta Business Manager. Register these:
  *   order_confirmed              — {name} {orderNo} {amount} {eta}
+ *   payment_received             — {name} {orderNo} {amount}
  *   order_shipped                — {name} {orderNo} {courier} {awb} {trackUrl}
  *   order_delivered              — {name} {orderNo}
  *   service_request_received     — {name} {ticket} {visitCharge} {phone}

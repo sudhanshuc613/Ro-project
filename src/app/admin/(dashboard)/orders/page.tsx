@@ -18,16 +18,31 @@ const STATUS_STYLE: Record<string, string> = {
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: { status?: string; pay?: string };
 }) {
-  const where = searchParams.status ? { status: searchParams.status as never } : {};
+  // `pay=unpaid` is the money view: prepaid orders where the cash has not
+  // landed. That is the list the owner needs to chase, and it was impossible
+  // to see before.
+  const where = {
+    ...(searchParams.status ? { status: searchParams.status as never } : {}),
+    ...(searchParams.pay === 'unpaid'
+      ? { paymentStatus: 'UNPAID' as const, NOT: { paymentMethod: 'COD' as const } }
+      : {}),
+    ...(searchParams.pay === 'guest' ? { userId: null } : {}),
+  };
 
-  const orders = await prisma.order.findMany({
-    where,
-    orderBy: { placedAt: 'desc' },
-    take: 100,
-    include: { user: { select: { fullName: true, phone: true } }, _count: { select: { items: true } } },
-  });
+  const [orders, counts] = await Promise.all([
+    prisma.order.findMany({
+      where,
+      orderBy: { placedAt: 'desc' },
+      take: 100,
+      include: { user: { select: { fullName: true, phone: true } }, _count: { select: { items: true } } },
+      // shippingAddress holds the guest's real name — selected via include above
+    }),
+    prisma.order.groupBy({ by: ['paymentStatus'], _count: true }),
+  ]);
+
+  const unpaidCount = counts.find((c) => c.paymentStatus === 'UNPAID')?._count ?? 0;
 
   return (
     <div className="space-y-6">
@@ -56,6 +71,29 @@ export default async function AdminOrdersPage({
         ))}
       </div>
 
+      <div className="flex flex-wrap gap-2">
+        <Link
+          href="/admin/orders?pay=unpaid"
+          className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
+            searchParams.pay === 'unpaid'
+              ? 'bg-red-600 text-white'
+              : 'bg-red-50 text-red-700 ring-1 ring-red-200 hover:bg-red-100'
+          }`}
+        >
+          💰 Awaiting payment{unpaidCount > 0 ? ` (${unpaidCount})` : ''}
+        </Link>
+        <Link
+          href="/admin/orders?pay=guest"
+          className={`rounded-lg px-3 py-1.5 text-sm font-semibold ${
+            searchParams.pay === 'guest'
+              ? 'bg-navy-700 text-white'
+              : 'bg-white text-navy-700 ring-1 ring-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          👤 Guest orders
+        </Link>
+      </div>
+
       <div className="rounded-2xl border border-slate-200 bg-white p-5">
         {orders.length === 0 ? (
           <div className="py-16 text-center">
@@ -74,26 +112,61 @@ export default async function AdminOrdersPage({
                   <th className="pb-2.5 font-semibold">Customer</th>
                   <th className="pb-2.5 font-semibold">Items</th>
                   <th className="pb-2.5 font-semibold">Amount</th>
+                  <th className="pb-2.5 font-semibold">Payment</th>
                   <th className="pb-2.5 font-semibold">Status</th>
                   <th className="pb-2.5 text-right font-semibold">Placed</th>
+                  <th className="pb-2.5 text-right font-semibold"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {orders.map((o) => (
                   <tr key={o.id} className="hover:bg-slate-50">
-                    <td className="py-3 font-semibold text-aqua-600">{o.orderNumber}</td>
                     <td className="py-3">
-                      <span className="block font-medium text-navy-700">{o.user?.fullName ?? 'Guest'}</span>
+                      <Link href={`/admin/orders/${o.id}`} className="font-semibold text-aqua-600 hover:underline">
+                        {o.orderNumber}
+                      </Link>
+                    </td>
+                    <td className="py-3">
+                      <span className="block font-medium text-navy-700">
+                        {o.user?.fullName
+                          ?? (o.shippingAddress as { contactName?: string } | null)?.contactName
+                          ?? 'Guest'}
+                        {!o.userId && (
+                          <span className="ml-1.5 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                            GUEST
+                          </span>
+                        )}
+                      </span>
                       <span className="block text-xs text-muted">{o.user?.phone ?? o.guestPhone}</span>
                     </td>
                     <td className="py-3 text-muted">{o._count.items}</td>
                     <td className="py-3 font-bold text-navy-700">{formatINR(Number(o.totalAmount))}</td>
+                    <td className="py-3">
+                      <span className={`rounded-md px-2 py-1 text-[11px] font-bold ${
+                        o.paymentStatus === 'PAID' ? 'bg-emerald-100 text-emerald-700'
+                        : o.paymentStatus === 'UNPAID' ? 'bg-red-100 text-red-700'
+                        : 'bg-amber-100 text-amber-800'
+                      }`}>
+                        {o.paymentStatus}
+                      </span>
+                      {o.paymentMethod && (
+                        <span className="mt-0.5 block text-[10px] text-muted">{o.paymentMethod}</span>
+                      )}
+                    </td>
                     <td className="py-3">
                       <span className={`rounded-md px-2 py-1 text-[11px] font-bold ${STATUS_STYLE[o.status] ?? 'bg-slate-100'}`}>
                         {o.status.replace(/_/g, ' ')}
                       </span>
                     </td>
                     <td className="py-3 text-right text-xs text-muted">{relativeTime(o.placedAt)}</td>
+                    <td className="py-3 text-right">
+                      <Link
+                        href={`/admin/orders/${o.id}`}
+                        className="rounded-lg bg-navy-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-navy-600"
+                      >
+                        Manage →
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -2,21 +2,216 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { ContactSettings, ServiceSettings, BannerSettings } from '@/lib/settings';
+import type { ContactSettings, ServiceSettings, BannerSettings, PaymentSettings } from '@/lib/settings';
 
 interface Props {
   contact: ContactSettings;
   service: ServiceSettings;
   banner: BannerSettings;
+  payment: PaymentSettings;
+  razorpayConfigured: boolean;
 }
 
-export default function SettingsForm({ contact, service, banner }: Props) {
+export default function SettingsForm({ contact, service, banner, payment, razorpayConfigured }: Props) {
   return (
     <div className="space-y-6">
+      <PaymentCard initial={payment} razorpayConfigured={razorpayConfigured} />
       <ContactCard initial={contact} />
       <ServiceCard initial={service} />
       <BannerCard initial={banner} />
     </div>
+  );
+}
+
+/* ── Payment methods ──────────────────────────────────────────────────────
+   The owner controls which payment channels are live, without touching code.
+   Manual UPI matters most here: it lets real money move before a Razorpay
+   account exists, which is the actual situation this business is in. */
+function PaymentCard({
+  initial, razorpayConfigured,
+}: { initial: PaymentSettings; razorpayConfigured: boolean }) {
+  const [f, setF] = useState(initial);
+  const [saving, setSaving] = useState(false);
+
+  async function submit() {
+    setSaving(true);
+    try {
+      await saveSettings('payment', f);
+      toast.success('Payment settings updated — live on checkout immediately');
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Failed');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const anyOn = f.codEnabled || f.razorpayEnabled || f.upiManualEnabled || f.bankTransferEnabled;
+
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="font-display text-lg font-bold text-navy-700">💳 Payment Methods</h2>
+          <p className="mt-0.5 text-sm text-muted">
+            Switch channels on or off. Changes apply to checkout instantly — no redeploy.
+          </p>
+        </div>
+      </div>
+
+      {!anyOn && (
+        <p className="mt-4 rounded-xl bg-red-50 p-3.5 text-sm font-semibold text-red-800 ring-1 ring-red-200">
+          ⚠️ Everything is off — customers cannot place any order right now.
+        </p>
+      )}
+
+      <div className="mt-5 space-y-4">
+        {/* COD */}
+        <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+          <Toggle
+            checked={f.codEnabled}
+            onChange={(v) => setF({ ...f, codEnabled: v })}
+            title="Cash on Delivery"
+            desc="Customer pays the delivery person. Highest conversion in India, but you carry the risk of refusal."
+          />
+          {f.codEnabled && (
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Field label="Max order value for COD" hint="Above this, COD is hidden">
+                <input
+                  type="number" value={f.codMaxOrder}
+                  onChange={(e) => setF({ ...f, codMaxOrder: Number(e.target.value) })}
+                  className="input"
+                />
+              </Field>
+              <Field label="COD handling charge (₹)">
+                <input
+                  type="number" value={f.codCharge}
+                  onChange={(e) => setF({ ...f, codCharge: Number(e.target.value) })}
+                  className="input"
+                />
+              </Field>
+            </div>
+          )}
+        </div>
+
+        {/* Manual UPI */}
+        <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+          <Toggle
+            checked={f.upiManualEnabled}
+            onChange={(v) => setF({ ...f, upiManualEnabled: v })}
+            title="UPI — direct to your account"
+            desc="Customer pays your UPI ID and enters the UTR. You verify in your bank app and mark it paid. Zero gateway fee, no Razorpay account needed."
+          />
+          {f.upiManualEnabled && (
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <Field label="Your UPI ID *" hint="e.g. 8969821440@ybl or aquanexa@okhdfcbank">
+                <input
+                  value={f.upiId}
+                  onChange={(e) => setF({ ...f, upiId: e.target.value.trim() })}
+                  placeholder="yourname@okhdfcbank"
+                  className="input font-mono"
+                />
+              </Field>
+              <Field label="Name shown to customer">
+                <input
+                  value={f.upiName}
+                  onChange={(e) => setF({ ...f, upiName: e.target.value })}
+                  className="input"
+                />
+              </Field>
+            </div>
+          )}
+        </div>
+
+        {/* Bank transfer */}
+        <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+          <Toggle
+            checked={f.bankTransferEnabled}
+            onChange={(v) => setF({ ...f, bankTransferEnabled: v })}
+            title="Bank Transfer / NEFT"
+            desc="For commercial plants and bulk orders where UPI limits are too low."
+          />
+          {f.bankTransferEnabled && (
+            <Field label="Bank details shown at checkout *" hint="Account name, number, IFSC, branch">
+              <textarea
+                rows={4}
+                value={f.bankDetails}
+                onChange={(e) => setF({ ...f, bankDetails: e.target.value })}
+                placeholder={'AquaNexa Water Solutions\nA/C: 1234567890\nIFSC: SBIN0001234\nSBI, Kankarbagh, Patna'}
+                className="input mt-1"
+              />
+            </Field>
+          )}
+        </div>
+
+        {/* Razorpay */}
+        <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+          <Toggle
+            checked={f.razorpayEnabled}
+            onChange={(v) => setF({ ...f, razorpayEnabled: v })}
+            title="Razorpay gateway"
+            desc="Cards, netbanking, wallets and UPI with automatic confirmation. Charges ~2% per transaction."
+            disabled={!razorpayConfigured}
+          />
+          {!razorpayConfigured && (
+            <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              Razorpay keys are not set on the server, so this stays off even if switched on.
+              Add <code className="rounded bg-white px-1">RAZORPAY_KEY_ID</code> and{' '}
+              <code className="rounded bg-white px-1">RAZORPAY_KEY_SECRET</code> in Vercel →
+              Settings → Environment Variables, then redeploy.
+            </p>
+          )}
+        </div>
+
+        <Field label="Note shown under payment options" hint="Optional — e.g. GST invoice information">
+          <input
+            value={f.paymentNote}
+            onChange={(e) => setF({ ...f, paymentNote: e.target.value })}
+            placeholder="GST invoice provided with every order."
+            className="input"
+          />
+        </Field>
+      </div>
+
+      <button
+        onClick={submit}
+        disabled={saving}
+        className="mt-5 rounded-xl bg-cta-orange px-6 py-3 font-bold text-white disabled:opacity-60"
+      >
+        {saving ? 'Saving…' : 'Save payment settings'}
+      </button>
+    </section>
+  );
+}
+
+function Toggle({
+  checked, onChange, title, desc, disabled,
+}: {
+  checked: boolean; onChange: (v: boolean) => void;
+  title: string; desc: string; disabled?: boolean;
+}) {
+  return (
+    <label className={`flex items-start gap-3 ${disabled ? 'opacity-60' : 'cursor-pointer'}`}>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        disabled={disabled}
+        onClick={() => !disabled && onChange(!checked)}
+        className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition ${
+          checked ? 'bg-cta-green' : 'bg-slate-300'
+        } disabled:cursor-not-allowed`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${
+            checked ? 'left-[22px]' : 'left-0.5'
+          }`}
+        />
+      </button>
+      <span>
+        <span className="block font-bold text-navy-700">{title}</span>
+        <span className="block text-xs text-muted">{desc}</span>
+      </span>
+    </label>
   );
 }
 

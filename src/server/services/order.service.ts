@@ -169,7 +169,8 @@ interface CreateOrderArgs {
   lines: CartLine[];
   shipping: AddressInput;
   billing?: AddressInput | null;
-  paymentMethod: 'RAZORPAY' | 'COD';
+  /** Any real PaymentMethod. UPI and NETBANKING arrive from manual channels. */
+  paymentMethod: 'RAZORPAY' | 'COD' | 'UPI' | 'NETBANKING' | 'CARD' | 'WALLET';
   customerNote?: string;
   utmSource?: string;
 }

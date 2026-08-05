@@ -30,6 +30,31 @@ export interface ServiceSettings {
   state: string;
 }
 
+/**
+ * Payment channel configuration — controlled from /admin/settings.
+ *
+ * WHY THIS EXISTS: the owner may not have a Razorpay account on day one, or
+ * may want to switch a method off during a bank issue. Hardcoding payment
+ * options means a code change + redeploy every time. These are switches.
+ *
+ * MANUAL UPI: the honest option for a business without a gateway. Customer
+ * pays to the owner's UPI ID and enters the 12-digit reference. Admin verifies
+ * against their bank app and marks the order paid. Not automatic, but real
+ * money moves — unlike mock mode.
+ */
+export interface PaymentSettings {
+  codEnabled: boolean;
+  codMaxOrder: number;
+  codCharge: number;
+  razorpayEnabled: boolean;
+  upiManualEnabled: boolean;
+  upiId: string;
+  upiName: string;
+  bankTransferEnabled: boolean;
+  bankDetails: string;
+  paymentNote: string;
+}
+
 export interface BannerSettings {
   heroHeadline: string;
   heroSubline: string;
@@ -54,6 +79,20 @@ const FALLBACK_SERVICE: ServiceSettings = {
   warrantyDays: SERVICE.warrantyDays,
   city: SERVICE.city,
   state: SERVICE.state,
+};
+
+const FALLBACK_PAYMENT: PaymentSettings = {
+  // COD on, gateway off: matches reality until Razorpay keys are added.
+  codEnabled: true,
+  codMaxOrder: SHIPPING.codMaxOrder,
+  codCharge: SHIPPING.codCharge,
+  razorpayEnabled: false,
+  upiManualEnabled: false,
+  upiId: '',
+  upiName: 'AquaNexa Water Solutions',
+  bankTransferEnabled: false,
+  bankDetails: '',
+  paymentNote: '',
 };
 
 const FALLBACK_BANNER: BannerSettings = {
@@ -98,14 +137,42 @@ export const getBannerSettings = unstable_cache(
   { tags: ['settings'], revalidate: 3600 },
 );
 
-/** Everything at once — used by layouts that need all three. */
+export const getPaymentSettings = unstable_cache(
+  () => fetchSetting<PaymentSettings>('payment', FALLBACK_PAYMENT),
+  ['settings:payment'],
+  { tags: ['settings'], revalidate: 3600 },
+);
+
+/** Everything at once — used by layouts that need all of them. */
 export async function getAllSettings() {
-  const [contact, service, banner] = await Promise.all([
+  const [contact, service, banner, payment] = await Promise.all([
     getContactSettings(),
     getServiceSettings(),
     getBannerSettings(),
+    getPaymentSettings(),
   ]);
-  return { contact, service, banner, shipping: SHIPPING };
+  return { contact, service, banner, payment, shipping: SHIPPING };
+}
+
+/**
+ * Payment methods the customer may actually pick right now.
+ *
+ * Razorpay is filtered out unless BOTH the admin switch is on AND live keys
+ * exist — otherwise a customer would reach a dead checkout. This is the guard
+ * that stops "pay online" from silently failing in production.
+ */
+export async function getAvailablePaymentMethods(orderTotal: number, codAllowedForPin = true) {
+  const p = await getPaymentSettings();
+  const hasRazorpayKeys = Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
+
+  return {
+    razorpay: p.razorpayEnabled && hasRazorpayKeys,
+    upiManual: p.upiManualEnabled && Boolean(p.upiId),
+    bankTransfer: p.bankTransferEnabled && Boolean(p.bankDetails),
+    cod: p.codEnabled && codAllowedForPin && orderTotal <= p.codMaxOrder,
+    settings: p,
+    razorpayConfigured: hasRazorpayKeys,
+  };
 }
 
 /* ── Helpers used across components ───────────────────────────────────────── */

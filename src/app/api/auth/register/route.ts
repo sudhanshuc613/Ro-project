@@ -76,12 +76,53 @@ export async function POST(req: NextRequest) {
           },
         });
 
+    /* ── Claim past guest activity ──────────────────────────────────────
+       Someone who ordered as a guest and later registers with the same phone
+       is the same person. Without this their orders stay invisible in
+       /account and they call us asking "mera order kahan hai".
+
+       Matching on phone alone is safe here because registration already
+       proves control of that number (OTP on the consumer flow), and the data
+       being claimed was submitted with that number in the first place. */
+    const [claimedOrders, claimedServices] = await Promise.all([
+      prisma.order.updateMany({
+        where: { userId: null, guestPhone: phone },
+        data: { userId: user.id },
+      }),
+      prisma.serviceRequest.updateMany({
+        where: { userId: null, customerPhone: phone },
+        data: { userId: user.id },
+      }),
+    ]);
+
+    // Keep the CRM counters honest after claiming.
+    if (claimedOrders.count > 0 || claimedServices.count > 0) {
+      const agg = await prisma.order.aggregate({
+        where: { userId: user.id, status: { notIn: ['CANCELLED', 'REFUNDED'] } },
+        _count: true,
+        _sum: { totalAmount: true },
+      });
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          totalOrders: agg._count,
+          totalServices: claimedServices.count,
+          lifetimeValue: agg._sum.totalAmount ?? 0,
+        },
+      });
+    }
+
+    const claimed = claimedOrders.count + claimedServices.count;
+
     return NextResponse.json(
       {
         success: true,
-        message: existing
-          ? 'Account created. Your previous service history is linked.'
-          : 'Account created successfully.',
+        message: claimed > 0
+          ? `Account created. We found ${claimed} earlier ${claimed === 1 ? 'record' : 'records'} on this number and linked them to your account.`
+          : existing
+            ? 'Account created. Your previous service history is linked.'
+            : 'Account created successfully.',
+        claimed,
         user: { id: user.id, fullName: user.fullName, phone: user.phone },
       },
       { status: 201 },

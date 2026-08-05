@@ -9,7 +9,10 @@ export const metadata = { title: 'Site Settings' };
  * text live, without editing code or redeploying.
  */
 export default async function AdminSettingsPage() {
-  const { contact, service, banner } = await getAllSettings();
+  const { contact, service, banner, payment } = await getAllSettings();
+  // Read on the server: the client must never see whether secrets exist by
+  // probing, and process.env is not available in the browser anyway.
+  const razorpayConfigured = Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
 
   return (
     <div className="space-y-6">
@@ -28,7 +31,13 @@ export default async function AdminSettingsPage() {
         </p>
       </div>
 
-      <SettingsForm contact={contact} service={service} banner={banner} />
+      <SettingsForm
+        contact={contact}
+        service={service}
+        banner={banner}
+        payment={payment}
+        razorpayConfigured={razorpayConfigured}
+      />
     </div>
   );
 }

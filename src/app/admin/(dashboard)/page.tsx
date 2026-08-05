@@ -42,6 +42,58 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Action bar — the things costing money right now, above everything
+          else. An owner opening the dashboard should not have to hunt for
+          "who hasn't paid" or "what needs shipping". */}
+      {(a.awaitingPayment > 0 || a.ordersToShip > 0 || a.pendingServices > 0) && (
+        <div className="grid gap-3 sm:grid-cols-3">
+          {a.awaitingPayment > 0 && (
+            <Link
+              href="/admin/orders?pay=unpaid"
+              className="rounded-2xl bg-red-50 p-4 ring-1 ring-red-200 transition hover:shadow-card-hover"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-wider text-red-700">
+                Awaiting payment
+              </p>
+              <p className="tnum mt-1 font-display text-2xl font-extrabold text-red-800">
+                {a.awaitingPayment}
+              </p>
+              <p className="text-xs text-red-700">
+                {formatINR(a.awaitingPaymentValue)} not received yet →
+              </p>
+            </Link>
+          )}
+          {a.ordersToShip > 0 && (
+            <Link
+              href="/admin/orders?status=CONFIRMED"
+              className="rounded-2xl bg-amber-50 p-4 ring-1 ring-amber-200 transition hover:shadow-card-hover"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-wider text-amber-800">
+                Ready to pack &amp; ship
+              </p>
+              <p className="tnum mt-1 font-display text-2xl font-extrabold text-amber-900">
+                {a.ordersToShip}
+              </p>
+              <p className="text-xs text-amber-800">Paid, waiting on you →</p>
+            </Link>
+          )}
+          {a.pendingServices > 0 && (
+            <Link
+              href="/admin/service-requests"
+              className="rounded-2xl bg-aqua-50 p-4 ring-1 ring-aqua-200 transition hover:shadow-card-hover"
+            >
+              <p className="text-[11px] font-bold uppercase tracking-wider text-aqua-700">
+                Open service jobs
+              </p>
+              <p className="tnum mt-1 font-display text-2xl font-extrabold text-aqua-800">
+                {a.pendingServices}
+              </p>
+              <p className="text-xs text-aqua-700">Assign a technician →</p>
+            </Link>
+          )}
+        </div>
+      )}
+
       {/* Live activity — auto-updates without refresh */}
       <LiveFeed initialPending={a.pendingServices} initialToShip={a.ordersToShip} />
 

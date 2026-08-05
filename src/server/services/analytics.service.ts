@@ -25,6 +25,9 @@ export interface DashboardAnalytics {
   todayServices: number;
   ordersToShip: number;
   ordersInTransit: number;
+  /** Prepaid orders where the money has not arrived — the chase list. */
+  awaitingPayment: number;
+  awaitingPaymentValue: number;
   newCustomers: number;
   repeatRate: number;
   abandonedCarts: number;
@@ -76,6 +79,7 @@ export async function getDashboardAnalytics(): Promise<DashboardAnalytics> {
     todayServices,
     ordersToShip,
     ordersInTransit,
+    awaitingPaymentAgg,
     newCustomers,
     repeatCustomers,
     totalCustomers,
@@ -116,6 +120,16 @@ export async function getDashboardAnalytics(): Promise<DashboardAnalytics> {
     prisma.serviceRequest.count({ where: { createdAt: { gte: today } } }),
     prisma.order.count({ where: { status: { in: ['CONFIRMED', 'PACKED'] } } }),
     prisma.order.count({ where: { status: { in: ['SHIPPED', 'OUT_FOR_DELIVERY'] } } }),
+    // Prepaid + unpaid + not cancelled = money the owner is still owed.
+    prisma.order.aggregate({
+      where: {
+        paymentStatus: 'UNPAID',
+        NOT: { paymentMethod: 'COD' },
+        status: { notIn: ['CANCELLED', 'REFUNDED', 'RETURNED'] },
+      },
+      _count: true,
+      _sum: { totalAmount: true },
+    }),
     prisma.user.count({ where: { createdAt: { gte: last30 }, role: 'CUSTOMER' } }),
     prisma.user.count({ where: { role: 'CUSTOMER', totalOrders: { gt: 1 } } }),
     prisma.user.count({ where: { role: 'CUSTOMER' } }),
@@ -179,6 +193,8 @@ export async function getDashboardAnalytics(): Promise<DashboardAnalytics> {
     todayServices,
     ordersToShip,
     ordersInTransit,
+    awaitingPayment: awaitingPaymentAgg._count,
+    awaitingPaymentValue: Number(awaitingPaymentAgg._sum.totalAmount ?? 0),
     newCustomers,
     repeatRate: totalCustomers ? Math.round((repeatCustomers / totalCustomers) * 100) : 0,
     abandonedCarts,

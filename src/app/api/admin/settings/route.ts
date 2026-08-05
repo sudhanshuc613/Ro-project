@@ -32,6 +32,31 @@ const SCHEMAS = {
     city: z.string().min(2).max(60),
     state: z.string().min(2).max(60),
   }),
+  payment: z.object({
+    codEnabled: z.boolean(),
+    codMaxOrder: z.number().int().min(0).max(500000),
+    codCharge: z.number().int().min(0).max(500),
+    razorpayEnabled: z.boolean(),
+    upiManualEnabled: z.boolean(),
+    // A UPI ID looks like name@bank. Empty is allowed (method just stays off).
+    upiId: z.string().trim().max(80).refine(
+      (v) => v === '' || /^[\w.\-]{2,64}@[a-zA-Z]{2,32}$/.test(v),
+      'Enter a valid UPI ID like yourname@okhdfcbank',
+    ),
+    upiName: z.string().trim().max(80),
+    bankTransferEnabled: z.boolean(),
+    bankDetails: z.string().trim().max(600),
+    paymentNote: z.string().trim().max(300),
+  }).refine(
+    (d) => !d.upiManualEnabled || d.upiId.length > 0,
+    { message: 'Add your UPI ID before switching manual UPI on', path: ['upiId'] },
+  ).refine(
+    (d) => !d.bankTransferEnabled || d.bankDetails.length > 10,
+    { message: 'Add your bank details before switching bank transfer on', path: ['bankDetails'] },
+  ).refine(
+    (d) => d.codEnabled || d.razorpayEnabled || d.upiManualEnabled || d.bankTransferEnabled,
+    { message: 'At least one payment method must stay enabled, or nobody can order', path: ['codEnabled'] },
+  ),
   banner: z.object({
     heroHeadline: z.string().min(3).max(120),
     heroSubline: z.string().min(3).max(160),

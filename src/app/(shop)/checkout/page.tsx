@@ -8,6 +8,7 @@
  */
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Script from 'next/script';
@@ -23,6 +24,19 @@ interface Quote {
 
 const STEPS = ['Address', 'Review', 'Payment'] as const;
 
+/** Which payment options the admin has switched on. */
+interface PayConfig {
+  razorpay: boolean;
+  upiManual: boolean;
+  bankTransfer: boolean;
+  cod: boolean;
+  upiId: string;
+  upiName: string;
+  bankDetails: string;
+  paymentNote: string;
+  codCharge: number;
+}
+
 export default function CheckoutPage() {
   const router = useRouter();
   const items = useCartStore((s) => s.items);
@@ -31,7 +45,11 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(0);
   const [quote, setQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(false);
-  const [payMethod, setPayMethod] = useState<'RAZORPAY' | 'COD'>('RAZORPAY');
+  const { data: session, status: authStatus } = useSession();
+  const [payMethod, setPayMethod] = useState<'RAZORPAY' | 'COD' | 'UPI_MANUAL' | 'BANK'>('COD');
+  const [payCfg, setPayCfg] = useState<PayConfig | null>(null);
+  const [upiRef, setUpiRef] = useState('');
+  const [guestEmail, setGuestEmail] = useState('');
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const [addr, setAddr] = useState({
@@ -39,6 +57,48 @@ export default function CheckoutPage() {
     city: '', state: 'Bihar', pincode: '',
   });
   const [note, setNote] = useState('');
+
+  // Payment options are admin-controlled, so the checkout must ask the server
+  // what is actually available rather than hardcoding two radio buttons.
+  useEffect(() => {
+    fetch('/api/checkout/payment-methods')
+      .then((r) => r.json())
+      .then((cfg: PayConfig) => {
+        setPayCfg(cfg);
+        // Pick the first enabled method so the customer never lands on a
+        // pre-selected option that is switched off.
+        setPayMethod(
+          cfg.razorpay ? 'RAZORPAY'
+          : cfg.upiManual ? 'UPI_MANUAL'
+          : cfg.cod ? 'COD'
+          : cfg.bankTransfer ? 'BANK'
+          : 'COD',
+        );
+      })
+      .catch(() => {});
+  }, []);
+
+  // Logged-in customers should not retype what we already know.
+  useEffect(() => {
+    if (authStatus !== 'authenticated' || !session?.user) return;
+    fetch('/api/account/addresses/default')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.address) {
+          setAddr((prev) => (prev.contactName ? prev : {
+            contactName: d.address.contactName ?? '',
+            contactPhone: d.address.contactPhone ?? '',
+            line1: d.address.line1 ?? '',
+            line2: d.address.line2 ?? '',
+            landmark: d.address.landmark ?? '',
+            city: d.address.city ?? '',
+            state: d.address.state ?? 'Bihar',
+            pincode: d.address.pincode ?? '',
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [authStatus, session]);
 
   const lines = items.map((i) => ({
     productId: i.productId,
@@ -96,12 +156,26 @@ export default function CheckoutPage() {
   }
 
   async function placeOrder() {
+    // UPI-manual orders are worthless to us without the reference number —
+    // catch it here rather than creating an unverifiable order.
+    if (payMethod === 'UPI_MANUAL' && upiRef.trim().length < 6) {
+      toast.error('Please pay first, then enter the UTR / reference number');
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lines, shipping: addr, paymentMethod: payMethod, customerNote: note }),
+        body: JSON.stringify({
+          lines,
+          shipping: addr,
+          paymentMethod: payMethod,
+          customerNote: note,
+          guestEmail: guestEmail || undefined,
+          paymentReference: payMethod === 'UPI_MANUAL' ? upiRef.trim() : undefined,
+        }),
       });
       const data = await res.json();
 
@@ -112,8 +186,10 @@ export default function CheckoutPage() {
         return;
       }
 
-      /* COD — done */
-      if (data.paymentMethod === 'COD') {
+      /* COD, manual UPI and bank transfer all finish server-side — there is
+         no gateway popup to open. The order lands as UNPAID (or AWAITING
+         verification) and the admin confirms it. */
+      if (data.paymentMethod === 'COD' || data.awaitingVerification) {
         clearCart();
         router.push(data.redirectTo);
         return;
@@ -196,6 +272,38 @@ export default function CheckoutPage() {
 
       <main className="container mx-auto px-4 py-8">
         <h1 className="font-display text-2xl font-extrabold text-navy-700">Checkout</h1>
+
+        {/* Guest vs account.
+            We do NOT force registration — forcing signup is the single biggest
+            cause of cart abandonment in Indian e-commerce. Instead we explain
+            what an account gets you and let the customer decide. Their phone
+            number links the order either way, so registering later still
+            surfaces this order in their history. */}
+        {authStatus === 'unauthenticated' && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-aqua-50 p-4 ring-1 ring-aqua-200">
+            <div>
+              <p className="text-sm font-bold text-navy-700">
+                Checking out as a guest — that&apos;s completely fine
+              </p>
+              <p className="mt-0.5 text-xs text-navy-600">
+                With an account you get live order tracking, saved addresses, invoices and
+                filter-change reminders. Your order links to your phone number either way.
+              </p>
+            </div>
+            <Link
+              href={`/login?callbackUrl=${encodeURIComponent('/checkout')}`}
+              className="shrink-0 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-navy-700 ring-1 ring-navy-200 hover:bg-navy-50"
+            >
+              Log in instead
+            </Link>
+          </div>
+        )}
+        {authStatus === 'authenticated' && session?.user && (
+          <p className="mt-3 text-sm text-muted">
+            Logged in as <strong className="text-navy-700">{session.user.name}</strong> · this order
+            will appear in your account
+          </p>
+        )}
 
         {/* Stepper */}
         <ol className="mt-5 flex items-center gap-2">
@@ -305,31 +413,108 @@ export default function CheckoutPage() {
                 <h2 className="font-display text-lg font-bold text-navy-700">Payment Method</h2>
 
                 <div className="mt-4 space-y-3">
-                  <label className={`flex cursor-pointer gap-3 rounded-xl border-2 p-4 ${payMethod === 'RAZORPAY' ? 'border-aqua-500 bg-aqua-50' : 'border-navy-100'}`}>
-                    <input type="radio" checked={payMethod === 'RAZORPAY'} onChange={() => setPayMethod('RAZORPAY')} className="mt-1 h-4 w-4 text-aqua-500" />
-                    <span>
-                      <span className="block font-bold text-navy-700">Pay Online</span>
-                      <span className="block text-sm text-muted">UPI, Card, Net Banking, Wallet — secured by Razorpay</span>
-                    </span>
-                  </label>
-
-                  <label className={`flex gap-3 rounded-xl border-2 p-4 ${
-                    quote?.codAvailable ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
-                  } ${payMethod === 'COD' ? 'border-aqua-500 bg-aqua-50' : 'border-navy-100'}`}>
-                    <input
-                      type="radio" checked={payMethod === 'COD'} disabled={!quote?.codAvailable}
-                      onChange={() => setPayMethod('COD')} className="mt-1 h-4 w-4 text-aqua-500"
-                    />
-                    <span>
-                      <span className="block font-bold text-navy-700">Cash on Delivery</span>
-                      <span className="block text-sm text-muted">
-                        {quote?.codAvailable
-                          ? `Extra ₹${quote.codCharge || 49} handling charge`
-                          : 'Not available for this pincode or order value'}
+                  {/* Only methods the admin switched ON are rendered. Razorpay
+                      additionally requires live keys on the server, so a
+                      half-configured gateway can never strand a customer. */}
+                  {payCfg?.razorpay && (
+                    <label className={`flex cursor-pointer gap-3 rounded-xl border-2 p-4 ${payMethod === 'RAZORPAY' ? 'border-aqua-500 bg-aqua-50' : 'border-navy-100'}`}>
+                      <input type="radio" checked={payMethod === 'RAZORPAY'} onChange={() => setPayMethod('RAZORPAY')} className="mt-1 h-4 w-4 text-aqua-500" />
+                      <span>
+                        <span className="block font-bold text-navy-700">Pay Online</span>
+                        <span className="block text-sm text-muted">UPI, Card, Net Banking, Wallet — secured by Razorpay</span>
                       </span>
-                    </span>
-                  </label>
+                    </label>
+                  )}
+
+                  {payCfg?.upiManual && (
+                    <label className={`flex cursor-pointer gap-3 rounded-xl border-2 p-4 ${payMethod === 'UPI_MANUAL' ? 'border-aqua-500 bg-aqua-50' : 'border-navy-100'}`}>
+                      <input type="radio" checked={payMethod === 'UPI_MANUAL'} onChange={() => setPayMethod('UPI_MANUAL')} className="mt-1 h-4 w-4 text-aqua-500" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-bold text-navy-700">Pay by UPI</span>
+                        <span className="block text-sm text-muted">
+                          GPay, PhonePe, Paytm — pay directly to us, no gateway fee
+                        </span>
+
+                        {payMethod === 'UPI_MANUAL' && (
+                          <span className="mt-3 block rounded-xl bg-white p-3.5 ring-1 ring-navy-100">
+                            <span className="block text-xs font-bold uppercase tracking-wide text-muted">Pay to</span>
+                            <span className="mt-1 block select-all font-mono text-base font-bold text-navy-700">
+                              {payCfg.upiId}
+                            </span>
+                            <span className="block text-xs text-muted">{payCfg.upiName}</span>
+
+                            <a
+                              href={`upi://pay?pa=${encodeURIComponent(payCfg.upiId)}&pn=${encodeURIComponent(payCfg.upiName)}&am=${quote?.total ?? 0}&cu=INR&tn=${encodeURIComponent('AquaNexa order')}`}
+                              className="mt-3 block rounded-lg bg-cta-green py-2.5 text-center text-sm font-bold text-white sm:hidden"
+                            >
+                              Open UPI app — pay {formatINR(quote?.total ?? 0)}
+                            </a>
+
+                            <span className="mt-3 block text-xs font-bold text-navy-700">
+                              After paying, enter the 12-digit UTR / reference number
+                            </span>
+                            <input
+                              value={upiRef}
+                              onChange={(e) => setUpiRef(e.target.value.replace(/\D/g, '').slice(0, 20))}
+                              placeholder="e.g. 431203456789"
+                              inputMode="numeric"
+                              className="input mt-1.5"
+                            />
+                            <span className="mt-1.5 block text-[11px] text-muted">
+                              We verify against our bank and confirm your order — usually within a few hours during working time.
+                            </span>
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                  )}
+
+                  {payCfg?.bankTransfer && (
+                    <label className={`flex cursor-pointer gap-3 rounded-xl border-2 p-4 ${payMethod === 'BANK' ? 'border-aqua-500 bg-aqua-50' : 'border-navy-100'}`}>
+                      <input type="radio" checked={payMethod === 'BANK'} onChange={() => setPayMethod('BANK')} className="mt-1 h-4 w-4 text-aqua-500" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-bold text-navy-700">Bank Transfer / NEFT</span>
+                        <span className="block text-sm text-muted">For bulk and commercial orders</span>
+                        {payMethod === 'BANK' && (
+                          <span className="mt-3 block whitespace-pre-line rounded-xl bg-white p-3.5 text-sm text-navy-700 ring-1 ring-navy-100">
+                            {payCfg.bankDetails}
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                  )}
+
+                  {payCfg?.cod && (
+                    <label className={`flex gap-3 rounded-xl border-2 p-4 ${
+                      quote?.codAvailable ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                    } ${payMethod === 'COD' ? 'border-aqua-500 bg-aqua-50' : 'border-navy-100'}`}>
+                      <input
+                        type="radio" checked={payMethod === 'COD'} disabled={!quote?.codAvailable}
+                        onChange={() => setPayMethod('COD')} className="mt-1 h-4 w-4 text-aqua-500"
+                      />
+                      <span>
+                        <span className="block font-bold text-navy-700">Cash on Delivery</span>
+                        <span className="block text-sm text-muted">
+                          {quote?.codAvailable
+                            ? `Extra ₹${quote.codCharge || payCfg.codCharge} handling charge`
+                            : 'Not available for this pincode or order value'}
+                        </span>
+                      </span>
+                    </label>
+                  )}
+
+                  {payCfg && !payCfg.razorpay && !payCfg.upiManual && !payCfg.cod && !payCfg.bankTransfer && (
+                    <div className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900 ring-1 ring-amber-200">
+                      Online ordering is temporarily unavailable. Please call us to place your order.
+                    </div>
+                  )}
                 </div>
+
+                {payCfg?.paymentNote && (
+                  <p className="mt-3 rounded-lg bg-navy-50 px-3.5 py-2.5 text-xs text-navy-600">
+                    {payCfg.paymentNote}
+                  </p>
+                )}
 
                 {quote?.errors?.length ? (
                   <ul className="mt-4 space-y-1 rounded-lg bg-red-50 p-3">
@@ -342,8 +527,10 @@ export default function CheckoutPage() {
                   disabled={loading || Boolean(quote?.errors?.length)}
                   className="mt-5 w-full rounded-xl bg-cta-green py-4 font-display text-lg font-bold text-white shadow-lg hover:bg-cta-greenDark disabled:opacity-60"
                 >
-                  {loading ? 'Processing…' : payMethod === 'COD'
-                    ? `Place Order — ${formatINR(quote?.total ?? 0)}`
+                  {loading ? 'Processing…'
+                    : payMethod === 'COD' ? `Place Order — ${formatINR(quote?.total ?? 0)}`
+                    : payMethod === 'UPI_MANUAL' ? `I've paid — submit order`
+                    : payMethod === 'BANK' ? `Place Order — ${formatINR(quote?.total ?? 0)}`
                     : `Pay ${formatINR(quote?.total ?? 0)}`}
                 </button>
 

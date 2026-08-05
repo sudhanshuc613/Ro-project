@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: { order?: string };
+  searchParams: { order?: string; pending?: string };
 }) {
   if (!searchParams.order) notFound();
 
@@ -36,6 +36,20 @@ export default async function SuccessPage({
 
   return (
     <main className="container mx-auto max-w-3xl px-4 py-10">
+      {searchParams.pending && (
+        <div className="mb-5 rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">
+          <p className="font-display font-bold text-amber-900">⏳ We&apos;re verifying your payment</p>
+          <p className="mt-1.5 text-sm text-amber-900 text-pretty">
+            Your order is placed. We check the reference number against our bank and confirm it —
+            usually within a few hours during working hours. You&apos;ll get a WhatsApp the moment
+            it&apos;s confirmed, and the order moves to packing straight after.
+          </p>
+          <p className="mt-2 text-xs text-amber-800">
+            Paid but haven&apos;t heard from us by end of day? Call us with your order number — we&apos;ll sort it immediately.
+          </p>
+        </div>
+      )}
+
       {/* Confirmation */}
       <div className="rounded-2xl bg-emerald-50 p-8 text-center ring-1 ring-emerald-200">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-100">
@@ -53,7 +67,9 @@ export default async function SuccessPage({
         <p className="mt-1 text-sm text-emerald-800">
           {order.paymentStatus === 'PAID'
             ? 'Payment received'
-            : 'Pay on delivery'}
+            : order.paymentMethod === 'COD'
+              ? 'Pay on delivery'
+              : 'Payment being verified'}
           {' · '}
           A confirmation has been sent to your WhatsApp
         </p>
