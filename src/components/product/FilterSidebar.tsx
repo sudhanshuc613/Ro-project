@@ -1,8 +1,9 @@
 'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FILTER_FACETS } from '@/lib/constants';
+import { useBodyScrollLock, useEscapeKey } from '@/lib/hooks/useBodyScrollLock';
 
 interface Props {
   brands: { name: string; slug: string }[];
@@ -14,6 +15,11 @@ export default function FilterSidebar({ brands, totalCount }: Props) {
   const pathname = usePathname();
   const params = useSearchParams();
   const [open, setOpen] = useState(false);
+  const closeDrawer = useCallback(() => setOpen(false), []);
+
+  /* Drawer khule to page scroll band — warna peeche ka content hilta hai */
+  useBodyScrollLock(open);
+  useEscapeKey(open, closeDrawer);
 
   function setParam(key: string, value: string | null) {
     const sp = new URLSearchParams(params.toString());
@@ -143,9 +149,9 @@ export default function FilterSidebar({ brands, totalCount }: Props) {
 
       {/* Mobile drawer */}
       {open && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-navy-900/50" onClick={() => setOpen(false)} />
-          <div className="absolute inset-y-0 right-0 w-[85%] max-w-xs overflow-y-auto bg-white p-5">
+          <div className="absolute inset-y-0 right-0 flex h-[100dvh] w-[85%] max-w-xs flex-col overflow-y-auto overscroll-contain bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl">
             <button
               onClick={() => setOpen(false)}
               className="mb-4 ml-auto block rounded-lg p-2 hover:bg-navy-50"

@@ -42,13 +42,19 @@ import { prisma } from '@/lib/db/prisma';
 import { sendWhatsApp } from '@/lib/integrations/whatsapp';
 
 export type OtpChannel = 'DEV' | 'WHATSAPP_REVERSE' | 'WHATSAPP' | 'SMS';
-export type OtpPurpose = 'LOGIN' | 'ORDER_COD' | 'SERVICE_BOOKING';
+export type OtpPurpose = 'LOGIN' | 'ORDER_COD' | 'SERVICE_BOOKING' | 'PASSWORD_RESET';
 
 /** Reverse flow needs longer — the user has to switch apps and come back. */
 const TTL_SECONDS = { DEV: 600, WHATSAPP: 600, SMS: 600, WHATSAPP_REVERSE: 900 } as const;
 const MAX_ATTEMPTS = 5;
 /** Per phone, per window — stops someone burning your SMS balance. */
 const MAX_SENDS_PER_HOUR = 5;
+/**
+ * Password reset is the only two-call flow: verify code, then submit the new
+ * password. This is how long the verified token stays usable in between.
+ * Kept tight (3 min) so a stamped row is not a standing key to the account.
+ */
+const RESET_HANDOFF_SECONDS = 180;
 
 export class OtpError extends Error {
   constructor(message: string, readonly status = 400) {
@@ -270,6 +276,23 @@ export async function verifyTypedCode(
     throw new OtpError(
       left > 0 ? `Wrong code. ${left} attempt${left === 1 ? '' : 's'} left.` : 'Wrong code. Please request a new one.',
     );
+  }
+
+  // PASSWORD_RESET is a two-call flow: the browser verifies the code here,
+  // then posts the same token to /api/auth/reset-password with the new
+  // password. Deleting the row now would make that second call impossible,
+  // so we stamp it instead and let consumeVerification() burn it.
+  // Its TTL is deliberately short so a stamped-but-unused row cannot linger.
+  if (challenge.purpose === 'PASSWORD_RESET') {
+    await prisma.otpChallenge.update({
+      where: { id: challenge.id },
+      data: {
+        verifiedAt: new Date(),
+        expiresAt: new Date(Date.now() + RESET_HANDOFF_SECONDS * 1000),
+      },
+    });
+    await markPhoneVerified(challenge.phone);
+    return { phone: challenge.phone, purpose: challenge.purpose as OtpPurpose };
   }
 
   await prisma.otpChallenge.delete({ where: { id: challenge.id } });

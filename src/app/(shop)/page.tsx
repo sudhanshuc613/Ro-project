@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
     fallback: {
       title: 'RO Service in Patna — ₹200 Visit Charge | Same-Day Repair',
       description:
-        'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.',
+        'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹350+. All brands, 90-min response, 30-day warranty. Call 8969821440.',
       keywords: [
         'RO service in Patna', 'RO repair Patna', 'water purifier service Patna',
         'RO service near me', 'RO technician Patna', 'RO installation Patna',
@@ -70,7 +70,7 @@ const SERVICES = [
 
 const FAQS = [
   { q: 'What is the RO service visit charge in Patna?',
-    a: `Our technician visit charge anywhere in Patna is only ₹${SERVICE.visitCharge} — most other providers in Patna charge ₹299 to ₹399. The ₹${SERVICE.visitCharge} covers complete inspection, TDS testing and diagnosis. Repair parts and labour are quoted separately and only carried out after you approve.` },
+    a: `Our technician visit charge anywhere in Patna is only ₹${SERVICE.visitCharge} — most other providers in Patna charge ₹350 to ₹399. The ₹${SERVICE.visitCharge} covers complete inspection, TDS testing and diagnosis. Repair parts and labour are quoted separately and only carried out after you approve.` },
   { q: 'How quickly will a technician reach my home?',
     a: `For calls placed before 5 PM we typically reach within ${SERVICE.responseTime} on the same day. Kankarbagh and Boring Road are usually under an hour because we station technicians there. For emergencies call ${CONTACT.primaryPhone} directly.` },
   { q: 'Which RO brands do you repair?',

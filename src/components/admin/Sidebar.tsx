@@ -10,8 +10,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { BRAND } from '@/lib/constants';
+import { useBodyScrollLock, useEscapeKey } from '@/lib/hooks/useBodyScrollLock';
 
 type Role = 'STAFF' | 'ADMIN' | 'SUPER_ADMIN' | string;
 
@@ -73,6 +74,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: 'System',
     items: [
       { label: 'Settings',   href: '/admin/settings',   icon: '⚙️', roles: ['ADMIN', 'SUPER_ADMIN'] },
+      { label: 'Security',   href: '/admin/security',   icon: '🔐' },
 
     ],
   },
@@ -86,6 +88,11 @@ interface Props {
 export default function AdminSidebar({ role, badges = {} }: Props) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  /* Drawer khule to page scroll band */
+  useBodyScrollLock(mobileOpen);
+  useEscapeKey(mobileOpen, closeMobile);
 
   const visible = (item: NavItem) => !item.roles || item.roles.includes(role);
   const isActive = (href: string) =>
@@ -176,9 +183,9 @@ export default function AdminSidebar({ role, badges = {} }: Props) {
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-navy-900/60" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute left-0 top-0 h-full w-[270px] bg-navy-700">{nav}</aside>
+          <aside className="absolute left-0 top-0 flex h-[100dvh] w-[270px] flex-col overflow-y-auto overscroll-contain bg-navy-700 pb-[env(safe-area-inset-bottom)] shadow-2xl">{nav}</aside>
         </div>
       )}
     </>

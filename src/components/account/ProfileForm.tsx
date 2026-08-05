@@ -11,6 +11,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 export default function ProfileForm({
   initial,
@@ -202,17 +203,17 @@ export default function ProfileForm({
             {hasPassword && (
               <label className="block">
                 <span className="mb-1 block text-xs font-bold text-navy-700">Current password</span>
-                <input type="password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} className={inp} autoComplete="current-password" />
+                <PasswordInput value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} className={inp} autoComplete="current-password" />
               </label>
             )}
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block">
                 <span className="mb-1 block text-xs font-bold text-navy-700">New password</span>
-                <input type="password" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} className={inp} autoComplete="new-password" />
+                <PasswordInput value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} className={inp} autoComplete="new-password" />
               </label>
               <label className="block">
                 <span className="mb-1 block text-xs font-bold text-navy-700">Confirm new password</span>
-                <input type="password" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} className={inp} autoComplete="new-password" />
+                <PasswordInput value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} className={inp} autoComplete="new-password" />
               </label>
             </div>
             <p className="text-[11px] text-muted">At least 8 characters.</p>

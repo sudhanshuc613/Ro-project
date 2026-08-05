@@ -21,7 +21,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'node:crypto';
 import { resolveInboundCode } from '@/server/services/otp.service';
-import { sendWhatsApp } from '@/lib/integrations/whatsapp';
+import { sendWhatsAppText } from '@/lib/integrations/whatsapp';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -90,14 +90,14 @@ export async function POST(req: NextRequest) {
           const matched = await resolveInboundCode(msg.from, msg.text.body);
 
           if (matched) {
-            // Confirming in-thread is a free service reply and closes the
-            // loop for a customer staring at WhatsApp wondering if it worked.
-            void sendWhatsApp({
-              to: msg.from,
-              template: 'otp_confirmed',
-              variables: [],
-              relatedType: 'ORDER',
-            });
+            // Plain text, not a template: the customer just messaged us, so
+            // we are inside the 24-hour service window where free-form
+            // replies are allowed and cost nothing. Using a template here
+            // would need Meta approval and would be billable.
+            void sendWhatsAppText(
+              msg.from,
+              '✅ Number verified. You can go back to the website and continue — AquaNexa',
+            );
           }
         } catch (err) {
           console.error('[whatsapp] inbound handling failed:', err);

@@ -8,7 +8,8 @@
  *   order_confirmed              — {name} {orderNo} {amount} {eta}
  *   payment_received             — {name} {orderNo} {amount}
  *   otp_verification             — {code}   (category: AUTHENTICATION)
- *   otp_confirmed                — (no vars, confirmation reply)
+ *   NOTE: the reverse-OTP confirmation is a free-form text reply, not a
+ *   template — see sendWhatsAppText(). No approval needed for it.
  *   order_shipped                — {name} {orderNo} {courier} {awb} {trackUrl}
  *   order_delivered              — {name} {orderNo}
  *   service_request_received     — {name} {ticket} {visitCharge} {phone}
@@ -121,18 +122,45 @@ export async function sendWhatsApp(payload: WhatsAppPayload): Promise<{ ok: bool
   }
 }
 
-/** Free-form text — only valid inside a 24-hour customer service window. */
-export async function sendWhatsAppText(to: string, body: string) {
+/**
+ * Free-form text reply.
+ *
+ * Only valid inside the 24-hour window opened by a customer's own message.
+ * That window is exactly where Meta's SERVICE category applies — no template
+ * approval required, and free since Meta's Nov 2024 pricing change. Outside
+ * the window Meta rejects it, which is correct: it stops businesses
+ * cold-messaging people for free.
+ *
+ * Failures are logged rather than thrown — a missed confirmation must never
+ * break the verification that already succeeded.
+ */
+export async function sendWhatsAppText(to: string, body: string): Promise<{ ok: boolean }> {
   const token = process.env.WHATSAPP_ACCESS_TOKEN;
   const phoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
   if (!token || !phoneId) return { ok: false };
 
-  const res = await fetch(`${BASE}/${phoneId}/messages`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messaging_product: 'whatsapp', to, type: 'text', text: { body } }),
-  });
-  return { ok: res.ok };
+  try {
+    const res = await fetch(`${BASE}/${phoneId}/messages`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        recipient_type: 'individual',
+        to,
+        type: 'text',
+        text: { preview_url: false, body },
+      }),
+    });
+    if (!res.ok) {
+      const j = await res.json().catch(() => ({}));
+      console.error('[whatsapp] text reply failed:', j?.error?.message ?? res.status);
+      return { ok: false };
+    }
+    return { ok: true };
+  } catch (err) {
+    console.error('[whatsapp] text reply error:', err);
+    return { ok: false };
+  }
 }
 
 /** Fan-out helper for the two business numbers. */

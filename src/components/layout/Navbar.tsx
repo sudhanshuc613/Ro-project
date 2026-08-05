@@ -7,9 +7,10 @@
  */
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BRAND, CONTACT, PRODUCT_TYPES } from '@/lib/constants';
+import { useBodyScrollLock, useEscapeKey } from '@/lib/hooks/useBodyScrollLock';
 import { useCartStore } from '@/store/cart';
 import SearchAutosuggest from './SearchAutosuggest';
 import AccountMenu from './AccountMenu';
@@ -71,12 +72,19 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const itemCount = useCartStore((s) => s.items.reduce((n, i) => n + i.quantity, 0));
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  /* Mobile drawer khulte hi page ka scroll band karo.
+     Warna drawer ke peeche ka homepage scroll hota rehta hai aur
+     content beech screen pe aa jaata hai (mobile pe dikhta bug). */
+  useBodyScrollLock(mobileOpen);
+  useEscapeKey(mobileOpen, closeMobile);
 
   const hoverOpen = (k: string) => { clearTimeout(closeTimer.current); setOpenMenu(k); };
   const hoverClose = () => { closeTimer.current = setTimeout(() => setOpenMenu(null), 160); };
@@ -225,9 +233,11 @@ export default function Navbar() {
 
       {/* ── Mobile drawer ── */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-[60] lg:hidden">
+        <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true">
           <div className="absolute inset-0 bg-navy-900/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute left-0 top-0 h-full w-[86%] max-w-sm overflow-y-auto bg-white p-5">
+          <aside
+            className="absolute left-0 top-0 flex h-[100dvh] w-[86%] max-w-sm flex-col overflow-y-auto overscroll-contain bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl"
+          >
             <div className="mb-6 flex items-center justify-between">
               <Image src={BRAND.logo} alt={BRAND.name} width={140} height={36} className="h-9 w-auto" />
               <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="rounded-lg p-2 hover:bg-navy-50">

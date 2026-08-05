@@ -5,16 +5,19 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export default function CustomerActions({
-  id, name, phone, banned, notes,
+  id, name, phone, banned, notes, canResetPassword = false,
 }: {
   id: string; name: string; phone: string; banned: boolean; notes: string;
+  /** SUPER_ADMIN only — issuing a working credential is the most abusable action here. */
+  canResetPassword?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
   const [noteText, setNoteText] = useState(notes);
+  const [tempPw, setTempPw] = useState('');
   const router = useRouter();
 
-  async function act(action: 'ban' | 'unban' | 'note', payload?: object) {
+  async function act(action: 'ban' | 'unban' | 'note' | 'reset-password', payload?: object) {
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/customers/${id}`, {
@@ -24,6 +27,7 @@ export default function CustomerActions({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message ?? 'Failed');
+      if (data.tempPassword) setTempPw(data.tempPassword);
       toast.success(data.message);
       setEditing(false);
       router.refresh();
@@ -32,6 +36,49 @@ export default function CustomerActions({
     } finally {
       setBusy(false);
     }
+  }
+
+  /* Shown once, right after a reset. Nobody can read it back later —
+     not even from the database — so it must be copied now. */
+  if (tempPw) {
+    return (
+      <div className="w-60 shrink-0 space-y-2 rounded-xl border-2 border-amber-300 bg-amber-50 p-3">
+        <p className="text-xs font-bold text-amber-900">Temporary password</p>
+        <p className="select-all break-all rounded-lg bg-white px-3 py-2 font-mono text-sm font-bold text-navy-700">
+          {tempPw}
+        </p>
+        <p className="text-[11px] leading-snug text-amber-900">
+          Read this out to {name.split(' ')[0]} now. It cannot be shown again.
+          Ask them to change it after signing in.
+        </p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              navigator.clipboard?.writeText(tempPw);
+              toast.success('Copied');
+            }}
+            className="flex-1 rounded-lg bg-navy-700 px-3 py-1.5 text-xs font-bold text-white"
+          >
+            Copy
+          </button>
+          <a
+            href={`https://wa.me/91${phone}?text=${encodeURIComponent(
+              `Hi ${name.split(' ')[0]}, AquaNexa se. Aapka temporary password hai: ${tempPw}\nLogin karke turant apna naya password set kar lijiye.`,
+            )}`}
+            target="_blank" rel="noopener noreferrer"
+            className="flex-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-center text-xs font-bold text-white"
+          >
+            WhatsApp
+          </a>
+        </div>
+        <button
+          onClick={() => setTempPw('')}
+          className="w-full text-[11px] font-semibold text-muted hover:underline"
+        >
+          Done — hide it
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -76,6 +123,25 @@ export default function CustomerActions({
           >
             📝 {notes ? 'Edit note' : 'Add note'}
           </button>
+          {canResetPassword && (
+            <button
+              onClick={() => {
+                if (
+                  confirm(
+                    `Create a temporary password for ${name}?\n\n` +
+                      'Their current password stops working immediately. ' +
+                      'You will see the new one once — read it out to them on the phone.',
+                  )
+                ) {
+                  act('reset-password');
+                }
+              }}
+              disabled={busy}
+              className="block w-full rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-xs font-bold text-amber-800 hover:bg-amber-100 disabled:opacity-60"
+            >
+              🔑 Reset password
+            </button>
+          )}
           <button
             onClick={() => {
               if (banned || confirm(`Ban ${name}? They will not be able to sign in or order.`)) {

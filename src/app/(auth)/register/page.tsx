@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BRAND } from '@/lib/constants';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -103,10 +104,10 @@ export default function RegisterPage() {
           </Field>
 
           <Field label="Password" error={errors.password?.[0]} required>
-            <input
-              type="password" value={form.password} onChange={set('password')}
+            <PasswordInput
+              value={form.password} onChange={set('password')}
               placeholder="Minimum 6 characters" autoComplete="new-password"
-              minLength={6} required className="input"
+              minLength={6} required
             />
           </Field>
 

@@ -477,7 +477,7 @@ function ServiceCard({ initial }: { initial: ServiceSettings }) {
   return (
     <Card title="Service Settings" sub="Visit charge and service promises shown across the site">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Visit Charge (₹)" hint="Your biggest competitive advantage — competitors charge ₹299–399">
+        <Field label="Visit Charge (₹)" hint="Your biggest competitive advantage — competitors charge ₹350–399">
           <input
             type="number" value={f.visitCharge}
             onChange={(e) => setF({ ...f, visitCharge: Number(e.target.value) })}

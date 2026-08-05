@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BRAND } from '@/lib/constants';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 export default function LoginPage() {
   return (
@@ -71,10 +72,15 @@ function LoginForm() {
             <span className="mb-1.5 block text-sm font-semibold text-navy-700">
               Password <span className="text-red-500">*</span>
             </span>
-            <input
-              type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••" autoComplete="current-password" required className="input"
+            <PasswordInput
+              value={password} onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••" autoComplete="current-password" required
             />
+            <div className="mt-1.5 text-right">
+              <Link href="/forgot-password" className="text-sm font-semibold text-aqua-600 hover:underline">
+                Forgot password?
+              </Link>
+            </div>
           </label>
 
           {error && (

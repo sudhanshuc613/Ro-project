@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db/prisma';
 import { formatINR, formatDateIN, relativeTime } from '@/lib/utils/format';
 import CustomerActions from '@/components/admin/CustomerActions';
@@ -13,6 +15,10 @@ export default async function CustomersPage({
 }) {
   const q = searchParams.q?.trim();
   const segment = searchParams.segment;
+
+  // Only the owner account may mint a working credential for a customer.
+  const session = await getServerSession(authOptions);
+  const canResetPassword = session?.user?.role === 'SUPER_ADMIN';
 
   const where = {
     role: 'CUSTOMER' as const,
@@ -147,6 +153,7 @@ export default async function CustomersPage({
                     phone={c.phone}
                     banned={banned}
                     notes={c.notes ?? ''}
+                    canResetPassword={canResetPassword}
                   />
                 </div>
               </div>

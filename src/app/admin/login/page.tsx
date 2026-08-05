@@ -5,6 +5,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { BRAND } from '@/lib/constants';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 /**
  * useSearchParams() forces client-side bailout, so the form must sit inside a
@@ -66,12 +67,11 @@ function AdminLoginForm() {
 
           <label className="block">
             <span className="mb-1.5 block text-sm font-semibold text-navy-700">Password</span>
-            <input
-              type="password"
+            <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="input"
+              autoComplete="current-password"
               placeholder="••••••••"
             />
           </label>

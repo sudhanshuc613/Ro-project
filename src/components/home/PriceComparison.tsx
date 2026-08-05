@@ -6,12 +6,12 @@ import { CONTACT, SERVICE } from '@/lib/constants';
  * Real market rates in Patna (verified from competitor listings, 2026):
  *   Mr Service Expert  — from ₹399
  *   RO Care India      — repair ₹399, install ₹599, AMC ₹999
- *   Most local shops   — ₹299–₹399 visit charge
+ *   Most local shops   — ₹350–₹399 visit charge
  *
  * Leading with the ₹200 gap converts better than any adjective.
  */
 const ROWS = [
-  { service: 'Technician visit & diagnosis', us: '₹200', them: '₹299 – ₹399', highlight: true },
+  { service: 'Technician visit & diagnosis', us: '₹200', them: '₹350 – ₹399', highlight: true },
   { service: 'Sediment / carbon filter change', us: '₹450 – ₹600', them: '₹500 – ₹1,200' },
   { service: 'RO membrane (75 GPD)', us: '₹1,200 – ₹1,800', them: '₹1,500 – ₹2,500' },
   { service: 'RO membrane (100 GPD)', us: '₹1,600 – ₹2,400', them: '₹2,000 – ₹3,000' },

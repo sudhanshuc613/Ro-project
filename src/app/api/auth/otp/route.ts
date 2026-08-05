@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
 
 const startSchema = z.object({
   phone: z.string().trim().regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile'),
-  purpose: z.enum(['LOGIN', 'ORDER_COD', 'SERVICE_BOOKING']).default('LOGIN'),
+  purpose: z.enum(['LOGIN', 'ORDER_COD', 'SERVICE_BOOKING', 'PASSWORD_RESET']).default('LOGIN'),
 });
 
 const verifySchema = z.object({
@@ -42,7 +42,9 @@ export async function POST(req: NextRequest) {
 
   // A number proven once does not need proving again — this is what keeps
   // repeat customers from hitting a wall on every order.
-  if (otp.skipIfAlreadyVerified && (await isPhoneVerified(phone))) {
+  // Password reset must always send a fresh code — skipping it because the
+  // number was verified once before would let anyone reset any account.
+  if (purpose !== 'PASSWORD_RESET' && otp.skipIfAlreadyVerified && (await isPhoneVerified(phone))) {
     return NextResponse.json({ alreadyVerified: true, message: 'This number is already verified' });
   }
 

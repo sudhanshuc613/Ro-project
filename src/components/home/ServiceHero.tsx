@@ -49,7 +49,7 @@ const QUICK_ISSUES = [
 ];
 
 export default function ServiceHero() {
-  const competitorLow = 299;
+  const competitorLow = 350;
   const saving = competitorLow - SERVICE.visitCharge;
 
   return (
@@ -116,7 +116,7 @@ export default function ServiceHero() {
                   Others in Patna
                 </p>
                 <p className="tnum mt-0.5 font-display text-xl font-bold text-red-300/85 line-through decoration-red-400/60 decoration-2">
-                  ₹299–399
+                  ₹350–399
                 </p>
               </div>
               <div className="flex-1 bg-white/[.07] px-5 py-3.5">

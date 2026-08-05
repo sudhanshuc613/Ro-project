@@ -733,7 +733,7 @@ export function buildAreaFaqs(area: ServiceAreaContent) {
   return [
     {
       q: `What is the RO service visit charge in ${area.name}, Patna?`,
-      a: `Our visit charge in ${area.name} is only ₹200 — most other providers in Patna charge ₹299 to ₹399. This covers complete inspection, TDS testing and diagnosis. Parts and repair work are quoted separately and only carried out after you approve the cost.`,
+      a: `Our visit charge in ${area.name} is only ₹200 — most other providers in Patna charge ₹350 to ₹399. This covers complete inspection, TDS testing and diagnosis. Parts and repair work are quoted separately and only carried out after you approve the cost.`,
     },
     {
       q: `How quickly can a technician reach ${area.name}?`,
