@@ -20,7 +20,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.4.2",
+    "@auth/prisma-adapter": "^2.11.3",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.18.0",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -38,14 +38,14 @@
     "embla-carousel-react": "^8.1.8",
     "ioredis": "^5.4.1",
     "lucide-react": "^0.427.0",
-    "next": "14.2.5",
-    "next-auth": "^4.24.7",
+    "next": "^16.3.0",
+    "next-auth": "^4.24.15",
     "razorpay": "^2.9.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "^7.52.2",
     "recharts": "^2.12.7",
-    "sharp": "^0.33.4",
+    "sharp": "^0.35.3",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "zod": "^3.23.8",
@@ -60,13 +60,13 @@
     "@types/react": "^18.3.3",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.5",
+    "eslint-config-next": "^16.3.0",
     "postcss": "^8.4.41",
     "prisma": "^5.18.0",
     "tailwindcss": "^3.4.9",
     "tsx": "^4.16.5",
     "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": ">=20"

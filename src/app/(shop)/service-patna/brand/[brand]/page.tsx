@@ -72,8 +72,10 @@ export default function BrandServicePage({ params }: { params: { brand: string }
     },
     {
       q: 'Do you service other brands too?',
-      a: 'Yes, we repair all brands including Kent, Aquaguard, Livpure, Pureit, AO Smith, Blue Star, Havells, and locally assembled RO units.',
+      a: 'Yes, we repair all brands including Kent, Aquaguard, Aquafresh, Livpure, Pureit, AO Smith, Blue Star, Havells, Nasaka, Zero B and locally assembled RO units.',
     },
+    // Brand-only questions — these are what make each page's FAQ block unique
+    ...(brand.extraFaqs ?? []),
   ];
 
   return (
@@ -158,6 +160,34 @@ export default function BrandServicePage({ params }: { params: { brand: string }
                 is always confirmed on site before any work begins.
               </p>
 
+              {/* ── Brand-specific context: the part no competitor page has ── */}
+              {brand.patnaContext && (
+                <section className="mt-10">
+                  <h2 className="font-display text-2xl font-bold text-navy-700">
+                    {short} in Patna — what we actually see
+                  </h2>
+                  <p className="mt-3 leading-relaxed text-navy-600 text-pretty">{brand.patnaContext}</p>
+                </section>
+              )}
+
+              {brand.partsProfile && (
+                <section className="mt-8">
+                  <h2 className="font-display text-2xl font-bold text-navy-700">
+                    {short} spare parts &amp; what they cost
+                  </h2>
+                  <p className="mt-3 leading-relaxed text-navy-600 text-pretty">{brand.partsProfile}</p>
+                </section>
+              )}
+
+              {brand.watchOut && (
+                <section className="mt-8 rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">
+                  <h2 className="font-display text-lg font-bold text-amber-900">
+                    ⚠️ One thing to watch out for with {short}
+                  </h2>
+                  <p className="mt-2 leading-relaxed text-amber-900 text-pretty">{brand.watchOut}</p>
+                </section>
+              )}
+
               <h2 className="mt-10 font-display text-2xl font-bold text-navy-700">
                 {short} Models We Service
               </h2>
@@ -176,7 +206,7 @@ export default function BrandServicePage({ params }: { params: { brand: string }
                 {short} Service Across Patna
               </h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {SERVICE_AREAS.map((a) => (
+                {SERVICE_AREAS.slice(0, 6).map((a) => (
                   <Link key={a.slug} href={`/service-patna/${a.slug}`}
                     className="flex items-center justify-between rounded-xl border border-navy-100 p-3.5 transition hover:border-aqua-400 hover:bg-aqua-50">
                     <span className="text-sm font-semibold text-navy-700">
@@ -186,6 +216,11 @@ export default function BrandServicePage({ params }: { params: { brand: string }
                   </Link>
                 ))}
               </div>
+              <p className="mt-3 text-sm text-muted">
+                <Link href="/service-patna" className="font-bold text-aqua-600 hover:underline">
+                  See all 16 Patna areas we cover →
+                </Link>
+              </p>
             </div>
 
             <div className="lg:sticky lg:top-28 lg:self-start">

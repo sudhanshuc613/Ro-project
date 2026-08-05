@@ -92,7 +92,10 @@ export async function uploadImage(opts: {
   }
 
   // Verify it is genuinely an image — a renamed .exe would fail here.
-  let meta: sharp.Metadata;
+  // Inferred rather than annotated as `sharp.Metadata`: sharp 0.35 stopped
+  // exporting its types as a namespace, so naming the type breaks the build.
+  // Inference gives identical safety and survives future sharp versions.
+  let meta: Awaited<ReturnType<ReturnType<typeof sharp>['metadata']>>;
   try {
     meta = await sharp(buffer).metadata();
   } catch {
