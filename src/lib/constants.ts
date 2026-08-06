@@ -98,6 +98,23 @@ export const SOCIAL: readonly string[] = [
   // 'https://www.instagram.com/<your-handle>',
 ];
 
+/**
+ * Google Analytics 4 measurement ID.
+ *
+ * Ye SECRET nahi hai — har visitor ise page source mein dekh sakta hai,
+ * isliye code mein rakhna bilkul safe hai. Yahan rakhne ka fayda: Vercel
+ * mein env var set karna bhool jaao tab bhi tracking chalti rahegi.
+ *
+ * Chahe to `NEXT_PUBLIC_GA_ID` env var se override kar sakte ho
+ * (jaise alag staging property ke liye).
+ */
+export const ANALYTICS = {
+  gaId: 'G-JP9HDZ9SE3',
+  /** In domains par hi GA chalega — localhost aur Vercel preview ka
+   *  data asli report kharab na kare isliye. */
+  allowedHosts: ['rokadoctor.in', 'www.rokadoctor.in'],
+} as const;
+
 export const GBP = {
   /** GBP par jo naam likha hai — hu-ba-hu. */
   name: 'Aqua Perl',
