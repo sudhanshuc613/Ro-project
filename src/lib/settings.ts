@@ -108,7 +108,7 @@ const FALLBACK_PAYMENT: PaymentSettings = {
   razorpayEnabled: false,
   upiManualEnabled: false,
   upiId: '',
-  upiName: 'AquaNexa Water Solutions',
+  upiName: 'Aqua Perl RO Service Centre',
   bankTransferEnabled: false,
   bankDetails: '',
   paymentNote: '',
@@ -217,7 +217,7 @@ export async function getAvailablePaymentMethods(orderTotal: number, codAllowedF
 
 export const telLink = (phone: string) => `tel:+91${phone.replace(/\D/g, '')}`;
 
-export const waLink = (whatsapp: string, msg = 'Hi AquaNexa, I need RO service in Patna.') =>
+export const waLink = (whatsapp: string, msg = 'Hi Aqua Perl, I need RO service in Patna.') =>
   `https://wa.me/${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
 
 /** All active phone numbers, in call-priority order. Blank entries dropped. */

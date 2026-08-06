@@ -82,7 +82,7 @@ export default async function AccountHeader({
               📞 Need help
             </a>
             <a
-              href={waLink(contact.whatsapp, 'Hi, I need help with my AquaNexa account.')}
+              href={waLink(contact.whatsapp, 'Hi, I need help with my Aqua Perl account.')}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-xl bg-white/95 px-4 py-2.5 text-sm font-bold text-navy-700 transition hover:bg-white"

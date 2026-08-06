@@ -151,7 +151,7 @@ export default async function ReviewsPage() {
                     {r.adminReply && (
                       <div className="mt-3 rounded-xl bg-aqua-50 p-3">
                         <p className="text-[11px] font-bold uppercase tracking-wider text-aqua-700">
-                          AquaNexa replied
+                          Aqua Perl replied
                         </p>
                         <p className="mt-0.5 text-sm text-aqua-900">{r.adminReply}</p>
                       </div>

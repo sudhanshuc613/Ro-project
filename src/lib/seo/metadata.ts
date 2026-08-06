@@ -41,7 +41,7 @@ export async function buildMetadata({
   const index = row ? row.robotsIndex : !fallback.noIndex;
 
   return {
-    // `absolute` stops the root layout's "%s | AquaNexa" template from
+    // `absolute` stops the root layout's "%s | Aqua Perl" template from
     // double-appending the brand name when the title already contains it.
     title: { absolute: title },
     description,
@@ -79,7 +79,7 @@ function fit(text: string, max: number) {
 }
 
 export const TITLE_TEMPLATES = {
-  // Reserve room for the ' | AquaNexa' suffix added by the root layout template
+  // Reserve room for the ' | Aqua Perl' suffix added by the root layout template
   product: (name: string, brand?: string) => `${fit(name, 43)} | Buy Online`,
   category: (name: string) => `${fit(name, 40)} — Best Price in India`,
   serviceArea: (area: string) =>

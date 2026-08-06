@@ -60,7 +60,7 @@ export default async function SuccessPage({
         <h1 className="mt-5 font-display text-2xl font-extrabold text-emerald-900">
           Order Confirmed!
         </h1>
-        <p className="mt-1 text-emerald-800">Thank you for shopping with AquaNexa</p>
+        <p className="mt-1 text-emerald-800">Thank you for shopping with Aqua Perl</p>
         <p className="mt-4 font-display text-2xl font-extrabold tracking-wide text-navy-700">
           {order.orderNumber}
         </p>

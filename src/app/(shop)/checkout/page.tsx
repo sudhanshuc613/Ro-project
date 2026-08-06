@@ -444,7 +444,7 @@ export default function CheckoutPage() {
                             <span className="block text-xs text-muted">{payCfg.upiName}</span>
 
                             <a
-                              href={`upi://pay?pa=${encodeURIComponent(payCfg.upiId)}&pn=${encodeURIComponent(payCfg.upiName)}&am=${quote?.total ?? 0}&cu=INR&tn=${encodeURIComponent('AquaNexa order')}`}
+                              href={`upi://pay?pa=${encodeURIComponent(payCfg.upiId)}&pn=${encodeURIComponent(payCfg.upiName)}&am=${quote?.total ?? 0}&cu=INR&tn=${encodeURIComponent('Aqua Perl order')}`}
                               className="mt-3 block rounded-lg bg-cta-green py-2.5 text-center text-sm font-bold text-white sm:hidden"
                             >
                               Open UPI app — pay {formatINR(quote?.total ?? 0)}

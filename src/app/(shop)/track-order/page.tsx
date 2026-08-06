@@ -6,7 +6,7 @@ import OrderLookup from '@/components/shop/OrderLookup';
 export const metadata: Metadata = {
   title: 'Track Your Order',
   description:
-    'Track your AquaNexa order without logging in — enter your order number and mobile. Or track a service ticket with your SRV number.',
+    'Track your Aqua Perl order without logging in — enter your order number and mobile. Or track a service ticket with your SRV number.',
   alternates: { canonical: '/track-order' },
 };
 

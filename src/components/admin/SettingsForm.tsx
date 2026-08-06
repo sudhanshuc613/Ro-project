@@ -314,7 +314,7 @@ function PaymentCard({
                 rows={4}
                 value={f.bankDetails}
                 onChange={(e) => setF({ ...f, bankDetails: e.target.value })}
-                placeholder={'AquaNexa Water Solutions\nA/C: 1234567890\nIFSC: SBIN0001234\nSBI, Kankarbagh, Patna'}
+                placeholder={'Aqua Perl RO Service Centre\nA/C: 1234567890\nIFSC: SBIN0001234\nSBI, Kankarbagh, Patna'}
                 className="input mt-1"
               />
             </Field>

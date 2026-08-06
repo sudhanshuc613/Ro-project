@@ -56,7 +56,7 @@ export default function AmcActions({
 
       <a
         href={`https://wa.me/91${phone}?text=${encodeURIComponent(
-          `Hi ${customerName.split(' ')[0]}, this is AquaNexa regarding your AMC.`,
+          `Hi ${customerName.split(' ')[0]}, this is Aqua Perl regarding your AMC.`,
         )}`}
         target="_blank"
         rel="noopener noreferrer"

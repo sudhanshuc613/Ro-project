@@ -1,12 +1,12 @@
 /**
- * JSON-LD structured data builders — the engine behind AquaNexa's DUAL SEO.
+ * JSON-LD structured data builders — the engine behind Aqua Perl's DUAL SEO.
  *
  *  GLOBAL e-commerce  → Product + Offer + AggregateRating + BreadcrumbList
  *  LOCAL Patna service → LocalBusiness/HVACBusiness + Service + GeoCircle + FAQPage
  *
  * Rendered via <script type="application/ld+json"> in each page's Server Component.
  */
-import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE, GBP, SOCIAL } from '@/lib/constants';
 
 type Json = Record<string, unknown>;
 
@@ -21,7 +21,7 @@ export function organizationSchema(): Json {
     url: BRAND.url,
     logo: { '@type': 'ImageObject', url: `${BRAND.url}${BRAND.logo}`, width: 512, height: 512 },
     description:
-      'AquaNexa sells RO water purifiers, commercial RO plants and genuine spare parts across India, and provides expert RO repair & installation service in Patna, Bihar.',
+      'Aqua Perl sells RO water purifiers, commercial RO plants and genuine spare parts across India, and provides expert RO repair & installation service in Patna, Bihar.',
     contactPoint: [
       {
         '@type': 'ContactPoint',
@@ -38,11 +38,10 @@ export function organizationSchema(): Json {
         availableLanguage: ['en', 'hi'],
       },
     ],
-    sameAs: [
-      'https://www.facebook.com/aquanexa',
-      'https://www.instagram.com/aquanexa',
-      'https://www.youtube.com/@aquanexa',
-    ],
+    // sameAs sirf tab bharna jab profile SACH MEIN maujood ho. Dead link
+    // dena trust todta hai — Google follow karta hai aur 404 milta hai.
+    // Facebook/Instagram page ban jaaye to yahan URL daal dena.
+    ...(SOCIAL.length ? { sameAs: SOCIAL } : {}),
   };
 }
 
@@ -62,9 +61,12 @@ export function localBusinessSchema(area?: {
     priceRange: '₹₹',
     currenciesAccepted: 'INR',
     paymentAccepted: 'Cash, UPI, Card, Net Banking',
+    // Service Area Business: Google Business Profile pe address chhupa hai,
+    // isliye schema mein bhi streetAddress nahi bhejte. GBP aur website ka
+    // address alag hona local ranking ka seedha nuksan hai.
     address: {
       '@type': 'PostalAddress',
-      streetAddress: CONTACT.address.street,
+      ...(CONTACT.showStreetAddress ? { streetAddress: CONTACT.address.street } : {}),
       addressLocality: area?.name ?? CONTACT.address.locality,
       addressRegion: CONTACT.address.state,
       postalCode: area?.pincodes?.[0] ?? CONTACT.address.pincode,
@@ -97,7 +99,15 @@ export function localBusinessSchema(area?: {
         { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Annual Maintenance Contract (AMC)' }, priceCurrency: 'INR' },
       ],
     },
-    aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', reviewCount: '312', bestRating: '5' },
+    // ⚠️ Ye Google Business Profile ke ASLI numbers hain (src/lib/constants.ts → GBP).
+    // Inflate kiya to "spammy structured markup" ka manual action lag sakta hai
+    // aur saare rich results band ho jaate hain. GBP pe count badle to wahin badlo.
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: String(GBP.ratingValue),
+      reviewCount: String(GBP.reviewCount),
+      bestRating: '5',
+    },
   };
 }
 

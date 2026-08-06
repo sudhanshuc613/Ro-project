@@ -79,8 +79,10 @@ export default function Footer() {
         <div className="border-t border-white/10 py-6 text-sm">
           <p className="font-semibold text-white">{BRAND.legalName}</p>
           <address className="mt-1 not-italic text-navy-200">
-            {CONTACT.address.street}, {CONTACT.address.locality}, {CONTACT.address.city},{' '}
-            {CONTACT.address.state} {CONTACT.address.pincode} · {CONTACT.email}
+            {CONTACT.showStreetAddress && <>{CONTACT.address.street}, </>}
+            {CONTACT.address.locality}, {CONTACT.address.city},{' '}
+            {CONTACT.address.state} {CONTACT.address.pincode}
+            {CONTACT.emailWorks && <> · {CONTACT.email}</>}
           </address>
         </div>
 

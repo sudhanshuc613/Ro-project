@@ -6,7 +6,7 @@ import { localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: 'Contact Us — AquaNexa Patna',
+  title: 'Contact Us — Aqua Perl Patna',
   description: `Call ${CONTACT.primaryPhone} or ${CONTACT.secondaryPhone} for RO service in Patna or orders across India. Open ${CONTACT.hours}.`,
   alternates: { canonical: '/contact' },
 };
@@ -65,7 +65,7 @@ export default function ContactPage() {
         </nav>
 
         <div className="container mx-auto px-4 py-12">
-          <h1 className="font-display text-3xl font-extrabold text-navy-700">Contact AquaNexa</h1>
+          <h1 className="font-display text-3xl font-extrabold text-navy-700">Contact Aqua Perl</h1>
           <p className="mt-2 max-w-2xl text-muted">
             RO service in Patna, or orders anywhere in India — call us, we answer.
           </p>
@@ -92,14 +92,23 @@ export default function ContactPage() {
           </div>
 
           <div className="mt-8 rounded-2xl bg-navy-50 p-6">
-            <h2 className="font-display font-bold text-navy-700">Visit or write to us</h2>
+            <h2 className="font-display font-bold text-navy-700">Where we work</h2>
             <address className="mt-2 not-italic text-navy-600">
               {BRAND.legalName}<br />
-              {CONTACT.address.street}, {CONTACT.address.locality}<br />
+              {CONTACT.showStreetAddress && <>{CONTACT.address.street}, </>}
+              {CONTACT.address.locality}<br />
               {CONTACT.address.city}, {CONTACT.address.state} — {CONTACT.address.pincode}<br />
-              <a href={`mailto:${CONTACT.email}`} className="text-aqua-600 hover:underline">{CONTACT.email}</a>
+              {CONTACT.emailWorks && (
+                <a href={`mailto:${CONTACT.email}`} className="text-aqua-600 hover:underline">{CONTACT.email}</a>
+              )}
             </address>
             <p className="mt-3 text-sm font-semibold text-navy-700">🕒 {CONTACT.hours} · All 7 days</p>
+            {!CONTACT.showStreetAddress && (
+              <p className="mt-3 text-sm text-navy-600">
+                Hum aapke ghar aate hain — poore Patna mein doorstep service.
+                Visit ke liye call ya WhatsApp kar dijiye.
+              </p>
+            )}
           </div>
 
           <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">Policies</h2>

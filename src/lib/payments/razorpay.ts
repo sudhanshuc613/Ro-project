@@ -116,7 +116,7 @@ export function buildCheckoutOptions(params: {
     key: params.gatewayOrder.keyId,
     amount: params.gatewayOrder.amount,
     currency: params.gatewayOrder.currency,
-    name: 'AquaNexa',
+    name: 'Aqua Perl',
     description: `Order ${params.orderNumber}`,
     image: '/brand/logo.png',
     order_id: params.gatewayOrder.id,

@@ -27,7 +27,7 @@ if (!process.env.DATABASE_URL) {
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding AquaNexa…');
+  console.log('🌱 Seeding Aqua Perl…');
 
   /* ── Admin user ── */
   const admin = await prisma.user.upsert({
@@ -35,7 +35,7 @@ async function main() {
     update: { role: 'SUPER_ADMIN' },
     create: {
       phone: '8969821440',
-      fullName: 'AquaNexa Admin',
+      fullName: 'Aqua Perl Admin',
       email: 'admin@rokadoctor.in',
       passwordHash: await bcrypt.hash('ChangeMe@123', 12),
       role: 'SUPER_ADMIN',
@@ -108,7 +108,7 @@ async function main() {
 
   /* ── Brands ── */
   const brandData = [
-    { name: 'AquaNexa', slug: 'aquanexa', isFeatured: true },
+    { name: 'Aqua Perl', slug: 'aquanexa', isFeatured: true },
     { name: 'Kent', slug: 'kent', isFeatured: true },
     { name: 'Aquaguard', slug: 'aquaguard', isFeatured: true },
     { name: 'Livpure', slug: 'livpure', isFeatured: false },
@@ -142,9 +142,9 @@ async function main() {
     {
       sku: 'AQN-RO-8L-001',
       slug: 'aquanexa-pure-8l-ro-uv-uf-water-purifier',
-      name: 'AquaNexa Pure 8L RO + UV + UF Water Purifier with TDS Controller',
+      name: 'Aqua Perl Pure 8L RO + UV + UF Water Purifier with TDS Controller',
       shortDescription: '7-stage purification with RO, UV and UF membranes plus a TDS controller that retains essential minerals. Ideal for borewell and municipal water up to 2000 ppm.',
-      description: '<p>The AquaNexa Pure 8L delivers genuinely safe drinking water through a 7-stage purification process. The RO membrane removes dissolved salts and heavy metals, UV sterilisation kills bacteria and viruses, and the UF stage traps suspended particles.</p><p>The built-in TDS controller lets you retain essential minerals like calcium and magnesium rather than stripping the water completely — a difference you can taste.</p>',
+      description: '<p>The Aqua Perl Pure 8L delivers genuinely safe drinking water through a 7-stage purification process. The RO membrane removes dissolved salts and heavy metals, UV sterilisation kills bacteria and viruses, and the UF stage traps suspended particles.</p><p>The built-in TDS controller lets you retain essential minerals like calcium and magnesium rather than stripping the water completely — a difference you can taste.</p>',
       type: 'NEW_RO' as const,
       categoryId: cats['new-ro-purifiers'],
       brandId: brands['aquanexa'],
@@ -154,9 +154,9 @@ async function main() {
       isFeatured: true, isBestseller: true, soldCount: 284, ratingAvg: 4.6, ratingCount: 1284,
       requiresInstallation: true, status: 'ACTIVE' as const,
       images: [
-        { url: '/products/ro-domestic.png', altText: 'AquaNexa Pure 8L RO UV UF water purifier front view', isPrimary: true },
-        { url: '/products/ro-domestic.png', altText: 'AquaNexa Pure 8L water purifier side profile', isPrimary: false },
-        { url: '/products/ro-domestic.png', altText: 'AquaNexa Pure 8L purifier filter cartridge detail', isPrimary: false },
+        { url: '/products/ro-domestic.png', altText: 'Aqua Perl Pure 8L RO UV UF water purifier front view', isPrimary: true },
+        { url: '/products/ro-domestic.png', altText: 'Aqua Perl Pure 8L water purifier side profile', isPrimary: false },
+        { url: '/products/ro-domestic.png', altText: 'Aqua Perl Pure 8L purifier filter cartridge detail', isPrimary: false },
       ],
       specs: [
         { specGroup: 'General', specKey: 'Storage Capacity', specValue: '8 Litres' },
@@ -172,7 +172,7 @@ async function main() {
     {
       sku: 'AQN-RO-10L-ALK',
       slug: 'aquanexa-alkaline-copper-10l-ro-purifier',
-      name: 'AquaNexa Alkaline Copper 10L RO Purifier — Mineral Guard',
+      name: 'Aqua Perl Alkaline Copper 10L RO Purifier — Mineral Guard',
       shortDescription: 'Alkaline pH+ and copper infusion technology in a 10-litre tank. Raises water pH to 8.5–9.5 for better hydration.',
       description: '<p>Combines reverse osmosis with an alkaline cartridge and copper infusion chamber. Output water sits at pH 8.5–9.5 with trace copper, following traditional Ayurvedic practice of storing water in copper vessels.</p>',
       type: 'NEW_RO' as const,
@@ -185,8 +185,8 @@ async function main() {
       isFeatured: true, soldCount: 96, ratingAvg: 4.4, ratingCount: 742,
       requiresInstallation: true, status: 'ACTIVE' as const,
       images: [
-        { url: '/products/ro-domestic.png', altText: 'AquaNexa Alkaline Copper 10L RO purifier front view', isPrimary: true },
-        { url: '/products/ro-domestic.png', altText: 'AquaNexa Alkaline Copper purifier copper chamber detail', isPrimary: false },
+        { url: '/products/ro-domestic.png', altText: 'Aqua Perl Alkaline Copper 10L RO purifier front view', isPrimary: true },
+        { url: '/products/ro-domestic.png', altText: 'Aqua Perl Alkaline Copper purifier copper chamber detail', isPrimary: false },
       ],
       specs: [
         { specGroup: 'General', specKey: 'Storage Capacity', specValue: '10 Litres' },
@@ -268,7 +268,7 @@ async function main() {
         entityType: 'PRODUCT',
         entityId: created.id,
         path: `/products/${p.slug}`,
-        // Google truncates past ~60 chars; layout appends ' | AquaNexa'
+        // Google truncates past ~60 chars; layout appends ' | Aqua Perl'
         metaTitle: `${p.name.length > 43 ? p.name.slice(0, 42).trimEnd() + '…' : p.name} | Buy Online`,
         metaDescription: p.shortDescription.slice(0, 152),
         metaKeywords: `${p.name}, buy ${p.name} online, ${p.name} price india`,

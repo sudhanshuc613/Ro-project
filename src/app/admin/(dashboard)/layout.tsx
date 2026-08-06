@@ -17,7 +17,7 @@ import AdminTopbar from '@/components/admin/Topbar';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: { default: 'Admin — AquaNexa', template: '%s | AquaNexa Admin' },
+  title: { default: 'Admin — Aqua Perl', template: '%s | Aqua Perl Admin' },
   robots: { index: false, follow: false, nocache: true },
 };
 

@@ -50,7 +50,7 @@ const SLIDES: Slide[] = [
     subtitle:
       `Repair, installation, filter change & AMC by certified technicians. Same-day visit within ${SERVICE.responseTime} and a ${SERVICE.warrantyDays}-day service warranty.`,
     image: '/banners/service-tech.png',
-    imageAlt: 'AquaNexa technician repairing an RO water purifier at a home in Patna',
+    imageAlt: 'Aqua Perl technician repairing an RO water purifier at a home in Patna',
     theme: 'service',
     primary: { label: `Call ${CONTACT.primaryPhone}`, href: CONTACT.primaryTel, external: true },
     secondary: { label: 'Book Service Online', href: '#book-service' },
@@ -80,7 +80,7 @@ export default function HeroCarousel() {
     <section
       className="relative isolate overflow-hidden bg-navy-700"
       aria-roledescription="carousel"
-      aria-label="AquaNexa featured offers"
+      aria-label="Aqua Perl featured offers"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}

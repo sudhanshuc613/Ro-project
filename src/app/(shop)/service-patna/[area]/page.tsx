@@ -26,7 +26,7 @@ export function generateMetadata({ params }: { params: { area: string } }): Meta
   const area = SERVICE_AREAS.find((a) => a.slug === params.area);
   if (!area) return { title: 'Area Not Found' };
 
-  // Keep the SERP title under 60 chars; the layout template appends ' | AquaNexa'
+  // Keep the SERP title under 60 chars; the layout template appends ' | Aqua Perl'
   const base = `RO Service in ${area.name}, Patna — ₹${SERVICE.visitCharge} Visit Charge`;
   const title = base.length > 49 ? `RO Service in ${area.name}, Patna — ₹${SERVICE.visitCharge} Visit` : base;
   const description = `RO repair & installation in ${area.name}, Patna. ₹${SERVICE.visitCharge} visit charge, technician in ${area.responseMin} min. All brands. Call ${CONTACT.primaryPhone}.`;
@@ -155,7 +155,7 @@ export default function AreaServicePage({ params }: { params: { area: string } }
 
             <div className="relative mx-auto w-full max-w-md">
               <div className="overflow-hidden rounded-3xl bg-white/95 shadow-2xl ring-1 ring-white/30">
-                <Image src="/banners/service-tech.png" alt={`AquaNexa RO technician repairing a water purifier in ${area.name}, Patna`}
+                <Image src="/banners/service-tech.png" alt={`Aqua Perl RO technician repairing a water purifier in ${area.name}, Patna`}
                   width={600} height={450} priority className="h-auto w-full object-cover" />
               </div>
             </div>

@@ -1,4 +1,4 @@
-// AquaNexa — Prisma schema (mirrors db/schema.sql)
+// Aqua Perl — Prisma schema (mirrors db/schema.sql)
 // Generate with: npx prisma generate
 // Push to a fresh DB with: npx prisma db push
 

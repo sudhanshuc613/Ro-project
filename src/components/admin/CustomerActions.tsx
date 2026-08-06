@@ -63,7 +63,7 @@ export default function CustomerActions({
           </button>
           <a
             href={`https://wa.me/91${phone}?text=${encodeURIComponent(
-              `Hi ${name.split(' ')[0]}, AquaNexa se. Aapka temporary password hai: ${tempPw}\nLogin karke turant apna naya password set kar lijiye.`,
+              `Hi ${name.split(' ')[0]}, Aqua Perl se. Aapka temporary password hai: ${tempPw}\nLogin karke turant apna naya password set kar lijiye.`,
             )}`}
             target="_blank" rel="noopener noreferrer"
             className="flex-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-center text-xs font-bold text-white"
@@ -111,7 +111,7 @@ export default function CustomerActions({
       ) : (
         <>
           <a
-            href={`https://wa.me/91${phone}?text=${encodeURIComponent(`Hi ${name.split(' ')[0]}, this is AquaNexa.`)}`}
+            href={`https://wa.me/91${phone}?text=${encodeURIComponent(`Hi ${name.split(' ')[0]}, this is Aqua Perl.`)}`}
             target="_blank" rel="noopener noreferrer"
             className="block rounded-lg bg-emerald-50 px-4 py-2 text-center text-xs font-bold text-emerald-700 hover:bg-emerald-100"
           >

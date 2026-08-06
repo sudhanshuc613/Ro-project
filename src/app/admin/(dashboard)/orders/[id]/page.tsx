@@ -98,7 +98,7 @@ export default async function AdminOrderDetail({ params }: { params: { id: strin
             📞 Call
           </a>
           <a
-            href={`https://wa.me/91${phone}?text=${encodeURIComponent(`Namaste, AquaNexa se. Aapke order ${order.orderNumber} ke baare mein baat karni thi.`)}`}
+            href={`https://wa.me/91${phone}?text=${encodeURIComponent(`Namaste, Aqua Perl se. Aapke order ${order.orderNumber} ke baare mein baat karni thi.`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-bold text-emerald-700 ring-1 ring-emerald-200"

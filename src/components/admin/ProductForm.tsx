@@ -156,7 +156,7 @@ export default function ProductForm({
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="Product Name" error={errors.name?.[0]} required full>
               <input value={f.name} onChange={(e) => onNameChange(e.target.value)}
-                placeholder="AquaNexa Pure 8L RO + UV + UF Water Purifier" className={inp} />
+                placeholder="Aqua Perl Pure 8L RO + UV + UF Water Purifier" className={inp} />
             </Field>
 
             <Field label="SKU" error={errors.sku?.[0]} required hint="Unique code, e.g. AQN-RO-8L-001">

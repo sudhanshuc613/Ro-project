@@ -47,7 +47,7 @@ export default function TrustBar() {
   return (
     <section
       className="border-b border-navy-100 bg-sand-100"
-      aria-label="Why choose AquaNexa"
+      aria-label="Why choose Aqua Perl"
     >
       <div className="container mx-auto grid grid-cols-2 gap-y-5 px-4 py-6 lg:grid-cols-4 lg:gap-y-0">
         {ITEMS.map((it, i) => (

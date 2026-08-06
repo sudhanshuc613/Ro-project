@@ -40,7 +40,7 @@ export default function PriceComparison() {
             <thead className="border-b border-navy-100 bg-sand-200">
               <tr>
                 <th className="px-4 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-navy-600">Service</th>
-                <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-aqua-700">AquaNexa</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-aqua-700">Aqua Perl</th>
                 <th className="px-4 py-3.5 text-right text-[11px] font-bold uppercase tracking-wider text-muted">Others in Patna</th>
               </tr>
             </thead>

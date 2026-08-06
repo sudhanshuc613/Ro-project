@@ -34,7 +34,7 @@ export interface MachineRow {
   notes: string | null;
 }
 
-const BRANDS = ['Kent', 'Aquaguard', 'Livpure', 'Pureit', 'AO Smith', 'Blue Star', 'Havells', 'AquaNexa', 'Other'];
+const BRANDS = ['Kent', 'Aquaguard', 'Livpure', 'Pureit', 'AO Smith', 'Blue Star', 'Havells', 'Aqua Perl', 'Other'];
 const TECHS = ['RO', 'UV', 'UF', 'TDS Controller', 'Alkaline', 'Copper', 'Mineral'];
 
 const EMPTY: Omit<MachineRow, 'id'> & { id?: string } = {

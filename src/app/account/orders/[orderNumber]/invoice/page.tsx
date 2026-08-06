@@ -165,7 +165,7 @@ export default async function InvoicePage({
             <p className="mt-1 text-muted">
               📞 {contact.primaryPhone} · {contact.secondaryPhone}
               <br />
-              ✉️ {contact.email} · {BRAND.domain}
+              {CONTACT.emailWorks && <>✉️ {contact.email} · </>}{BRAND.domain}
             </p>
           </div>
           <div className="text-right">

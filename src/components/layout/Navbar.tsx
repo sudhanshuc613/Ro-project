@@ -25,7 +25,7 @@ const MEGA_MENU: Record<string, { heading: string; links: { label: string; href:
     ]},
     { heading: 'By Brand', links: [
       { label: 'Kent', href: '/service-patna/brand/kent' }, { label: 'Aquaguard', href: '/service-patna/brand/aquaguard' },
-      { label: 'Livpure', href: '/service-patna/brand/livpure' }, { label: 'AquaNexa', href: '/category/new-ro-purifiers' },
+      { label: 'Livpure', href: '/service-patna/brand/livpure' }, { label: 'Aqua Perl', href: '/category/new-ro-purifiers' },
     ]},
     { heading: 'By Budget', links: [
       { label: 'Under ₹8,000', href: '/category/new-ro-purifiers?price=0-8000' },

@@ -26,10 +26,10 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: '/service-patna' },
   openGraph: {
-    title: `RO Service in Patna — ₹${SERVICE.visitCharge} Visit Charge | AquaNexa`,
+    title: `RO Service in Patna — ₹${SERVICE.visitCharge} Visit Charge | Aqua Perl`,
     description: 'Same-day RO repair & installation across Patna. All brands serviced. 30-day warranty.',
     url: `${BRAND.url}/service-patna`,
-    images: [{ url: '/banners/service-tech.png', width: 1200, height: 630, alt: 'AquaNexa RO technician in Patna' }],
+    images: [{ url: '/banners/service-tech.png', width: 1200, height: 630, alt: 'Aqua Perl RO technician in Patna' }],
   },
   other: {
     'geo.region': 'IN-BR',

@@ -1,5 +1,5 @@
 -- ============================================================================
---  AquaNexa (rokadoctor.in) — PostgreSQL 15+ Relational Schema
+--  Aqua Perl (rokadoctor.in) — PostgreSQL 15+ Relational Schema
 --  Dual model: Pan-India e-commerce  +  Patna-local RO service booking
 --  Author: Full-Stack Architecture Blueprint
 --  Convention: snake_case, UUID PKs, soft-delete via deleted_at, TIMESTAMPTZ
@@ -90,7 +90,7 @@ CREATE UNIQUE INDEX uq_default_addr ON addresses(user_id) WHERE is_default;
 -- ---------------------------------------------------------------------------
 CREATE TABLE brands (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name        VARCHAR(80) UNIQUE NOT NULL,      -- Kent, Aquaguard, Livpure, Pureit, AquaNexa
+    name        VARCHAR(80) UNIQUE NOT NULL,      -- Kent, Aquaguard, Livpure, Pureit, Aqua Perl
     slug        VARCHAR(96) UNIQUE NOT NULL,
     logo_url    TEXT,
     description TEXT,

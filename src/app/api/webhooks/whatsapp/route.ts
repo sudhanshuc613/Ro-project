@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
             // would need Meta approval and would be billable.
             void sendWhatsAppText(
               msg.from,
-              '✅ Number verified. You can go back to the website and continue — AquaNexa',
+              '✅ Number verified. You can go back to the website and continue — Aqua Perl',
             );
           }
         } catch (err) {

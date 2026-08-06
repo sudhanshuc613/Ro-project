@@ -35,7 +35,7 @@ interface Props { params: { slug: string } }
 /* ── Dynamic, admin-overridable metadata ────────────────────────────────── */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await getProductBySlug(params.slug);
-  if (!product) return { title: 'Product Not Found | AquaNexa' };
+  if (!product) return { title: 'Product Not Found | Aqua Perl' };
 
   return buildMetadata({
     entityType: 'PRODUCT',

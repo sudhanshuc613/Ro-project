@@ -112,7 +112,7 @@ export default async function ServiceDuePage() {
                 const items = overdue.length ? overdue : dueSoon;
                 const isOverdue = overdue.length > 0;
                 const waText = encodeURIComponent(
-                  `Namaste ${m.user.fullName.split(' ')[0]} ji, AquaNexa se. Aapke ${m.brand} RO ka ` +
+                  `Namaste ${m.user.fullName.split(' ')[0]} ji, Aqua Perl se. Aapke ${m.brand} RO ka ` +
                     `${items.map((d) => d.label).join(' aur ')} ` +
                     `${isOverdue ? 'change karne ka time ho gaya hai' : 'jaldi change karna hoga'}. ` +
                     `Kharcha ${items[0].costRange} + ₹${contact ? 200 : 200} visit. Kab bhej dein technician?`,

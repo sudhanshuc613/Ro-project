@@ -196,7 +196,7 @@ export default function ProblemSolver() {
                             </a>
                             <a
                               href={CONTACT.whatsappLink(
-                                `Hi AquaNexa, my RO problem: ${p.title} (${p.hindi}). I am in Patna. Please send a technician.`,
+                                `Hi Aqua Perl, my RO problem: ${p.title} (${p.hindi}). I am in Patna. Please send a technician.`,
                               )}
                               target="_blank"
                               rel="noopener noreferrer"

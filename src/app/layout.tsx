@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.url),
   title: {
-    default: 'AquaNexa — Buy RO Water Purifiers Online India | RO Service in Patna ₹200',
+    default: 'Aqua Perl — Buy RO Water Purifiers Online India | RO Service in Patna ₹200',
     template: `%s | ${BRAND.name}`,
   },
   description:

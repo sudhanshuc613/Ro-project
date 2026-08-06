@@ -16,7 +16,7 @@ import { CONTACT } from '@/lib/constants';
 const SHOTS = [
   {
     src: '/service/technician-working.jpg',
-    alt: 'AquaNexa technician repairing an RO water purifier in a Patna home kitchen',
+    alt: 'Aqua Perl technician repairing an RO water purifier in a Patna home kitchen',
     title: 'We come to your kitchen',
     caption: 'Full toolkit and common spares on every visit — most repairs finish in one trip.',
   },
@@ -28,7 +28,7 @@ const SHOTS = [
   },
   {
     src: '/service/tds-testing.jpg',
-    alt: 'TDS meter measuring water quality during an AquaNexa service visit in Patna',
+    alt: 'TDS meter measuring water quality during an Aqua Perl service visit in Patna',
     title: 'Free TDS test, before and after',
     caption: 'We measure your water on arrival and again after service, so you can see the difference.',
   },

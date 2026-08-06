@@ -32,7 +32,7 @@
  */
 import Image from 'next/image';
 import Link from 'next/link';
-import { CONTACT, SERVICE } from '@/lib/constants';
+import { CONTACT, SERVICE, GBP } from '@/lib/constants';
 
 const STATS = [
   { n: '10+', l: 'Years in Patna' },
@@ -79,7 +79,7 @@ export default function ServiceHero() {
             </span>
             {/* Gold use 1 of 2 */}
             <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-50 px-3 py-1.5 text-[13px] font-bold text-gold-700 ring-1 ring-gold-200">
-              ⭐ 4.9 · 600+ repairs
+              ⭐ {GBP.ratingValue} · {GBP.reviewCount} Google reviews
             </span>
           </div>
 
@@ -184,7 +184,7 @@ export default function ServiceHero() {
           <div className="relative mx-auto max-w-[520px]">
             <Image
               src="/banners/hero-technician.png"
-              alt="AquaNexa RO service technician in Patna holding a wrench beside a wall-mounted RO water purifier"
+              alt="Aqua Perl RO service technician in Patna holding a wrench beside a wall-mounted RO water purifier"
               width={1024}
               height={1024}
               priority
