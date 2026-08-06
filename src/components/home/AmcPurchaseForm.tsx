@@ -48,7 +48,6 @@ export default function AmcPurchaseForm({ planKey, planName, price, visits, popu
           day: 'numeric', month: 'long', year: 'numeric',
         }),
       });
-      // @ts-expect-error gtag injected by GTM
       window.gtag?.('event', 'purchase', { value: price, currency: 'INR', items: [{ item_name: planName }] });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed');

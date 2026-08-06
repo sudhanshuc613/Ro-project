@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import './globals.css';
 import { BRAND } from '@/lib/constants';
 import Providers from './providers';
+import Analytics from '@/components/analytics/Analytics';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <Providers>{children}</Providers>
         <Toaster position="top-center" richColors closeButton />
+        <Analytics />
       </body>
     </html>
   );

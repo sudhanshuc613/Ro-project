@@ -97,8 +97,7 @@ export default function ServiceBookingForm() {
         setTicket(data.ticketNumber);
         setForm(INITIAL);
         setPinStatus('idle');
-        // @ts-expect-error gtag injected by GTM
-        window.gtag?.('event', 'generate_lead', { value: SERVICE.visitCharge, currency: 'INR' });
+          window.gtag?.('event', 'generate_lead', { value: SERVICE.visitCharge, currency: 'INR' });
       } catch (err) {
         setSubmitError(err instanceof Error ? err.message : 'Could not submit. Please call us.');
       }
