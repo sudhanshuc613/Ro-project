@@ -44,7 +44,7 @@ function LoginForm() {
     <main className="grid min-h-[85vh] place-items-center bg-navy-50 px-4 py-10">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-card">
         <Link href="/" className="block">
-          <Image src={BRAND.logo} alt={BRAND.name} width={150} height={38} className="mx-auto h-9 w-auto" />
+          <Image src={BRAND.logo} alt={BRAND.name} width={240} height={58} priority className="mx-auto h-12 w-auto" />
         </Link>
 
         <h1 className="mt-6 text-center font-display text-2xl font-bold text-navy-700">Sign In</h1>

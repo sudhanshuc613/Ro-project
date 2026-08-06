@@ -103,12 +103,20 @@ export default function ContactPage() {
               )}
             </address>
             <p className="mt-3 text-sm font-semibold text-navy-700">🕒 {CONTACT.hours} · All 7 days</p>
-            {!CONTACT.showStreetAddress && (
-              <p className="mt-3 text-sm text-navy-600">
-                Hum aapke ghar aate hain — poore Patna mein doorstep service.
-                Visit ke liye call ya WhatsApp kar dijiye.
-              </p>
-            )}
+            <p className="mt-3 text-sm text-navy-600">
+              Service ke liye aana zaroori nahi — hum aapke ghar aate hain,
+              poore Patna mein. Naya purifier ya spare part dekhna ho to
+              upar wale pate par aa sakte hain.
+            </p>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${CONTACT.address.street}, ${CONTACT.address.locality}, ${CONTACT.address.city} ${CONTACT.address.pincode}`,
+              )}`}
+              target="_blank" rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-aqua-600 hover:underline"
+            >
+              📍 Google Maps par kholo
+            </a>
           </div>
 
           <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">Policies</h2>

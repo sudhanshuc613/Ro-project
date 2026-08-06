@@ -8,7 +8,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { BRAND, CONTACT, PRODUCT_TYPES } from '@/lib/constants';
 import { useBodyScrollLock, useEscapeKey } from '@/lib/hooks/useBodyScrollLock';
 import { useCartStore } from '@/store/cart';
@@ -67,6 +67,7 @@ const MEGA_MENU: Record<string, { heading: string; links: { label: string; href:
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -129,10 +130,21 @@ export default function Navbar() {
             <Burger />
           </button>
 
-          {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center" aria-label={`${BRAND.name} home`}>
-            <Image src={BRAND.logo} alt={`${BRAND.name} logo`} width={168} height={44}
-              priority className="h-9 w-auto object-contain sm:h-11" />
+          {/* Logo — bada rakha hai. Chhota logo pe log click hi nahi karte,
+              aur bahut log jaante hi nahi ki logo se homepage khulta hai.
+              Isliye desktop pe saath mein saaf-saaf "Home" link bhi diya hai. */}
+          <Link
+            href="/"
+            className="group flex shrink-0 items-center rounded-xl px-1 py-1 transition hover:bg-navy-50/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-aqua-500"
+            aria-label={`${BRAND.name} — go to homepage`}
+            title={`${BRAND.name} — Home`}
+          >
+            <Image
+              src={BRAND.logo}
+              alt={`${BRAND.name} — RO service and water purifiers in Patna`}
+              width={260} height={62} priority
+              className="h-11 w-auto object-contain sm:h-14"
+            />
           </Link>
 
           {/* Smart search — desktop */}
@@ -174,6 +186,19 @@ export default function Navbar() {
       {/* ── Tier 3: category bar with mega-menus ── */}
       <nav className="hidden border-b border-navy-100 bg-sand-100 lg:block" aria-label="Product categories">
         <div className="container mx-auto flex items-center gap-1 px-4">
+          {/* Saaf-saaf "Home" — logo pe click karna sabko nahi pata hota */}
+          <Link
+            href="/"
+            aria-current={pathname === '/' ? 'page' : undefined}
+            className={`flex items-center gap-1.5 px-4 py-3 text-sm font-bold transition ${
+              pathname === '/'
+                ? 'text-aqua-600'
+                : 'text-navy-700 hover:text-aqua-600'
+            }`}
+          >
+            <HomeIcon /> Home
+          </Link>
+          <span className="h-4 w-px bg-navy-200" aria-hidden="true" />
           <Link href="/service-patna" className="px-4 py-3 text-sm font-bold text-cta-green hover:text-cta-greenDark">
             🔧 RO Service Patna
           </Link>
@@ -238,8 +263,10 @@ export default function Navbar() {
           <aside
             className="absolute left-0 top-0 flex h-[100dvh] w-[86%] max-w-sm flex-col overflow-y-auto overscroll-contain bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl"
           >
-            <div className="mb-6 flex items-center justify-between">
-              <Image src={BRAND.logo} alt={BRAND.name} width={140} height={36} className="h-9 w-auto" />
+            <div className="mb-5 flex items-center justify-between">
+              <Link href="/" onClick={closeMobile} aria-label={`${BRAND.name} — Home`}>
+                <Image src={BRAND.logo} alt={BRAND.name} width={220} height={52} className="h-11 w-auto" />
+              </Link>
               <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="rounded-lg p-2 hover:bg-navy-50">
                 <CloseIcon />
               </button>
@@ -248,6 +275,17 @@ export default function Navbar() {
             <Link href="/#book-service" onClick={() => setMobileOpen(false)}
               className="mb-5 flex items-center justify-center gap-2 rounded-xl bg-cta-green py-3.5 font-bold text-white">
               <WrenchIcon /> Book RO Service — ₹200
+            </Link>
+
+            {/* Home sabse upar — mobile pe logo chhota lagta hai aur log
+                dhoondte reh jaate hain ki wapas kaise jayein */}
+            <Link href="/" onClick={closeMobile}
+              aria-current={pathname === '/' ? 'page' : undefined}
+              className={`flex items-center justify-between border-b border-navy-50 py-3.5 font-semibold ${
+                pathname === '/' ? 'text-aqua-600' : 'text-navy-700'
+              }`}>
+              <span className="flex items-center gap-2.5"><HomeIcon /> Home</span>
+              <ChevronRight />
             </Link>
 
             {PRODUCT_TYPES.map((t) => (
@@ -279,6 +317,7 @@ export default function Navbar() {
 }
 
 /* ── Icons ──────────────────────────────────────────────────────────────── */
+const HomeIcon = () => <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" /></svg>;
 const Burger = () => <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" /></svg>;
 const CloseIcon = () => <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" /></svg>;
 const CartIcon = () => <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.4c.5 0 .94.35 1.05.84L5.4 6m0 0l1.7 7.9c.11.5.55.85 1.06.85h8.3c.5 0 .93-.34 1.05-.83l1.6-6.6a.75.75 0 00-.73-.93H5.4zM8.25 19.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm10.5 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>;

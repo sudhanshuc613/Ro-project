@@ -101,8 +101,10 @@ export default function AdminSidebar({ role, badges = {} }: Props) {
   const nav = (
     <nav className="flex h-full flex-col">
       <div className="flex h-16 shrink-0 items-center gap-2 border-b border-navy-600/40 px-5">
-        <Image src={BRAND.logo} alt={BRAND.name} width={130} height={32}
-          className="h-8 w-auto brightness-0 invert" />
+        <Link href="/" title="Website kholo" className="shrink-0">
+          <Image src={BRAND.logo} alt={BRAND.name} width={200} height={48}
+            className="h-9 w-auto brightness-0 invert transition hover:opacity-80" />
+        </Link>
         <span className="rounded bg-aqua-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-aqua-300">
           Admin
         </span>

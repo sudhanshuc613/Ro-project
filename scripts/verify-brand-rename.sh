@@ -34,19 +34,29 @@ chk   "purana 'AquaNexa' bacha"  "$(grep -o 'AquaNexa' /tmp/home.html | wc -l)" 
 chk   "source mein AquaNexa"     "$(grep -rn 'AquaNexa' src/ prisma/ db/ 2>/dev/null | wc -l)" "0"
 
 echo
-echo "════ 2) Address — Service Area Business (street CHHUPA) ════"
-chkge "Buddha Colony dikhta"      "$(grep -o 'Buddha Colony' /tmp/home.html | wc -l)" "1"
-chk   "street address CHHUPA"     "$(grep -o 'Sai Gali' /tmp/home.html | wc -l)" "0"
-chk   "schema mein streetAddress" "$(grep -o 'streetAddress' /tmp/home.html | wc -l)" "0"
-chk   "schema postalCode 800001"  "$(grep -o '\"postalCode\":\"800001\"' /tmp/home.html | wc -l)" "1"
-chk   "purana B-63"               "$(grep -o 'B-63' /tmp/home.html | wc -l)" "0"
+echo "════ 2) Address poora dikhta hai (B-62) ════"
+chkge "Buddha Colony"            "$(grep -o 'Buddha Colony' /tmp/home.html | wc -l)" "1"
+chkge "Sai Gali dikhta"          "$(grep -o 'Sai Gali' /tmp/home.html | wc -l)" "1"
+chkge "Opposite B-62"            "$(grep -o 'Opposite B-62' /tmp/home.html | wc -l)" "1"
+chk   "purana B-63 gaya"         "$(grep -o 'B-63' /tmp/home.html | wc -l)" "0"
+chkge "schema streetAddress"     "$(grep -o 'streetAddress' /tmp/home.html | wc -l)" "1"
+chk   "schema postalCode 800001" "$(grep -o '\"postalCode\":\"800001\"' /tmp/home.html | wc -l)" "1"
 
 echo
-echo "════ 2b) Dead email website pe nahi dikhta ════"
-chk "homepage pe email"  "$(grep -o 'support@rokadoctor.in' /tmp/home.html | wc -l)" "0"
+echo "════ 2c) LOGO — naya, bada, clickable ════"
+chk   "purana logo.png navbar mein" "$(grep -o 'brand%2Flogo.png' /tmp/home.html | wc -l)" "0"
+chkge "naya logo.svg use ho raha"   "$(grep -o 'brand/logo.svg' /tmp/home.html | wc -l)" "1"
+chkge "logo pe 'Home' aria-label"   "$(grep -o 'go to homepage' /tmp/home.html | wc -l)" "1"
+chkge "alag 'Home' nav link"        "$(grep -o 'M2.25 12l8.954' /tmp/home.html | wc -l)" "1"
+chkge "favicon icon.svg"            "$(grep -o 'brand/icon.svg' /tmp/home.html | wc -l)" "1"
+chk   "logo mein purana naam"       "$(grep -o 'AquaNexa' /tmp/home.html | wc -l)" "0"
+
+echo
+echo "════ 2b) Email + contact page ════"
 curl -sS -m 20 $B/contact -o /tmp/contact.html
-chk "contact page pe email" "$(grep -o 'support@rokadoctor.in' /tmp/contact.html | wc -l)" "0"
-chkge "contact pe doorstep msg" "$(grep -o 'doorstep service' /tmp/contact.html | wc -l)" "1"
+chkge "contact page pe email"    "$(grep -o 'support@rokadoctor.in' /tmp/contact.html | wc -l)" "1"
+chkge "contact pe poora address" "$(grep -o 'Sai Gali' /tmp/contact.html | wc -l)" "1"
+chkge "Google Maps link"         "$(grep -o 'google.com/maps' /tmp/contact.html | wc -l)" "1"
 
 echo
 echo "════ 3) ASLI review count har jagah ════"

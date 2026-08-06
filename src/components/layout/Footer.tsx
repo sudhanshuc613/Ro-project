@@ -43,13 +43,18 @@ export default function Footer() {
         <div className="grid gap-9 pb-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand + contact */}
           <div className="lg:col-span-1">
-            <Image
-              src={BRAND.logo}
-              alt={BRAND.name}
-              width={150}
-              height={38}
-              className="h-9 w-auto brightness-0 invert"
-            />
+            {/* Dark footer pe logo ke teal/navy rang doob jaate hain,
+                isliye white silhouette. Link isliye ki footer se bhi
+                homepage pahunchna aasaan ho. */}
+            <Link href="/" aria-label={`${BRAND.name} — Home`} className="inline-block">
+              <Image
+                src={BRAND.logo}
+                alt={BRAND.name}
+                width={220}
+                height={52}
+                className="h-11 w-auto brightness-0 invert transition hover:opacity-80"
+              />
+            </Link>
             <p className="mt-4 text-sm leading-relaxed text-navy-200">
               Pan-India e-commerce for RO purifiers, commercial plants and genuine spare parts —
               plus expert doorstep RO repair and installation across Patna, Bihar.

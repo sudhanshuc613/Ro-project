@@ -44,8 +44,11 @@ export const metadata: Metadata = {
     url: BRAND.url,
   },
   icons: {
-    icon: '/brand/logo.png',
-    apple: '/brand/logo.png',
+    icon: [
+      { url: '/brand/icon.svg', type: 'image/svg+xml' },
+      { url: '/brand/favicon-32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/brand/apple-icon.png',
   },
 };
 

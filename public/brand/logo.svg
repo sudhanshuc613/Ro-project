@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" role="img" aria-label="Aqua Perl">
+  <title>Aqua Perl</title>
+  <!--
+    Vector logo — PNG ke bajaye SVG isliye ki navbar mein chhota (36-44px)
+    aur invoice/print mein bada — dono jagah bilkul sharp rahe. File ~2 KB.
+    Rang tailwind.config.ts se match karte hain: teal #1590A5, navy #0A1F3C.
+  -->
+  <defs>
+    <clipPath id="ap-drop">
+      <path d="M36 6C36 6 14 30.5 14 44a22 22 0 1 0 44 0C58 30.5 36 6 36 6Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Droplet: left half teal, right half navy -->
+  <g clip-path="url(#ap-drop)">
+    <rect x="10" y="2" width="26" height="68" fill="#1590A5"/>
+    <rect x="36" y="2" width="26" height="68" fill="#0A1F3C"/>
+  </g>
+
+  <!-- Orbit swoosh — drawn over the droplet, breaks the silhouette -->
+  <path d="M8 47c8 7 22 10 35 6s22-13 22-21c0-3-1-5-3-7 1 2 1 4 1 6 0 8-9 16-21 19s-25 1-34-3Z"
+        fill="#3AAFC0"/>
+
+  <!-- Pearl -->
+  <circle cx="36" cy="42" r="10" fill="#FFFFFF"/>
+  <circle cx="36" cy="42" r="10" fill="none" stroke="#D2F2F5" stroke-width="1.5"/>
+  <path d="M31 38a7 7 0 0 1 6-3.5" fill="none" stroke="#A8E4EA"
+        stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Wordmark -->
+  <text x="80" y="52"
+        font-family="Poppins, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+        font-size="38" font-weight="700" letter-spacing="-0.5">
+    <tspan fill="#1590A5">Aqua</tspan><tspan fill="#0A1F3C"> Perl</tspan>
+  </text>
+</svg>

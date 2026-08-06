@@ -46,7 +46,7 @@ function AdminLoginForm() {
   return (
     <main className="grid min-h-screen place-items-center bg-navy-700 px-4">
       <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
-        <Image src={BRAND.logo} alt={BRAND.name} width={160} height={40} className="mx-auto h-10 w-auto" />
+        <Image src={BRAND.logo} alt={BRAND.name} width={240} height={58} priority className="mx-auto h-12 w-auto" />
         <h1 className="mt-6 text-center font-display text-xl font-bold text-navy-700">Admin Sign In</h1>
         <p className="mt-1 text-center text-sm text-muted">Authorised staff only</p>
 

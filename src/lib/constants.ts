@@ -18,7 +18,12 @@ export const BRAND = {
   domain: 'rokadoctor.in',
   url: 'https://rokadoctor.in',
   tagline: 'Pure Water, Delivered & Serviced',
-  logo: '/brand/logo.png',
+  /** SVG — navbar (44px) se invoice print tak har jagah sharp. ~1.5 KB. */
+  logo: '/brand/logo.svg',
+  /** PNG fallback — email, WhatsApp preview jaise jagah jahan SVG nahi chalta. */
+  logoPng: '/brand/logo.png',
+  /** Square mark — favicon, app icon, share thumbnail. */
+  icon: '/brand/icon.svg',
   ogImage: '/brand/og-default.jpg',
 } as const;
 
@@ -30,20 +35,22 @@ export const CONTACT = {
   whatsapp: '918969821440',
   whatsappLink: (msg = 'Hi Aqua Perl, I need RO service in Patna.') =>
     `https://wa.me/918969821440?text=${encodeURIComponent(msg)}`,
-  /**
-   * ⚠️ 6 Aug 2026 tak `rokadoctor.in` ka koi MX record nahi hai — is pate
-   * pe bheji mail BOUNCE hoti hai. Isliye `emailWorks` false hai aur
-   * website email ko contact option ki tarah nahi dikhati; customer ko
-   * call/WhatsApp par bheja jaata hai.
-   *
-   * Email chalu karne ke baad (Zoho Mail free / Google Workspace / purani
-   * cPanel hosting ka MX wapas):
-   *   1. GoDaddy DNS mein MX record daalo
-   *   2. `emailWorks: true` kar do
-   * Tab tak jhoota contact dikhana customer kho dene ka seedha rasta hai.
-   */
   email: 'support@rokadoctor.in',
-  emailWorks: false,
+  /**
+   * Email website par dikhana hai ya nahi.
+   *
+   * ⚠️ 6 Aug 2026 tak `rokadoctor.in` ka koi MX record NAHI tha — matlab
+   * is pate par bheji hui mail bounce ho jaayegi. Ye `true` hai isliye
+   * address dikh raha hai, par mail chalu karna abhi baaki hai:
+   *
+   *   1. Zoho Mail (free plan) ya Google Workspace pe account banao
+   *   2. GoDaddy DNS mein unka MX record daalo
+   *   3. Khud ko test mail bhej ke confirm karo
+   *
+   * Jab tak MX nahi hai, customer ka mail kahin nahi pahunchega —
+   * usse lagega tum ignore kar rahe ho. Isliye ye jaldi kar lena.
+   */
+  emailWorks: true,
   /** GBP ke address se hu-ba-hu match hona chahiye. */
   address: {
     street: 'Sai Gali, Opposite B-62',
@@ -54,20 +61,18 @@ export const CONTACT = {
     country: 'IN',
   },
   /**
-   * Service Area Business (SAB) — technician customer ke ghar jaata hai,
-   * customer dukaan pe nahi aata. Google Business Profile pe address
-   * CHHUPA hua hai.
+   * Poora street address website par dikhana hai ya nahi.
    *
-   * Isliye website pe bhi poora street address nahi dikhate — sirf
-   * locality/city. Agar GBP pe address chhupa ho aur website pe poora
-   * pata ho to Google ise mismatch maanta hai aur local ranking girti hai.
+   * `true`  → footer/contact/schema mein "Sai Gali, Opposite B-62" bhi aayega
+   * `false` → sirf "Buddha Colony, Patna" (Service Area Business style)
    *
-   * Aage kabhi dukaan khol ke customer bulaane lage (hybrid business):
-   *   1. GBP pe address dikhao
-   *   2. Yahan `true` kar do
-   * Dono ek saath — ek badla aur doosra nahi, to mismatch ban jaayega.
+   * ⚠️ Ye Google Business Profile ke saath MATCH hona chahiye:
+   *   - GBP par address DIKH raha hai  → yahan `true`
+   *   - GBP par address CHHUPA hai     → yahan `false`
+   * Dono alag hue to Google ise mismatch maanta hai aur local ranking girti hai.
+   * Kabhi ek badlo to doosra bhi usi waqt badalna.
    */
-  showStreetAddress: false,
+  showStreetAddress: true,
   /** Buddha Colony, Patna. */
   geo: { lat: 25.6093, lng: 85.1376 },
   hours: 'Mon–Sun 08:00–21:00',

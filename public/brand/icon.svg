@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Aqua Perl">
+  <title>Aqua Perl</title>
+  <!-- Square mark — favicon, app icon, WhatsApp/Google share thumbnail. -->
+  <defs>
+    <clipPath id="ic-drop">
+      <path d="M32 4C32 4 10 30 10 44a22 22 0 1 0 44 0C54 30 32 4 32 4Z"/>
+    </clipPath>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#0A1F3C"/>
+  <g clip-path="url(#ic-drop)">
+    <rect x="6" y="0" width="26" height="64" fill="#1590A5"/>
+    <rect x="32" y="0" width="26" height="64" fill="#F2F5F9"/>
+  </g>
+  <path d="M6 47c7 6 20 9 31 5.5S57 40 57 33c0-2.5-.9-4.5-2.6-6.2.9 1.7 1.3 3.4 1.3 5.2 0 7-8 14-18.5 16.7S13.9 50.5 6 47Z"
+        fill="#3AAFC0"/>
+  <circle cx="32" cy="42" r="9" fill="#FFFFFF"/>
+  <path d="M27.5 38.5a6 6 0 0 1 5-3" fill="none" stroke="#A8E4EA"
+        stroke-width="2" stroke-linecap="round"/>
+</svg>
