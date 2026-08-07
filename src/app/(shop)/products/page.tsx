@@ -3,7 +3,8 @@ import Link from 'next/link';
 import ProductCard from '@/components/product/ProductCard';
 import FilterSidebar from '@/components/product/FilterSidebar';
 import SortDropdown from '@/components/product/SortDropdown';
-import { listProducts, parseListParams, getAllBrands } from '@/server/services/catalog.service';
+import CategoryChips from '@/components/product/CategoryChips';
+import { listProducts, parseListParams, getAllBrands, getAllCategories } from '@/server/services/catalog.service';
 import { CONTACT } from '@/lib/constants';
 
 export const revalidate = 300;
@@ -21,9 +22,10 @@ export default async function AllProductsPage({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const params = parseListParams(searchParams);
-  const [{ items, total, page, pages }, brands] = await Promise.all([
+  const [{ items, total, page, pages }, brands, categories] = await Promise.all([
     listProducts(params),
     getAllBrands(),
+    getAllCategories().catch(() => []),
   ]);
 
   return (
@@ -37,25 +39,39 @@ export default async function AllProductsPage({
       </nav>
 
       <div className="container mx-auto px-4 pt-6">
-        <h1 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">All Products</h1>
+        <h1 className="font-display text-xl font-extrabold text-navy-700 sm:text-2xl md:text-3xl">All Products</h1>
         <p className="mt-1 text-sm text-muted">{total} products available</p>
 
-        <div className="mt-6 flex gap-8">
+        <div className="mt-4">
+          <CategoryChips categories={categories} />
+        </div>
+
+        {/* Mobile: filter + sort ek control bar mein, products ke upar. */}
+        <div className="mt-5 flex items-center justify-between gap-3 lg:hidden">
           <FilterSidebar brands={brands} totalCount={total} />
+          <SortDropdown />
+        </div>
+
+        <div className="mt-4 flex gap-8 lg:mt-6">
+          <div className="hidden lg:block">
+            <FilterSidebar brands={brands} totalCount={total} desktopOnly />
+          </div>
 
           <div className="min-w-0 flex-1">
-            <div className="mb-5 flex items-center justify-between gap-4">
-              <p className="text-sm text-muted">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <p className="text-xs text-muted sm:text-sm">
                 Showing <strong className="text-navy-700">{items.length}</strong> of {total}
               </p>
-              <SortDropdown />
+              <div className="hidden lg:block">
+                <SortDropdown />
+              </div>
             </div>
 
             {items.length === 0 ? (
               <EmptyState />
             ) : (
               <>
-                <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:gap-5 xl:grid-cols-4">
                   {items.map((p) => <ProductCard key={p.id} product={p} />)}
                 </div>
                 <Pagination page={page} pages={pages} searchParams={searchParams} basePath="/products" />

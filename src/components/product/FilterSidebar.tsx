@@ -8,9 +8,21 @@ import { useBodyScrollLock, useEscapeKey } from '@/lib/hooks/useBodyScrollLock';
 interface Props {
   brands: { name: string; slug: string }[];
   totalCount: number;
+  /**
+   * Desktop column ke andar render karte waqt `true` bhejo.
+   * Tab mobile-only "Filters" button chhupa rehta hai — warna wahi button
+   * do baar aa jaata (ek control bar mein, ek yahan) aur layout tootta.
+   */
+  desktopOnly?: boolean;
 }
 
-export default function FilterSidebar({ brands, totalCount }: Props) {
+const FilterIcon = () => (
+  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 4.5h18M6.75 12h10.5M11.25 19.5h1.5" />
+  </svg>
+);
+
+export default function FilterSidebar({ brands, totalCount, desktopOnly = false }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -41,6 +53,9 @@ export default function FilterSidebar({ brands, totalCount }: Props) {
   const activeBrands = params.get('brand')?.split(',').filter(Boolean) ?? [];
   const activePrice = params.get('price') ?? '';
   const hasFilters = activeTech.length || activeBrands.length || activePrice || params.get('inStock');
+  /** Badge mein kitne filter lage hain — mobile pe saaf pata chalta hai. */
+  const activeCount =
+    activeTech.length + activeBrands.length + (activePrice ? 1 : 0) + (params.get('inStock') ? 1 : 0);
 
   const body = (
     <div className="space-y-6">
@@ -135,12 +150,20 @@ export default function FilterSidebar({ brands, totalCount }: Props) {
   return (
     <>
       {/* Mobile trigger */}
-      <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-xl border border-navy-100 px-4 py-2.5 text-sm font-bold text-navy-700 lg:hidden"
-      >
-        ☰ Filters {hasFilters ? <span className="rounded-full bg-cta-orange px-1.5 text-[11px] text-white">•</span> : null}
-      </button>
+      {!desktopOnly && (
+        <button
+          onClick={() => setOpen(true)}
+          className="flex shrink-0 items-center gap-2 rounded-xl border border-navy-200 bg-white px-4 py-2.5 text-sm font-bold text-navy-700 shadow-sm active:scale-95 lg:hidden"
+        >
+          <FilterIcon />
+          Filters
+          {hasFilters ? (
+            <span className="grid h-5 w-5 place-items-center rounded-full bg-cta-orange text-[11px] font-bold text-white">
+              {activeCount}
+            </span>
+          ) : null}
+        </button>
+      )}
 
       {/* Desktop */}
       <aside className="hidden w-60 shrink-0 lg:block">

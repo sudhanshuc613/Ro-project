@@ -1,3 +1,5 @@
+import { GBP } from '@/lib/constants';
+
 const REVIEWS = [
   {
     stars: 5,
@@ -24,11 +26,13 @@ const REVIEWS = [
 
 export default function Testimonials() {
   return (
-    <section className="py-14 md:py-16">
+    <section id="reviews" className="scroll-mt-24 py-14 md:py-16">
       <div className="container mx-auto px-4">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <h2 className="font-display text-3xl font-extrabold text-navy-700">What Our Customers Say</h2>
-          <p className="mt-2 text-muted">4.8★ average from 312 verified reviews</p>
+          <p className="mt-2 text-muted">
+            {GBP.ratingValue}★ average from {GBP.reviewCount} Google reviews
+          </p>
         </div>
 
         <div className="grid gap-5 md:grid-cols-3">
