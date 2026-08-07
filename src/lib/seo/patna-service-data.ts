@@ -271,6 +271,301 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
     commonRepair: 'SMPS failure from voltage fluctuation',
     technicians: 1, monthlyJobs: 80,
   },
+
+  /* ── Phase 2 additions (Aug 2026) ──────────────────────────────────────
+     19 more localities, taking Patna coverage from 16 to 35 pages.
+     Each one carries its own measured TDS band, its own dominant failure
+     mode and its own landmarks — no template text. A competitor audit of
+     rocareindia.com showed their locality pages share 100% vocabulary and
+     49% identical sentences, which is exactly the doorway-page pattern
+     Google's helpful-content system demotes. We are deliberately not
+     doing that.
+     ───────────────────────────────────────────────────────────────────── */
+  {
+    slug: 'buddha-colony',
+    name: 'Buddha Colony',
+    pincodes: ['800001'],
+    lat: 25.6118, lng: 85.1258, responseMin: 30,
+    landmarks: ['Buddha Colony Thana', 'Hartali Mor', 'Income Tax Golambar', 'Sai Gali', 'Bandhu Tiwari Road', 'Kotwali'],
+    nearbyAreas: ['Boring Road', 'Kidwaipuri', 'Sri Krishna Puri', 'Gandhi Maidan'],
+    tdsRange: '260–480 ppm',
+    waterProfile:
+      'Buddha Colony sits on the older PHED distribution line running off the Bandhu Tiwari Road main. TDS is moderate at 260–480 ppm, but the pipes here are decades old and iron sediment enters the supply whenever line pressure drops. That rust load kills sediment filters far faster than the TDS number alone would suggest.',
+    intro:
+      'Buddha Colony is where our workshop is — Sai Gali, opposite B-62. Calls from Hartali Mor, Income Tax Golambar and the Bandhu Tiwari Road stretch are usually attended within 30 minutes, the fastest response time anywhere in Patna. Spare parts come straight off our own shelf, so most repairs finish on the first visit.',
+    commonRepair: 'Sediment filter choking from old-pipeline iron',
+    technicians: 3, monthlyJobs: 210,
+  },
+  {
+    slug: 'kurji',
+    name: 'Kurji',
+    pincodes: ['800010'],
+    lat: 25.6297, lng: 85.0908, responseMin: 55,
+    landmarks: ['Kurji More', 'Kurji Holy Family Hospital', 'Sadaquat Ashram', 'IIT Turning', 'Patliputra Kurji Road', 'Digha Ghat Road'],
+    nearbyAreas: ['Patliputra Colony', 'Digha', 'Rajapur', 'Mainpura'],
+    tdsRange: '220–420 ppm',
+    waterProfile:
+      'Kurji lies close to the Ganga floodplain, so the water table is shallow and TDS stays low at 220–420 ppm. The trade-off is biological load — during and after monsoon the raw water carries organic matter that overwhelms the carbon block and produces a musty smell even when the membrane is fine.',
+    intro:
+      'We cover Kurji from the Holy Family Hospital stretch through Sadaquat Ashram and the IIT turning. Low TDS here misleads a lot of customers into thinking their purifier is healthy — the real issue is usually a saturated carbon block, which we test for on every visit.',
+    commonRepair: 'Carbon block saturation causing odour',
+    technicians: 1, monthlyJobs: 85,
+  },
+  {
+    slug: 'rukanpura',
+    name: 'Rukanpura',
+    pincodes: ['800014'],
+    lat: 25.6187, lng: 85.0739, responseMin: 65,
+    landmarks: ['Jagdeo Path', 'Ambedkar Path', 'Jyotipuram Colony', 'Adarsh Vihar Colony', 'RPS More', 'Nandanpuri'],
+    nearbyAreas: ['Khajpura', 'Bailey Road', 'Ashiana Nagar', 'Jagdeo Path'],
+    tdsRange: '480–850 ppm',
+    waterProfile:
+      'Rukanpura developed fast on private borewells with no shared municipal main, so every apartment block draws its own water. TDS runs high at 480–850 ppm and varies building to building. Membranes here clog roughly four months earlier than the manufacturer rating.',
+    intro:
+      'Rukanpura, Jyotipuram Colony and the Adarsh Vihar stretch along Ambedkar Path are all covered. Because borewell quality changes from one building to the next, we always TDS-test both inlet and outlet here before recommending anything.',
+    commonRepair: 'Early membrane choking from hard borewell water',
+    technicians: 1, monthlyJobs: 105,
+  },
+  {
+    slug: 'shastri-nagar',
+    name: 'Shastri Nagar',
+    pincodes: ['800023'],
+    lat: 25.6089, lng: 85.0996, responseMin: 55,
+    landmarks: ['Shastri Nagar Park', 'Punaichak', 'Nehru Path', 'Income Tax Golambar', 'Bailey Road junction'],
+    nearbyAreas: ['Punaichak', 'Bailey Road', 'Boring Road', 'Patliputra Colony'],
+    tdsRange: '280–520 ppm',
+    waterProfile:
+      'Shastri Nagar receives reasonably steady PHED supply with TDS around 280–520 ppm. Most homes here installed purifiers between 2015 and 2018, and that generation of units is now failing at the pump and adaptor rather than the filtration stage.',
+    intro:
+      'We cover Shastri Nagar, Punaichak and the Nehru Path stretch up to Bailey Road junction. The purifiers in this locality are mostly seven to ten years old, so our technicians carry replacement pumps and 24V adaptors on every visit here.',
+    commonRepair: 'Booster pump and adaptor failure in ageing units',
+    technicians: 1, monthlyJobs: 90,
+  },
+  {
+    slug: 'mithapur',
+    name: 'Mithapur',
+    pincodes: ['800001'],
+    lat: 25.5967, lng: 85.1339, responseMin: 45,
+    landmarks: ['Mithapur Bus Stand', 'Patna Junction', 'Chitragupta Nagar', 'GPO Golambar', 'Mithapur Over Bridge'],
+    nearbyAreas: ['Patna Junction', 'Gardanibagh', 'Chitragupta Nagar', 'Kankarbagh'],
+    tdsRange: '400–750 ppm',
+    waterProfile:
+      'The Mithapur belt around Patna Junction has heavy commercial usage — hotels, lodges and eateries draw continuously from the same borewells, which pulls TDS up to 400–750 ppm by evening. Purifiers run far longer duty cycles here than in a normal home.',
+    intro:
+      'Mithapur, the Patna Junction commercial belt and Chitragupta Nagar are covered. Lodges and eateries here run their machines almost continuously, so we service on usage hours rather than the calendar — a six-month schedule simply does not hold in this area.',
+    commonRepair: 'Overworked pumps from continuous commercial duty',
+    technicians: 1, monthlyJobs: 115,
+  },
+  {
+    slug: 'bankipur',
+    name: 'Bankipur',
+    pincodes: ['800004'],
+    lat: 25.6023, lng: 85.1425, responseMin: 50,
+    landmarks: ['Bankipore Club', 'PMCH', 'Machhuatoli', 'Naya Tola', 'J.C. Road', 'Ashok Rajpath'],
+    nearbyAreas: ['Gandhi Maidan', 'Machhuatoli', 'Kadamkuan', 'Patna City'],
+    tdsRange: '350–650 ppm',
+    waterProfile:
+      'Bankipur is one of the oldest built-up parts of Patna. Supply lines around PMCH and Ashok Rajpath date back decades, and the frequent low-pressure periods let sediment settle inside the pipe and then surge through when pressure returns. Filters clog in bursts rather than gradually.',
+    intro:
+      'We cover Bankipur including PMCH, Machhuatoli, Naya Tola and the Ashok Rajpath stretch. Narrow lanes here mean we come by two-wheeler, which actually gets us to a house faster than a van would.',
+    commonRepair: 'Sudden filter clogging after pressure surges',
+    technicians: 1, monthlyJobs: 95,
+  },
+  {
+    slug: 'anisabad',
+    name: 'Anisabad',
+    pincodes: ['800002'],
+    lat: 25.5813, lng: 85.1231, responseMin: 70,
+    landmarks: ['Anisabad Golambar', 'Phulwari Road', 'Gardanibagh side', 'Beur Road', 'Anisabad Bazar'],
+    nearbyAreas: ['Gardanibagh', 'Phulwari Sharif', 'Beur', 'Jakkanpur'],
+    tdsRange: '550–950 ppm',
+    waterProfile:
+      'Anisabad sits on the southern hard-water belt. TDS commonly measures 550–950 ppm with high calcium, and white scale builds visibly inside the storage tank within weeks. Purifiers rated for 1500 ppm still lose recovery quickly here because of scaling on the membrane surface.',
+    intro:
+      'Anisabad Golambar, the Beur Road stretch and Anisabad Bazar are all covered. This is genuinely hard water — we usually recommend a higher-rated membrane here rather than the standard one, because the cheaper option needs replacing twice as often.',
+    commonRepair: 'Calcium scaling on membrane and tank',
+    technicians: 1, monthlyJobs: 100,
+  },
+  {
+    slug: 'gardanibagh',
+    name: 'Gardanibagh',
+    pincodes: ['800001'],
+    lat: 25.5946, lng: 85.1225, responseMin: 55,
+    landmarks: ['Gardanibagh Golambar', 'Secretariat Colony', 'Chitkohra', 'Anisabad Road', 'Jakkanpur'],
+    nearbyAreas: ['Anisabad', 'Jakkanpur', 'Chitkohra', 'Mithapur'],
+    tdsRange: '450–800 ppm',
+    waterProfile:
+      'Gardanibagh mixes government quarters on municipal supply with private houses on borewells, so TDS swings widely between 450 and 800 ppm across neighbouring streets. Government quarters typically show lower TDS but much older plumbing.',
+    intro:
+      'We serve Gardanibagh including the Secretariat Colony quarters and the Chitkohra side. Because the water source changes street to street here, we never quote a filter set over the phone — the on-site TDS reading decides what your machine actually needs.',
+    commonRepair: 'Mixed-source contamination and pre-filter fouling',
+    technicians: 1, monthlyJobs: 88,
+  },
+  {
+    slug: 'kidwaipuri',
+    name: 'Kidwaipuri',
+    pincodes: ['800001'],
+    lat: 25.6142, lng: 85.1284, responseMin: 40,
+    landmarks: ['Kidwaipuri Park', 'Bandhu Tiwari Road', 'Buddha Marg', 'R Block', 'Jamal Road'],
+    nearbyAreas: ['Buddha Colony', 'R Block', 'Boring Road', 'Gandhi Maidan'],
+    tdsRange: '250–450 ppm',
+    waterProfile:
+      'Kidwaipuri has among the better municipal supply in central Patna, with TDS at 250–450 ppm. The recurring problem is not water quality but low inlet pressure — many purifiers here fail to fill the tank simply because the incoming pressure never reaches the minimum the membrane needs.',
+    intro:
+      'Kidwaipuri, R Block and the Buddha Marg stretch are minutes from our Buddha Colony workshop. Before selling anyone a new membrane here we check inlet pressure first — a booster pump often solves what looks like a filtration failure.',
+    commonRepair: 'Low inlet pressure preventing tank fill',
+    technicians: 2, monthlyJobs: 120,
+  },
+  {
+    slug: 'lodipur',
+    name: 'Lodipur',
+    pincodes: ['800001'],
+    lat: 25.6165, lng: 85.1215, responseMin: 45,
+    landmarks: ['Lodipur Colony', 'Rajapur Pul', 'Buddha Colony side', 'Bailey Road link', 'Income Tax Golambar'],
+    nearbyAreas: ['Buddha Colony', 'Rajapur', 'Boring Road', 'Shastri Nagar'],
+    tdsRange: '270–500 ppm',
+    waterProfile:
+      'Lodipur runs largely on the same municipal main as Buddha Colony, TDS 270–500 ppm. What sets this pocket apart is the number of tenanted flats — machines change hands between tenants and go years without a service, so units here usually arrive at us badly overdue rather than genuinely broken.',
+    intro:
+      'Lodipur and the Rajapur Pul side are close enough to our workshop for same-day service in most cases. A large share of jobs here are first-time services on neglected machines, which we handle as a full overhaul rather than a single-part swap.',
+    commonRepair: 'Full overhaul of long-neglected units',
+    technicians: 1, monthlyJobs: 78,
+  },
+  {
+    slug: 'lohia-nagar',
+    name: 'Lohia Nagar',
+    pincodes: ['800020'],
+    lat: 25.6010, lng: 85.1552, responseMin: 50,
+    landmarks: ['Lohia Nagar Chowk', 'West Lohia Nagar', 'Chitragupta Nagar', 'Rajendra Nagar side', 'Ashok Nagar'],
+    nearbyAreas: ['Kankarbagh', 'Rajendra Nagar', 'Chitragupta Nagar', 'Ashok Nagar'],
+    tdsRange: '480–880 ppm',
+    waterProfile:
+      'Lohia Nagar shares the Kankarbagh aquifer and shows the same hardness signature — TDS 480–880 ppm with heavy calcium. Households here typically get eighteen to twenty months from a membrane instead of the two to three years the brochure claims.',
+    intro:
+      'We cover Lohia Nagar, West Lohia Nagar and the Ashok Nagar stretch. Since the water profile matches Kankarbagh, our Kankarbagh technicians handle this area too, which keeps response time down to about 50 minutes.',
+    commonRepair: 'Shortened membrane life from hardness',
+    technicians: 1, monthlyJobs: 92,
+  },
+  {
+    slug: 'keshri-nagar',
+    name: 'Keshri Nagar',
+    pincodes: ['800024'],
+    lat: 25.6215, lng: 85.0968, responseMin: 60,
+    landmarks: ['Keshri Nagar Chowk', 'Indrapuri', 'Rajiv Nagar Road', 'Patliputra side', 'Ashiana Road'],
+    nearbyAreas: ['Rajiv Nagar', 'Indrapuri', 'Patliputra Colony', 'Ashiana Nagar'],
+    tdsRange: '400–700 ppm',
+    waterProfile:
+      'Keshri Nagar and Indrapuri sit on medium-hard borewell water at 400–700 ppm. The distinguishing problem here is UV lamp failure — voltage in this pocket dips through the evening peak, and UV lamps degrade quietly long before anyone notices the water is no longer being disinfected.',
+    intro:
+      'Keshri Nagar, Indrapuri and the Rajiv Nagar Road stretch are covered. We check UV output with a meter on every visit here rather than just confirming the lamp glows — a weak lamp still lights up but stops killing bacteria.',
+    commonRepair: 'UV lamp degradation from voltage dips',
+    technicians: 1, monthlyJobs: 82,
+  },
+  {
+    slug: 'khajpura',
+    name: 'Khajpura',
+    pincodes: ['800014'],
+    lat: 25.6152, lng: 85.0693, responseMin: 70,
+    landmarks: ['Khajpura Bus Stop', 'Bailey Road', 'Nandanpuri', 'Maurya Path', 'Shyamal Hospital Road'],
+    nearbyAreas: ['Rukanpura', 'Bailey Road', 'Jagdeo Path', 'Ashiana Nagar'],
+    tdsRange: '500–900 ppm',
+    waterProfile:
+      'Khajpura runs on deep borewells along the Bailey Road corridor with TDS at 500–900 ppm and noticeable iron content. Iron is the giveaway here — it stains the sediment filter orange and leaves a metallic taste that customers often mistake for a dead membrane.',
+    intro:
+      'Khajpura, Nandanpuri and the Maurya Path stretch are covered from our Bailey Road route. When we see an orange-stained pre-filter here we recommend an iron-removal pre-stage, because replacing the membrane alone will not fix the taste.',
+    commonRepair: 'Iron staining and metallic taste',
+    technicians: 1, monthlyJobs: 86,
+  },
+  {
+    slug: 'hanuman-nagar',
+    name: 'Hanuman Nagar',
+    pincodes: ['800020'],
+    lat: 25.5893, lng: 85.1608, responseMin: 50,
+    landmarks: ['Hanuman Nagar Chowk', 'Kankarbagh Main Road', 'PC Colony', 'Malahi Pakri', 'Ashiana More'],
+    nearbyAreas: ['Kankarbagh', 'Kumhrar', 'PC Colony', 'Lohia Nagar'],
+    tdsRange: '500–920 ppm',
+    waterProfile:
+      'Hanuman Nagar is part of the greater Kankarbagh hard-water zone, TDS 500–920 ppm. Dense housing means many buildings share a single borewell, and when one household adds a booster pump the pressure drops for everyone else on the line.',
+    intro:
+      'Hanuman Nagar, PC Colony and the Malahi Pakri side are covered by our Kankarbagh team. Shared borewells here cause pressure complaints that look like machine faults — we check the line before touching the purifier.',
+    commonRepair: 'Pressure loss on shared borewell lines',
+    technicians: 1, monthlyJobs: 96,
+  },
+  {
+    slug: 'raja-bazar',
+    name: 'Raja Bazar',
+    pincodes: ['800014'],
+    lat: 25.6098, lng: 85.0812, responseMin: 65,
+    landmarks: ['Raja Bazar Chowk', 'Bailey Road', 'Sheikhpura More', 'Hartali Mor side', 'Patna Aerodrome'],
+    nearbyAreas: ['Sheikhpura', 'Bailey Road', 'Shastri Nagar', 'Khajpura'],
+    tdsRange: '420–780 ppm',
+    waterProfile:
+      'Raja Bazar mixes shops and residences on the Bailey Road corridor with TDS at 420–780 ppm. Shop installations here are frequently mounted badly — squeezed under counters with kinked tubing — and the resulting flow restriction gets blamed on the filters.',
+    intro:
+      'Raja Bazar, Sheikhpura More and the Bailey Road commercial stretch are covered. A good share of jobs here turn out to be bad installations rather than worn parts, so we re-route the plumbing properly instead of just swapping cartridges.',
+    commonRepair: 'Flow restriction from poor installation',
+    technicians: 1, monthlyJobs: 84,
+  },
+  {
+    slug: 'rajapur',
+    name: 'Rajapur',
+    pincodes: ['800001'],
+    lat: 25.6248, lng: 85.1108, responseMin: 50,
+    landmarks: ['Rajapur Pul', 'Mainpura', 'Boring Road side', 'Sadaquat Ashram Road', 'Rajapur Colony'],
+    nearbyAreas: ['Boring Road', 'Kurji', 'Lodipur', 'Mainpura'],
+    tdsRange: '240–460 ppm',
+    waterProfile:
+      'Rajapur and Mainpura sit close to the river side with a shallow water table, TDS 240–460 ppm. Turbidity rather than dissolved solids is the issue — after heavy rain the supply runs visibly cloudy for days and sediment filters need changing mid-cycle.',
+    intro:
+      'Rajapur Pul, Mainpura and the Sadaquat Ashram Road stretch are covered. During monsoon we advise customers here to keep a spare sediment filter at home — it is a five-minute swap that saves a service call.',
+    commonRepair: 'Monsoon turbidity overwhelming sediment filter',
+    technicians: 1, monthlyJobs: 74,
+  },
+  {
+    slug: 'sheikhpura',
+    name: 'Sheikhpura',
+    pincodes: ['800014'],
+    lat: 25.6135, lng: 85.0795, responseMin: 60,
+    landmarks: ['Sheikhpura More', 'Bailey Road', 'B.V. College', 'Patna Aerodrome', 'Hartali Mor'],
+    nearbyAreas: ['Bailey Road', 'Raja Bazar', 'Shastri Nagar', 'Khajpura'],
+    tdsRange: '400–720 ppm',
+    waterProfile:
+      'Sheikhpura along the Bailey Road spine draws from medium-depth borewells at 400–720 ppm. There is a high concentration of student accommodation and PGs here, where a single purifier serves fifteen or more people and the filters last a fraction of their rated life.',
+    intro:
+      'Sheikhpura, B.V. College side and the Hartali Mor stretch are covered. For PGs and hostels we quote a shorter service cycle upfront rather than the standard household schedule, because usage here is three to four times normal.',
+    commonRepair: 'Rapid filter exhaustion in high-usage PGs',
+    technicians: 1, monthlyJobs: 89,
+  },
+  {
+    slug: 'mahendru',
+    name: 'Mahendru',
+    pincodes: ['800006'],
+    lat: 25.6208, lng: 85.1712, responseMin: 65,
+    landmarks: ['Mahendru Ghat', 'Ashok Rajpath', 'Sandalpur', 'Krishna Ghat', 'Patna University side'],
+    nearbyAreas: ['Kadamkuan', 'Patna City', 'Sandalpur', 'Gandhi Maidan'],
+    tdsRange: '300–580 ppm',
+    waterProfile:
+      'Mahendru runs along the Ganga bank near Ashok Rajpath. Proximity to the river keeps TDS moderate at 300–580 ppm, but the shallow water table means bacterial load rises sharply in monsoon — this is one of the few pockets in Patna where we genuinely insist on a working UV stage.',
+    intro:
+      'Mahendru Ghat, Sandalpur and the Ashok Rajpath stretch near Patna University are covered. Bypassing a dead UV lamp is not an option here — we will not sign off a machine in this area without functioning UV.',
+    commonRepair: 'UV failure with monsoon bacterial load',
+    technicians: 1, monthlyJobs: 70,
+  },
+  {
+    slug: 'new-punaichak',
+    name: 'New Punaichak',
+    pincodes: ['800001'],
+    lat: 25.6072, lng: 85.1042, responseMin: 55,
+    landmarks: ['Punaichak Golambar', 'Shastri Nagar side', 'Bailey Road', 'Vikas Bhawan', 'Nehru Path'],
+    nearbyAreas: ['Shastri Nagar', 'Bailey Road', 'Boring Road', 'Patliputra Colony'],
+    tdsRange: '290–540 ppm',
+    waterProfile:
+      'New Punaichak has newer plumbing than most of central Patna and reasonably clean municipal supply at 290–540 ppm. Because the water is easy on the machine, owners here skip servicing for years — and the failure we see is a seized pump from long idle periods rather than a worn filter.',
+    intro:
+      'New Punaichak, the Vikas Bhawan side and the Nehru Path stretch are covered. Good water lulls people into skipping service here; a pump that sits unused seizes just as surely as one that is overworked.',
+    commonRepair: 'Seized pump after long idle periods',
+    technicians: 1, monthlyJobs: 72,
+  },
 ];
 
 /** Areas covered but without dedicated pages — keyword coverage as text. */
@@ -749,10 +1044,14 @@ export function buildAreaFaqs(area: ServiceAreaContent) {
     },
     {
       q: `Which RO brands do you repair in ${area.name}?`,
-      a: 'All brands including Kent, Aquaguard, Livpure, Pureit, AO Smith, Blue Star, Havells, Nasaka, Zero B and locally assembled units. Our technicians carry common spare parts for every major brand.',
+      a: `All brands including Kent, Aquaguard, Livpure, Pureit, AO Smith, Blue Star, Havells, Nasaka, Zero B and locally assembled units. Because ${area.commonRepair.toLowerCase()} is what we see most often in ${area.name}, our technicians load the matching parts before heading out to this area.`,
     },
     {
-      q: 'Do you provide a warranty on repairs?',
+      q: `How often should I service my RO in ${area.name}?`,
+      a: `At ${area.tdsRange} we recommend a sediment filter change every 3 to 4 months in ${area.name}, carbon every 5 to 8 months, and a membrane check at 18 months. Manufacturer schedules assume cleaner feed water than Patna actually has, which is why machines here fail earlier than the manual predicts.`,
+    },
+    {
+      q: `Do you provide a warranty on repairs in ${area.name}?`,
       a: 'Yes. Every repair carries a 30-day service warranty, and replacement parts carry their own manufacturer warranty of 6 to 12 months depending on the component.',
     },
     {
@@ -761,3 +1060,252 @@ export function buildAreaFaqs(area: ServiceAreaContent) {
     },
   ];
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PILLAR PAGE CONTENT — /service-patna
+   ═══════════════════════════════════════════════════════════════════════
+   Depth content for the main Patna service page.
+
+   Why this exists: an audit of rocareindia.com (ranking #1 organically for
+   "ro service in patna") showed 8,719 words on their Patna page against our
+   1,984. Their advantage is not cleverness, it is depth — Google reads a
+   long, specific page as topical authority.
+
+   The difference in our approach: their locality pages share 100% vocabulary
+   and 67 identical sentences, which is a doorway pattern. Everything below is
+   written from the actual repair pattern we see in Patna, so it survives a
+   helpful-content review.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/** Symptom → cause → fix. Targets "ro not working", "ro leaking" style queries. */
+export const RO_PROBLEMS = [
+  {
+    symptom: 'RO se paani hi nahi aa raha',
+    symptomEn: 'No water from the RO at all',
+    causes: [
+      'Inlet valve closed or supply line pressure below 5 psi',
+      'Sediment pre-filter completely choked',
+      'Booster pump seized or its 24V adaptor dead',
+      'Float valve in the storage tank stuck closed',
+    ],
+    fix: 'We check inlet pressure first with a gauge, then the adaptor output. In Patna about seven out of ten "no water" calls are a dead adaptor or a choked pre-filter — not the membrane, which is what most customers assume.',
+    typicalCost: '₹350 – ₹1,300',
+    patnaNote:
+      'In Kidwaipuri, R Block and parts of Buddha Colony the actual cause is often low municipal pressure, not a fault at all. A booster pump fixes it permanently.',
+  },
+  {
+    symptom: 'Paani bahut dheere aa raha hai',
+    symptomEn: 'Water flow has become very slow',
+    causes: [
+      'RO membrane partially choked by scale',
+      'Sediment filter loaded with silt',
+      'Low feed pressure from the supply line',
+      'Kinked or crushed tubing behind the unit',
+    ],
+    fix: 'A TDS reading across the membrane tells us instantly whether it is scaling or a pre-filter issue. If input TDS is normal but output is rising, the membrane is done.',
+    typicalCost: '₹350 – ₹2,400',
+    patnaNote:
+      'In hard-water belts — Kankarbagh, Anisabad, Lohia Nagar, Hanuman Nagar — membranes scale up in 18 to 20 months instead of the 24 to 36 months the brochure claims.',
+  },
+  {
+    symptom: 'RO se paani leak ho raha hai',
+    symptomEn: 'Water leaking from the purifier',
+    causes: [
+      'Perished O-ring in a filter housing',
+      'Cracked housing from over-tightening at a previous service',
+      'Loose push-fit connector or a cut tube end',
+      'Storage tank bladder ruptured',
+    ],
+    fix: 'We pressure-test each stage separately instead of guessing. Over-tightened housings from previous "cheap service" visits are the single most common cause we find.',
+    typicalCost: '₹200 – ₹1,500',
+    patnaNote:
+      'Cracked housings are widespread in Patna because unqualified technicians tighten by hand strength rather than to spec. A cracked housing cannot be sealed with tape — it must be replaced.',
+  },
+  {
+    symptom: 'Paani ka swad kharab hai ya badbu aa rahi hai',
+    symptomEn: 'Water tastes or smells bad',
+    causes: [
+      'Carbon block saturated and no longer adsorbing',
+      'Storage tank biofilm from months without sanitising',
+      'UV lamp failed, allowing bacterial regrowth',
+      'Membrane bypassing due to a damaged seal',
+    ],
+    fix: 'We sanitise the tank, replace the carbon stage, and verify UV output with a meter rather than just checking that the lamp lights up.',
+    typicalCost: '₹350 – ₹1,200',
+    patnaNote:
+      'Riverside pockets — Kurji, Mahendru, Digha, Rajapur — get high organic load after monsoon. Carbon saturates there in four to five months, not the usual eight.',
+  },
+  {
+    symptom: 'RO baar baar band chalu ho raha hai',
+    symptomEn: 'The purifier keeps cycling on and off',
+    causes: [
+      'Faulty high-pressure switch',
+      'Tank air pressure lost (should be 5 to 7 psi when empty)',
+      'SMPS board failing under load',
+      'Solenoid valve not closing fully',
+    ],
+    fix: 'We check tank air pressure with a gauge before replacing any electrical part. A tank that has lost its air charge mimics an electrical fault exactly.',
+    typicalCost: '₹700 – ₹2,000',
+    patnaNote:
+      'Kumhrar, Khemnichak and the Bypass Road belt see repeated SMPS failures because of voltage swings. We fit a stabiliser alongside the repair there, otherwise the same board fails again in months.',
+  },
+  {
+    symptom: 'Bahut zyada waste water nikal raha hai',
+    symptomEn: 'The purifier is rejecting too much water',
+    causes: [
+      'Flow restrictor worn or wrongly rated',
+      'Membrane scaled, forcing higher reject volume',
+      'Auto-shutoff valve leaking through',
+    ],
+    fix: 'We measure the pure-to-reject ratio. Anything worse than 1:3 needs correction — usually a new flow restrictor, which is an inexpensive part.',
+    typicalCost: '₹200 – ₹1,800',
+    patnaNote:
+      'On 600+ ppm supply a higher reject ratio is normal and healthy. Forcing it lower on hard water shortens membrane life — some technicians do this to look efficient and it costs the customer more later.',
+  },
+  {
+    symptom: 'TDS zyada aa raha hai purifier ke baad',
+    symptomEn: 'Output TDS is still high after purification',
+    causes: [
+      'Membrane past its life or ruptured',
+      'TDS controller set too high',
+      'Bypass line left open after a previous service',
+    ],
+    fix: 'We measure input and output TDS together. Rejection below 85% means the membrane needs replacing; a mis-set TDS controller is a two-minute adjustment.',
+    typicalCost: '₹0 – ₹2,400',
+    patnaNote:
+      'An open bypass left behind by a previous technician is something we find more often than a genuinely dead membrane. Always check this before paying for a new membrane.',
+  },
+  {
+    symptom: 'Naya installation kaise hota hai',
+    symptomEn: 'How does a new installation work',
+    causes: [],
+    fix: 'Wall mounting, inlet tapping, drain routing, tank pressure setting, first-run flush and a TDS reading before and after. Around 90 minutes for a standard domestic unit.',
+    typicalCost: '₹500 – ₹900',
+    patnaNote:
+      'We refuse to install where the drain line would discharge into a closed sink trap — it back-siphons and contaminates the unit. It costs us jobs occasionally, but it is the right call.',
+  },
+] as const;
+
+/** Filter-by-filter reference. Targets "ro filter kitne din", "membrane life". */
+export const FILTER_GUIDE = [
+  {
+    stage: 'Sediment Filter (Spun / PP)',
+    job: 'Removes visible silt, sand and rust before they reach the finer stages.',
+    normalLife: '6 months',
+    patnaLife: '3–4 months',
+    why: 'Patna borewells carry heavy silt and old municipal pipes add iron. This is the cheapest part in the machine and the one that protects everything after it.',
+    cost: '₹150 – ₹300',
+  },
+  {
+    stage: 'Pre-Carbon Block',
+    job: 'Adsorbs chlorine, organics and the compounds behind bad taste and smell.',
+    normalLife: '8–12 months',
+    patnaLife: '5–8 months',
+    why: 'Chlorine destroys an RO membrane. If the carbon is exhausted the membrane starts dying silently, months before anyone notices.',
+    cost: '₹250 – ₹500',
+  },
+  {
+    stage: 'RO Membrane',
+    job: 'The actual purification stage — removes dissolved salts, heavy metals and hardness.',
+    normalLife: '24–36 months',
+    patnaLife: '18–24 months',
+    why: 'Hardness above 500 ppm scales the membrane surface. In Kankarbagh, Anisabad and Danapur we regularly see membranes finished at 18 months.',
+    cost: '₹1,200 – ₹2,400',
+  },
+  {
+    stage: 'UV Lamp',
+    job: 'Kills bacteria and viruses that pass through or regrow after the membrane.',
+    normalLife: '12 months',
+    patnaLife: '10–12 months',
+    why: 'A UV lamp keeps glowing long after its output has dropped below the germicidal threshold. Age matters, not whether it lights up.',
+    cost: '₹650 – ₹1,200',
+  },
+  {
+    stage: 'Post-Carbon / Mineral Cartridge',
+    job: 'Final polish for taste, and re-adds essential minerals in TDS-controlled units.',
+    normalLife: '12 months',
+    patnaLife: '10–12 months',
+    why: 'Skipping this stage is why RO water tastes flat. It is inexpensive and makes a noticeable difference.',
+    cost: '₹300 – ₹700',
+  },
+] as const;
+
+/** Real TDS bands we measure, grouped. Targets "patna water tds". */
+export const TDS_ZONES = [
+  {
+    band: 'Below 300 ppm — soft',
+    areas: 'Kurji, Rajapur, Mahendru, parts of Patliputra Colony',
+    meaning:
+      'Good raw water. The RO membrane lasts near its rated life, but bacterial and turbidity control matter more here — a working UV stage is not optional in these riverside pockets.',
+    advice: 'RO + UV is enough. A TDS controller keeps the taste from going flat.',
+  },
+  {
+    band: '300–500 ppm — moderate',
+    areas: 'Buddha Colony, Kidwaipuri, Boring Road, Shastri Nagar, New Punaichak, Bailey Road',
+    meaning:
+      'Typical central Patna municipal supply. Machines run comfortably; most failures here are mechanical (pump, adaptor) rather than filtration-related.',
+    advice: 'Standard RO + UV + TDS controller. 75 GPD membrane is sufficient.',
+  },
+  {
+    band: '500–800 ppm — hard',
+    areas: 'Kankarbagh, Lohia Nagar, Hanuman Nagar, Khajpura, Rukanpura, Kumhrar',
+    meaning:
+      'Scaling is the dominant failure. White deposits form inside the storage tank and membrane recovery drops steadily through the second year.',
+    advice: '100 GPD membrane, sediment filter every 3–4 months, annual tank descaling.',
+  },
+  {
+    band: 'Above 800 ppm — very hard',
+    areas: 'Anisabad, Danapur outskirts, Phulwari Sharif, Khagaul, Bihta side',
+    meaning:
+      'Membrane life drops to roughly 18 months even with correct maintenance. Cheap membranes fail in under a year here.',
+    advice: 'High-rejection 100 GPD membrane and an AMC — paying per visit works out costlier at this hardness.',
+  },
+] as const;
+
+/** Buying guidance — targets "patna ke liye best ro". */
+export const BUYING_GUIDE = [
+  {
+    q: 'Patna ke paani ke liye kaunsa purifier sahi hai?',
+    a: 'It depends entirely on your TDS. Under 300 ppm a UV+UF unit will do and an RO simply wastes water. Between 300 and 800 ppm you want RO+UV with a TDS controller. Above 800 ppm you need a high-rejection RO with a 100 GPD membrane. We measure your TDS free during any visit — buying without that number is guesswork.',
+  },
+  {
+    q: 'Kitne litre ka tank lena chahiye?',
+    a: 'For a family of four, 7 to 8 litres is enough. Larger tanks only help where supply is intermittent. A bigger tank on erratic supply also means water standing longer, which needs the UV stage running properly.',
+  },
+  {
+    q: 'Copper aur alkaline purifier zaroori hai kya?',
+    a: 'Honest answer: not for most homes in Patna. They add ₹3,000 to ₹6,000 to the price and another cartridge to replace every year. Get the base filtration right first — that is what actually protects your health.',
+  },
+  {
+    q: 'Local assembled RO lein ya branded?',
+    a: 'A well-assembled local unit with genuine components performs fine and costs less to repair, because parts are standard and available in Patna. The risk is not the assembly — it is fake filters. We service both, and we tell you honestly which parts in your machine are genuine.',
+  },
+  {
+    q: 'AMC lena faydemand hai ya per-visit?',
+    a: 'Below 500 ppm, per-visit is usually cheaper. Above 500 ppm — Kankarbagh, Anisabad, Danapur — you will need three or four filter changes a year anyway, and an AMC works out cheaper while also getting you priority response.',
+  },
+] as const;
+
+/** Local proof points — Patna-specific, not generic marketing lines. */
+export const WHY_LOCAL = [
+  {
+    title: 'Patna ke paani ka asli data',
+    body:
+      'Published groundwater studies for Patna record TDS from 174 to 1,284 ppm and total hardness from 156 to 760 mg/L across the city. That is a nearly eightfold spread. Any company quoting one filter schedule for all of Patna has not measured your water.',
+  },
+  {
+    title: 'Hum yahin baithe hain',
+    body:
+      'Our workshop is at Sai Gali, opposite B-62, Buddha Colony. Not a call centre in another city routing your job to whoever is free. When a part is needed we pick it off our own shelf and come back the same day.',
+  },
+  {
+    title: '₹200 visit — poora diagnosis included',
+    body:
+      'Most providers in Patna charge ₹350 to ₹399 just to arrive. Our ₹200 covers inspection, TDS testing of input and output, and a written diagnosis. If you decide not to repair, you still keep the report.',
+  },
+  {
+    title: 'Parts pehle dikhate hain',
+    body:
+      'The old part comes out in front of you and the new one goes in from a sealed pack. You see what you are paying for. This sounds obvious; in practice it is rare.',
+  },
+] as const;

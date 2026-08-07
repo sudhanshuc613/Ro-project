@@ -6,7 +6,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
+import {
+  SERVICE_AREAS, SERVICED_BRANDS, RO_PROBLEMS, FILTER_GUIDE,
+  TDS_ZONES, BUYING_GUIDE, WHY_LOCAL,
+} from '@/lib/seo/patna-service-data';
 import { localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
 import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import FaqAccordion from '@/components/home/FaqAccordion';
@@ -56,6 +59,33 @@ const FAQS = [
     a: 'Yes. Our annual maintenance contracts start at ₹1,499 and include 4 scheduled visits with filter changes, priority response, and discounted parts. Ideal for high-TDS areas where filters need frequent replacement.' },
   { q: 'Do I need to pay in advance?',
     a: 'No advance payment. You pay only after the technician completes the work at your home. We accept cash, UPI, and cards.' },
+
+  /* Long-tail questions — these mirror what people actually type into
+     Google in Patna, so each one is a separate ranking opportunity. */
+  { q: 'Patna ke paani ka TDS kitna hota hai?',
+    a: 'Published groundwater studies for Patna record TDS between 174 and 1,284 ppm, and total hardness between 156 and 760 mg/L. Riverside areas like Kurji, Rajapur and Mahendru run under 300 ppm. Central Patna sits around 300 to 500. Kankarbagh, Lohia Nagar and Khajpura run 500 to 800. Anisabad, Danapur and Phulwari Sharif regularly cross 800. We test your TDS free on every visit.' },
+  { q: 'RO ka filter Patna mein kitne din chalta hai?',
+    a: 'Shorter than the box claims. Sediment filter: 3 to 4 months instead of 6. Pre-carbon: 5 to 8 months instead of 8 to 12. RO membrane: 18 to 24 months instead of 24 to 36. UV lamp: 10 to 12 months. Patna water carries more silt and hardness than the ratings assume.' },
+  { q: 'Mera RO paani nahi de raha, kya karan ho sakta hai?',
+    a: 'About seven out of ten no-water calls in Patna turn out to be a dead 24V adaptor or a fully choked sediment filter — not the membrane. Other causes are a seized booster pump, a stuck float valve, or simply low inlet pressure. Diagnosis is included in the ₹200 visit.' },
+  { q: 'RO se paani leak ho to kya karna chahiye?',
+    a: 'Switch off the power and close the inlet valve first. Most leaks are a perished O-ring or a housing cracked by over-tightening at a previous service. A cracked housing cannot be sealed with tape, it must be replaced. Typical cost ₹200 to ₹1,500.' },
+  { q: 'Paani mein badbu aa rahi hai, membrane badalna padega?',
+    a: 'Usually not. Smell almost always comes from a saturated carbon block, biofilm in the storage tank, or a failed UV lamp — not the membrane. We sanitise the tank and replace the carbon stage, which costs far less than a membrane. Riverside areas like Kurji and Mahendru need carbon changed every 4 to 5 months.' },
+  { q: 'Patna ke liye 75 GPD ya 100 GPD membrane?',
+    a: 'Under 500 ppm a 75 GPD membrane is fine. Above 500 ppm — Kankarbagh, Anisabad, Danapur, Khajpura — go for 100 GPD. It costs ₹400 to ₹600 more but lasts noticeably longer on hard water and keeps flow rate usable.' },
+  { q: 'Kya aap Sunday ko bhi service karte hain?',
+    a: 'Yes, all seven days from 8 AM to 9 PM including Sundays and most holidays. Weekend slots fill up fast, so call 8969821440 in the morning if you need a same-day visit.' },
+  { q: 'Commercial RO plant ka service karte hain?',
+    a: 'Yes — 250 LPH upwards for shops, schools, hotels, offices and clinics across Patna. Site survey is free. Commercial units need a different service cycle from domestic ones because of continuous duty.' },
+  { q: 'Purane RO ko repair karana theek hai ya naya lena chahiye?',
+    a: 'If the body and housings are sound, repair is almost always cheaper — a full overhaul runs ₹1,500 to ₹3,000 against ₹8,000 or more for a new unit. We recommend replacement only when housings are cracked, the pump chamber is corroded, or spares for that model have gone out of production. We will tell you honestly which one you are looking at.' },
+  { q: 'Kya aap nakli filter to nahi lagate?',
+    a: 'Every part comes out of a sealed pack in front of you and the old part is handed to you. Fake filters are a real problem in the Patna market — they look identical and fail in months. If you are unsure about parts fitted by someone else, we will inspect them and tell you straight.' },
+  { q: 'RO ka waste water use kar sakte hain?',
+    a: 'Yes — for mopping, washing utensils, toilet flushing and non-edible garden plants. Do not use it for drinking or cooking, and avoid it on vegetable plants because the reject water carries concentrated salts. On 600+ ppm supply a 1:3 pure-to-reject ratio is normal.' },
+  { q: 'AMC mein kya kya cover hota hai?',
+    a: 'Our AMC starts at ₹1,499 and covers scheduled visits with filter changes, priority response and discounted parts. Comprehensive plans also cover the membrane and electrical parts. Above 500 ppm an AMC works out cheaper than paying per visit, because you will need three to four filter changes a year regardless.' },
 ];
 
 export default function ServicePatnaPillar() {
@@ -172,6 +202,160 @@ export default function ServicePatnaPillar() {
         </section>
 
         <HowItWorks />
+
+        {/* ── Why local (Patna-specific proof) ── */}
+        <section className="border-t border-navy-50 py-14">
+          <div className="container mx-auto px-4">
+            <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+              Patna mein RO service — hum alag kyun hain
+            </h2>
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {WHY_LOCAL.map((w) => (
+                <div key={w.title} className="rounded-2xl border border-navy-100 bg-white p-6">
+                  <h3 className="font-display text-lg font-bold text-navy-700">{w.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-navy-600">{w.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── TDS zones — the single most searched Patna water question ── */}
+        <section className="bg-navy-50 py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+                Patna ke paani ka TDS — area ke hisaab se
+              </h2>
+              <p className="mt-2 text-muted">
+                Published groundwater studies for Patna record TDS between 174 and 1,284 ppm.
+                Your area decides which purifier and which service schedule you actually need.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+              {TDS_ZONES.map((z) => (
+                <div key={z.band} className="rounded-2xl border border-navy-100 bg-white p-6">
+                  <h3 className="font-display text-lg font-bold text-navy-700">{z.band}</h3>
+                  <p className="mt-1.5 text-xs font-bold uppercase tracking-wide text-aqua-600">{z.areas}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-navy-600">{z.meaning}</p>
+                  <p className="mt-3 rounded-lg bg-aqua-50 px-3 py-2 text-sm font-semibold text-aqua-800">
+                    {z.advice}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Symptom → cause → fix ── */}
+        <section className="py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+                RO ki common problem aur unka asli karan
+              </h2>
+              <p className="mt-2 text-muted">
+                What we actually find when we open the machine — and what it costs to put right.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+              {RO_PROBLEMS.map((p) => (
+                <article key={p.symptom} className="rounded-2xl border border-navy-100 bg-white p-6">
+                  <h3 className="font-display text-lg font-bold text-navy-700">{p.symptom}</h3>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">{p.symptomEn}</p>
+
+                  {p.causes.length > 0 && (
+                    <>
+                      <p className="mt-4 text-xs font-bold uppercase tracking-wide text-navy-500">
+                        Kya ho sakta hai
+                      </p>
+                      <ul className="mt-1.5 space-y-1">
+                        {p.causes.map((c) => (
+                          <li key={c} className="flex gap-2 text-sm text-navy-600">
+                            <span className="text-aqua-500">•</span>{c}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  <p className="mt-4 text-sm leading-relaxed text-navy-600">{p.fix}</p>
+
+                  <p className="mt-3 rounded-lg bg-sand-200 px-3 py-2 text-sm text-navy-700">
+                    <strong>Patna note:</strong> {p.patnaNote}
+                  </p>
+
+                  <p className="mt-3 text-sm font-bold text-cta-green">
+                    Typical cost: {p.typicalCost}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Filter life table ── */}
+        <section className="bg-navy-50 py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+                Filter kitne din chalta hai — Patna mein
+              </h2>
+              <p className="mt-2 text-muted">
+                Manufacturer ratings assume clean feed water. Patna is harder than that,
+                so the real intervals are shorter.
+              </p>
+            </div>
+
+            <div className="mx-auto mt-8 max-w-4xl space-y-4">
+              {FILTER_GUIDE.map((f) => (
+                <div key={f.stage} className="rounded-2xl border border-navy-100 bg-white p-6">
+                  <div className="flex flex-wrap items-baseline justify-between gap-3">
+                    <h3 className="font-display text-lg font-bold text-navy-700">{f.stage}</h3>
+                    <span className="text-sm font-bold text-cta-green">{f.cost}</span>
+                  </div>
+                  <p className="mt-2 text-sm text-navy-600">{f.job}</p>
+
+                  <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                    <span className="rounded-lg bg-navy-50 px-3 py-1.5 text-navy-600">
+                      Company rating: <strong>{f.normalLife}</strong>
+                    </span>
+                    <span className="rounded-lg bg-cta-orange/10 px-3 py-1.5 text-cta-orangeDark">
+                      Patna mein: <strong>{f.patnaLife}</strong>
+                    </span>
+                  </div>
+
+                  <p className="mt-3 text-sm leading-relaxed text-navy-600">{f.why}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Buying guide ── */}
+        <section className="py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+                Naya RO lene se pehle — seedhi salah
+              </h2>
+              <p className="mt-2 text-muted">
+                We service every brand, so we have no reason to push one on you.
+              </p>
+            </div>
+
+            <div className="mx-auto mt-8 max-w-3xl space-y-4">
+              {BUYING_GUIDE.map((b) => (
+                <div key={b.q} className="rounded-2xl border border-navy-100 bg-white p-6">
+                  <h3 className="font-display text-base font-bold text-navy-700">{b.q}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-navy-600">{b.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Pricing transparency */}
         <section className="py-14">
