@@ -209,3 +209,50 @@ export const jsonLd = (data: Json | Json[]) => ({
   type: 'application/ld+json',
   dangerouslySetInnerHTML: { __html: JSON.stringify(data) },
 });
+
+/* ── REVIEW SCHEMA ────────────────────────────────────────────────────────
+   Microsoft's published AEO/GEO framework lists Review and AggregateRating
+   among the schema types AI engines read when deciding which local business
+   to name. We already ship AggregateRating; individual Review objects were
+   missing, so the testimonials on the homepage were invisible to machines.
+
+   SOCi's 2026 Local Visibility Index found ChatGPT recommends only 1.2% of
+   local businesses and Perplexity 7.4%, against 35.9% for Google's local
+   3-pack — the gap is largely explained by data the engines cannot read.
+
+   ⚠️ Only ever pass REAL reviews here. Fabricated review markup is a
+   structured-data violation and costs every rich result on the domain.
+   ────────────────────────────────────────────────────────────────────── */
+export function reviewSchema(
+  reviews: readonly { body: string; name: string; place: string; stars: number }[],
+): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${BRAND.url}/#reviews`,
+    name: BRAND.name,
+    image: `${BRAND.url}${BRAND.logoPng}`,
+    telephone: `+91${CONTACT.primaryPhone}`,
+    address: {
+      '@type': 'PostalAddress',
+      ...(CONTACT.showStreetAddress ? { streetAddress: CONTACT.address.street } : {}),
+      addressLocality: CONTACT.address.locality,
+      addressRegion: CONTACT.address.state,
+      postalCode: CONTACT.address.pincode,
+      addressCountry: 'IN',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: String(GBP.ratingValue),
+      reviewCount: String(GBP.reviewCount),
+      bestRating: '5',
+    },
+    review: reviews.map((r) => ({
+      '@type': 'Review',
+      reviewRating: { '@type': 'Rating', ratingValue: String(r.stars), bestRating: '5' },
+      author: { '@type': 'Person', name: r.name },
+      reviewBody: r.body,
+      itemReviewed: { '@type': 'LocalBusiness', name: BRAND.name },
+    })),
+  };
+}

@@ -40,7 +40,8 @@ chkge "Sai Gali dikhta"          "$(grep -o 'Sai Gali' /tmp/home.html | wc -l)" 
 chkge "Opposite B-62"            "$(grep -o 'Opposite B-62' /tmp/home.html | wc -l)" "1"
 chk   "purana B-63 gaya"         "$(grep -o 'B-63' /tmp/home.html | wc -l)" "0"
 chkge "schema streetAddress"     "$(grep -o 'streetAddress' /tmp/home.html | wc -l)" "1"
-chk   "schema postalCode 800001" "$(grep -o '\"postalCode\":\"800001\"' /tmp/home.html | wc -l)" "1"
+# 2 expected now: localBusinessSchema + reviewSchema (Aug 2026) both carry address.
+chkge "schema postalCode 800001" "$(grep -o '\"postalCode\":\"800001\"' /tmp/home.html | wc -l)" "1"
 
 echo
 echo "════ 2c) LOGO — naya, bada, clickable ════"

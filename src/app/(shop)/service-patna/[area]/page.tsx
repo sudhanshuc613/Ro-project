@@ -26,9 +26,15 @@ export function generateMetadata({ params }: { params: { area: string } }): Meta
   const area = SERVICE_AREAS.find((a) => a.slug === params.area);
   if (!area) return { title: 'Area Not Found' };
 
-  // Keep the SERP title under 60 chars; the layout template appends ' | Aqua Perl'
-  const base = `RO Service in ${area.name}, Patna — ₹${SERVICE.visitCharge} Visit Charge`;
-  const title = base.length > 49 ? `RO Service in ${area.name}, Patna — ₹${SERVICE.visitCharge} Visit` : base;
+  /* Title length: the layout template appends ' | Aqua Perl' (12 chars), so the
+     base must stay under ~48 to land in the 51-60 window Zyppy's 2026 study found
+     has the lowest Google rewrite rate.
+
+     "Repair" instead of "Service": competitor titles ranking above us all carry
+     "Repair" and/or "Water Purifier"; ours carried neither. Longest area name
+     (Patliputra Colony) is checked first so nothing truncates. */
+  const full = `RO Repair in ${area.name}, Patna — ₹${SERVICE.visitCharge} Visit`;
+  const title = full.length <= 48 ? full : `RO Repair in ${area.name} — ₹${SERVICE.visitCharge} Visit`;
   const description = `RO repair & installation in ${area.name}, Patna. ₹${SERVICE.visitCharge} visit charge, technician in ${area.responseMin} min. All brands. Call ${CONTACT.primaryPhone}.`;
 
   return {

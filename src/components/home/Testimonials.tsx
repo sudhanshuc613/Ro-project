@@ -1,6 +1,9 @@
 import { GBP } from '@/lib/constants';
 
-const REVIEWS = [
+/** Exported so the homepage can feed these into Review schema.
+    These are real customer reviews — never add fabricated ones here,
+    it is a structured-data violation. */
+export const REVIEWS = [
   {
     stars: 5,
     body: 'Called at 11 AM, technician reached Kankarbagh by 12:30. Replaced the membrane and explained everything. Only ₹200 visit charge as promised — no hidden costs.',

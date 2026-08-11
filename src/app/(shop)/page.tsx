@@ -28,13 +28,13 @@ import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import PriceComparison from '@/components/home/PriceComparison';
 import AreaCoverage from '@/components/home/AreaCoverage';
 import HowItWorks from '@/components/home/HowItWorks';
-import Testimonials from '@/components/home/Testimonials';
+import Testimonials, { REVIEWS } from '@/components/home/Testimonials';
 import ShopStrip from '@/components/home/ShopStrip';
 import FaqAccordion from '@/components/home/FaqAccordion';
 
 import { buildMetadata } from '@/lib/seo/metadata';
 import {
-  localBusinessSchema, websiteSchema, organizationSchema, faqSchema, jsonLd,
+  localBusinessSchema, websiteSchema, organizationSchema, faqSchema, reviewSchema, jsonLd,
 } from '@/lib/seo/schema';
 import { SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import { CONTACT, SERVICE } from '@/lib/constants';
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
     entityType: 'STATIC_PAGE',
     path: '/',
     fallback: {
-      title: 'RO Service in Patna — ₹200 Visit Charge | Same-Day Repair',
+      title: 'RO Service in Patna — Water Purifier Repair ₹200',
       description:
         'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹350+. All brands, 90-min response, 30-day warranty. Call 8969821440.',
       keywords: [
@@ -94,6 +94,9 @@ export default function HomePage() {
         organizationSchema(),
         websiteSchema(),
         localBusinessSchema(),
+        // Individual Review objects — AI engines (ChatGPT, Perplexity, Gemini)
+        // read these when deciding which local business to name.
+        reviewSchema(REVIEWS),
         faqSchema(FAQS),
       ])} />
 

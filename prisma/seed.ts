@@ -348,12 +348,19 @@ async function main() {
   // otherwise Google truncates them in search results. These DB rows OVERRIDE
   // the code fallbacks, so length discipline matters most here.
   const pages = [
-    { path: '/', metaTitle: 'RO Service in Patna — ₹200 Visit | Same-Day Repair',
-      metaDescription: 'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹299+. All brands, 90-min response, 30-day warranty. Call 8969821440.' },
-    { path: '/service-patna', metaTitle: 'RO Service in Patna — ₹200 Visit | Same-Day Repair',
+    /* Titles kept in the 50-60 char window (Zyppy 2026: lowest rewrite rate).
+       "Water Purifier" carries a query term every competitor ranking above us
+       had and we did not. */
+    { path: '/', metaTitle: 'RO Service in Patna — Water Purifier Repair ₹200',
+      metaDescription: 'Expert RO repair & water purifier service across Patna at ₹200 visit charge — others charge ₹350+. All brands, 90-min response, 30-day warranty. Call 8969821440.' },
+    { path: '/service-patna', metaTitle: 'RO Service in Patna — Water Purifier Repair ₹200',
       metaDescription: 'RO repair, installation & AMC across Patna. ₹200 visit charge, same-day service, 30-day warranty. All brands. Call 8969821440.' },
   ];
   for (const pg of pages) {
+    /* `update` stays empty on purpose: once the site is live the owner edits
+       these from /admin/seo, and re-running the seed must never wipe that.
+       To push a new default onto an existing row, run the SQL in
+       TITLE-SEO-UPDATE.md instead. */
     await prisma.seoMetadata.upsert({
       where: { path: pg.path },
       update: {},

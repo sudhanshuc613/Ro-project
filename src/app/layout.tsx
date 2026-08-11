@@ -28,7 +28,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND.url),
   title: {
-    default: 'Aqua Perl — Buy RO Water Purifiers Online India | RO Service in Patna ₹200',
+    /* 52 chars. Research (Zyppy 2026): 51-60 chars has the lowest Google
+       rewrite rate. Keyword front-loaded, brand at the end. "Water Purifier"
+       added because competitors rank for it and we did not carry the term. */
+    default: 'RO Service Patna & Water Purifier Repair — Aqua Perl',
     template: `%s | ${BRAND.name}`,
   },
   description:

@@ -27,7 +27,11 @@ export function generateMetadata({ params }: { params: { brand: string } }): Met
   const short = brand.name.split(' (')[0];
   // Keep the SERP title under ~60 chars even for long brand labels
   const label = short.length > 22 ? 'All Brands' : short;
-  const title = `${label} RO Service in Patna — ₹${SERVICE.visitCharge} Visit Charge`;
+  /* Same 48-char budget as area pages (layout appends ' | Aqua Perl').
+     "Repair & Filters" carries two extra query terms that plain
+     "Visit Charge" did not. */
+  const long = `${label} RO Service in Patna — Repair & Filters`;
+  const title = long.length <= 48 ? long : `${label} RO Service Patna — ₹${SERVICE.visitCharge} Visit`;
   const description = `${label} RO repair & service in Patna. ₹${SERVICE.visitCharge} visit charge, genuine parts, 30-day warranty, same-day visit. Call ${CONTACT.primaryPhone}.`;
 
   return {

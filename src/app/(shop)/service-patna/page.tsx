@@ -19,7 +19,7 @@ import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: `RO Service in Patna — ₹${SERVICE.visitCharge} Visit | Same-Day Repair`,
+  title: `RO Service in Patna — Water Purifier Repair ₹${SERVICE.visitCharge}`,
   description: `RO repair, installation & AMC across Patna. ₹${SERVICE.visitCharge} visit charge, same-day service, 30-day warranty. All brands. Call ${CONTACT.primaryPhone}.`,
   keywords: [
     'RO service in Patna', 'RO repair Patna', 'water purifier service Patna',
