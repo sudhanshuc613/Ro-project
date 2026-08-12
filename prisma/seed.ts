@@ -6,6 +6,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { BRAND_SEED } from '../src/lib/seo/product-seo';
 
 // tsx does not auto-load .env the way the Prisma CLI does, so load it here.
 // Without this the seed fails with "Environment variable not found: DATABASE_URL".
@@ -106,17 +107,22 @@ async function main() {
   }
   console.log(`  ✓ ${patnaPincodes.length + 3} serviceable + ${metros.length} delivery-only pincodes`);
 
-  /* ── Brands ── */
-  const brandData = [
+  /* ── Brands ──
+     The full BRAND_SEED list lives in src/lib/seo/product-seo.ts so the admin
+     UI and the seed can never drift apart. The 'aquanexa' slug is kept as-is
+     because live products already point at that row — only the display name
+     was renamed to 'Aqua Perl'. Renaming the slug would orphan those rows. */
+  const brandData: { name: string; slug: string; isFeatured?: boolean }[] = [
     { name: 'Aqua Perl', slug: 'aquanexa', isFeatured: true },
-    { name: 'Kent', slug: 'kent', isFeatured: true },
-    { name: 'Aquaguard', slug: 'aquaguard', isFeatured: true },
-    { name: 'Livpure', slug: 'livpure', isFeatured: false },
-    { name: 'Pureit', slug: 'pureit', isFeatured: false },
+    ...BRAND_SEED.filter((b) => b.slug !== 'aqua-perl'),
   ];
   const brands: Record<string, string> = {};
   for (const b of brandData) {
-    const row = await prisma.brand.upsert({ where: { slug: b.slug }, update: {}, create: b });
+    const row = await prisma.brand.upsert({
+      where: { slug: b.slug },
+      update: {},
+      create: { name: b.name, slug: b.slug, isFeatured: b.isFeatured ?? false },
+    });
     brands[b.slug] = row.id;
   }
   console.log(`  ✓ ${brandData.length} brands`);

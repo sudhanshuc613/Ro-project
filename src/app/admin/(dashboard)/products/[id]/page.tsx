@@ -43,6 +43,7 @@ export default async function EditProductPage({ params }: { params: { id: string
     sellingPrice: Number(product.sellingPrice),
     costPrice: Number(product.costPrice ?? 0),
     taxRate: Number(product.taxRate),
+    hsnCode: product.hsnCode ?? '',
     stockQuantity: product.stockQuantity,
     lowStockThreshold: product.lowStockThreshold,
     purificationTech: product.purificationTech,

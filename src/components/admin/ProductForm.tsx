@@ -8,12 +8,18 @@
  * via media.service.ts — Vercel Blob when a token exists, otherwise Postgres.
  * Pasting an existing path or CDN URL still works for anything already hosted.
  */
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { FILTER_FACETS } from '@/lib/constants';
 import ImageUploader from '@/components/admin/ImageUploader';
+import BrandPicker from '@/components/admin/BrandPicker';
+import SeoAssistant from '@/components/admin/SeoAssistant';
+import {
+  SPEC_TEMPLATES, HSN_HINTS, suggestAltText, scoreProductSeo,
+  type ProductSeoInput,
+} from '@/lib/seo/product-seo';
 
 interface Option { id: string; name: string }
 
@@ -31,6 +37,7 @@ export interface ProductFormData {
   sellingPrice: number;
   costPrice: number;
   taxRate: number;
+  hsnCode: string;
   stockQuantity: number;
   lowStockThreshold: number;
   purificationTech: string[];
@@ -50,7 +57,7 @@ export interface ProductFormData {
 const EMPTY: ProductFormData = {
   name: '', sku: '', slug: '', type: 'NEW_RO', categoryId: '', brandId: '',
   shortDescription: '', description: '',
-  mrp: 0, sellingPrice: 0, costPrice: 0, taxRate: 18,
+  mrp: 0, sellingPrice: 0, costPrice: 0, taxRate: 18, hsnCode: '',
   stockQuantity: 0, lowStockThreshold: 5,
   purificationTech: [], warrantyMonths: 12, storageLitres: 0, capacityLph: 0,
   isPanIndia: true, requiresInstallation: false, freeShipping: false, isFeatured: false,
@@ -63,7 +70,7 @@ const EMPTY: ProductFormData = {
   seo: { metaTitle: '', metaDescription: '', metaKeywords: '' },
 };
 
-const TABS = ['Basic', 'Pricing', 'Images', 'Specs', 'SEO'] as const;
+const TABS = ['Basic', 'Pricing', 'Images', 'Specs', 'SEO', 'SEO Coach'] as const;
 
 export default function ProductForm({
   initial, categories, brands,
@@ -75,12 +82,50 @@ export default function ProductForm({
   const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]>('Basic');
   const [f, setF] = useState<ProductFormData>({ ...EMPTY, ...initial });
+  const [brandList, setBrandList] = useState<Option[]>(brands);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [saving, setSaving] = useState(false);
 
   const isEdit = Boolean(f.id);
   const up = <K extends keyof ProductFormData>(k: K, v: ProductFormData[K]) =>
     setF((p) => ({ ...p, [k]: v }));
+
+  /* ── Live SEO input, shared by the coach tab and the header badge ── */
+  const brandName = brandList.find((b) => b.id === f.brandId)?.name ?? '';
+  const categoryName = categories.find((c) => c.id === f.categoryId)?.name ?? '';
+  const seoInput: ProductSeoInput = useMemo(() => ({
+    name: f.name, brandName, type: f.type, categoryName,
+    purificationTech: f.purificationTech,
+    storageLitres: f.storageLitres, capacityLph: f.capacityLph,
+    sellingPrice: f.sellingPrice, mrp: f.mrp,
+    warrantyMonths: f.warrantyMonths,
+    shortDescription: f.shortDescription, description: f.description,
+    slug: f.slug, sku: f.sku, hsnCode: f.hsnCode,
+    images: f.images, specifications: f.specifications, seo: f.seo,
+  }), [f, brandName, categoryName]);
+
+  const seoScore = useMemo(() => scoreProductSeo(seoInput), [seoInput]);
+
+  /** Fill the spec table with the right template for this product type. */
+  function loadSpecTemplate() {
+    const tpl = SPEC_TEMPLATES[f.type] ?? SPEC_TEMPLATES.NEW_RO;
+    const existing = f.specifications.filter((s) => s.specKey.trim() && s.specValue.trim());
+    const have = new Set(existing.map((s) => s.specKey.toLowerCase()));
+    const merged = [...existing, ...tpl.filter((t) => !have.has(t.specKey.toLowerCase()))];
+    up('specifications', merged);
+    toast.success(`${tpl.length} spec rows aa gaye — value bhar do`);
+  }
+
+  /** Write a unique, descriptive alt text into every image that has none. */
+  function fillAltTexts() {
+    let n = 0;
+    up('images', f.images.map((img, i) => {
+      if (!img.url.trim() || img.altText.trim().length >= 12) return img;
+      n++;
+      return { ...img, altText: suggestAltText(seoInput, i) };
+    }));
+    toast.success(n ? `${n} image ka alt text bhar diya` : 'Sab alt text pehle se bhare hue hain');
+  }
 
   /** Auto-generate slug from name unless the user has typed their own. */
   function onNameChange(name: string) {
@@ -146,6 +191,17 @@ export default function ProductForm({
             }`}
           >
             {t}
+            {t === 'SEO Coach' && (
+              <span
+                className={`ml-1.5 rounded px-1.5 py-0.5 text-[10px] font-bold ${
+                  seoScore.score >= 85 ? 'bg-emerald-100 text-emerald-700'
+                    : seoScore.score >= 60 ? 'bg-amber-100 text-amber-700'
+                    : 'bg-red-100 text-red-700'
+                }`}
+              >
+                {seoScore.score}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -183,11 +239,16 @@ export default function ProductForm({
               </select>
             </Field>
 
-            <Field label="Brand">
-              <select value={f.brandId} onChange={(e) => up('brandId', e.target.value)} className={inp}>
-                <option value="">No brand</option>
-                {brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-              </select>
+            <Field
+              label="Brand"
+              hint="List me na mile to naam type karke '+ naya brand banao' dabao"
+            >
+              <BrandPicker
+                brands={brandList}
+                value={f.brandId}
+                onChange={(id) => up('brandId', id)}
+                onBrandsChange={setBrandList}
+              />
             </Field>
 
             <Field label="Short Description" hint="Shown on the product card and in search results" full>
@@ -261,6 +322,30 @@ export default function ProductForm({
               <input type="number" value={f.taxRate} onChange={(e) => up('taxRate', Number(e.target.value))} className={inp} />
             </Field>
 
+            <Field label="HSN Code" hint="GST invoice ke liye. Neeche se chunno ya khud likho." full>
+              <input
+                value={f.hsnCode}
+                onChange={(e) => up('hsnCode', e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+                placeholder="84213900"
+                className={inp}
+              />
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {HSN_HINTS.map((h) => (
+                  <button
+                    key={h.code}
+                    type="button"
+                    onClick={() => { up('hsnCode', h.code); up('taxRate', h.gst); }}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                      f.hsnCode === h.code ? 'bg-aqua-500 text-white' : 'bg-slate-100 text-navy-700 hover:bg-slate-200'
+                    }`}
+                    title={`${h.label} · GST ${h.gst}%`}
+                  >
+                    {h.code} — {h.label}
+                  </button>
+                ))}
+              </div>
+            </Field>
+
             <Field label="Stock Quantity" required>
               <input type="number" value={f.stockQuantity} onChange={(e) => up('stockQuantity', Number(e.target.value))} className={inp} />
             </Field>
@@ -317,6 +402,19 @@ export default function ProductForm({
                 });
               }}
             />
+
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-aqua-50 p-3 ring-1 ring-aqua-100">
+              <p className="text-xs text-navy-700">
+                <strong>Alt text SEO ke liye zaroori hai.</strong> Google Images se bhi customer aate hain.
+              </p>
+              <button
+                type="button"
+                onClick={fillAltTexts}
+                className="rounded-lg bg-aqua-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-aqua-600"
+              >
+                Khaali alt text bhar do
+              </button>
+            </div>
 
             <details className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
               <summary className="cursor-pointer text-xs font-bold text-navy-700">
@@ -398,6 +496,20 @@ export default function ProductForm({
         {/* ── SPECS ── */}
         {tab === 'Specs' && (
           <div className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-aqua-50 p-3 ring-1 ring-aqua-100">
+              <p className="flex-1 text-xs text-navy-700">
+                <strong>Spec table long-tail search pakadta hai</strong> — &ldquo;8 litre ro purifier&rdquo;,
+                &ldquo;2000 tds ro&rdquo; jaise search yahi se match hote hain. GTIN/EAN row bharoge to
+                Google Shopping me ~20% zyada click aate hain.
+              </p>
+              <button
+                type="button"
+                onClick={loadSpecTemplate}
+                className="shrink-0 rounded-lg bg-aqua-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-aqua-600"
+              >
+                {f.type === 'SPARE_PART' ? 'Spare part' : f.type === 'COMMERCIAL_PLANT' ? 'RO plant' : f.type === 'ACCESSORY' ? 'Accessory' : 'RO purifier'} ka template bharo
+              </button>
+            </div>
             <p className="text-sm text-muted">
               These appear in the specification table on the product page.
             </p>
@@ -470,7 +582,27 @@ export default function ProductForm({
                 onChange={(e) => up('seo', { ...f.seo, metaKeywords: e.target.value })}
                 placeholder="RO purifier, water purifier online, Kent RO price" className={inp} />
             </Field>
+
+            <button
+              type="button"
+              onClick={() => setTab('SEO Coach')}
+              className="w-full rounded-xl border-2 border-dashed border-aqua-300 py-3 text-sm font-bold text-aqua-700 hover:bg-aqua-50"
+            >
+              🎯 SEO Coach kholo — ready-made title, description aur keywords
+            </button>
           </div>
+        )}
+
+        {/* ── SEO COACH ── */}
+        {tab === 'SEO Coach' && (
+          <SeoAssistant
+            data={seoInput}
+            onApplyTitle={(v) => { up('seo', { ...f.seo, metaTitle: v }); toast.success('Title lag gaya'); }}
+            onApplyDescription={(v) => { up('seo', { ...f.seo, metaDescription: v }); toast.success('Description lag gaya'); }}
+            onApplyKeywords={(v) => up('seo', { ...f.seo, metaKeywords: v })}
+            onApplyName={(v) => { setF((p) => ({ ...p, name: v })); toast.success('Product name update ho gaya'); }}
+            onGoTo={(t) => setTab(t as (typeof TABS)[number])}
+          />
         )}
       </div>
 
@@ -493,6 +625,15 @@ export default function ProductForm({
           <p className="text-sm text-muted">
             Status is <strong>Draft</strong> — set it to Active on the Basic tab to show it on the site.
           </p>
+        )}
+        {f.status === 'ACTIVE' && seoScore.criticalOpen > 0 && (
+          <button
+            type="button"
+            onClick={() => setTab('SEO Coach')}
+            className="rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 ring-1 ring-red-100 hover:bg-red-100"
+          >
+            ⚠ {seoScore.criticalOpen} zaroori SEO cheez baaki hai — dekho
+          </button>
         )}
       </div>
     </div>

@@ -73,9 +73,19 @@ export async function buildMetadata({
 }
 
 /** Title templates keep SERP formatting consistent across thousands of pages. */
-/** Google truncates SERP titles beyond ~60 characters, so trim to fit. */
+/**
+ * Google truncates SERP titles beyond ~60 characters, so trim to fit.
+ * Cuts on a WORD boundary — the old version sliced mid-word and produced
+ * titles like "… RO Purifier —… | Buy Online", which reads broken in the SERP
+ * and pushes Google to rewrite the title itself.
+ */
 function fit(text: string, max: number) {
-  return text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`;
+  const s = text.replace(/\s+/g, ' ').trim();
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 1);
+  const sp = cut.lastIndexOf(' ');
+  const base = sp > max * 0.6 ? cut.slice(0, sp) : cut;
+  return `${base.replace(/[\s—–|,-]+$/, '')}…`;
 }
 
 export const TITLE_TEMPLATES = {

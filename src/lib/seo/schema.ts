@@ -116,7 +116,15 @@ export function productSchema(p: {
   name: string; slug: string; sku: string; description: string; brand?: string;
   images: string[]; price: number; mrp: number; inStock: boolean;
   ratingAvg?: number; ratingCount?: number; warrantyMonths?: number;
+  /** GTIN/EAN barcode when the admin has entered one — Google's own data shows
+   *  products with a correct GTIN earn ~20% more clicks in Shopping. */
+  gtin?: string;
+  /** Full Google product-taxonomy path improves Shopping classification. */
+  category?: string;
 }): Json {
+  const gtinKey = p.gtin
+    ? { [`gtin${p.gtin.length === 8 || p.gtin.length === 12 || p.gtin.length === 13 || p.gtin.length === 14 ? p.gtin.length : ''}`]: p.gtin }
+    : {};
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -124,6 +132,8 @@ export function productSchema(p: {
     name: p.name,
     sku: p.sku,
     mpn: p.sku,
+    ...gtinKey,
+    ...(p.category ? { category: p.category } : {}),
     description: p.description,
     image: p.images.map((i) => (i.startsWith('http') ? i : `${BRAND.url}${i}`)),
     brand: { '@type': 'Brand', name: p.brand ?? BRAND.name },

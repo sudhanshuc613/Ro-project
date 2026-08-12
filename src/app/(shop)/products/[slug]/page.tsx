@@ -25,6 +25,7 @@ import ProductGridSkeleton from '@/components/product/ProductGridSkeleton';
 import { getProductBySlug, getRelatedProducts, incrementProductView } from '@/server/services/product.service';
 import { buildMetadata, TITLE_TEMPLATES, DESC_TEMPLATES } from '@/lib/seo/metadata';
 import { productSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
+import { findGtin } from '@/lib/seo/product-seo';
 import { formatINR } from '@/lib/utils/format';
 import { CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
 
@@ -84,6 +85,8 @@ export default async function ProductPage({ params }: Props) {
           price, mrp, inStock,
           ratingAvg: Number(product.ratingAvg), ratingCount: product.ratingCount,
           warrantyMonths: product.warrantyMonths ?? undefined,
+          gtin: findGtin(product.specifications),
+          category: product.category.name,
         }),
         breadcrumbSchema(crumbs),
       ])} />
