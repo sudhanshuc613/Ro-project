@@ -11,8 +11,10 @@ import { z } from 'zod';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/db/prisma';
 import { authOptions } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 import { slugify } from '@/lib/utils/format';
 import { logAudit } from '@/server/services/audit.service';
+import { notifyProductPublished } from '@/server/services/indexing.service';
 
 /* ── Public catalog ─────────────────────────────────────────────────────── */
 export async function GET(req: NextRequest) {
@@ -87,7 +89,9 @@ export async function GET(req: NextRequest) {
 const createProductSchema = z.object({
   name: z.string().min(3).max(220),
   sku: z.string().min(2).max(64),
-  slug: z.string().optional(),
+  // Forced lowercase server-side: an uppercase slug serves 200 on the
+  // uppercase URL and 404 on the lowercase form everyone actually types.
+  slug: z.string().optional().transform((s) => (s ? slugify(s) : s)),
   type: z.enum(['NEW_RO','SPARE_PART','COMMERCIAL_PLANT','ACCESSORY','AMC_PLAN']),
   categoryId: z.string().uuid(),
   brandId: z.string().uuid().optional().nullable().or(z.literal('')),
@@ -194,6 +198,21 @@ export async function POST(req: NextRequest) {
       actorId: session.user.id, action: 'product.create',
       entityType: 'PRODUCT', entityId: product.id, afterData: product,
     });
+
+    // Sitemap must reflect the new URL before we ask anyone to crawl it.
+    try {
+      revalidatePath('/sitemap.xml');
+      revalidatePath('/products');
+    } catch { /* ISR will catch up */ }
+
+    // Fire-and-forget IndexNow ping (Bing, Yandex, Naver, Seznam).
+    // Google does not support IndexNow — the fresh sitemap above is its signal.
+    if (d.status === 'ACTIVE') {
+      const cat = await prisma.category
+        .findUnique({ where: { id: d.categoryId }, select: { slug: true } })
+        .catch(() => null);
+      void notifyProductPublished(slug, cat?.slug).catch(() => {});
+    }
 
     return NextResponse.json({ success: true, product }, { status: 201 });
   } catch (err: unknown) {

@@ -88,17 +88,58 @@ function fit(text: string, max: number) {
   return `${base.replace(/[\s—–|,-]+$/, '')}…`;
 }
 
+/**
+ * Clean a raw product name before it becomes a title.
+ * Admin-typed names arrive with stray marks like "10L RO Purifier— Mineral"
+ * (missing space) or double spaces. Left alone those defects show up in the
+ * SERP exactly as typed, which reads broken and invites Google to rewrite.
+ */
+function tidy(name: string) {
+  return name
+    .replace(/\s+/g, ' ')
+    .replace(/\s*—\s*/g, ' — ')       // normalise em-dash spacing
+    .replace(/\s*–\s*/g, ' – ')
+    .replace(/\s*\|\s*/g, ' | ')
+    .trim();
+}
+
 export const TITLE_TEMPLATES = {
-  // Reserve room for the ' | Aqua Perl' suffix added by the root layout template
-  product: (name: string, brand?: string) => `${fit(name, 43)} | Buy Online`,
+  /**
+   * Product titles target 45–60 characters — the band Zyppy's 2026 study found
+   * Google rewrites least often. Short names get a helpful qualifier appended
+   * instead of being left as a bare 22-character title like "AquaPearl".
+   */
+  product: (name: string, brand?: string) => {
+    const clean = tidy(name);
+    const suffix = ' | Buy Online';
+    // A very short name carries no search intent on its own. Pad it with the
+    // category noun so it still matches "… water purifier price" style queries.
+    if (clean.length < 28) {
+      const padded = /purifier|ro\b|pump|membrane|filter|plant|kit|smps/i.test(clean)
+        ? `${clean} — Price in India`
+        : `${clean} RO Water Purifier — Price`;
+      return `${fit(padded, 46)}${suffix}`;
+    }
+    return `${fit(clean, 46)}${suffix}`;
+  },
   category: (name: string) => `${fit(name, 40)} — Best Price in India`,
   serviceArea: (area: string) =>
     `RO Service in ${area}, Patna — ₹200 Visit Charge | Same-Day Repair | ${BRAND.name}`,
 } as const;
 
 export const DESC_TEMPLATES = {
-  product: (name: string, price: number) =>
-    `Buy ${name} online at ₹${price.toLocaleString('en-IN')}. Genuine product, free delivery across India, easy EMI & 7-day returns. Expert installation support available.`,
+  /**
+   * Meta descriptions are capped at 158 characters — past that Google cuts
+   * mid-sentence with an ellipsis. The old template ran to 168+ on long
+   * product names and was being truncated on every page.
+   */
+  product: (name: string, price: number) => {
+    const clean = tidy(name);
+    const full = `Buy ${clean} online at ₹${price.toLocaleString('en-IN')}. Genuine product, free delivery across India, easy EMI & 7-day returns. Expert installation support.`;
+    if (full.length <= 158) return full;
+    const short = `Buy ${clean} at ₹${price.toLocaleString('en-IN')}. Genuine product, free delivery across India, 7-day returns. Call 8969821440.`;
+    return short.length <= 158 ? short : fit(short, 157);
+  },
   serviceArea: (area: string) =>
     `Expert RO repair & installation in ${area}, Patna. Visit charge only ₹200. Same-day service, 30-day warranty, genuine spare parts. Call 8969821440 now.`,
 } as const;

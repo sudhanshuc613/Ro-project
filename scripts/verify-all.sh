@@ -5,8 +5,8 @@ set -u
 cd /home/user/aquanexa
 
 TOTAL_P=0; TOTAL_F=0
-for s in verify-product-admin verify-titles-and-schema verify-brand-rename \
-         verify-admin-full verify-password-features; do
+for s in verify-seo-indexing verify-product-admin verify-titles-and-schema \
+         verify-brand-rename verify-admin-full verify-password-features; do
   OUT=$(bash "scripts/$s.sh" 2>&1)
   LINE=$(echo "$OUT" | grep -E "^  PASS: " | tail -1)
   P=$(echo "$LINE" | sed -n 's/.*PASS: \([0-9]*\).*/\1/p')

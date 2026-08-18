@@ -174,6 +174,52 @@ export function productSchema(p: {
   };
 }
 
+/* ── ITEM LIST (category & listing pages) ─────────────────────────────────── */
+/**
+ * ItemList tells Google that a page is a curated set of products rather than
+ * one long article. It is on Microsoft's own AEO/GEO schema shortlist
+ * (LocalBusiness, Product, AggregateRating, Review, Brand, ItemList, FAQ)
+ * because AI answer engines lean on it to enumerate options.
+ *
+ * Category and listing pages on this site previously shipped only a
+ * BreadcrumbList, so nothing told a crawler what was actually being sold.
+ */
+export function itemListSchema(
+  items: { name: string; url: string; image?: string; price?: number; inStock?: boolean }[],
+  listName: string,
+): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName,
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        name: it.name,
+        url: it.url.startsWith('http') ? it.url : `${BRAND.url}${it.url}`,
+        ...(it.image
+          ? { image: it.image.startsWith('http') ? it.image : `${BRAND.url}${it.image}` }
+          : {}),
+        ...(it.price
+          ? {
+              offers: {
+                '@type': 'Offer',
+                priceCurrency: 'INR',
+                price: it.price.toFixed(2),
+                availability: it.inStock === false
+                  ? 'https://schema.org/OutOfStock'
+                  : 'https://schema.org/InStock',
+              },
+            }
+          : {}),
+      },
+    })),
+  };
+}
+
 /* ── BREADCRUMBS ──────────────────────────────────────────────────────────── */
 export function breadcrumbSchema(items: { name: string; url: string }[]): Json {
   return {

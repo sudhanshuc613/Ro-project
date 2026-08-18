@@ -72,6 +72,24 @@ const EMPTY: ProductFormData = {
 
 const TABS = ['Basic', 'Pricing', 'Images', 'Specs', 'SEO', 'SEO Coach'] as const;
 
+/**
+ * URL-safe slug. Must stay lowercase: on 18 Aug 2026 a product saved with the
+ * slug "Grand-Forest-ro-booster-pump-75-gpd-24v" served 200 on the uppercase
+ * URL and 404 on the lowercase one everyone actually types, which splits
+ * Google's view of the page in two.
+ */
+function cleanSlug(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 180);
+}
+
 export default function ProductForm({
   initial, categories, brands,
 }: {
@@ -129,7 +147,7 @@ export default function ProductForm({
 
   /** Auto-generate slug from name unless the user has typed their own. */
   function onNameChange(name: string) {
-    const autoSlug = name.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+    const autoSlug = cleanSlug(name);
     setF((p) => ({
       ...p,
       name,
@@ -219,8 +237,27 @@ export default function ProductForm({
               <input value={f.sku} onChange={(e) => up('sku', e.target.value.toUpperCase())} className={inp} />
             </Field>
 
-            <Field label="URL Slug" error={errors.slug?.[0]} hint="Auto-filled from name">
-              <input value={f.slug} onChange={(e) => up('slug', e.target.value)} className={inp} />
+            <Field
+              label="URL Slug"
+              error={errors.slug?.[0]}
+              hint={
+                isEdit
+                  ? '⚠️ Ye URL hai. Live product ka slug badla to Google ka indexed page 404 ho jayega.'
+                  : 'Naam se auto-fill. Sirf chhote akshar, number aur dash.'
+              }
+            >
+              <input
+                value={f.slug}
+                onChange={(e) => up('slug', cleanSlug(e.target.value))}
+                className={inp}
+              />
+              {isEdit && initial?.slug && f.slug !== initial.slug && (
+                <p className="mt-1 rounded-lg bg-red-50 px-2.5 py-2 text-xs font-semibold text-red-700">
+                  🔴 Slug badal raha hai: <code>{initial.slug}</code> → <code>{f.slug}</code>
+                  <br />
+                  Purana URL 404 ho jayega. Save karne ke baad admin se redirect zaroor jodo.
+                </p>
+              )}
             </Field>
 
             <Field label="Type" required>

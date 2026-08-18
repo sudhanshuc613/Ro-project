@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import SeoEditor from '@/components/admin/SeoEditor';
+import RedirectManager from '@/components/admin/RedirectManager';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'SEO Manager' };
@@ -104,6 +105,9 @@ export default async function SeoManagerPage() {
         products={productEntries}
         categories={categoryEntries}
       />
+
+      {/* Redirects: a 404 on an indexed URL throws away its ranking. */}
+      <RedirectManager />
     </div>
   );
 }

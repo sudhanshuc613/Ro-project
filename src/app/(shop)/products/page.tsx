@@ -6,14 +6,21 @@ import SortDropdown from '@/components/product/SortDropdown';
 import CategoryChips from '@/components/product/CategoryChips';
 import { listProducts, parseListParams, getAllBrands, getAllCategories } from '@/server/services/catalog.service';
 import { CONTACT } from '@/lib/constants';
+import { breadcrumbSchema, itemListSchema, faqSchema, jsonLd } from '@/lib/seo/schema';
+import { PRODUCTS_PAGE_SEO } from '@/lib/seo/catalog-seo';
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: 'All Products — RO Purifiers, Spare Parts & Plants',
-  description:
-    'Browse RO water purifiers, commercial plants and genuine spare parts. Free delivery across India above ₹1,999. Expert support on call.',
+  title: PRODUCTS_PAGE_SEO.metaTitle,
+  description: PRODUCTS_PAGE_SEO.metaDescription,
   alternates: { canonical: '/products' },
+  openGraph: {
+    title: PRODUCTS_PAGE_SEO.metaTitle,
+    description: PRODUCTS_PAGE_SEO.metaDescription,
+    url: '/products',
+    type: 'website',
+  },
 };
 
 export default async function AllProductsPage({
@@ -30,6 +37,31 @@ export default async function AllProductsPage({
 
   return (
     <main className="bg-white pb-16">
+      {/*
+        This page previously shipped ZERO structured data — measured on the
+        live site 18 Aug 2026. ItemList declares the catalog, FAQPage makes the
+        page eligible for the FAQ rich result.
+      */}
+      <script {...jsonLd([
+        breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'All Products', url: '/products' },
+        ]),
+        ...(items.length
+          ? [itemListSchema(
+              items.map((p) => ({
+                name: p.name,
+                url: `/products/${p.slug}`,
+                image: p.images?.[0]?.url,
+                price: Number(p.sellingPrice),
+                inStock: p.stockQuantity > 0,
+              })),
+              'RO Purifiers, Spare Parts & Commercial Plants — Aqua Perl',
+            )]
+          : []),
+        faqSchema(PRODUCTS_PAGE_SEO.faqs),
+      ])} />
+
       <nav aria-label="Breadcrumb" className="border-b border-navy-50 bg-navy-50/50">
         <ol className="container mx-auto flex gap-2 px-4 py-3 text-sm">
           <li><Link href="/" className="text-navy-600 hover:text-aqua-600">Home</Link></li>
@@ -39,7 +71,12 @@ export default async function AllProductsPage({
       </nav>
 
       <div className="container mx-auto px-4 pt-6">
-        <h1 className="font-display text-xl font-extrabold text-navy-700 sm:text-2xl md:text-3xl">All Products</h1>
+        <h1 className="font-display text-xl font-extrabold text-navy-700 sm:text-2xl md:text-3xl">
+          {PRODUCTS_PAGE_SEO.heading}
+        </h1>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-navy-600 sm:text-base">
+          {PRODUCTS_PAGE_SEO.intro}
+        </p>
         <p className="mt-1 text-sm text-muted">{total} products available</p>
 
         <div className="mt-4">
@@ -79,6 +116,37 @@ export default async function AllProductsPage({
             )}
           </div>
         </div>
+
+        {/* Trust block + FAQs. Below the grid so buyers reach products first. */}
+        <section className="mt-14 border-t border-slate-100 pt-10">
+          <h2 className="font-display text-xl font-bold text-navy-700 sm:text-2xl">
+            Why buy from a service company
+          </h2>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            {PRODUCTS_PAGE_SEO.trustPoints.map((t) => (
+              <div key={t.title} className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-100">
+                <h3 className="text-sm font-bold text-navy-700">{t.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">{t.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <h2 className="mt-10 font-display text-xl font-bold text-navy-700 sm:text-2xl">
+            Frequently Asked Questions
+          </h2>
+          <div className="mt-4 space-y-2.5">
+            {PRODUCTS_PAGE_SEO.faqs.map((f) => (
+              <details key={f.q} className="group rounded-xl bg-slate-50 p-4 ring-1 ring-slate-100">
+                <summary className="cursor-pointer list-none text-sm font-bold text-navy-700 marker:hidden">
+                  <span className="mr-2 text-aqua-600 group-open:hidden">+</span>
+                  <span className="mr-2 hidden text-aqua-600 group-open:inline">−</span>
+                  {f.q}
+                </summary>
+                <p className="mt-2.5 pl-5 text-sm leading-relaxed text-navy-600">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );

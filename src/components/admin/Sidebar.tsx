@@ -68,6 +68,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: 'Growth',
     items: [
       { label: 'SEO Manager', href: '/admin/seo', icon: '🔍', roles: ['ADMIN', 'SUPER_ADMIN'] },
+      { label: 'Competitor Watch', href: '/admin/competitors', icon: '🎯', roles: ['ADMIN', 'SUPER_ADMIN'] },
     ],
   },
   {

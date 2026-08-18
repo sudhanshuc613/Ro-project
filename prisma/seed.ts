@@ -147,7 +147,7 @@ async function main() {
   const products = [
     {
       sku: 'AQN-RO-8L-001',
-      slug: 'aquanexa-pure-8l-ro-uv-uf-water-purifier',
+      slug: 'aquabizz-pure-8l-ro-uv-uf-water-purifier',
       name: 'Aqua Perl Pure 8L RO + UV + UF Water Purifier with TDS Controller',
       shortDescription: '7-stage purification with RO, UV and UF membranes plus a TDS controller that retains essential minerals. Ideal for borewell and municipal water up to 2000 ppm.',
       description: '<p>The Aqua Perl Pure 8L delivers genuinely safe drinking water through a 7-stage purification process. The RO membrane removes dissolved salts and heavy metals, UV sterilisation kills bacteria and viruses, and the UF stage traps suspended particles.</p><p>The built-in TDS controller lets you retain essential minerals like calcium and magnesium rather than stripping the water completely — a difference you can taste.</p>',
@@ -177,7 +177,7 @@ async function main() {
     },
     {
       sku: 'AQN-RO-10L-ALK',
-      slug: 'aquanexa-alkaline-copper-10l-ro-purifier',
+      slug: 'aquafresh-alkaline-copper-10l-ro-purifier',
       name: 'Aqua Perl Alkaline Copper 10L RO Purifier — Mineral Guard',
       shortDescription: 'Alkaline pH+ and copper infusion technology in a 10-litre tank. Raises water pH to 8.5–9.5 for better hydration.',
       description: '<p>Combines reverse osmosis with an alkaline cartridge and copper infusion chamber. Output water sits at pH 8.5–9.5 with trace copper, following traditional Ayurvedic practice of storing water in copper vessels.</p>',
@@ -203,7 +203,7 @@ async function main() {
     },
     {
       sku: 'AQN-PUMP-100G',
-      slug: 'ro-booster-pump-100-gpd-24v',
+      slug: 'grand-forest-ro-booster-pump-75-gpd-24v',
       name: 'RO Booster Pump 100 GPD — 24V DC with Mounting Bracket',
       shortDescription: 'Genuine 100 GPD diaphragm booster pump. Fits most domestic RO systems. Includes mounting bracket and connectors.',
       description: '<p>A reliable 24V DC diaphragm pump rated at 100 GPD, suitable for domestic RO purifiers where inlet pressure is below 40 psi. Runs quiet and ships with a mounting bracket plus quick-connect fittings.</p>',

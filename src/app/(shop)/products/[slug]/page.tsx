@@ -9,7 +9,7 @@
  *  • Admin-controlled meta title/description via seo_metadata
  */
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -26,6 +26,7 @@ import { getProductBySlug, getRelatedProducts, incrementProductView } from '@/se
 import { buildMetadata, TITLE_TEMPLATES, DESC_TEMPLATES } from '@/lib/seo/metadata';
 import { productSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
 import { findGtin } from '@/lib/seo/product-seo';
+import { lookupRedirect } from '@/lib/seo/redirects';
 import { formatINR } from '@/lib/utils/format';
 import { CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
 
@@ -57,7 +58,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(params.slug);
-  if (!product || product.status === 'ARCHIVED') notFound();
+
+  /*
+   * Before giving up with a 404, check whether this slug was renamed. A 404 on
+   * a URL Google already indexed throws away all of its ranking; a 301 passes
+   * that ranking to the new URL instead. The `redirects` row is written
+   * automatically whenever an admin changes a product slug.
+   */
+  if (!product) {
+    const hit = await lookupRedirect(`/products/${params.slug}`);
+    if (hit) permanentRedirect(hit);
+    notFound();
+  }
+  if (product.status === 'ARCHIVED') notFound();
 
   // Fire-and-forget analytics — never blocks render
   void incrementProductView(product.id);
