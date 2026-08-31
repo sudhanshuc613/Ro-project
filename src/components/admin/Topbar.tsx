@@ -4,6 +4,8 @@ import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import Link from 'next/link';
 import { CONTACT } from '@/lib/constants';
+import NotificationBell from '@/components/admin/NotificationBell';
+import CommandPalette from '@/components/admin/CommandPalette';
 
 interface Props {
   user: { name?: string | null; role?: string; phone?: string };
@@ -36,13 +38,12 @@ export default function Topbar({ user }: Props) {
           📞 {CONTACT.primaryPhone}
         </a>
 
-        <Link
-          href="/admin/service-requests"
-          className="rounded-lg p-2 text-lg hover:bg-slate-100"
-          aria-label="Service requests"
-        >
-          🔔
-        </Link>
+        {/* Ctrl+K search across every admin page and live record. */}
+        <CommandPalette />
+
+        {/* Live alert menu. This used to be a static emoji linking to the
+            service queue — it never told the owner that anything had happened. */}
+        <NotificationBell />
 
         <div className="relative">
           <button

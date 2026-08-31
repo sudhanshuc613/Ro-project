@@ -943,6 +943,66 @@ model AuditLog {
   @@map("audit_logs")
 }
 
+/// In-app alert for the OWNER, shown in the admin bell menu.
+///
+/// Deliberately separate from `Notification`: that table is the outbound
+/// customer queue (WhatsApp/SMS templates, delivery status, retry attempts).
+/// This one is inbound-to-owner, has no delivery concept, and is read by
+/// polling from the admin UI. Mixing the two would mean the bell has to filter
+/// out every customer message on every poll.
+///
+/// Rows are written by `alert.service.ts` whenever something happens the owner
+/// would want to know about within minutes: a new service request, a new
+/// order, a COD order needing confirmation, or stock running out.
+model AdminAlert {
+  id         String    @id @default(uuid()) @db.Uuid
+  /// SERVICE_REQUEST | ORDER | STOCK | REVIEW | SYSTEM
+  kind       String    @db.VarChar(40)
+  /// low | normal | high — drives colour and whether the browser notifies.
+  priority   String    @default("normal") @db.VarChar(10)
+  title      String    @db.VarChar(160)
+  body       String    @db.VarChar(400)
+  /// Where the bell should navigate when this alert is clicked.
+  link       String?   @db.VarChar(300)
+  /// Customer phone, when the alert is about a person — powers 1-tap call.
+  phone      String?   @db.VarChar(20)
+  /// Money involved, for order alerts.
+  amount     Decimal?  @db.Decimal(12, 2)
+  relatedType String?  @map("related_type") @db.VarChar(40)
+  relatedId   String?  @map("related_id") @db.Uuid
+  isRead     Boolean   @default(false) @map("is_read")
+  readAt     DateTime? @map("read_at") @db.Timestamptz
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([isRead, createdAt])
+  @@index([kind, createdAt])
+  @@map("admin_alerts")
+}
+
+/// Web Push subscription for the owner's phone.
+///
+/// This is what makes a notification arrive on the phone even when the browser
+/// tab is closed — the Push API delivers to the service worker, which raises a
+/// system notification. One row per device, so the owner can register a phone
+/// and a laptop and get both.
+///
+/// Keys come straight from the browser's PushSubscription object. VAPID keys
+/// live in env vars, never in the database.
+model PushSubscription {
+  id        String   @id @default(uuid()) @db.Uuid
+  /// Unique per browser/device — the natural dedupe key.
+  endpoint  String   @unique @db.VarChar(500)
+  p256dh    String   @db.VarChar(200)
+  auth      String   @db.VarChar(100)
+  /// Free-text so the owner can tell "Redmi phone" from "shop laptop".
+  label     String?  @db.VarChar(80)
+  userId    String?  @map("user_id") @db.Uuid
+  lastUsed  DateTime @default(now()) @map("last_used") @db.Timestamptz
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("push_subscriptions")
+}
+
 /// Phone verification challenge.
 ///
 /// WHY IN POSTGRES AND NOT REDIS: the original OTP code used

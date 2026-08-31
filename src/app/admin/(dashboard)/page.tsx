@@ -11,14 +11,55 @@ import RevenueChart from '@/components/admin/RevenueChart';
 import ServicePipeline from '@/components/admin/ServicePipeline';
 import RecentOrdersTable from '@/components/admin/RecentOrdersTable';
 import LowStockList from '@/components/admin/LowStockList';
+import ActionCenter from '@/components/admin/ActionCenter';
 import { getDashboardAnalytics } from '@/server/services/analytics.service';
+import { getActionItems, getTodayPulse } from '@/server/services/action-center.service';
 import { formatINR } from '@/lib/utils/format';
+
+/** Compact today-at-a-glance tile. */
+function PulseCard({
+  label, value, delta, tone,
+}: {
+  label: string;
+  value: string;
+  delta?: number | null;
+  tone: 'green' | 'aqua' | 'navy' | 'orange';
+}) {
+  const cls = {
+    green: 'bg-emerald-50 text-emerald-800 ring-emerald-100',
+    aqua: 'bg-aqua-50 text-aqua-800 ring-aqua-100',
+    navy: 'bg-sand-200 text-navy-700 ring-navy-100',
+    orange: 'bg-orange-50 text-orange-800 ring-orange-100',
+  }[tone];
+
+  return (
+    <div className={`rounded-2xl p-4 ring-1 ${cls}`}>
+      <p className="text-[10px] font-bold uppercase tracking-wide opacity-70">{label}</p>
+      <p className="tnum mt-1 font-display text-2xl font-extrabold leading-none">{value}</p>
+      {delta != null && delta !== 0 && (
+        <p className="mt-1 text-[11px] font-semibold">
+          {delta > 0 ? `▲ ${delta}%` : `▼ ${Math.abs(delta)}%`} kal se
+        </p>
+      )}
+    </div>
+  );
+}
 
 export const dynamic = 'force-dynamic'; // always live numbers
 export const metadata = { title: 'Dashboard' };
 
 export default async function AdminDashboardPage() {
-  const a = await getDashboardAnalytics();
+  /*
+   * Three parallel loads. The action items and today's pulse answer "what
+   * needs me right now"; the analytics answer "how is the business doing".
+   * The first question is the one the owner has on opening the panel, so it
+   * renders above everything else.
+   */
+  const [a, actionItems, pulse] = await Promise.all([
+    getDashboardAnalytics(),
+    getActionItems(),
+    getTodayPulse(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -28,6 +69,9 @@ export default async function AdminDashboardPage() {
           <h1 className="font-display text-2xl font-bold text-navy-700">Dashboard</h1>
           <p className="mt-0.5 text-sm text-muted">
             {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            <span className="ml-2 hidden text-xs text-slate-400 md:inline">
+              · <kbd className="rounded border border-navy-100 bg-sand-200 px-1 font-mono">Ctrl K</kbd> se kuch bhi dhundo
+            </span>
           </p>
         </div>
         <div className="flex gap-2">
@@ -41,6 +85,31 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Today's pulse — four numbers that answer "how is today going" before
+          any chart loads. */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <PulseCard
+          label="Aaj ki kamai"
+          value={formatINR(pulse.revenue)}
+          tone="green"
+        />
+        <PulseCard
+          label="Nayi service request"
+          value={String(pulse.todayServices)}
+          delta={pulse.delta}
+          tone="aqua"
+        />
+        <PulseCard label="Aaj ke order" value={String(pulse.todayOrders)} tone="navy" />
+        <PulseCard
+          label="Pending queue"
+          value={String(pulse.pendingServices)}
+          tone={pulse.pendingServices > 0 ? 'orange' : 'navy'}
+        />
+      </div>
+
+      {/* What needs the owner right now, ranked by what it costs to ignore. */}
+      <ActionCenter items={actionItems} />
 
       {/* Action bar — the things costing money right now, above everything
           else. An owner opening the dashboard should not have to hunt for

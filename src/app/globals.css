@@ -171,6 +171,106 @@
   }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   STICKY ACTION BAR SPACING
+   The mobile call/WhatsApp bar is position:fixed, so without this the last
+   block of every page sits underneath it and becomes untappable.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  body.has-sticky-bar {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   MOTION SYSTEM
+   Every duration here is ≤ 400ms on purpose. Slow animation reads as cheap,
+   not premium — the effect should register without ever making the user wait.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes aqp-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes aqp-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes aqp-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes aqp-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+@keyframes aqp-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.45); }
+  70%  { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+@keyframes aqp-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
+}
+
+@layer utilities {
+  /* Scroll-reveal. Applied by useRevealOnScroll — the element starts hidden
+     and only animates once, when it actually enters the viewport. */
+  .reveal {
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+  .reveal-in {
+    animation: aqp-fade-up 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .anim-fade-in  { animation: aqp-fade-in 260ms ease-out both; }
+  .anim-scale-in { animation: aqp-scale-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .anim-shake    { animation: aqp-shake 400ms ease-in-out; }
+
+  /* WhatsApp button breathing ring — draws the eye without moving layout. */
+  .pulse-ring { animation: aqp-pulse-ring 2.4s ease-out infinite; }
+
+  /* Skeleton shimmer. Perceived load time drops noticeably versus a blank
+     box, because the user can see the shape of what is arriving. */
+  .skeleton {
+    background: linear-gradient(90deg, #EFEDE8 25%, #F7F5F1 50%, #EFEDE8 75%);
+    background-size: 800px 100%;
+    animation: aqp-shimmer 1.4s linear infinite;
+  }
+
+  /* Frosted glass — used by the navbar once the page scrolls. */
+  .glass {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+  }
+  .glass-dark {
+    background: rgba(10, 31, 60, 0.72);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+  }
+
+  /* Card lift. transform+shadow only — never animate width/height/top, those
+     force layout on every frame and stutter on mid-range Android. */
+  .lift {
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px -12px rgba(10, 31, 60, 0.22);
+  }
+
+  /* Focus ring for keyboard users — visible, on-brand, never on mouse click. */
+  .focus-ring:focus-visible {
+    outline: 2px solid #1590A5;
+    outline-offset: 2px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -178,6 +278,8 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* Reveal elements must not stay invisible when animation is disabled. */
+  .reveal { opacity: 1 !important; transform: none !important; }
 }
 
 @media print {

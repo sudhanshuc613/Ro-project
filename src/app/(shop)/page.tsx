@@ -22,9 +22,12 @@ import Link from 'next/link';
 
 import ServiceHero from '@/components/home/ServiceHero';
 import TrustBar from '@/components/home/TrustBar';
+import ProofStats from '@/components/home/ProofStats';
+import ReviewShowcase from '@/components/home/ReviewShowcase';
 import ProblemSolver from '@/components/home/ProblemSolver';
 import RealWork from '@/components/home/RealWork';
 import ServiceBookingForm from '@/components/home/ServiceBookingForm';
+import QuickBookForm from '@/components/home/QuickBookForm';
 import PriceComparison from '@/components/home/PriceComparison';
 import AreaCoverage from '@/components/home/AreaCoverage';
 import HowItWorks from '@/components/home/HowItWorks';
@@ -38,8 +41,35 @@ import {
 } from '@/lib/seo/schema';
 import { SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import { CONTACT, SERVICE } from '@/lib/constants';
+import { getSlotAvailability } from '@/lib/social-proof';
+import { prisma } from '@/lib/db/prisma';
 
-export const revalidate = 3600;
+/**
+ * Revalidate every 10 minutes rather than hourly, because the page now shows
+ * live slot availability. An hour-stale slot count is worse than none at all.
+ */
+export const revalidate = 600;
+
+/**
+ * Today's remaining service slots, derived from real bookings.
+ *
+ * Deliberately NOT a fake countdown. Invented urgency is transparent to anyone
+ * who reloads the page, and it undermines every genuine trust signal around
+ * it. This counts actual service requests created today against a real daily
+ * capacity, and simply says nothing when the database is unreachable.
+ */
+async function getTodaySlots() {
+  try {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const booked = await prisma.serviceRequest.count({
+      where: { createdAt: { gte: start } },
+    });
+    return getSlotAvailability(booked);
+  } catch {
+    return { available: true, slotsLeft: 0, message: '', urgent: false };
+  }
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
@@ -87,7 +117,8 @@ const FAQS = [
     a: 'Yes. We stock new RO purifiers, commercial plants and genuine spare parts, delivered across India. In Patna we also install what you buy from us.' },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const slots = await getTodaySlots();
   return (
     <>
       <script {...jsonLd([
@@ -104,10 +135,29 @@ export default function HomePage() {
         {/* 1 — Service hero */}
         <ServiceHero />
 
-        {/* 2 — Trust signals */}
+        {/*
+          2 — PROOF STATS, immediately under the hero.
+          The site has 44 genuine reviews at 4.8★, which reads small on its own.
+          Inflating that count is off the table — it feeds aggregateRating, and
+          Google's July 2026 review-snippet rules make fake counts a manual-action
+          offence that strips structured data site-wide. So instead the rating is
+          surrounded by the numbers that ARE large and ARE true: 2,400+ repairs,
+          35 areas, 21 brands, years in Patna. Same honest data, far more weight.
+        */}
+        <ProofStats />
+
+        {/*
+          3 — REVIEWS, high on the page.
+          Practitioners running 30-40% conversion on trades accounts consistently
+          place a review carousel directly below the hero. Proof belongs at the
+          point of doubt, not on a testimonials page nobody scrolls to.
+        */}
+        <ReviewShowcase />
+
+        {/* 4 — Trust signals */}
         <TrustBar />
 
-        {/* 3 — PROBLEM SOLVER: customer ki asli bhasha mein */}
+        {/* 5 — PROBLEM SOLVER: customer ki asli bhasha mein */}
         <ProblemSolver />
 
         {/* 3 — BOOKING FORM: the primary conversion point */}
@@ -144,7 +194,28 @@ export default function HomePage() {
               </div>
             </div>
 
-            <ServiceBookingForm />
+            {/*
+              Two forms, two intents. QuickBookForm asks for three fields and
+              is for the visitor who has not decided yet — three-or-fewer-field
+              forms convert ~25% better, and each extra field costs 5-11%. The
+              full ServiceBookingForm stays available underneath for anyone who
+              wants to pick a date and slot themselves.
+            */}
+            <div className="space-y-4">
+              <QuickBookForm
+                slotsLeft={slots.slotsLeft}
+                urgent={slots.urgent}
+                slotMessage={slots.message}
+              />
+              <details className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
+                <summary className="cursor-pointer text-sm font-bold text-white">
+                  Poori details bharni hain? (date, time slot, address)
+                </summary>
+                <div className="mt-4">
+                  <ServiceBookingForm />
+                </div>
+              </details>
+            </div>
           </div>
         </section>
 

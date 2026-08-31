@@ -18,6 +18,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAvailablePaymentMethods, getOtpSettings } from '@/lib/settings';
 import { consumeVerification, isPhoneVerified } from '@/server/services/otp.service';
 import { notifyAdmins } from '@/lib/integrations/whatsapp';
+import { alertNewOrder } from '@/server/services/alert.service';
 
 const addressSchema = z.object({
   contactName: z.string().trim().min(2).max(120),
@@ -182,6 +183,18 @@ export async function POST(req: NextRequest) {
         order.id,
       );
 
+      /* In-app + phone push. Unlike the WhatsApp fan-out above, this does not
+         depend on Meta credentials being configured. */
+      void alertNewOrder({
+        orderNumber: order.orderNumber,
+        customerName: d.shipping.contactName,
+        phone: d.shipping.contactPhone,
+        amount: quote.total,
+        itemCount: quote.lines.length,
+        paymentMethod: d.paymentMethod,
+        orderId: order.id,
+      }).catch(() => {});
+
       return NextResponse.json({
         success: true,
         awaitingVerification: true,
@@ -195,6 +208,19 @@ export async function POST(req: NextRequest) {
     /* ── Cash on Delivery: confirm right away ── */
     if (dbMethod === 'COD') {
       await confirmOrderPaid(order.id);
+
+      /* COD is the highest-priority alert: the owner has to ring the customer
+         to confirm before dispatching, or risk shipping to a fake order. */
+      void alertNewOrder({
+        orderNumber: order.orderNumber,
+        customerName: d.shipping.contactName,
+        phone: d.shipping.contactPhone,
+        amount: quote.total,
+        itemCount: quote.lines.length,
+        paymentMethod: 'COD',
+        orderId: order.id,
+      }).catch(() => {});
+
       return NextResponse.json(
         {
           success: true,

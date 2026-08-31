@@ -18,6 +18,7 @@ import { rateLimit } from '@/lib/db/redis';
 import { sendWhatsApp } from '@/lib/integrations/whatsapp';
 import { generateTicketNumber } from '@/lib/utils/format';
 import { autoAssignTechnician } from '@/server/services/service.service';
+import { alertNewServiceRequest } from '@/server/services/alert.service';
 import { CONTACT, SERVICE } from '@/lib/constants';
 
 const serviceRequestSchema = z.object({
@@ -159,6 +160,25 @@ export async function POST(req: NextRequest) {
 
     // ── Best-fit technician auto-assignment (non-blocking) ──
     void autoAssignTechnician(request.id, data.pincode).catch(console.error);
+
+    /*
+     * OWNER ALERT — always fires, unlike the WhatsApp below.
+     *
+     * The WhatsApp admin message depends on Meta credentials that are not yet
+     * configured, so until now a new lead could arrive and the owner would
+     * never be told. This writes a database row (shown in the admin bell) and
+     * fires a Web Push notification to the owner's phone, neither of which
+     * depends on any third-party account.
+     */
+    void alertNewServiceRequest({
+      ticketNumber,
+      customerName: data.customerName,
+      phone: data.customerPhone,
+      area: data.area ?? pin?.city ?? data.pincode,
+      issue: data.issueDescription,
+      requestId: request.id,
+      urgent: data.issueCategory === 'NO_WATER',
+    }).catch(() => {});
 
     // ── Notifications (non-blocking; failures never break the UX) ──
     void Promise.allSettled([

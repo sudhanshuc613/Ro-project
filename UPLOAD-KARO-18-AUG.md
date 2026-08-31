@@ -1,6 +1,6 @@
 # 📤 Upload — Step by Step (18 Aug 2026)
 
-**Zip:** `aquanexa-project.zip` — **15 MB** · MD5 `19feaa1263afce047713285e393d5964` · 425 files
+**Zip:** `aquanexa-project.zip` — **14.7 MB** · MD5 `863f867316ada7aa80627fadd0b09299` · 426 files
 **Tera folder:** `C:\Users\SUDHA\Downloads\ro-Project\Ro-project`
 **Time lagega:** ~15 minute (deploy ke 4 min milaake)
 
