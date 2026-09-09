@@ -21,7 +21,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { SERVICE_AREAS, SERVICED_BRANDS, buildAreaFaqs } from '@/lib/seo/patna-service-data';
+import { SERVICE_AREAS, SERVICED_BRANDS, buildAreaFaqs, subLocalities } from '@/lib/seo/patna-service-data';
 import { localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
@@ -83,6 +83,7 @@ export default function AreaPage({ params }: { params: { area: string } }) {
   const cost = costForecast(area);
   const faults = faultProfile(area);
   const response = responseDetail(area);
+  const subs = subLocalities(area.slug);
   const nearby = SERVICE_AREAS.filter(
     (a) => a.slug !== area.slug &&
       area.nearbyAreas.some((n) => a.name.toLowerCase().includes(n.toLowerCase().split(' ')[0])),
@@ -248,6 +249,35 @@ export default function AreaPage({ params }: { params: { area: string } }) {
                   </li>
                 ))}
               </ul>
+
+              {/* Named pockets inside this area that do not have their own
+                  page. Listing them here rather than building 14 more pages is
+                  deliberate: a street inside Boring Road would produce a page
+                  saying the same thing as Boring Road with a different noun,
+                  which is the doorway pattern the competitor is built on
+                  (their five Patna pages measure 100% identical). This gives
+                  the same keyword coverage with none of that exposure. */}
+              {subs.length > 0 && (
+                <>
+                  <h3 className="mt-7 font-display text-lg font-bold text-navy-700">
+                    {area.name} ke andar ye jagah bhi
+                  </h3>
+                  <p className="mt-1 text-sm text-muted">
+                    Ye sab {area.name} ke service area me hi aate hain — wahi rate,
+                    wahi {area.responseMin} minute ka response.
+                  </p>
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {subs.map((sl) => (
+                      <li
+                        key={sl}
+                        className="rounded-lg border border-navy-100 bg-white px-3 py-1.5 text-sm font-medium text-navy-600"
+                      >
+                        {sl}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
               <TrustBadges className="mt-6" />
             </div>

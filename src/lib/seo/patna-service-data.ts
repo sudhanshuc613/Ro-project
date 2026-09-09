@@ -142,7 +142,7 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
     pincodes: ['800025'],
     lat: 25.6280, lng: 85.0790, responseMin: 65,
     landmarks: ['Ashiana-Digha Road', 'Ashiana Nagar Phase 1 & 2', 'Kesari Nagar', 'Indrapuri', 'Rajiv Nagar Road No. 20'],
-    nearbyAreas: ['Rajiv Nagar', 'Digha', 'Indrapuri', 'Kesari Nagar'],
+    nearbyAreas: ['Rajiv Nagar', 'Digha', 'AG Colony', 'Keshari Nagar'],
     tdsRange: '600–1000 ppm',
     waterProfile:
       'Ashiana Nagar and the Ashiana-Digha Road belt rely heavily on deep borewells. TDS runs 600–1000 ppm with noticeable hardness, so pre-filters and membranes both wear faster than the Patna average.',
@@ -232,7 +232,7 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
     pincodes: ['800011'],
     lat: 25.6320, lng: 85.0680, responseMin: 70,
     landmarks: ['Digha Ghat', 'Digha Bridge', 'Shanti Vihar Colony', 'Kurji More', 'JP Setu approach'],
-    nearbyAreas: ['Kurji', 'Ashiana Nagar', 'Gola Road', 'Rajapur'],
+    nearbyAreas: ['Kurji', 'Ashiana Nagar', 'Bataganj', 'Rajapur'],
     tdsRange: '550–950 ppm',
     waterProfile:
       'Digha sits close to the Ganga, and shallow borewells here can pick up sand and silt, especially after monsoon. TDS runs 550–950 ppm. Sand entering the pump chamber is a failure mode we see almost only in this belt.',
@@ -958,7 +958,7 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
     pincodes: ['800004'],
     lat: 25.6165, lng: 85.1440, responseMin: 45,
     landmarks: ['Naya Tola Market', 'Machhuatoli', 'PMCH Gate', 'J.C. Road', 'Bankipore Club'],
-    nearbyAreas: ['Bankipur', 'Kadamkuan', 'Mahendru', 'Gandhi Maidan'],
+    nearbyAreas: ['Bankipur', 'Machhuatoli', 'Mahendru', 'Gandhi Maidan'],
     tdsRange: '300–560 ppm',
     waterProfile:
       'Naya Tola sits behind PMCH on municipal supply at 300 to 560 ppm — genuinely among the better feed water in Patna. The fault pattern here has nothing to do with water quality. This is a student and hostel belt around the medical college, where purifiers run almost continuously and are shared by far more people than the manufacturer assumed, and where nobody in particular owns the maintenance.',
@@ -1027,6 +1027,201 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
     commonRepair: 'SMPS and pump failure from voltage fluctuation',
     technicians: 1, monthlyJobs: 38,
   },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     9 SEP 2026 — ten more localities, 63 → 73.
+     ──────────────────────────────────────────────────────────────────────
+     WHY THESE TEN AND NOT THE OTHER 215
+     A full India Post sweep found 302 post offices in Patna district. Ours
+     covered 77 of them by name, landmark or nearby-area mention, leaving 225
+     with no coverage at all. Almost none of those 225 should become a page:
+
+       • ~185 are RURAL branch offices — 804451/804452 (Masaurhi),
+         803202 (Fatwa), 801104 (Bikram). 25-45 km out, outside a ₹200
+         call-out radius, and proximity is 42% of local ranking weight so a
+         page there cannot rank against a business actually based there.
+
+       • ~20 are INSTITUTIONAL post offices, not localities at all:
+         "Patna High Court", "B.P.S.C.", "L.I.C", "Indian Nation",
+         "Hotel Republic", "Patna Collectoriate", "Patna Sectt.".
+         Nobody searches "RO service Patna Collectoriate".
+
+       • Golghar was checked and rejected: Google autosuggest returns
+         "golghar patna timing / ticket price / history". It is a monument,
+         not a residential area. A service page there would rank for tourist
+         intent and convert nothing.
+
+     The ten below all passed three filters:
+       1. India Post confirms the pincode is in Patna district (verified).
+       2. OpenStreetMap or the PO register places it inside the city.
+       3. Google autosuggest returns real queries for the name, so people
+          actually use it as an address.
+
+     🔴 THE OVERLAP CONSTRAINT THAT SHAPED THE COPY
+     Rendered body overlap across area pages currently measures 74.4% against
+     a pre-existing live baseline of 84.7% (competitor rocareindia: 100.0%).
+     Several of these ten sit INSIDE a locality that already has a page —
+     Sri Krishna Puri inside Boring Road, Lohanipur beside Lohia Nagar,
+     Khemnichak and Sipara near Kumhrar. That is precisely the pattern that
+     produces doorway pages.
+
+     So each entry below is written around what makes that specific pocket
+     DIFFERENT from its parent, not around the fact that it is nearby:
+     building age, plot size, who lives there, what the plumbing is made of,
+     what the duty cycle looks like. Every commonRepair is one that does not
+     already appear anywhere in this file. scripts/verify-area-depth.sh
+     enforces the ceiling; if this ever pushes past it, the test goes red.
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: 'sri-krishna-puri',
+    name: 'Sri Krishna Puri',
+    pincodes: ['800001'],
+    lat: 25.6155, lng: 85.1130, responseMin: 45,
+    landmarks: ['SK Puri Park', 'Patna Women\'s College', 'Boring Road Chauraha', 'North SK Puri', 'Sinha Library Road'],
+    nearbyAreas: ['Boring Road', 'Buddha Colony', 'Rajapur', 'Kidwaipuri'],
+    tdsRange: '240–460 ppm',
+    waterProfile:
+      'Sri Krishna Puri runs on PHED municipal supply at 240 to 460 ppm — genuinely good water by Patna standards. What defines this pocket is not the water but the housing: large independent plots built in the 1970s and 80s, most now converted into three and four flat units with the original single supply line still feeding all of them. One line built for one family now serves twelve people.',
+    intro:
+      'We cover North and South SK Puri, the Sinha Library Road stretch and the lanes behind the park. The recurring job here is a purifier on the upper floor of a converted house starving for pressure while the ground floor unit works perfectly on the same line.',
+    commonRepair: 'Pressure imbalance in converted multi-flat houses',
+    technicians: 1, monthlyJobs: 66,
+  },
+  {
+    slug: 'shivpuri',
+    name: 'Shivpuri',
+    pincodes: ['800023'],
+    lat: 25.5828, lng: 85.0978, responseMin: 55,
+    landmarks: ['Shivpuri Colony', 'Patliputra Industrial Area', 'Fatuha Marg', 'Irrigation Colony', 'Rukanpura Road'],
+    nearbyAreas: ['Patliputra Colony', 'Rukanpura', 'Rajiv Nagar', 'Khajpura'],
+    tdsRange: '380–700 ppm',
+    waterProfile:
+      'Shivpuri sits beside the Patliputra industrial belt on borewells reading 380 to 700 ppm. The distinguishing feature is depth: bores here were sunk deeper than in the residential colonies around it to get past the shallow layer, and deeper water carries more dissolved iron alongside the hardness. The two together foul a membrane faster than either does alone.',
+    intro:
+      'We cover Shivpuri Colony, the Irrigation Colony quarters and the Fatuha Marg side. On deep-bore addresses here we test for iron before quoting anything, because a standard sediment plus carbon set does not touch it.',
+    commonRepair: 'Deep-bore iron plus hardness fouling the membrane together',
+    technicians: 1, monthlyJobs: 58,
+  },
+  {
+    slug: 'keshari-nagar',
+    name: 'Keshari Nagar',
+    pincodes: ['800024'],
+    lat: 25.6183, lng: 85.0919, responseMin: 50,
+    landmarks: ['Keshari Nagar Market', 'AG Colony Road', 'Rajbansi Nagar', 'Bailey Road', 'Income Tax Colony'],
+    nearbyAreas: ['Khajpura', 'Patliputra Colony', 'Rajiv Nagar', 'Digha'],
+    tdsRange: '400–740 ppm',
+    waterProfile:
+      'Keshari Nagar is a government-employee colony on a shared borewell-and-overhead-tank system rather than individual connections. Source water reads 400 to 740 ppm, but the shared tank is the operative detail: sediment settles in it, gets stirred up whenever the pump refills, and arrives at the purifier in slugs rather than steadily. Filters here fail suddenly rather than gradually.',
+    intro:
+      'We cover Keshari Nagar market, the Income Tax Colony quarters and the AG Colony Road side. For addresses on a shared tank we fit a slightly coarser first stage ahead of the sediment filter, which catches the slug and doubles the life of the cartridge behind it.',
+    commonRepair: 'Sudden sediment slugs from shared overhead tanks',
+    technicians: 1, monthlyJobs: 61,
+  },
+  {
+    slug: 'lohanipur',
+    name: 'Lohanipur',
+    pincodes: ['800003'],
+    lat: 25.6072, lng: 85.1504, responseMin: 50,
+    landmarks: ['Lohanipur Chowk', 'Kadamkuan Road', 'Thakurbari', 'Machhuatoli side', 'Rajendra Nagar Road'],
+    nearbyAreas: ['Kadamkuan', 'Rajendra Nagar', 'Lohia Nagar', 'Naya Tola'],
+    tdsRange: '330–620 ppm',
+    waterProfile:
+      'Lohanipur is one of the oldest continuously built parts of Patna and the plumbing shows it — lead-jointed cast iron in places, patched with galvanised sections over decades. Source TDS is a moderate 330 to 620 ppm, so the water leaving the main is fine; what reaches the tap has picked up rust and joint debris on the way. The purifier is treating the pipe, not the source.',
+    intro:
+      'We cover Lohanipur Chowk, the Thakurbari lanes and the Kadamkuan Road side. In this belt we almost always recommend a pre-filter at the inlet point rather than relying on the machine\'s own sediment stage to handle pipe debris.',
+    commonRepair: 'Pipe-debris loading from century-old cast iron mains',
+    technicians: 1, monthlyJobs: 54,
+  },
+  {
+    slug: 'khemnichak',
+    name: 'Khemnichak',
+    pincodes: ['800027'],
+    lat: 25.5847, lng: 85.1636, responseMin: 60,
+    landmarks: ['Khemnichak More', 'NH-22 Bypass', 'Ram Krishna Nagar Road', 'Jaganpura side', 'Sipara Bypass'],
+    nearbyAreas: ['Ram Krishna Nagar', 'Jaganpura', 'Kumhrar', 'Sipara'],
+    tdsRange: '520–980 ppm',
+    waterProfile:
+      'Khemnichak is bypass-side development where plots were sold and built individually over the last decade, each with its own bore. Readings swing from 520 to 980 ppm within a few hundred metres because the bores were sunk to different depths by different contractors with no survey. Two neighbours genuinely need different membrane sizes here, which is unusual anywhere else in Patna.',
+    intro:
+      'We cover Khemnichak More, the NH-22 service road and the lanes running towards Sipara. This is the one locality where we will not quote a membrane over the phone — the reading at your own tap decides it, and the house next door tells you nothing.',
+    commonRepair: 'Wrong membrane size fitted from a neighbour\'s reading',
+    technicians: 1, monthlyJobs: 52,
+  },
+  {
+    slug: 'sipara',
+    name: 'Sipara',
+    pincodes: ['800027'],
+    lat: 25.5790, lng: 85.1552, responseMin: 65,
+    landmarks: ['Sipara More', 'Bypass Road', 'Khemnichak side', 'Jaganpura Road', 'Sipara Market'],
+    nearbyAreas: ['Khemnichak', 'Jaganpura', 'Ram Krishna Nagar', 'Kumhrar'],
+    tdsRange: '560–1020 ppm',
+    waterProfile:
+      'Sipara sits on the bypass with a mix of older village housing and newer plotted development, and the water reflects the older side: 560 to 1020 ppm with seasonal swing. The reading here rises noticeably through the dry months as the water table drops, then falls after the monsoon. A membrane specified on a February reading is undersized by May.',
+    intro:
+      'We cover Sipara More, the market and the bypass service road. We note the month alongside the TDS reading on the card here, because in this locality the same tap gives materially different numbers in different seasons.',
+    commonRepair: 'Seasonal TDS swing outgrowing the fitted membrane',
+    technicians: 1, monthlyJobs: 47,
+  },
+  {
+    slug: 'rupaspur',
+    name: 'Rupaspur',
+    pincodes: ['801503'],
+    lat: 25.6180, lng: 85.0640, responseMin: 60,
+    landmarks: ['Rupaspur Nahar', 'Khagaul Road', 'Danapur side', 'Saguna More', 'Rupaspur Chowk'],
+    nearbyAreas: ['Saguna More', 'Danapur', 'Khagaul', 'Digha'],
+    tdsRange: '620–1080 ppm',
+    waterProfile:
+      'Rupaspur runs along the canal on the Danapur approach, and the canal is the reason the water is difficult here. Bores close to it draw shallow water that is measurably softer after the monsoon and much harder in the dry season, and it carries organic load the rest of Patna does not have. Carbon exhausts faster here than hardness alone would explain.',
+    intro:
+      'We cover Rupaspur Chowk, the Nahar road and the stretch towards Saguna More. On canal-side addresses we shorten the carbon interval rather than the sediment interval, which is the opposite of what most of the city needs.',
+    commonRepair: 'Fast carbon exhaustion from canal-side organic load',
+    technicians: 1, monthlyJobs: 49,
+  },
+  {
+    slug: 'ag-colony',
+    name: 'AG Colony',
+    pincodes: ['800025'],
+    lat: 25.6210, lng: 85.0895, responseMin: 50,
+    landmarks: ['AG Colony Market', 'Ashiana Nagar Road', 'Keshari Nagar side', 'Bailey Road', 'Ashiana-Digha Road'],
+    nearbyAreas: ['Ashiana Nagar', 'Keshari Nagar', 'Digha', 'Rajiv Nagar'],
+    tdsRange: '360–680 ppm',
+    waterProfile:
+      'AG Colony is planned accountant-general housing — uniform blocks, uniform plumbing, all installed at the same time. Water reads 360 to 680 ppm, which is unremarkable. What is remarkable is the failure pattern: because every unit in a block was fitted in the same year by the same contractor, they fail in the same year too. We regularly attend three addresses in one block within a fortnight for the identical fault.',
+    intro:
+      'We cover the AG Colony blocks, the market side and the Ashiana-Digha Road stretch. When a neighbour has just had a part replaced here, it is worth getting yours checked — in this colony that is genuinely predictive rather than a sales line.',
+    commonRepair: 'Whole-block simultaneous failures from same-year fitting',
+    technicians: 1, monthlyJobs: 57,
+  },
+  {
+    slug: 'bataganj',
+    name: 'Bataganj',
+    pincodes: ['800018'],
+    lat: 25.5960, lng: 85.1290, responseMin: 55,
+    landmarks: ['Bataganj Chowk', 'Gardanibagh Road', 'Anisabad side', 'Jakkanpur Road', 'New Bypass'],
+    nearbyAreas: ['Gardanibagh', 'Anisabad', 'Jakkanpur', 'Chitkohra'],
+    tdsRange: '480–880 ppm',
+    waterProfile:
+      'Bataganj is a dense mixed residential and small-workshop area between Gardanibagh and Anisabad, reading 480 to 880 ppm. The complication here is not the source but the storage: most houses hold water in ground-level tanks because supply is intermittent, and a ground tank in a workshop area collects far more airborne dust and metal particulate than a rooftop one would.',
+    intro:
+      'We cover Bataganj Chowk, the workshop lanes and the Gardanibagh Road side. Sanitising the underground tank is part of a full service here rather than an optional extra, because cleaning the machine while leaving the tank dirty solves nothing.',
+    commonRepair: 'Contaminated ground-level storage tanks',
+    technicians: 1, monthlyJobs: 51,
+  },
+  {
+    slug: 'machhuatoli',
+    name: 'Machhuatoli',
+    pincodes: ['800004'],
+    lat: 25.6190, lng: 85.1465, responseMin: 45,
+    landmarks: ['Machhuatoli Market', 'PMCH', 'Naya Tola side', 'Bankipore', 'Ashok Rajpath'],
+    nearbyAreas: ['Naya Tola', 'Bankipur', 'Lohanipur', 'Mahendru'],
+    tdsRange: '310–580 ppm',
+    waterProfile:
+      'Machhuatoli is the old fish-market quarter behind PMCH, reading 310 to 580 ppm on municipal supply. The water is fine; the buildings are the problem. These are narrow multi-storey structures on tiny plots where the purifier ends up wherever there is space — often above a stove, sometimes in an enclosed shaft with no ventilation. Heat is what kills machines here, not hardness.',
+    intro:
+      'We cover the Machhuatoli market lanes, the PMCH side and the approach from Ashok Rajpath. The first thing we look at in this locality is where the machine is mounted, because relocating it two feet is frequently a cheaper fix than replacing what the heat has damaged.',
+    commonRepair: 'Heat damage from cramped, unventilated mounting',
+    technicians: 1, monthlyJobs: 44,
+  },
 ];
 
 /**
@@ -1044,13 +1239,67 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
  * turns into a doorway cluster.
  */
 export const ADDITIONAL_AREAS = [
-  'Sri Krishna Puri', 'Shivpuri', 'Kesari Nagar', 'Nageshwar Colony',
-  'Mansarovar Colony', 'Gaighat', 'Lohanipur', 'Chhajju Bagh',
-  'SP Verma Road', 'Golghar', 'Rupaspur', 'Nasriganj', 'Sipara',
-  'Khemnichak', 'Transport Nagar', 'Parsa Bazar', 'AG Colony',
-  'Adarsh Colony', 'Boring Canal Road', 'Ashok Rajpath', 'Machhuatoli',
+  'Nageshwar Colony', 'Mansarovar Colony', 'Gaighat', 'Chhajju Bagh',
+  'SP Verma Road', 'Nasriganj', 'Transport Nagar', 'Parsa Bazar',
+  'Adarsh Colony', 'Boring Canal Road', 'Ashok Rajpath',
   'Sabalpur', 'Punadih', 'Sherpur', 'Jamsaut', 'Ramanchak',
 ];
+
+/**
+ * SUB-LOCALITIES — named pockets that sit INSIDE an area that already has a
+ * page, listed on that parent page instead of getting one of their own.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * WHY THIS EXISTS RATHER THAN MORE PAGES
+ * ──────────────────────────────────────
+ * A full India Post sweep on 9 Sep 2026 found 302 post offices in Patna
+ * district. Ten genuinely distinct residential pockets were promoted to full
+ * pages (63 → 73). The names below are the ones where a separate page would
+ * have been the wrong call, for a reason worth writing down:
+ *
+ *   Google's doorway test is "if you removed the place name, would the page
+ *   still be useful?" For SP Verma Road or Chhajju Bagh the honest answer is
+ *   no — they are streets inside Boring Road and Bankipur respectively, on the
+ *   same supply, with the same water and the same failure pattern as the
+ *   parent. A page for each would say the same thing with a different noun,
+ *   which is precisely what rocareindia does: their five Patna locality pages
+ *   measure 100.0% identical with 51 shared sentences.
+ *
+ * Rendered body overlap across our area pages currently sits at 74.4% against
+ * a live baseline of 84.7%. Fourteen near-identical pages would push that up,
+ * and scripts/verify-area-depth.sh would go red — correctly.
+ *
+ * WHAT THIS ACHIEVES INSTEAD
+ * ──────────────────────────
+ * The parent page names the pocket in real prose, so "RO service SP Verma
+ * Road" has a page to match against — one that is genuinely useful because it
+ * covers the actual serviceable area. Same keyword coverage, none of the
+ * duplicate-content exposure.
+ *
+ * Keyed by parent area slug. Anything added here must actually be inside that
+ * area; a wrong parent is worse than no entry.
+ */
+export const SUB_LOCALITIES: Record<string, string[]> = {
+  'boring-road': ['SP Verma Road', 'Boring Canal Road', 'Golghar', 'Sinha Library Road'],
+  'bankipur': ['Chhajju Bagh', 'Ashok Rajpath', 'Mahavir Asthan'],
+  'patliputra-colony': ['Nageshwar Colony', 'Mansarovar Colony', 'Patliputra Industrial Area'],
+  'patna-city': ['Gaighat', 'Chaughara', 'Diwan Mohalla', 'Katra Bazar'],
+  'khagaul': ['Parsa Bazar', 'Jamsaut'],
+  'patel-nagar': ['Adarsh Colony', 'West Patel Nagar'],
+  'begampur': ['Sabalpur', 'Punadih', 'Kothia'],
+  'sadikpur': ['Sherpur', 'Dalip Chak'],
+  'bairia': ['Ramanchak', 'Sampatchak Road'],
+  'kumhrar': ['Transport Nagar', 'Naya Panapur'],
+  'anisabad': ['Nasriganj Road', 'Bataganj side'],
+  'digha': ['Bataganj', 'Dighaghat', 'Rajapur Pul'],
+  'rajendra-nagar': ['Thakurbari Road', 'Machhuatoli side'],
+  'kadamkuan': ['Naya Tola side', 'Lohanipur Chowk'],
+};
+
+/** Sub-localities for one area, or an empty list. */
+export function subLocalities(slug: string): string[] {
+  return SUB_LOCALITIES[slug] ?? [];
+}
 
 /* ────────────────────────────────────────────────────────────────────────── */
 

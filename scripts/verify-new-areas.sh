@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════════
-# Verification for the 8 Sep 2026 area expansion: 55 → 63 localities.
+# Verification for the Sep 2026 area expansion: 55 → 63 → 73 localities.
 #
 # WHAT WAS ADDED AND WHY THESE EIGHT
 # ──────────────────────────────────
@@ -84,13 +84,17 @@ for a in $NEW; do
 done
 
 echo
-echo "════ A3) Total area count is 63 ════"
+echo "════ A3) Total area count ════"
 COUNT=$(python3 -c "
 import re
 s=open('src/lib/seo/patna-service-data.ts').read()
 i=s.index('export const SERVICE_AREAS'); j=s.index('export const ADDITIONAL_AREAS')
 print(len(re.findall(r\"slug: '\", s[i:j])))")
-chk "SERVICE_AREAS length" "$COUNT" "63"
+# Floor, not an exact number — a passing test must not turn red just because
+# the site grew. verify-area-depth.sh owns the doorway ceiling.
+if [ "${COUNT:-0}" -ge 63 ]; then
+  echo "  PASS  SERVICE_AREAS $COUNT areas (>= 63)"; pass=$((pass+1));
+else echo "  FAIL  SERVICE_AREAS only $COUNT"; fail=$((fail+1)); fi
 
 DUPS=$(python3 -c "
 import re
@@ -151,7 +155,7 @@ print(len(html.unescape(m.group(1))) if m else 0)")
 done
 
 echo
-echo "════ A8) 🔴 DOORWAY TEST — all 63 areas ════"
+echo "════ A8) 🔴 DOORWAY TEST — all areas (data-object level) ════"
 OV=$(python3 -c "
 import re, itertools
 s=open('src/lib/seo/patna-service-data.ts').read()
@@ -159,7 +163,7 @@ i=s.index('export const SERVICE_AREAS'); j=s.index('export const ADDITIONAL_AREA
 objs=re.split(r'\n  \{\n    slug: ', s[i:j])[1:]
 W=[set(re.findall(r'[a-z]{4,}',o.lower())) for o in objs]
 print(int(max(len(a&b)/max(len(a|b),1)*100 for a,b in itertools.combinations(W,2))))")
-lt "max overlap across 63 areas" "$OV" 39
+lt "max overlap across all areas" "$OV" 39
 
 NEWOV=$(python3 -c "
 import re
@@ -194,7 +198,7 @@ for o in objs:
             if sent in seen and seen[sent]!=n: dup+=1
             seen[sent]=n
 print(dup)")
-chk "0 identical sentences across 63 areas" "${DUP:-99}" "0"
+chk "0 identical sentences across all areas" "${DUP:-99}" "0"
 
 echo
 echo "════ A9) Each new page says something the others do not ════"
@@ -230,10 +234,10 @@ for n in NEW:
 print(orph)")
 chk "0 orphan new areas" "${ORPH:-9}" "0"
 
-# and the hub links to all 63
+# and the hub links to every area
 curl -sS -m 25 $B/service-patna -o /tmp/na_hub.html
 HUBN=$(grep -o 'href="/ro-service-patna/[a-z-]*"' /tmp/na_hub.html | sort -u | wc -l)
-gt "hub links to all areas" "$HUBN" 63
+gt "hub links to all areas" "$HUBN" 73
 for a in $NEW; do
   hasf "hub links /$a" /tmp/na_hub.html "href=\"/ro-service-patna/$a\""
 done
@@ -245,9 +249,9 @@ for a in $NEW; do
   hasf "sitemap has $a" /tmp/na_sm.xml "ro-service-patna/$a<"
 done
 SMC=$(grep -c "ro-service-patna/" /tmp/na_sm.xml)
-gt "sitemap area URLs" "$SMC" 63
+gt "sitemap area URLs" "$SMC" 73
 TOTAL=$(grep -c "<loc>" /tmp/na_sm.xml)
-gt "sitemap total URLs" "$TOTAL" 110
+gt "sitemap total URLs" "$TOTAL" 120
 
 echo
 echo "════ A12) ADDITIONAL_AREAS no longer duplicates real pages ════"
