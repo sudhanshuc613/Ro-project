@@ -32,7 +32,10 @@ const AREAS = [
    sitemaps for installation, AMC, repair and filter service — 2,369 URLs of
    service-type pages — while we had none. Every one of these is a distinct
    job with its own price and its own process, not a keyword variant. */
-const SERVICES = SERVICE_INTENTS.map((s) => ({ label: s.footerLabel, href: s.path }));
+const SERVICES = [
+  ...SERVICE_INTENTS.map((s) => ({ label: s.footerLabel, href: s.path })),
+  { label: 'Rates & Answers', href: '/ro-service-patna-faq' },
+];
 
 const BRANDS = [
   { label: 'Kent RO Service', href: '/service-patna/brand/kent' },

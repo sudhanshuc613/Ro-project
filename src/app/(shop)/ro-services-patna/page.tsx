@@ -254,6 +254,14 @@ export default function ServiceHubPage() {
               Pata nahi kaunsa? Call kar do — {CONTACT.primaryPhone}. Phone pe hi
               bata denge, aur agar zaroorat nahi hai to wo bhi keh denge.
             </p>
+            <div className="mt-4 text-center">
+              <Link
+                href="/ro-service-patna-faq"
+                className="inline-block rounded-xl border-2 border-navy-200 bg-white px-6 py-3 text-sm font-bold text-navy-700 transition hover:border-aqua-400 hover:text-aqua-600"
+              >
+                Sab rate aur sawaal ek page pe →
+              </Link>
+            </div>
           </div>
         </section>
 

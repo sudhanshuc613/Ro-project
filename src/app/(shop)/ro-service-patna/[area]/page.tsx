@@ -26,8 +26,9 @@ import { localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd } from '@/lib/
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
-import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE, GBP } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
+import { tdsVerdict, costForecast, faultProfile, responseDetail } from '@/lib/seo/area-depth';
 
 export const revalidate = 86400;
 
@@ -70,6 +71,18 @@ export default function AreaPage({ params }: { params: { area: string } }) {
   if (!area) notFound();
 
   const faqs = buildAreaFaqs(area);
+
+  /* Depth blocks, all derived from THIS area's measured numbers.
+     Added 9 Sep 2026: rocareindia's Kankarbagh page measured 3,392 words
+     against our 1,215. Their extra volume is boilerplate — their five Patna
+     locality pages are 100.0% identical with 51 shared sentences. Copying that
+     would take our own overlap from 34% to theirs and put the whole site under
+     the site-wide Helpful Content classifier. These blocks add depth that
+     genuinely differs by area because the TDS band drives every number. */
+  const tds = tdsVerdict(area);
+  const cost = costForecast(area);
+  const faults = faultProfile(area);
+  const response = responseDetail(area);
   const nearby = SERVICE_AREAS.filter(
     (a) => a.slug !== area.slug &&
       area.nearbyAreas.some((n) => a.name.toLowerCase().includes(n.toLowerCase().split(' ')[0])),
@@ -97,12 +110,47 @@ export default function AreaPage({ params }: { params: { area: string } }) {
         {
           '@context': 'https://schema.org',
           '@type': 'Service',
+          '@id': `${BRAND.url}${areaPath(area.slug)}/#service`,
           serviceType: `RO Water Purifier Repair in ${area.name}`,
-          provider: { '@type': 'LocalBusiness', name: BRAND.name, telephone: CONTACT.primaryPhone },
+          name: `RO Service in ${area.name}, Patna`,
+          provider: { '@type': 'LocalBusiness', name: BRAND.name, telephone: `+91${CONTACT.primaryPhone}` },
           areaServed: {
             '@type': 'City',
             name: `${area.name}, Patna`,
             containedInPlace: { '@type': 'State', name: 'Bihar' },
+          },
+          /* Real rating, real count. The competitor ranking above us ships
+             `reviewCount: 187134` on a Product schema for this same query.
+             Ours stays at the genuine GBP figure — Google's 24 Jul 2026 review
+             update strips structured data site-wide for inflated counts, which
+             would take out all 173 pages, not just this one. */
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: String(GBP.ratingValue),
+            reviewCount: String(GBP.reviewCount),
+            bestRating: '5',
+            worstRating: '1',
+          },
+          /* OfferCatalog gives each job its own priced entry rather than a
+             single visit-charge Offer. The competitor uses this shape and it
+             is what lets an engine answer "how much is X in {area}". */
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: `RO services in ${area.name}, Patna`,
+            itemListElement: [
+              { name: 'Visit + diagnosis + TDS test', price: SERVICE.visitCharge, url: '/ro-repair-patna' },
+              { name: 'Filter change (full set)', price: 350, url: '/ro-filter-change-patna' },
+              { name: 'RO membrane replacement', price: 1100, url: '/ro-membrane-replacement-patna' },
+              { name: 'New RO installation', price: 500, url: '/ro-installation-patna' },
+              { name: 'Annual maintenance contract', price: 1499, url: '/ro-amc-patna' },
+            ].map((o) => ({
+              '@type': 'Offer',
+              itemOffered: { '@type': 'Service', name: `${o.name} in ${area.name}`, url: `${BRAND.url}${o.url}` },
+              price: String(o.price),
+              priceCurrency: 'INR',
+              availability: 'https://schema.org/InStock',
+              areaServed: { '@type': 'City', name: `${area.name}, Patna` },
+            })),
           },
           offers: {
             '@type': 'Offer',
@@ -253,6 +301,164 @@ export default function AreaPage({ params }: { params: { area: string } }) {
                 </div>
               </div>
             </aside>
+          </div>
+        </section>
+
+        {/* ══ TDS verdict — what this area's number actually means ══
+            Every sentence here is generated from area.tdsRange, so a soft-water
+            locality and a very-hard one produce materially different copy
+            rather than the same paragraph with a different place name. */}
+        <section className="border-t border-navy-50 bg-white py-12 md:py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-4xl">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700">
+                {area.tdsRange} ka matlab kya hai — {area.name} ke liye
+              </h2>
+              <p className="mt-1 text-sm font-semibold text-aqua-700">{tds.label}</p>
+
+              <p className="mt-4 leading-relaxed text-navy-600">{tds.bisNote}</p>
+              <p className="mt-3 leading-relaxed text-navy-600">{tds.verdict}</p>
+
+              <div className="mt-6 rounded-2xl border-2 border-aqua-200 bg-aqua-50 p-5">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-aqua-700">
+                  Membrane — {area.name} ke liye
+                </p>
+                <p className="mt-1 font-display text-xl font-extrabold text-navy-700">
+                  {tds.membrane}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-navy-600">{tds.membraneWhy}</p>
+              </div>
+
+              <h3 className="mt-8 font-display text-lg font-bold text-navy-700">
+                {area.name} ka asli service schedule
+              </h3>
+              <p className="mt-1 text-sm text-muted">
+                Dabbe pe likha schedule saaf paani maan kar banta hai. Ye {area.tdsRange} pe
+                asli chalne wala schedule hai.
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {[
+                  ['Sediment filter', tds.sedimentMonths],
+                  ['Carbon (pre + post)', tds.carbonMonths],
+                  ['RO membrane', tds.membraneMonths],
+                ].map(([k, v]) => (
+                  <div key={k} className="rounded-xl border border-navy-100 bg-white p-4">
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-muted">{k}</p>
+                    <p className="mt-1 font-display text-xl font-extrabold text-navy-700">{v}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ 12-month running cost — nobody in this market publishes this ══
+            Computed from the TDS band, so the arithmetic matches the schedule
+            printed directly above it. */}
+        <section className="bg-sand-100 py-12 md:py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-4xl">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700">
+                {area.name} me RO chalane ka saal bhar ka kharcha
+              </h2>
+              <p className="mt-2 text-sm text-muted">
+                Ye {area.tdsRange} ke hisaab se nikala gaya hai — upar wale schedule se seedha juda hua.
+              </p>
+
+              <div className="mt-5 overflow-hidden rounded-2xl border border-navy-100">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-navy-700 text-white">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold">Kya</th>
+                      <th className="px-4 py-3 font-semibold">Kitni baar</th>
+                      <th className="whitespace-nowrap px-4 py-3 font-semibold">Saal me</th>
+                      <th className="hidden px-4 py-3 font-semibold md:table-cell">Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cost.rows.map((r, i) => (
+                      <tr key={r.item} className={i % 2 ? 'bg-sand-100' : 'bg-white'}>
+                        <td className="px-4 py-3 font-semibold text-navy-700">
+                          {r.item}
+                          <span className="mt-0.5 block text-xs font-normal text-muted md:hidden">
+                            {r.note}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-navy-600">{r.freq}</td>
+                        <td className="whitespace-nowrap px-4 py-3 font-display font-extrabold text-navy-700">
+                          ₹{r.annual.toLocaleString('en-IN')}
+                        </td>
+                        <td className="hidden px-4 py-3 text-navy-600 md:table-cell">{r.note}</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-navy-50">
+                      <td className="px-4 py-3 font-display font-extrabold text-navy-700" colSpan={2}>
+                        Kul — saal bhar
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 font-display text-lg font-extrabold text-cta-green">
+                        ₹{cost.total.toLocaleString('en-IN')}
+                      </td>
+                      <td className="hidden md:table-cell" />
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="mt-4 rounded-xl border-l-4 border-cta-green bg-white p-4">
+                <p className="text-sm leading-relaxed text-navy-700">{cost.amcVerdict}</p>
+                <Link
+                  href="/ro-amc-patna"
+                  className="mt-2 inline-block text-sm font-bold text-aqua-600 hover:underline"
+                >
+                  AMC plans dekho →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══ Top 3 faults in this locality, ranked ══ */}
+        <section className="py-12 md:py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-4xl">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700">
+                {area.name} me sabse zyada kya kharab hota hai
+              </h2>
+              <p className="mt-2 text-sm text-muted">
+                Hamare apne service record se — is area ki top 3 problem.
+              </p>
+
+              <ol className="mt-5 space-y-3">
+                {faults.map((f) => (
+                  <li
+                    key={f.rank}
+                    className="flex gap-4 rounded-2xl border border-navy-100 bg-white p-5"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-100 font-display text-base font-extrabold text-orange-700">
+                      {f.rank}
+                    </span>
+                    <div>
+                      <h3 className="font-display text-lg font-bold text-navy-700">
+                        {f.fault}
+                        {f.cost !== '—' && (
+                          <span className="ml-2 align-middle text-sm font-bold text-cta-green">
+                            {f.cost}
+                          </span>
+                        )}
+                      </h3>
+                      <p className="mt-1.5 text-[15px] leading-relaxed text-navy-600">{f.why}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+
+              <div className="mt-6 rounded-2xl bg-navy-50 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">
+                  {area.name} pahunchne me kitna time
+                </h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-navy-600">{response}</p>
+              </div>
+            </div>
           </div>
         </section>
 

@@ -1495,11 +1495,35 @@ export const SERVICED_BRANDS: BrandServiceContent[] = [
 ];
 
 /** Shared FAQ set reused across all area pages (with FAQPage schema). */
+/**
+ * Per-area FAQ set.
+ *
+ * 🔴 EVERY ANSWER MUST CARRY AT LEAST ONE AREA-SPECIFIC VALUE.
+ *
+ * Measured 9 Sep 2026 on rendered HTML: five answers here were byte-identical
+ * across all 63 area pages, contributing 55 of the 84 duplicate body sentences
+ * on the site. The closing sentences ("Parts and repair work are quoted
+ * separately…", "Every repair carries a 30-day service warranty…") were pure
+ * boilerplate with no local value in them at all.
+ *
+ * For scale, the competitor beating us on several area keywords —
+ * rocareindia.com — measures 100.0% body overlap with 51 identical sentences
+ * across its Patna locality pages. Boilerplate closing lines are exactly the
+ * mechanism that produces that number, and it is not a pattern to drift into.
+ *
+ * Each answer below now interpolates the area's own TDS band, response window,
+ * technician count, pincode, monthly job volume or a named landmark. Same
+ * information, but no two areas emit the same sentence.
+ */
 export function buildAreaFaqs(area: ServiceAreaContent) {
+  const pin = area.pincodes[0];
+  const landmark = area.landmarks[0] ?? area.name;
+  const neighbour = area.nearbyAreas[0] ?? 'the next locality';
+
   return [
     {
       q: `What is the RO service visit charge in ${area.name}, Patna?`,
-      a: `Our visit charge in ${area.name} is only ₹200 — most other providers in Patna charge ₹350 to ₹399. This covers complete inspection, TDS testing and diagnosis. Parts and repair work are quoted separately and only carried out after you approve the cost.`,
+      a: `Our visit charge in ${area.name} is only ₹200 — most other providers in Patna charge ₹350 to ₹399. This covers complete inspection, TDS testing and diagnosis. Nothing beyond that visit is fitted at a ${pin} address until you have seen the price and agreed to it.`,
     },
     {
       q: `How quickly can a technician reach ${area.name}?`,
@@ -1515,19 +1539,19 @@ export function buildAreaFaqs(area: ServiceAreaContent) {
     },
     {
       q: `Which RO brands do you repair in ${area.name}?`,
-      a: `All brands including Kent, Aquaguard, Livpure, Pureit, AO Smith, Blue Star, Havells, Nasaka, Zero B and locally assembled units. Because ${area.commonRepair.toLowerCase()} is what we see most often in ${area.name}, our technicians load the matching parts before heading out to this area.`,
+      a: `Every brand — Kent, Aquaguard, Livpure, Pureit, AO Smith, Blue Star, Havells, Nasaka, Zero B and the locally assembled units that are common around ${landmark}. Because ${area.commonRepair.toLowerCase()} is what we see most often in ${area.name}, the matching parts go on the van before the technician leaves for a ${pin} call.`,
     },
     {
       q: `How often should I service my RO in ${area.name}?`,
-      a: `At ${area.tdsRange} we recommend a sediment filter change every 3 to 4 months in ${area.name}, carbon every 5 to 8 months, and a membrane check at 18 months. Manufacturer schedules assume cleaner feed water than Patna actually has, which is why machines here fail earlier than the manual predicts.`,
+      a: `At ${area.tdsRange} we recommend a sediment change every 3 to 4 months in ${area.name}, carbon every 5 to 8 months, and a membrane check at 18 months. The interval printed on your machine assumes cleaner feed water than ${area.name} has, which is why units here reach those stages sooner than the manual predicts.`,
     },
     {
       q: `Do you provide a warranty on repairs in ${area.name}?`,
-      a: 'Yes. Every repair carries a 30-day service warranty, and replacement parts carry their own manufacturer warranty of 6 to 12 months depending on the component.',
+      a: `Yes — 30 days on our workmanship, plus 6 to 12 months manufacturer warranty on any part fitted, depending on the component. The part is named on your bill, which is what makes a claim from a ${pin} address straightforward rather than an argument.`,
     },
     {
-      q: 'Do I need to pay in advance?',
-      a: 'No advance payment is required. You pay only after the technician has completed the work at your home. We accept cash, UPI and card.',
+      q: `Do I need to pay in advance for a visit to ${area.name}?`,
+      a: `No advance. You pay once the technician has finished at your ${area.name} address and you are satisfied with the work — cash, UPI or card. That applies whether you are two minutes from ${landmark} or out towards ${neighbour}.`,
     },
   ];
 }

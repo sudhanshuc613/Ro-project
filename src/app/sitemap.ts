@@ -17,6 +17,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BRAND.url}/service-patna/brand`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     /* Service-intent hub — the third axis alongside place and brand. */
     { url: `${BRAND.url}/ro-services-patna`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    /* Answer hub — QAPage + speakable spans for retrieval engines. The live
+       robots.txt allows OAI-SearchBot, PerplexityBot and Bingbot, so this is
+       the page they can actually quote from. */
+    { url: `${BRAND.url}/ro-service-patna-faq`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${BRAND.url}/products`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${BRAND.url}/amc-plans`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BRAND.url}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
