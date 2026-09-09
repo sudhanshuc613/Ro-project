@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { SERVICE_AREAS, ADDITIONAL_AREAS } from '@/lib/seo/patna-service-data';
+import { areaPath } from '@/lib/seo/area-url';
 
 /**
  * Area coverage grid.
@@ -28,7 +29,7 @@ export default function AreaCoverage() {
           {SERVICE_AREAS.map((a) => (
             <Link
               key={a.slug}
-              href={`/service-patna/${a.slug}`}
+              href={areaPath(a.slug)}
               className="group rounded-2xl border border-navy-100 p-5 transition hover:-translate-y-1 hover:border-aqua-400 hover:shadow-card-hover"
             >
               <div className="flex items-start justify-between gap-3">

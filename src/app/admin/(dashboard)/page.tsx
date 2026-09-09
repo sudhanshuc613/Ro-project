@@ -12,6 +12,8 @@ import ServicePipeline from '@/components/admin/ServicePipeline';
 import RecentOrdersTable from '@/components/admin/RecentOrdersTable';
 import LowStockList from '@/components/admin/LowStockList';
 import ActionCenter from '@/components/admin/ActionCenter';
+import ReviewTracker from '@/components/admin/ReviewTracker';
+import { prisma } from '@/lib/db/prisma';
 import { getDashboardAnalytics } from '@/server/services/analytics.service';
 import { getActionItems, getTodayPulse } from '@/server/services/action-center.service';
 import { formatINR } from '@/lib/utils/format';
@@ -55,10 +57,19 @@ export default async function AdminDashboardPage() {
    * The first question is the one the owner has on opening the panel, so it
    * renders above everything else.
    */
-  const [a, actionItems, pulse] = await Promise.all([
+  const [a, actionItems, pulse, completedThisMonth] = await Promise.all([
     getDashboardAnalytics(),
     getActionItems(),
     getTodayPulse(),
+    /* Pool of customers who could be asked for a review in the last 30 days.
+       Queried here rather than added to getDashboardAnalytics() so the
+       existing analytics contract and its callers stay untouched. */
+    prisma.serviceRequest.count({
+      where: {
+        status: 'COMPLETED',
+        completedAt: { gte: new Date(Date.now() - 30 * 86_400_000) },
+      },
+    }),
   ]);
 
   return (
@@ -110,6 +121,11 @@ export default async function AdminDashboardPage() {
 
       {/* What needs the owner right now, ranked by what it costs to ignore. */}
       <ActionCenter items={actionItems} />
+
+      {/* The 36% that no amount of code can move. Placed above the revenue
+          charts on purpose — it is the largest remaining ranking lever and it
+          only moves if someone looks at it daily. */}
+      <ReviewTracker completedThisMonth={completedThisMonth} />
 
       {/* Action bar — the things costing money right now, above everything
           else. An owner opening the dashboard should not have to hunt for

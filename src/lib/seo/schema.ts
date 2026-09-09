@@ -48,6 +48,8 @@ export function organizationSchema(): Json {
 /* ── LOCAL BUSINESS (homepage + every Patna service page) ─────────────────── */
 export function localBusinessSchema(area?: {
   name: string; pincodes: string[]; lat?: number; lng?: number;
+  /** Canonical path of the page carrying this markup, e.g. areaPath(slug). */
+  path?: string;
 }): Json {
   const label = area ? `${BRAND.name} — RO Service in ${area.name}, Patna` : `${BRAND.name} RO Service Patna`;
   return {
@@ -56,7 +58,11 @@ export function localBusinessSchema(area?: {
     '@id': `${BRAND.url}/#localbusiness${area ? `-${area.name.toLowerCase().replace(/\s+/g, '-')}` : ''}`,
     name: label,
     image: `${BRAND.url}/banners/service-tech.png`,
-    url: area ? `${BRAND.url}/service-patna/${area.name.toLowerCase().replace(/\s+/g, '-')}` : `${BRAND.url}/service-patna`,
+    /* Must be a URL that actually resolves. This previously built
+       /ro-service-{name}-patna by hand — a route shape that was abandoned
+       during the Sep 2026 URL migration — so LocalBusiness.url pointed at a
+       404 on all 55 area pages. Now it takes the caller's real path. */
+    url: area?.path ? `${BRAND.url}${area.path}` : `${BRAND.url}/service-patna`,
     telephone: `+91${CONTACT.primaryPhone}`,
     priceRange: '₹₹',
     currenciesAccepted: 'INR',
@@ -220,6 +226,53 @@ export function itemListSchema(
   };
 }
 
+/**
+ * ItemList of SERVICES rather than products.
+ *
+ * itemListSchema() above emits `@type: Product` for each entry, which is
+ * correct for a catalogue page and wrong for a list of jobs — a Product with
+ * no price, no availability and no SKU is a weaker signal than a Service with
+ * a provider and an area served. Google's structured-data guidance treats the
+ * two as distinct, so the service hub uses this one.
+ */
+export function serviceListSchema(
+  items: { name: string; url: string; description?: string; priceFrom?: number }[],
+  listName: string,
+): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName,
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Service',
+        name: it.name,
+        url: it.url.startsWith('http') ? it.url : `${BRAND.url}${it.url}`,
+        ...(it.description ? { description: it.description } : {}),
+        provider: {
+          '@type': 'LocalBusiness',
+          name: BRAND.legalName,
+          telephone: `+91${CONTACT.primaryPhone}`,
+        },
+        areaServed: { '@type': 'City', name: 'Patna' },
+        ...(it.priceFrom
+          ? {
+              offers: {
+                '@type': 'Offer',
+                priceCurrency: 'INR',
+                price: String(it.priceFrom),
+                availability: 'https://schema.org/InStock',
+              },
+            }
+          : {}),
+      },
+    })),
+  };
+}
+
 /* ── BREADCRUMBS ──────────────────────────────────────────────────────────── */
 export function breadcrumbSchema(items: { name: string; url: string }[]): Json {
   return {
@@ -309,6 +362,140 @@ export function reviewSchema(
       author: { '@type': 'Person', name: r.name },
       reviewBody: r.body,
       itemReviewed: { '@type': 'LocalBusiness', name: BRAND.name },
+    })),
+  };
+}
+
+/* ── ARTICLE + AUTHOR (E-E-A-T) ───────────────────────────────────────────── */
+/**
+ * Article schema with a named Person author.
+ *
+ * Why this matters, measured 3 Sep 2026: the competitor ranking #1 for
+ * "ro repair patna" ships both Article and Person schema. We shipped neither.
+ *
+ * Person schema is the machine-readable form of "a real, named expert with
+ * stated credentials wrote this". Google weights that heavily under E-E-A-T,
+ * and drinking water is a YMYL topic — it affects health — where the bar for
+ * demonstrated expertise is at its highest.
+ *
+ * `knowsAbout` and `hasCredential` are the properties that carry the actual
+ * expertise claim; an author byline without them is just a name.
+ */
+export function articleSchema(a: {
+  title: string;
+  description: string;
+  slug: string;
+  published: string;
+  updated: string;
+  author: { name: string; slug: string; role: string; bio: string; credentials: string[] };
+  keywords?: string[];
+}): Json {
+  const url = `${BRAND.url}/blog/${a.slug}`;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${url}/#article`,
+    headline: a.title,
+    description: a.description,
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    datePublished: a.published,
+    dateModified: a.updated,
+    inLanguage: 'en-IN',
+    ...(a.keywords?.length ? { keywords: a.keywords.join(', ') } : {}),
+    author: {
+      '@type': 'Person',
+      '@id': `${BRAND.url}/about/${a.author.slug}/#person`,
+      name: a.author.name,
+      jobTitle: a.author.role,
+      description: a.author.bio,
+      url: `${BRAND.url}/about/${a.author.slug}`,
+      worksFor: { '@type': 'Organization', name: BRAND.legalName, url: BRAND.url },
+      knowsAbout: [
+        'RO water purifier repair',
+        'Reverse osmosis membrane replacement',
+        'Water TDS measurement',
+        'Commercial RO plant installation',
+        'Water quality in Patna, Bihar',
+      ],
+      hasCredential: a.author.credentials.map((c) => ({
+        '@type': 'EducationalOccupationalCredential',
+        credentialCategory: 'Professional experience',
+        name: c,
+      })),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: BRAND.legalName,
+      url: BRAND.url,
+      logo: { '@type': 'ImageObject', url: `${BRAND.url}${BRAND.logoPng}` },
+    },
+    image: [`${BRAND.url}${BRAND.ogImage}`],
+  };
+}
+
+/** Standalone Person schema for the author page. */
+export function personSchema(a: {
+  name: string; slug: string; role: string; bio: string;
+  credentials: string[]; yearsExperience: number;
+}): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${BRAND.url}/about/${a.slug}/#person`,
+    name: a.name,
+    jobTitle: a.role,
+    description: a.bio,
+    url: `${BRAND.url}/about/${a.slug}`,
+    telephone: `+91${CONTACT.primaryPhone}`,
+    worksFor: {
+      '@type': 'LocalBusiness',
+      name: BRAND.legalName,
+      url: BRAND.url,
+      telephone: `+91${CONTACT.primaryPhone}`,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: CONTACT.address.locality,
+        addressRegion: CONTACT.address.state,
+        postalCode: CONTACT.address.pincode,
+        addressCountry: 'IN',
+      },
+    },
+    knowsAbout: [
+      'RO water purifier repair', 'Reverse osmosis membrane replacement',
+      'Water TDS measurement', 'UV and UF water purification',
+      'Commercial RO plant installation', 'Water quality in Patna, Bihar',
+    ],
+    hasCredential: a.credentials.map((c) => ({
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'Professional experience',
+      name: c,
+    })),
+    workLocation: { '@type': 'Place', name: 'Patna, Bihar, India' },
+  };
+}
+
+/**
+ * HowTo schema — eligible for the step-by-step rich result and heavily used
+ * by AI answer engines, which quote procedural content more readily than prose.
+ */
+export function howToSchema(h: {
+  name: string;
+  description: string;
+  totalTime: string;
+  steps: { name: string; text: string }[];
+}): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: h.name,
+    description: h.description,
+    totalTime: h.totalTime,
+    step: h.steps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
     })),
   };
 }

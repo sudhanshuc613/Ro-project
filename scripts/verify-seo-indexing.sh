@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# NOTE (3 Sep 2026): area pages moved to /ro-service-patna/{slug}.
+# The old path now 308s there on purpose, so these assert the new URL.
 # Verification for the 18 Aug 2026 SEO + indexing + competitor-watch work.
 #   • middleware: lowercase forcing, legacy slug 301s
 #   • auto-redirect on slug rename
@@ -247,7 +249,7 @@ c.execute(\"delete from redirects where from_path like '/products/%'\")" 2>/dev/
 
 echo
 echo "════ 10) Kuch toota to nahi ════"
-for p in / /products /service-patna /service-patna/kankarbagh /service-patna/brand/kent /contact /amc-plans /cart /login; do
+for p in / /products /service-patna /ro-service-patna/kankarbagh /service-patna/brand/kent /contact /amc-plans /cart /login; do
   chk "$p" "$(curl -sS -m 25 -o /dev/null -w '%{http_code}' $B$p)" "200"
 done
 SM=$(curl -sS -m 20 $B/sitemap.xml | grep -c "<loc>")

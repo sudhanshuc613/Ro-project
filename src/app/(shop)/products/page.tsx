@@ -4,6 +4,7 @@ import ProductCard from '@/components/product/ProductCard';
 import FilterSidebar from '@/components/product/FilterSidebar';
 import SortDropdown from '@/components/product/SortDropdown';
 import CategoryChips from '@/components/product/CategoryChips';
+import { unstable_cache } from 'next/cache';
 import { listProducts, parseListParams, getAllBrands, getAllCategories } from '@/server/services/catalog.service';
 import { CONTACT } from '@/lib/constants';
 import { breadcrumbSchema, itemListSchema, faqSchema, jsonLd } from '@/lib/seo/schema';
@@ -23,6 +24,38 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Filter/sort/page state lives in the URL, which makes this a dynamic route —
+ * Next.js opts any page reading searchParams out of static generation, so the
+ * `revalidate = 300` above never applied and every request hit the database.
+ *
+ * Measured on the live site 3 Sep 2026: TTFB 2.71s with `x-vercel-cache: MISS`
+ * on every single request, against 0.69s on the fully static /service-patna.
+ *
+ * The fix is to cache the QUERY rather than the page. unstable_cache keys on
+ * the resolved filter params, so the common cases — the unfiltered first page,
+ * and each category — are served from cache, while an unusual filter
+ * combination simply misses and runs the query as before. Tagged so an admin
+ * product save can purge it immediately rather than waiting out the TTL.
+ */
+const listProductsCached = unstable_cache(
+  async (p: ReturnType<typeof parseListParams>) => listProducts(p),
+  ['products-list'],
+  { revalidate: 300, tags: ['products'] },
+);
+
+const getBrandsCached = unstable_cache(
+  async () => getAllBrands(),
+  ['all-brands'],
+  { revalidate: 3600, tags: ['products'] },
+);
+
+const getCategoriesCached = unstable_cache(
+  async () => getAllCategories().catch(() => []),
+  ['all-categories'],
+  { revalidate: 3600, tags: ['products'] },
+);
+
 export default async function AllProductsPage({
   searchParams,
 }: {
@@ -30,9 +63,9 @@ export default async function AllProductsPage({
 }) {
   const params = parseListParams(searchParams);
   const [{ items, total, page, pages }, brands, categories] = await Promise.all([
-    listProducts(params),
-    getAllBrands(),
-    getAllCategories().catch(() => []),
+    listProductsCached(params),
+    getBrandsCached(),
+    getCategoriesCached(),
   ]);
 
   return (

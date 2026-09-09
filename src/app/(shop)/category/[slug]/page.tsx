@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/product/ProductCard';
@@ -45,6 +46,25 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
+/* Same caching rationale as /products: reading searchParams makes the route
+   dynamic, so the page-level revalidate never applies. Cache the query instead,
+   keyed on the resolved filters and tagged for instant purge on product save. */
+const listProductsCached = unstable_cache(
+  async (p: ReturnType<typeof parseListParams> & { categorySlug: string }) => listProducts(p),
+  ['category-list'],
+  { revalidate: 300, tags: ['products'] },
+);
+const getBrandsCached = unstable_cache(
+  async () => getAllBrands(),
+  ['all-brands'],
+  { revalidate: 3600, tags: ['products'] },
+);
+const getCategoriesCached = unstable_cache(
+  async () => getAllCategories().catch(() => []),
+  ['all-categories'],
+  { revalidate: 3600, tags: ['products'] },
+);
+
 export default async function CategoryPage({
   params, searchParams,
 }: {
@@ -56,9 +76,9 @@ export default async function CategoryPage({
 
   const listParams = { ...parseListParams(searchParams), categorySlug: params.slug };
   const [{ items, total, page, pages }, brands, categories] = await Promise.all([
-    listProducts(listParams),
-    getAllBrands(),
-    getAllCategories().catch(() => []),
+    listProductsCached(listParams),
+    getBrandsCached(),
+    getCategoriesCached(),
   ]);
 
   const seo = CATEGORY_SEO[params.slug];

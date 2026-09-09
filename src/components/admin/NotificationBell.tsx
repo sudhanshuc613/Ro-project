@@ -62,6 +62,8 @@ export default function NotificationBell() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [unread, setUnread] = useState(0);
   const [pushState, setPushState] = useState<'unknown' | 'unsupported' | 'off' | 'on' | 'unconfigured'>('unknown');
+  /** True when the database is missing the admin_alerts table entirely. */
+  const [setupNeeded, setSetupNeeded] = useState(false);
   const [busy, setBusy] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const lastTopId = useRef<string | null>(null);
@@ -76,6 +78,7 @@ export default function NotificationBell() {
       const list: Alert[] = d.alerts ?? [];
       setAlerts(list);
       setUnread(d.unread ?? 0);
+      setSetupNeeded(Boolean(d.setupNeeded));
 
       // Chime only for a genuinely new high-priority alert, never on first load.
       const top = list[0];
@@ -253,8 +256,29 @@ export default function NotificationBell() {
             )}
           </div>
 
+          {/* Setup blocker. Shown when the tables were never created, so a
+              missing migration can never masquerade as "no alerts yet". */}
+          {setupNeeded && (
+            <div className="border-b border-navy-50 bg-red-50 px-4 py-3">
+              <p className="text-sm font-bold text-red-800">
+                🔴 Database setup baaki hai
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-red-700">
+                <code className="rounded bg-white/70 px-1">admin_alerts</code> table nahi bana.
+                Isliye notification save nahi ho rahe. Neon SQL Editor me{' '}
+                <code className="rounded bg-white/70 px-1">
+                  prisma/migrations/add-notification-tables.sql
+                </code>{' '}
+                chalao — 30 second ka kaam hai.
+              </p>
+              <p className="mt-1.5 text-[11px] text-red-600">
+                Booking safe hai — sirf alert nahi ban raha.
+              </p>
+            </div>
+          )}
+
           {/* Push enable prompt */}
-          {pushState === 'off' && (
+          {!setupNeeded && pushState === 'off' && (
             <button
               onClick={enablePush}
               disabled={busy}

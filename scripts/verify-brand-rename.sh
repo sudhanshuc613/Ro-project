@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# NOTE (3 Sep 2026): area pages moved to /ro-service-patna/{slug}.
+# The old path now 308s there on purpose, so these assert the new URL.
 # Naam badalne ke baad sab kuch sahi hai ya nahi — ek hi process mein.
 set -u
 
@@ -86,7 +88,7 @@ chkge "8969821440" "$(grep -o '8969821440' /tmp/home.html | wc -l)" "5"
 
 echo
 echo "════ 7) Saare page 200 ════"
-for p in / /service-patna /service-patna/brand /service-patna/kankarbagh /products /amc-plans /contact /cart /login /register /forgot-password /track-order /admin/login /sitemap.xml /robots.txt; do
+for p in / /service-patna /service-patna/brand /ro-service-patna/kankarbagh /products /amc-plans /contact /cart /login /register /forgot-password /track-order /admin/login /sitemap.xml /robots.txt; do
   chk "$p" "$(curl -sS -m 20 -o /dev/null -w '%{http_code}' $B$p)" "200"
 done
 
@@ -96,7 +98,7 @@ chkge "sitemap URLs" "$(curl -sS -m 20 $B/sitemap.xml | grep -c '<loc>')" "50"
 
 echo
 echo "════ 9) Area page pe bhi naya naam + address ════"
-curl -sS -m 20 $B/service-patna/kankarbagh -o /tmp/area.html
+curl -sS -m 20 $B/ro-service-patna/kankarbagh -o /tmp/area.html
 chkge "area page 'Aqua Perl'" "$(grep -o 'Aqua Perl' /tmp/area.html | wc -l)" "3"
 chk   "area page AquaNexa"    "$(grep -o 'AquaNexa' /tmp/area.html | wc -l)" "0"
 chkge "area LocalBusiness"    "$(grep -o 'LocalBusiness' /tmp/area.html | wc -l)" "1"

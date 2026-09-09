@@ -2,6 +2,9 @@ import type { MetadataRoute } from 'next';
 import { prisma } from '@/lib/db/prisma';
 import { BRAND } from '@/lib/constants';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
+import { getPosts, AUTHOR } from '@/lib/seo/blog-data';
+import { areaPath } from '@/lib/seo/area-url';
+import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 
 export const revalidate = 3600;
 
@@ -12,6 +15,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BRAND.url}/`, lastModified: now, changeFrequency: 'daily', priority: 1.0 },
     { url: `${BRAND.url}/service-patna`, lastModified: now, changeFrequency: 'weekly', priority: 0.95 },
     { url: `${BRAND.url}/service-patna/brand`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
+    /* Service-intent hub — the third axis alongside place and brand. */
+    { url: `${BRAND.url}/ro-services-patna`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BRAND.url}/products`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${BRAND.url}/amc-plans`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BRAND.url}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
@@ -19,7 +24,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Local SEO pages — high priority, they drive the service business
   const areaPages: MetadataRoute.Sitemap = SERVICE_AREAS.map((a) => ({
-    url: `${BRAND.url}/service-patna/${a.slug}`,
+    url: `${BRAND.url}${areaPath(a.slug)}`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  }));
+
+  /* Blog + author. These carry the Article and Person schema that the
+     top-ranking competitor had and we did not, so they need to be crawled. */
+  const blogPages: MetadataRoute.Sitemap = [
+    { url: `${BRAND.url}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${BRAND.url}/about/${AUTHOR.slug}`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    ...getPosts().map((p) => ({
+      url: `${BRAND.url}/blog/${p.slug}`,
+      lastModified: new Date(p.updated),
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    })),
+  ];
+
+  /* Service-intent pages — the JOB axis. High priority because they target
+     transactional queries ("ro installation charges in patna") that convert
+     harder than informational ones. */
+  const intentPages: MetadataRoute.Sitemap = SERVICE_INTENTS.map((s) => ({
+    url: `${BRAND.url}${s.path}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.9,
@@ -66,5 +94,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('[sitemap] catalog fetch failed', err);
   }
 
-  return [...staticPages, ...areaPages, ...brandPages, ...categoryPages, ...productPages];
+  return [
+    ...staticPages, ...intentPages, ...areaPages, ...brandPages,
+    ...blogPages, ...categoryPages, ...productPages,
+  ];
 }

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# NOTE (3 Sep 2026): area pages moved to /ro-service-patna/{slug}.
+# The old path now 308s there on purpose, so these assert the new URL.
 # Verification for the Phase 1+2+3 UX upgrade:
 #   Phase 1 — proof stats, review showcase, sticky bar, quick form, exit intent
 #   Phase 2 — motion system, glass, skeleton, reduced-motion safety
@@ -194,7 +196,7 @@ hasf "service-requests route alert"      "alertNewServiceRequest" src/app/api/se
 
 echo
 echo "════ 11) Kuch toota to nahi — public pages ════"
-for p in / /products /service-patna /service-patna/kankarbagh /service-patna/brand/kent \
+for p in / /products /service-patna /ro-service-patna/kankarbagh /service-patna/brand/kent \
          /category/spare-parts /contact /amc-plans /cart /login /track-order; do
   chk "$p" "$(curl -sS -m 25 -o /dev/null -w '%{http_code}' $B$p)" "200"
 done

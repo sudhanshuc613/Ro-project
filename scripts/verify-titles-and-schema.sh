@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# NOTE (3 Sep 2026): area pages moved to /ro-service-patna/{slug}.
+# The old path now 308s there on purpose, so these assert the new URL.
 # Title tag + Review schema changes ka verification.
 # Ek hi process mein server uthata hai, sab check karta hai, band karta hai.
 set -u
@@ -26,7 +28,7 @@ chkge(){ if [ "$2" -ge "$3" ]; then echo "  PASS  $1 ($2)"; pass=$((pass+1)); el
 echo
 echo "════ 1) TITLE LENGTHS — research target 45-62 chars ════"
 allok=1
-for p in / /service-patna /service-patna/kankarbagh /service-patna/buddha-colony \
+for p in / /service-patna /ro-service-patna/kankarbagh /service-patna/buddha-colony \
          /service-patna/patliputra-colony /service-patna/brand/kent \
          /service-patna/brand/aquaguard /amc-plans /products /contact; do
   t=$(curl -sS -m 20 "$B$p" | grep -oiE '<title>[^<]*' | head -1 | sed 's/<title>//')
@@ -43,7 +45,7 @@ echo
 echo "════ 2) NAYE KEYWORD titles mein aa gaye? ════"
 curl -sS -m 20 $B/ -o /tmp/h.html
 curl -sS -m 20 $B/service-patna -o /tmp/sp.html
-curl -sS -m 20 $B/service-patna/kankarbagh -o /tmp/ka.html
+curl -sS -m 20 $B/ro-service-patna/kankarbagh -o /tmp/ka.html
 chkge "homepage: 'Water Purifier' in title"  "$(grep -oiE '<title>[^<]*Water Purifier[^<]*' /tmp/h.html | wc -l)" "1"
 chkge "pillar: 'Water Purifier' in title"    "$(grep -oiE '<title>[^<]*Water Purifier[^<]*' /tmp/sp.html | wc -l)" "1"
 chkge "area: 'Repair' in title"              "$(grep -oiE '<title>[^<]*Repair[^<]*' /tmp/ka.html | wc -l)" "1"
@@ -98,7 +100,7 @@ for a in kankarbagh boring-road patliputra-colony rajendra-nagar danapur bailey-
          khagaul digha patna-city kumhrar buddha-colony kurji rukanpura shastri-nagar \
          mithapur bankipur anisabad gardanibagh kidwaipuri lodipur lohia-nagar \
          keshri-nagar khajpura hanuman-nagar raja-bazar rajapur sheikhpura mahendru new-punaichak; do
-  c=$(curl -sS -m 15 -o /dev/null -w '%{http_code}' $B/service-patna/$a)
+  c=$(curl -sS -m 15 -o /dev/null -w '%{http_code}' $B/ro-service-patna/$a)
   [ "$c" = "200" ] && ok=$((ok+1)) || { echo "    FAIL $a=$c"; bad=$((bad+1)); }
 done
 chk "35 area pages" "$ok" "35"

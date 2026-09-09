@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# NOTE (3 Sep 2026): area pages moved to /ro-service-patna/{slug}.
+# The old path now 308s there on purpose, so these assert the new URL.
 # Verification for the product-admin upgrade:
 #   brand picker + create-brand API, HSN field, spec templates,
 #   SEO coach, GTIN in Product schema, word-boundary title trim.
@@ -184,7 +186,7 @@ echo "        -> \"$T\""
 
 echo
 echo "════ 8) Public site abhi bhi theek hai ════"
-for p in / /products /service-patna /service-patna/kankarbagh /category/spare-parts /contact; do
+for p in / /products /service-patna /ro-service-patna/kankarbagh /category/spare-parts /contact; do
   chk "$p" "$(curl -sS -m 25 -o /dev/null -w '%{http_code}' $B$p)" "200"
 done
 SM=$(curl -sS -m 20 $B/sitemap.xml | grep -c "<loc>")

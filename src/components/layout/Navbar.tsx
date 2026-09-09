@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { BRAND, CONTACT, PRODUCT_TYPES } from '@/lib/constants';
+import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { useBodyScrollLock, useEscapeKey } from '@/lib/hooks/useBodyScrollLock';
 import { useCartStore } from '@/store/cart';
 import SearchAutosuggest from './SearchAutosuggest';
@@ -202,11 +203,19 @@ export default function Navbar() {
           <Link href="/service-patna" className="px-4 py-3 text-sm font-bold text-cta-green hover:text-cta-greenDark">
             🔧 RO Service Patna
           </Link>
+          {/* Service-intent hub. The service business is what pays the bills,
+              so the JOB axis gets a top-level slot, not a footer link. */}
+          <Link href="/ro-services-patna" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
+            All Services
+          </Link>
           <Link href="/amc-plans" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
             AMC Plans
           </Link>
           <Link href="/products" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
             Shop Products
+          </Link>
+          <Link href="/blog" className="px-4 py-3 text-sm font-bold text-navy-700 hover:text-aqua-600">
+            RO Guide
           </Link>
 
           {Object.keys(MEGA_MENU).map((key) => (
@@ -298,9 +307,25 @@ export default function Navbar() {
               className="flex items-center justify-between border-b border-navy-50 py-3.5 font-semibold text-navy-700">
               RO Service in Patna <ChevronRight />
             </Link>
+            {/* ~80% of this site's traffic is mobile, so the service pages
+                have to be reachable from the drawer, not just the desktop bar. */}
+            <Link href="/ro-services-patna" onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-between border-b border-navy-50 py-3.5 font-semibold text-navy-700">
+              All RO Services &amp; Rates <ChevronRight />
+            </Link>
+            {SERVICE_INTENTS.map((s) => (
+              <Link key={s.slug} href={s.path} onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between border-b border-navy-50 py-3 pl-4 text-sm text-navy-600">
+                {s.footerLabel} <ChevronRight />
+              </Link>
+            ))}
             <Link href="/amc-plans" onClick={() => setMobileOpen(false)}
               className="flex items-center justify-between border-b border-navy-50 py-3.5 font-semibold text-navy-700">
               AMC Plans <ChevronRight />
+            </Link>
+            <Link href="/blog" onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-between border-b border-navy-50 py-3.5 font-semibold text-navy-700">
+              RO Guide &amp; Tips <ChevronRight />
             </Link>
 
             <div className="mt-6 space-y-2 rounded-xl bg-navy-50 p-4">

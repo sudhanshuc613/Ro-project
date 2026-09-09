@@ -7,7 +7,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
 import { authOptions } from '@/lib/auth';
@@ -190,6 +190,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     try {
       revalidatePath(`/products/${d.slug}`);
       revalidatePath('/products');
+      // Purge the cached product queries so an admin edit shows immediately
+      // instead of waiting out the 5-minute TTL.
+      revalidateTag('products');
       // Refresh the sitemap so Google's next crawl sees an accurate lastmod
       // instead of waiting out the 1-hour ISR window.
       revalidatePath('/sitemap.xml');

@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { formatINR, formatDateIN, relativeTime } from '@/lib/utils/format';
 import { getContactSettings, telLink, waLink } from '@/lib/settings';
 import TrackingRefresher from '@/components/service/TrackingRefresher';
+import { googleReviewLink } from '@/lib/reviews/review-request';
 
 export const dynamic = 'force-dynamic';
 
@@ -113,6 +114,52 @@ export default async function TrackPage({ params }: { params: { ticket: string }
               </p>
             )}
           </section>
+
+          {/* ── Review ask, customer side ──────────────────────────────────
+              The tracking page is where the customer already is when the job
+              finishes — they opened it to watch the technician arrive. Asking
+              here costs them no context switch, unlike a message that lands
+              hours later.
+
+              Shown only on COMPLETED, never before. Asking mid-job is how you
+              get a 3-star review about something that had not gone wrong yet.
+              No incentive is offered and no rating is filtered: Google's July
+              2026 review-spam policy treats both as grounds for a site-wide
+              structured-data manual action. */}
+          {request.status === 'COMPLETED' && (
+            <section className="mt-4 rounded-2xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 to-white p-5">
+              <p className="text-xs font-bold uppercase tracking-wide text-yellow-700">
+                Ek chhoti si guzarish
+              </p>
+              <h2 className="mt-1 font-display text-xl font-extrabold text-navy-700">
+                Kaam theek hua? 30 second de dijiye 🙏
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-navy-600">
+                Hum Patna ka chhota sa kaam hai — koi bada brand nahi. Aapki ek
+                line Google par likhi hui hamare liye bahut badi baat hoti hai,
+                aur kisi aur ko sahi technician dhoondhne me madad karti hai.
+              </p>
+
+              <a
+                href={googleReviewLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 block rounded-xl bg-yellow-500 px-5 py-3.5 text-center font-bold text-white shadow-lg transition hover:bg-yellow-600"
+              >
+                ⭐ Google par review likhein
+              </a>
+
+              <p className="mt-3 rounded-lg bg-white/70 px-3 py-2 text-xs leading-relaxed text-navy-700">
+                <strong>Agar koi dikkat reh gayi hai</strong> to pehle humein
+                bataiye —{' '}
+                <a href={telLink(contact.primaryPhone)} className="font-bold text-aqua-700 underline">
+                  {contact.primaryPhone}
+                </a>{' '}
+                — warranty me hai, koi charge nahi lagega. Review baad me likh
+                dijiyega.
+              </p>
+            </section>
+          )}
 
           {/* Technician card */}
           {request.assignedTechnician && (

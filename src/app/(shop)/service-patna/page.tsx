@@ -15,6 +15,8 @@ import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import HowItWorks from '@/components/home/HowItWorks';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { areaPath } from '@/lib/seo/area-url';
+import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 
 export const revalidate = 86400;
 
@@ -143,6 +145,43 @@ export default function ServicePatnaPillar() {
           </div>
         </section>
 
+        {/* Services — the JOB axis. Added 8 Sep 2026: this pillar linked out to
+            every area and every brand but had no route to the individual jobs,
+            so "ro installation charges patna" had nowhere to land. */}
+        <section className="border-b border-navy-50 py-14">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+                What do you need done?
+              </h2>
+              <p className="mt-2 text-muted">
+                Har kaam ka apna page hai — poora process, asli rate, aur kaise pata chale ki zaroorat hai.
+              </p>
+            </div>
+
+            <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {SERVICE_INTENTS.map((s) => (
+                <Link key={s.slug} href={s.path}
+                  className="group flex flex-col rounded-2xl border border-navy-100 p-5 transition hover:-translate-y-1 hover:border-aqua-400 hover:shadow-card-hover">
+                  <h3 className="font-display text-lg font-bold text-navy-700 group-hover:text-aqua-600">
+                    {s.h1}
+                  </h3>
+                  <p className="mt-1.5 text-sm font-semibold text-cta-green">{s.lede}</p>
+                  <p className="mt-3 line-clamp-3 flex-1 text-sm text-navy-600">{s.intro[0]}</p>
+                  <span className="mt-4 text-sm font-bold text-aqua-600">Rate list dekho →</span>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-7 text-center">
+              <Link href="/ro-services-patna"
+                className="inline-block rounded-xl bg-navy-700 px-6 py-3 font-bold text-white transition hover:bg-navy-600">
+                Sabhi services ek jagah →
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Areas */}
         <section className="py-14">
           <div className="container mx-auto px-4">
@@ -157,7 +196,7 @@ export default function ServicePatnaPillar() {
 
             <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {SERVICE_AREAS.map((a) => (
-                <Link key={a.slug} href={`/service-patna/${a.slug}`}
+                <Link key={a.slug} href={areaPath(a.slug)}
                   className="group rounded-2xl border border-navy-100 p-5 transition hover:-translate-y-1 hover:border-aqua-400 hover:shadow-card-hover">
                   <h3 className="font-display text-lg font-bold text-navy-700 group-hover:text-aqua-600">
                     RO Service in {a.name}

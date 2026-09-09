@@ -35,10 +35,24 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // Legacy / common misspellings → canonical service pillar
+      /* Legacy / common misspellings → canonical service pillar.
+         ────────────────────────────────────────────────────────────────
+         ⚠️ next.config redirects run BEFORE route matching, so anything
+         listed here wins over a real page at the same path. Two entries
+         were removed on 8 Sep 2026 because they had started shadowing
+         pages that now exist:
+
+           /ro-repair-patna   is now a real service page  → was 308ing away
+           /ro-service-patna  is now the area-page parent → would break
+                              /ro-service-patna/{area} if left as a prefix
+
+         Before adding to this list, confirm no route exists at that path.
+         `/service` has no page and is kept. */
+      { source: '/service', destination: '/ro-services-patna', permanent: true },
+      /* Bare /ro-service-patna has no page of its own — the areas live at
+         /ro-service-patna/{area}. Send the bare form to the pillar. Written
+         with an exact source so child paths are untouched. */
       { source: '/ro-service-patna', destination: '/service-patna', permanent: true },
-      { source: '/ro-repair-patna', destination: '/service-patna', permanent: true },
-      { source: '/service', destination: '/service-patna', permanent: true },
     ];
   },
 

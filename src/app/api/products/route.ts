@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/db/prisma';
 import { authOptions } from '@/lib/auth';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { slugify } from '@/lib/utils/format';
 import { logAudit } from '@/server/services/audit.service';
 import { notifyProductPublished } from '@/server/services/indexing.service';
@@ -203,6 +203,9 @@ export async function POST(req: NextRequest) {
     try {
       revalidatePath('/sitemap.xml');
       revalidatePath('/products');
+      // Purge the cached product queries so an admin edit shows immediately
+      // instead of waiting out the 5-minute TTL.
+      revalidateTag('products');
     } catch { /* ISR will catch up */ }
 
     // Fire-and-forget IndexNow ping (Bing, Yandex, Naver, Seznam).

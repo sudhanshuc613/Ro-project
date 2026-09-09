@@ -13,6 +13,7 @@ import { localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd } from '@/lib/
 import FaqAccordion from '@/components/home/FaqAccordion';
 import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { areaPath } from '@/lib/seo/area-url';
 
 export const revalidate = 86400;
 
@@ -211,7 +212,7 @@ export default function BrandServicePage({ params }: { params: { brand: string }
               </h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {SERVICE_AREAS.slice(0, 6).map((a) => (
-                  <Link key={a.slug} href={`/service-patna/${a.slug}`}
+                  <Link key={a.slug} href={areaPath(a.slug)}
                     className="flex items-center justify-between rounded-xl border border-navy-100 p-3.5 transition hover:border-aqua-400 hover:bg-aqua-50">
                     <span className="text-sm font-semibold text-navy-700">
                       {short} service in {a.name}

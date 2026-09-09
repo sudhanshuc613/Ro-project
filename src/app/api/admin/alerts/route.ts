@@ -26,6 +26,7 @@ export async function GET() {
     const { alerts, unread } = await getAlerts(25);
     return NextResponse.json({
       unread,
+      setupNeeded: false,
       alerts: alerts.map((a) => ({
         id: a.id,
         kind: a.kind,
@@ -40,9 +41,39 @@ export async function GET() {
       })),
     });
   } catch (err) {
+    /*
+     * Distinguish "table does not exist" from every other failure.
+     *
+     * This matters because of exactly what happened on 31 Aug 2026: the code
+     * deployed fine, but the two new tables were never created in the
+     * production database (the Vercel build runs `prisma generate && next
+     * build` — no `db push`). Alert writes then failed inside a try/catch and
+     * were swallowed, so bookings kept working while notifications silently
+     * did nothing. A silent failure that looks identical to "no alerts yet" is
+     * the worst possible behaviour.
+     *
+     * Postgres error 42P01 = undefined_table. When we see it we tell the admin
+     * UI to show the fix instead of pretending the inbox is empty.
+     */
+    const code = (err as { code?: string })?.code;
+    const msg = String((err as Error)?.message ?? '');
+    const tableMissing =
+      code === 'P2021' || code === '42P01' || /admin_alerts.*does not exist/i.test(msg);
+
+    if (tableMissing) {
+      console.error('[admin/alerts] admin_alerts table missing — run prisma/migrations/add-notification-tables.sql');
+      return NextResponse.json({
+        unread: 0,
+        alerts: [],
+        setupNeeded: true,
+        setupHint:
+          'Database me admin_alerts table nahi hai. Neon SQL Editor me prisma/migrations/add-notification-tables.sql chalao.',
+      });
+    }
+
     console.error('[admin/alerts:GET]', err);
-    // Never let a bell error surface as a broken admin page.
-    return NextResponse.json({ unread: 0, alerts: [] });
+    // Any other failure: degrade quietly rather than breaking the admin page.
+    return NextResponse.json({ unread: 0, alerts: [], setupNeeded: false });
   }
 }
 

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/db/prisma';
 import { relativeTime, formatINR } from '@/lib/utils/format';
 import ServiceRequestActions from '@/components/admin/ServiceRequestActions';
+import ReviewRequestButton from '@/components/admin/ReviewRequestButton';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Service Requests' };
@@ -163,6 +164,21 @@ export default async function AdminServiceRequestsPage({
                     technicians={technicians}
                     currentTechId={r.assignedTechnicianId}
                   />
+
+                  {/* Reviews are 36% of local ranking weight for home services
+                      against 19% for all on-page SEO combined. The ask has to
+                      live at the exact moment the job is marked done, or it
+                      does not happen. */}
+                  {r.status === 'COMPLETED' && (
+                    <ReviewRequestButton
+                      ticket={r.ticketNumber}
+                      name={r.customerName}
+                      phone={r.customerPhone}
+                      area={r.area}
+                      workDone={r.resolutionNote}
+                      completedAt={r.completedAt?.toISOString() ?? null}
+                    />
+                  )}
                 </div>
               </div>
             </div>

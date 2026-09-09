@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { BRAND, CONTACT } from '@/lib/constants';
+import { areaPath } from '@/lib/seo/area-url';
+import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 
 const SHOP = [
   { label: 'New RO Purifiers', href: '/category/new-ro-purifiers' },
@@ -10,14 +12,27 @@ const SHOP = [
   { label: 'AMC Plans', href: '/amc-plans' },
 ];
 
-// Local-SEO internal links — every one is an indexable service page
+/* Local-SEO internal links — every one is an indexable service page.
+   ────────────────────────────────────────────────────────────────────────
+   These paths MUST come from areaPath(). They were hardcoded once as
+   /ro-service-kankarbagh-patna, a shape that was designed and then abandoned
+   because Next.js cannot put a dynamic segment inside a path segment. The
+   route was reverted but these five strings were not, so every page on the
+   site shipped five links to a 404. Generating them removes the whole class
+   of bug: the path shape now has exactly one definition. */
 const AREAS = [
-  { label: 'RO Service Kankarbagh', href: '/service-patna/kankarbagh' },
-  { label: 'RO Service Boring Road', href: '/service-patna/boring-road' },
-  { label: 'RO Service Patliputra', href: '/service-patna/patliputra-colony' },
-  { label: 'RO Service Rajendra Nagar', href: '/service-patna/rajendra-nagar' },
-  { label: 'RO Service Danapur', href: '/service-patna/danapur' },
+  { label: 'RO Service Kankarbagh', href: areaPath('kankarbagh') },
+  { label: 'RO Service Boring Road', href: areaPath('boring-road') },
+  { label: 'RO Service Patliputra', href: areaPath('patliputra-colony') },
+  { label: 'RO Service Rajendra Nagar', href: areaPath('rajendra-nagar') },
+  { label: 'RO Service Danapur', href: areaPath('danapur') },
 ];
+
+/* Service-intent links. Measured 8 Sep 2026: rocareindia.com ships dedicated
+   sitemaps for installation, AMC, repair and filter service — 2,369 URLs of
+   service-type pages — while we had none. Every one of these is a distinct
+   job with its own price and its own process, not a keyword variant. */
+const SERVICES = SERVICE_INTENTS.map((s) => ({ label: s.footerLabel, href: s.path }));
 
 const BRANDS = [
   { label: 'Kent RO Service', href: '/service-patna/brand/kent' },
@@ -40,7 +55,7 @@ export default function Footer() {
   return (
     <footer className="bg-navy-700 text-navy-100">
       <div className="container mx-auto px-4 pt-14">
-        <div className="grid gap-9 pb-10 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-9 pb-10 md:grid-cols-2 lg:grid-cols-6">
           {/* Brand + contact */}
           <div className="lg:col-span-1">
             {/* Dark footer pe logo ke teal/navy rang doob jaate hain,
@@ -75,6 +90,7 @@ export default function Footer() {
           </div>
 
           <FooterCol title="Shop" links={SHOP} />
+          <FooterCol title="Services & Rates" links={SERVICES} />
           <FooterCol title="RO Service in Patna" links={AREAS} />
           <FooterCol title="Brands We Repair" links={BRANDS} />
           <FooterCol title="Support" links={SUPPORT} />
