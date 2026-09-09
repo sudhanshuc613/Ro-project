@@ -39,6 +39,12 @@ const serviceRequestSchema = z.object({
   issueDescription: z.string().trim().min(10).max(2000),
   preferredDate:    z.string().optional().or(z.literal('')),
   preferredSlot:    z.string().max(24).optional().or(z.literal('')),
+  /* Referral code the customer was given by an existing customer. Stored on
+     internalNote rather than a new column: adding a column means a production
+     migration, and this project's build script has no `prisma db push`, which
+     is exactly how the admin_alerts table silently failed to exist for weeks.
+     The owner honours the discount manually at billing, so a note is enough. */
+  referralCode:     z.string().trim().max(12).optional().or(z.literal('')),
   source:           z.string().default('WEBSITE_FORM'),
 });
 
@@ -151,6 +157,11 @@ export async function POST(req: NextRequest) {
         status: 'NEW',
         priority: data.issueCategory === 'NO_WATER' ? 'HIGH' : 'NORMAL',
         source: data.source,
+        /* Surfaced to the owner on the job card so the ₹50 discount is applied
+           at billing. Prefixed so it is unmistakable in a free-text field. */
+        internalNote: data.referralCode
+          ? `REFERRAL: ${data.referralCode.toUpperCase()} — customer ko ₹50 kam lagana hai`
+          : null,
       },
     });
 

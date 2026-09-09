@@ -54,6 +54,56 @@
   }
 }
 
+/* ── 🔴 FORM CONTROL COLOUR — reported bug, 9 Sep 2026 ────────────────────
+   The area dropdown on the booking form rendered as a white box with
+   invisible option text; the names only appeared on hover.
+
+   CAUSE: no form control on the site set an explicit `color`. Text colour
+   inherits, and QuickBookForm is rendered inside dark hero panels
+   (bg-navy-gradient) on /ro-service-patna/[area], /ro-services-patna and all
+   six intent pages. The <select> carried bg-white but inherited the hero's
+   white text — white on white. On hover the browser paints its own highlight
+   background, which is exactly why the text "appeared" only then.
+
+   Native <option> elements are rendered by the OS, not the page, so the rule
+   has to be set on the option itself; styling the parent select is not enough.
+
+   `color-scheme: light` stops Chrome and Android WebView from repainting the
+   popup list dark when the phone is in dark mode. That produces the identical
+   invisible-text symptom for a different reason, and India runs a high share
+   of dark-mode Android.
+
+   🔴 WHY THIS SITS OUTSIDE @layer base:
+   Tailwind tree-shakes anything inside a @layer that it cannot match to
+   content it scanned. Bare element selectors like `select option` never match
+   a class in the JSX, so the rule was silently dropped from the compiled
+   bundle — verified by grepping .next/static/css after a build. Outside the
+   layer it is emitted verbatim and always ships. Do not move this back in. */
+input,
+select,
+textarea {
+  color: theme('colors.navy.700');
+  color-scheme: light;
+}
+
+select option,
+select optgroup {
+  background-color: #fff;
+  color: theme('colors.navy.700');
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: theme('colors.slate.400');
+}
+
+/* Disabled controls must stay readable, not fade into the field. */
+input:disabled,
+select:disabled,
+textarea:disabled {
+  color: theme('colors.slate.500');
+}
+
 @layer components {
   .container {
     @apply mx-auto w-full max-w-[1280px] px-4 sm:px-5;

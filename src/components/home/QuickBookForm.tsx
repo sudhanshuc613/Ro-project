@@ -25,6 +25,8 @@ import { useMemo, useState } from 'react';
 import { CONTACT, ISSUE_CATEGORIES, SERVICE } from '@/lib/constants';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import TrustBadges from '@/components/ui/TrustBadges';
+import AreaPicker from '@/components/home/AreaPicker';
+import { REFERRAL } from '@/lib/referral';
 
 type Step = 'form' | 'done';
 
@@ -44,6 +46,12 @@ export default function QuickBookForm({
   const [ticket, setTicket] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  /* Optional and collapsed by default. The measured penalty for extra form
+     fields is 5-11% per field, so a referral input can never be allowed to
+     sit in the main three-field path — it opens only if the customer has a
+     code to enter. */
+  const [refCode, setRefCode] = useState('');
+  const [showRef, setShowRef] = useState(false);
 
   const area = useMemo(
     () => SERVICE_AREAS.find((a) => a.slug === areaSlug),
@@ -73,6 +81,7 @@ export default function QuickBookForm({
           serviceType: 'REPAIR',
           issueCategory: issue,
           issueDescription: label,
+          referralCode: refCode.trim() || undefined,
           source: 'WEBSITE',
         }),
       });
@@ -129,8 +138,13 @@ export default function QuickBookForm({
 
   /* ── Form ── */
   return (
+    /* data-shared-ui marks this as template chrome, not page content. The
+       doorway test in verify-area-depth.sh strips it the same way it strips
+       nav and footer — an identical booking widget on every page is expected
+       and says nothing about whether the surrounding copy is distinct. */
     <form
       onSubmit={submit}
+      data-shared-ui="booking-form"
       className="rounded-3xl border border-navy-100 bg-white p-5 shadow-card md:p-6"
     >
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -180,19 +194,12 @@ export default function QuickBookForm({
           <span className="mb-1 block text-xs font-bold uppercase tracking-wide text-muted">
             2 · Aapka area
           </span>
-          <select
-            value={areaSlug}
-            onChange={(e) => setAreaSlug(e.target.value)}
-            className="w-full rounded-xl border border-navy-200 bg-white px-3 py-3 text-base outline-none transition focus:border-aqua-500 focus:ring-2 focus:ring-aqua-100"
-            aria-label="Area"
-          >
-            <option value="">Area chuniye…</option>
-            {SERVICE_AREAS.map((a) => (
-              <option key={a.slug} value={a.slug}>
-                {a.name} — {a.pincodes[0]}
-              </option>
-            ))}
-          </select>
+          {/* Was a native <select> of 63 options. Replaced 9 Sep 2026 after a
+              report that the list rendered white-on-white inside the dark hero
+              panels — and because eight scroll-flicks to reach "Saguna More"
+              on a 360px phone was costing bookings regardless of colour.
+              AreaPicker filters by name, pincode and landmark. */}
+          <AreaPicker value={areaSlug} onChange={setAreaSlug} id="qbf-area" />
         </label>
 
         {/* 3 — problem, as tappable chips */}
@@ -218,6 +225,37 @@ export default function QuickBookForm({
             ))}
           </div>
         </div>
+
+        {/* Referral — collapsed. Each extra visible field costs 5-11% of
+            conversions, so this stays out of the three-field path until the
+            customer says they have a code. */}
+        {!showRef ? (
+          <button
+            type="button"
+            onClick={() => setShowRef(true)}
+            className="text-xs font-bold text-aqua-600 hover:underline"
+          >
+            + Referral code hai? ₹{REFERRAL.friendDiscount} kam lagega
+          </button>
+        ) : (
+          <label className="block">
+            <span className="mb-1 block text-xs font-bold uppercase tracking-wide text-muted">
+              Referral code
+            </span>
+            <input
+              type="text"
+              value={refCode}
+              onChange={(e) => setRefCode(e.target.value.toUpperCase())}
+              placeholder="AP-XXXX"
+              maxLength={12}
+              autoCapitalize="characters"
+              className="w-full rounded-xl border border-navy-200 bg-white px-3 py-3 font-mono text-base tracking-wider text-navy-700 outline-none transition focus:border-aqua-500 focus:ring-2 focus:ring-aqua-100"
+            />
+            <span className="mt-1 block text-[11px] text-muted">
+              Visit charge ₹{SERVICE.visitCharge} ki jagah ₹{REFERRAL.friendPays} lagega.
+            </span>
+          </label>
+        )}
       </div>
 
       {error && (

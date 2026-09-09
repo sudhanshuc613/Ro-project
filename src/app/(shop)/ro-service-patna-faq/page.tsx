@@ -43,6 +43,7 @@ import {
 } from '@/lib/seo/schema';
 import { BRAND, CONTACT, SERVICE, GBP } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
+import TdsChecker from '@/components/home/TdsChecker';
 
 export const revalidate = 86400;
 
@@ -139,7 +140,19 @@ export default function AnswerHubPage() {
           </div>
         </section>
 
-        <section className="py-12 md:py-14">
+        {/* Self-diagnostic, above the answers. A visitor who arrives asking
+            "do I need a new membrane" gets an actual answer from their own
+            numbers before reading anything — and is told to do nothing when
+            the numbers say the machine is fine. No competitor in this market
+            has a diagnostic tool, and none of them can build a useful one
+            without measured TDS data for every locality. */}
+        <section className="py-10 md:py-12">
+          <div className="container mx-auto max-w-4xl px-4">
+            <TdsChecker />
+          </div>
+        </section>
+
+        <section className="pb-12 md:pb-14">
           <div className="container mx-auto max-w-4xl px-4">
             <div className="space-y-5">
               {answers.map((a, i) => (

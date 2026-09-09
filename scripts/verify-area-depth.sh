@@ -27,9 +27,11 @@
 #     rendered body overlap      must stay BELOW 84.7%
 #     duplicate body sentences   must stay AT OR BELOW 55
 #
-# Both are measured on <main> with header, nav and footer stripped, because
-# site chrome is identical on every page of every site by design and counting
-# it tells you nothing about whether the content is distinct.
+# Both are measured on <main> with header, nav, footer and any element marked
+# data-shared-ui stripped, because site chrome is identical on every page of
+# every site by design and counting it tells you nothing about whether the
+# content is distinct. The booking widget carries data-shared-ui for exactly
+# that reason — it is the same form everywhere on purpose.
 # ═══════════════════════════════════════════════════════════════════════════
 set -u
 
@@ -95,7 +97,8 @@ import re,html,glob,itertools
 def body(p):
     t=open(p,encoding='utf-8',errors='ignore').read()
     for pat in (r'<script.*?</script>', r'<style.*?</style>', r'<header.*?</header>',
-                r'<footer.*?</footer>', r'<nav.*?</nav>'):
+                r'<footer.*?</footer>', r'<nav.*?</nav>',
+                r'<form[^>]*data-shared-ui[^>]*>.*?</form>'):
         t=re.sub(pat,' ',t,flags=re.S)
     m=re.search(r'<main.*?</main>',t,flags=re.S)
     return html.unescape(re.sub(r'<[^>]+>',' ',m.group(0) if m else t))
@@ -110,7 +113,8 @@ import re,html,glob
 def body(p):
     t=open(p,encoding='utf-8',errors='ignore').read()
     for pat in (r'<script.*?</script>', r'<style.*?</style>', r'<header.*?</header>',
-                r'<footer.*?</footer>', r'<nav.*?</nav>'):
+                r'<footer.*?</footer>', r'<nav.*?</nav>',
+                r'<form[^>]*data-shared-ui[^>]*>.*?</form>'):
         t=re.sub(pat,' ',t,flags=re.S)
     m=re.search(r'<main.*?</main>',t,flags=re.S)
     return html.unescape(re.sub(r'<[^>]+>',' ',m.group(0) if m else t))
@@ -134,7 +138,8 @@ import re,html
 def body(p):
     t=open(p,encoding='utf-8',errors='ignore').read()
     for pat in (r'<script.*?</script>', r'<style.*?</style>', r'<header.*?</header>',
-                r'<footer.*?</footer>', r'<nav.*?</nav>'):
+                r'<footer.*?</footer>', r'<nav.*?</nav>',
+                r'<form[^>]*data-shared-ui[^>]*>.*?</form>'):
         t=re.sub(pat,' ',t,flags=re.S)
     m=re.search(r'<main.*?</main>',t,flags=re.S)
     return set(re.findall(r'[a-z]{4,}', html.unescape(re.sub(r'<[^>]+>',' ',m.group(0) if m else t)).lower()))

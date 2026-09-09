@@ -5,6 +5,7 @@ import { formatINR, formatDateIN, relativeTime } from '@/lib/utils/format';
 import { getContactSettings, telLink, waLink } from '@/lib/settings';
 import TrackingRefresher from '@/components/service/TrackingRefresher';
 import { googleReviewLink } from '@/lib/reviews/review-request';
+import ReferralCard from '@/components/home/ReferralCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -159,6 +160,13 @@ export default async function TrackPage({ params }: { params: { ticket: string }
                 dijiyega.
               </p>
             </section>
+          )}
+
+          {/* Referral, second. The review ask above is worth more — reviews are
+              36% of local ranking weight and a referral is worth one job — so
+              if the customer only does one thing it should be the review. */}
+          {request.status === 'COMPLETED' && (
+            <ReferralCard phone={request.customerPhone} name={request.customerName} />
           )}
 
           {/* Technician card */}

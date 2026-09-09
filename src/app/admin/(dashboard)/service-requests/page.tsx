@@ -131,6 +131,15 @@ export default async function AdminServiceRequestsPage({
                     </p>
                   )}
 
+                  {/* Referral discount. Must be impossible to miss at billing,
+                      because the customer was promised ₹50 off on a page we
+                      published — not honouring it is worse than not offering it. */}
+                  {r.internalNote?.startsWith('REFERRAL:') && (
+                    <p className="mt-2 rounded-lg border border-aqua-300 bg-aqua-50 px-3 py-2 text-sm font-bold text-aqua-900">
+                      🎁 {r.internalNote}
+                    </p>
+                  )}
+
                   {r.resolutionNote && (
                     <p className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-navy-600">
                       ✅ {r.resolutionNote}

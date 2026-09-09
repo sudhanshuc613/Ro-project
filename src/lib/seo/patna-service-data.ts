@@ -1547,7 +1547,7 @@ export function buildAreaFaqs(area: ServiceAreaContent) {
     },
     {
       q: `Do you provide a warranty on repairs in ${area.name}?`,
-      a: `Yes — 30 days on our workmanship, plus 6 to 12 months manufacturer warranty on any part fitted, depending on the component. The part is named on your bill, which is what makes a claim from a ${pin} address straightforward rather than an argument.`,
+      a: `Thirty days on our workmanship, and 6 to 12 months manufacturer warranty on whichever part goes in. For ${area.name} that matters most on ${area.commonRepair.toLowerCase()} — the exact part is written on your bill, so a return visit to ${landmark} is a two-minute conversation rather than an argument about what was fitted last time.`,
     },
     {
       q: `Do I need to pay in advance for a visit to ${area.name}?`,
