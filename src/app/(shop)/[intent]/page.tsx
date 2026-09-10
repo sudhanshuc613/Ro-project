@@ -52,6 +52,7 @@ import {
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
+import AreaWorkProof, { serviceShots, imageObjectSchema } from '@/components/home/AreaWorkProof';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 
@@ -105,6 +106,8 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
      helps nobody and looks like a link farm. */
   const topAreas = SERVICE_AREAS.slice(0, 12);
   const topBrands = SERVICED_BRANDS.slice(0, 10);
+  /* Same reason as the area pages: these seven carried zero photographs. */
+  const shots = serviceShots(intent.h1);
 
   return (
     <>
@@ -122,6 +125,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
           { name: 'RO Service in Patna', url: '/service-patna' },
           { name: intent.h1, url: intent.path },
         ]),
+        ...imageObjectSchema(shots, BRAND.url, intent.path),
         howToSchema({
           name: `${intent.h1} — how the job is done`,
           description: intent.description,
@@ -334,6 +338,12 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
             </ul>
           </div>
         </section>
+
+        <AreaWorkProof
+          shots={shots}
+          heading={`${intent.h1} — kaam kaisa dikhta hai`}
+          sub="Har visit pe TDS test, har badla part aapke haath me."
+        />
 
         {/* ── FAQ (mirrors FAQPage schema) ── */}
         <FaqAccordion faqs={intent.faqs} title={`${intent.h1} — common questions`} />

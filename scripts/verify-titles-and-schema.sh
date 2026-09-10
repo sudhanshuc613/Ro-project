@@ -48,7 +48,12 @@ curl -sS -m 20 $B/service-patna -o /tmp/sp.html
 curl -sS -m 20 $B/ro-service-patna/kankarbagh -o /tmp/ka.html
 chkge "homepage: 'Water Purifier' in title"  "$(grep -oiE '<title>[^<]*Water Purifier[^<]*' /tmp/h.html | wc -l)" "1"
 chkge "pillar: 'Water Purifier' in title"    "$(grep -oiE '<title>[^<]*Water Purifier[^<]*' /tmp/sp.html | wc -l)" "1"
-chkge "area: 'Repair' in title"              "$(grep -oiE '<title>[^<]*Repair[^<]*' /tmp/ka.html | wc -l)" "1"
+# Area titles changed 10 Sep 2026: "RO Repair in X, Patna — ₹200 Visit | Aqua Perl"
+# became "RO Service X Patna ₹200 · 8969821440". Every competitor ranking above
+# us puts the phone number in the title; we now do too, and keep the ₹200 hook
+# they do not have. Assert the two things that actually matter.
+chkge "area: phone number in title"          "$(grep -oE '<title>[^<]*8969821440[^<]*' /tmp/ka.html | wc -l)" "1"
+chkge "area: price hook in title"            "$(grep -oE '<title>[^<]*200[^<]*' /tmp/ka.html | wc -l)" "1"
 
 echo
 echo "════ 3) REVIEW SCHEMA (naya — AI search ke liye) ════"

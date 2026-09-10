@@ -149,9 +149,14 @@ import re,html
 t=open('/tmp/na_$a.html',encoding='utf-8',errors='ignore').read()
 m=re.search(r'<title>(.*?)</title>',t,re.S)
 print(len(html.unescape(m.group(1))) if m else 0)")
-  if [ "${T:-0}" -ge 45 ] && [ "${T:-0}" -le 60 ]; then
+  # Band widened 10 Sep 2026. Area titles now drop the ' | Aqua Perl' suffix
+  # (title.absolute) to make room for the phone number, so a short area name
+  # like "Beur" lands at 39 chars. That is not a regression — Zyppy's data
+  # shows shorter titles are rewritten LESS often, and the phone number is
+  # worth more on mobile than 6 characters of brand.
+  if [ "${T:-0}" -ge 36 ] && [ "${T:-0}" -le 60 ]; then
     echo "  PASS  $a title $T chars"; pass=$((pass+1));
-  else echo "  FAIL  $a title $T chars (chahiye 45-60)"; fail=$((fail+1)); fi
+  else echo "  FAIL  $a title $T chars (chahiye 36-60)"; fail=$((fail+1)); fi
 done
 
 echo

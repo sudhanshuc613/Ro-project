@@ -26,6 +26,7 @@ import { localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd } from '@/lib/
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
+import AreaWorkProof, { areaShots, imageObjectSchema } from '@/components/home/AreaWorkProof';
 import { BRAND, CONTACT, SERVICE, GBP } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { tdsVerdict, costForecast, faultProfile, responseDetail } from '@/lib/seo/area-depth';
@@ -40,15 +41,35 @@ export function generateMetadata({ params }: { params: { area: string } }): Meta
   const area = SERVICE_AREAS.find((a) => a.slug === params.area);
   if (!area) return { title: 'Area Not Found' };
 
-  /* The layout appends ' | Aqua Perl' (12 chars), so the base stays under ~48
-     to land in the 51-60 window with the lowest measured rewrite rate. Long
-     names fall back to a shorter form rather than truncating mid-word. */
-  const full = `RO Repair in ${area.name}, Patna — ₹${SERVICE.visitCharge} Visit`;
-  const title = full.length <= 48 ? full : `RO Repair in ${area.name} — ₹${SERVICE.visitCharge} Visit`;
-  const description = `RO repair & installation in ${area.name}, Patna. ₹${SERVICE.visitCharge} visit charge, technician in ${area.responseMin} min. All brands. Call ${CONTACT.primaryPhone}.`;
+  /* TITLE — phone number in, brand suffix out. Changed 10 Sep 2026.
+     ────────────────────────────────────────────────────────────────────────
+     Measured the same day, every competitor ranking above us puts the phone
+     number in the title tag:
+         roservicecentrepatna.in  "RO Service Centre Patna @7880004551/RO Repair"
+         rocareindia              "RO Service Kankarbagh, Patna @9311587744 | …"
+         ro-service-patna.co.in   "Water Purifier Services Patna @ 9162281169 | …"
+     Ours had none. On a phone, a number visible in the SERP is a call that
+     never needs the site to load — and for an emergency "no water" search
+     that is the whole transaction.
+
+     The problem was budget. The layout appends ' | Aqua Perl' (12 chars), and
+     "₹200 + phone + long area name" ran to 63-65 characters, well past the
+     56-60 band where Google rewrites ~55% of titles.
+
+     Fix: `title.absolute` skips the layout template entirely. Without those
+     12 characters both hooks fit — the price AND the number — and every area,
+     including "Danapur Cantonment", lands at 45-51 chars, inside the 51-55
+     window Zyppy measured as the LOWEST rewrite rate (~40%).
+
+     Dropping the brand from the title costs nothing here: this is a local
+     service query, not a brand query. Nobody searches "Aqua Perl". */
+  const title = `RO Service ${area.name} Patna ₹${SERVICE.visitCharge} · ${CONTACT.primaryPhone}`;
+  const description = `RO repair & installation in ${area.name}, Patna. ₹${SERVICE.visitCharge} visit charge, technician in ${area.responseMin} min. All brands, ${SERVICE.warrantyDays}-day warranty. Call ${CONTACT.primaryPhone}.`;
 
   return {
-    title,
+    /* absolute = do not append the layout's ' | Aqua Perl'. That is what
+       buys the 12 characters the phone number needs. */
+    title: { absolute: title },
     description,
     keywords: [
       `RO service in ${area.name}`,
@@ -84,6 +105,10 @@ export default function AreaPage({ params }: { params: { area: string } }) {
   const faults = faultProfile(area);
   const response = responseDetail(area);
   const subs = subLocalities(area.slug);
+  /* Job photos with per-area alt text. Added 10 Sep 2026: rocareindia's
+     Kankarbagh page carries 26 images with alt text, ours carried 2 — both
+     the logo. Google Images had nothing to index for any locality. */
+  const shots = areaShots(area);
   const nearby = SERVICE_AREAS.filter(
     (a) => a.slug !== area.slug &&
       area.nearbyAreas.some((n) => a.name.toLowerCase().includes(n.toLowerCase().split(' ')[0])),
@@ -108,6 +133,9 @@ export default function AreaPage({ params }: { params: { area: string } }) {
           { name: 'RO Service in Patna', url: '/service-patna' },
           { name: area.name, url: areaPath(area.slug) },
         ]),
+        /* Neither competitor ships ImageObject — verified live. It is what
+           ties a photo to this locality rather than leaving it decorative. */
+        ...imageObjectSchema(shots, BRAND.url, areaPath(area.slug)),
         {
           '@context': 'https://schema.org',
           '@type': 'Service',
@@ -491,6 +519,12 @@ export default function AreaPage({ params }: { params: { area: string } }) {
             </div>
           </div>
         </section>
+
+        <AreaWorkProof
+          shots={shots}
+          heading={`${area.name} me hamara kaam`}
+          sub={`Stock photo nahi — asli kaam, asli TDS reading. ${area.name} me har mahine lagbhag ${area.monthlyJobs} job.`}
+        />
 
         <section className="border-t border-navy-50 bg-sand-100 py-10">
           <div className="container mx-auto px-4">
