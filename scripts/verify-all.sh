@@ -5,7 +5,7 @@ set -u
 cd /home/user/aquanexa
 
 TOTAL_P=0; TOTAL_F=0
-for s in verify-forms-and-features verify-area-depth verify-new-areas \
+for s in verify-robots-media verify-forms-and-features verify-area-depth verify-new-areas \
          verify-service-intent verify-seo-packages verify-ux-upgrade \
          verify-seo-indexing verify-product-admin verify-titles-and-schema \
          verify-brand-rename verify-admin-full verify-password-features; do
