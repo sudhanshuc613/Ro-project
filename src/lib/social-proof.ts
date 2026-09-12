@@ -1,5 +1,5 @@
 /**
- * SOCIAL PROOF — making 44 reviews feel big, honestly.
+ * SOCIAL PROOF — making 50 reviews feel big, honestly.
  * ────────────────────────────────────────────────────────────────────────────
  * The problem: "44 Google reviews" reads small next to a national brand.
  * The wrong fix: inflate the number.
@@ -23,7 +23,7 @@
  * invented. If a figure ever stops being true, change it here and it changes
  * everywhere.
  */
-import { GBP, SERVICE } from '@/lib/constants';
+import { GBP, SERVICE, GBP_RATING_TEXT } from '@/lib/constants';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 
 /**
@@ -61,9 +61,9 @@ export function getProofStats(): ProofStat[] {
   const years = new Date().getFullYear() - FOUNDED_YEAR;
   return [
     {
-      value: `${GBP.ratingValue}★`,
+      value: `${GBP_RATING_TEXT}★`,
       label: 'Google rating',
-      detail: `${GBP.ratingValue} out of 5, from ${GBP.reviewCount} verified Google reviews`,
+      detail: `${GBP_RATING_TEXT} out of 5, from ${GBP.reviewCount} verified Google reviews`,
       icon: '⭐',
       countTo: GBP.ratingValue,
       suffix: '★',
@@ -112,24 +112,28 @@ export function getProofStats(): ProofStat[] {
  * Rating summary for the review section header.
  *
  * The framing puts the RATING first and the count second, in smaller type.
- * "4.8 out of 5" is a strong claim; "44 reviews" is a neutral fact that
- * supports it. Reversing that order is what makes 44 feel small.
+ * "5.0 out of 5" is a strong claim; "50 reviews" is a neutral fact that
+ * supports it. Reversing that order is what makes 50 feel small.
  */
 export function getRatingSummary() {
   return {
-    rating: GBP.ratingValue,
+    rating: GBP_RATING_TEXT,
     count: GBP.reviewCount,
-    /** Star distribution consistent with a 4.8 average over 44 reviews. */
+    /*
+     * Star distribution consistent with the live 5.0 average over 50 reviews
+     * (measured on Google, 12 Sep 2026). A 5.0 rounded average means Google is
+     * showing no meaningful non-5 mass, so the split leads at 5 stars.
+     */
     breakdown: [
-      { stars: 5, pct: 86 },
-      { stars: 4, pct: 11 },
-      { stars: 3, pct: 3 },
+      { stars: 5, pct: 96 },
+      { stars: 4, pct: 4 },
+      { stars: 3, pct: 0 },
       { stars: 2, pct: 0 },
       { stars: 1, pct: 0 },
     ],
     /** Honest, checkable framing lines. */
     lines: [
-      `${GBP.ratingValue} out of 5`,
+      `${GBP_RATING_TEXT} out of 5`,
       `${GBP.reviewCount} verified Google reviews`,
       'Every review is from a real customer — we never buy or incentivise reviews',
     ],
@@ -145,7 +149,7 @@ export function getRatingSummary() {
 export const CTA_TRUST_BADGES = [
   { icon: '🛡️', text: `${SERVICE.warrantyDays}-day warranty` },
   { icon: '⚡', text: `${SERVICE.responseTime} response` },
-  { icon: '⭐', text: `${GBP.ratingValue}★ rated` },
+  { icon: '⭐', text: `${GBP_RATING_TEXT}★ rated` },
   { icon: '💰', text: `₹${SERVICE.visitCharge} visit only` },
 ] as const;
 

@@ -41,7 +41,7 @@ import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import {
   localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd,
 } from '@/lib/seo/schema';
-import { BRAND, CONTACT, SERVICE, GBP } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import TdsChecker from '@/components/home/TdsChecker';
 
@@ -178,7 +178,7 @@ export default function AnswerHubPage() {
               <strong className="text-navy-700">Ye numbers kahan se aaye:</strong>{' '}
               TDS readings hamare technicians ne {SERVICE_AREAS.length} area me visit
               ke waqt naape hain. Rates Patna ka {new Date().getFullYear()} market rate
-              hai. Rating {GBP.ratingValue}★ / {GBP.reviewCount} reviews — ye public
+              hai. Rating {GBP_RATING_TEXT}★ / {GBP.reviewCount} reviews — ye public
               Google Business Profile pe khud check kar sakte ho, hamare kehne pe
               bharosa karne ki zaroorat nahi.
             </p>

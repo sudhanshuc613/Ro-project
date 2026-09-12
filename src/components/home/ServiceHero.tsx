@@ -32,7 +32,7 @@
  */
 import Image from 'next/image';
 import Link from 'next/link';
-import { CONTACT, SERVICE, GBP } from '@/lib/constants';
+import { CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 
 const STATS = [
   { n: '10+', l: 'Years in Patna' },
@@ -79,7 +79,7 @@ export default function ServiceHero() {
             </span>
             {/* Gold use 1 of 2 */}
             <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-50 px-3 py-1.5 text-[13px] font-bold text-gold-700 ring-1 ring-gold-200">
-              ⭐ {GBP.ratingValue} · {GBP.reviewCount} Google reviews
+              ⭐ {GBP_RATING_TEXT} · {GBP.reviewCount} Google reviews
             </span>
           </div>
 

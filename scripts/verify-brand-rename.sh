@@ -63,12 +63,16 @@ chkge "Google Maps link"         "$(grep -o 'google.com/maps' /tmp/contact.html 
 
 echo
 echo "════ 3) ASLI review count har jagah ════"
-chk   "fake 312 hata"        "$(grep -o '\"reviewCount\":\"312\"' /tmp/home.html | wc -l)" "0"
-chkge "schema mein asli 44"  "$(grep -o '\"reviewCount\":\"44\"' /tmp/home.html | wc -l)" "1"
-chkge "schema rating 4.8"    "$(grep -o '\"ratingValue\":\"4.8\"' /tmp/home.html | wc -l)" "1"
+RC=$(grep -oP 'reviewCount: \K[0-9]+' src/lib/constants.ts | head -1)
+# GBP_RATING_TEXT = ratingValue.toFixed(1), isliye test bhi wahi format bane.
+RV=$(grep -oP 'ratingValue: \K[0-9.]+' src/lib/constants.ts | head -1 \
+      | python3 -c 'import sys;print(f"{float(sys.stdin.read().strip()):.1f}")')
+chk   "fake 312 hata"          "$(grep -o '\"reviewCount\":\"312\"' /tmp/home.html | wc -l)" "0"
+chkge "schema mein asli $RC"   "$(grep -o "\"reviewCount\":\"$RC\"" /tmp/home.html | wc -l)" "1"
+chkge "schema rating $RV"      "$(grep -o "\"ratingValue\":\"$RV\"" /tmp/home.html | wc -l)" "1"
 chk   "fake '600+ repairs'"  "$(grep -o '600+ repairs' /tmp/home.html | wc -l)" "0"
 chk   "fake '4.9' badge"     "$(grep -oE '4\.9 · 600' /tmp/home.html | wc -l)" "0"
-chkge "hero pe 44 reviews"   "$(grep -o '44' /tmp/home.html | wc -l)" "1"
+chkge "hero pe $RC reviews"  "$(grep -o "$RC" /tmp/home.html | wc -l)" "1"
 
 echo
 echo "════ 4) Fake social links gaye ════"

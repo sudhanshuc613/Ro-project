@@ -59,11 +59,12 @@ hasf "CountUp component"             "IntersectionObserver" src/components/ui/Co
 echo
 echo "════ 2) 🔴 Review count IMAANDAR hai (fake nahi) ════"
 # The visible count and the schema count must both be the real GBP number.
+RC=$(grep -oP 'reviewCount: \K[0-9]+' src/lib/constants.ts | head -1)
 SCHEMA_COUNT=$(echo "$HOME_HTML" | grep -oP '"reviewCount":"?\d+' | grep -oP '\d+' | head -1)
-chk "schema reviewCount = 44 (asli)" "${SCHEMA_COUNT:-none}" "44"
+chk "schema reviewCount = $RC (asli, constants se)" "${SCHEMA_COUNT:-none}" "$RC"
 hasnt "koi fake 300 count nahi"      "$HOME_HTML" '"reviewCount":"300"'
 hasnt "koi fake 312 count nahi"      "$HOME_HTML" '"reviewCount":"312"'
-has "44 verified likha hai"          "$HOME_HTML" "44"
+has "$RC verified likha hai"         "$HOME_HTML" "$RC"
 has "hum review nahi kharidte line"  "$HOME_HTML" "review kharidte"
 
 echo

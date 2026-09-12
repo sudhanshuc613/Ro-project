@@ -137,7 +137,7 @@ export default async function HomePage() {
 
         {/*
           2 — PROOF STATS, immediately under the hero.
-          The site has 44 genuine reviews at 4.8★, which reads small on its own.
+          The site has 50 genuine reviews at 5.0★ (live-measured 12 Sep 2026).
           Inflating that count is off the table — it feeds aggregateRating, and
           Google's July 2026 review-snippet rules make fake counts a manual-action
           offence that strips structured data site-wide. So instead the rating is

@@ -41,7 +41,7 @@ export const AUTHOR: Author = {
     'Kent, Aquaguard, Pureit, Livpure, AO Smith sabhi brands par kaam',
     'Domestic RO se lekar 1000 LPH commercial plant tak',
     '55 Patna localities me service network',
-    'Google par 4.8★ rating, 44 verified reviews',
+    'Google par 5.0★ rating, 50 verified reviews',
   ],
   yearsExperience: new Date().getFullYear() - 2019,
 };

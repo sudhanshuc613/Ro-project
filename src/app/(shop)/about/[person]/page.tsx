@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { AUTHOR, getPosts } from '@/lib/seo/blog-data';
 import { personSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
-import { CONTACT, SERVICE, GBP } from '@/lib/constants';
+import { CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { REPAIRS_COMPLETED, FOUNDED_YEAR } from '@/lib/social-proof';
 
 export const revalidate = 86400;
@@ -92,7 +92,7 @@ export default function AuthorPage({ params }: { params: { person: string } }) {
               { v: `${AUTHOR.yearsExperience}+`, l: 'Saal ka experience' },
               { v: `${REPAIRS_COMPLETED.toLocaleString('en-IN')}+`, l: 'Units theek kiye' },
               { v: String(SERVICE_AREAS.length), l: 'Patna areas' },
-              { v: `${GBP.ratingValue}★`, l: `${GBP.reviewCount} reviews` },
+              { v: `${GBP_RATING_TEXT}★`, l: `${GBP.reviewCount} reviews` },
             ].map((s) => (
               <div key={s.l} className="rounded-xl bg-sand-200 p-4 text-center">
                 <p className="font-display text-2xl font-extrabold text-navy-700">{s.v}</p>

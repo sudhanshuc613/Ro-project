@@ -6,7 +6,7 @@
  *
  * Rendered via <script type="application/ld+json"> in each page's Server Component.
  */
-import { BRAND, CONTACT, SERVICE, GBP, SOCIAL } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE, GBP, SOCIAL, GBP_RATING_TEXT } from '@/lib/constants';
 
 type Json = Record<string, unknown>;
 
@@ -110,7 +110,7 @@ export function localBusinessSchema(area?: {
     // aur saare rich results band ho jaate hain. GBP pe count badle to wahin badlo.
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: String(GBP.ratingValue),
+      ratingValue: GBP_RATING_TEXT,
       reviewCount: String(GBP.reviewCount),
       bestRating: '5',
     },
@@ -352,7 +352,7 @@ export function reviewSchema(
     },
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: String(GBP.ratingValue),
+      ratingValue: GBP_RATING_TEXT,
       reviewCount: String(GBP.reviewCount),
       bestRating: '5',
     },

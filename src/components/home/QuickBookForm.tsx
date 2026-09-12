@@ -22,7 +22,7 @@
  * are already in place. No parallel code path to keep in sync.
  */
 import { useMemo, useState } from 'react';
-import { CONTACT, ISSUE_CATEGORIES, SERVICE } from '@/lib/constants';
+import { ANALYTICS, CONTACT, ISSUE_CATEGORIES, SERVICE } from '@/lib/constants';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import TrustBadges from '@/components/ui/TrustBadges';
 import AreaPicker from '@/components/home/AreaPicker';
@@ -98,10 +98,18 @@ export default function QuickBookForm({
 
       // GA4 — same event name the rest of the site uses for lead conversion.
       if (typeof window !== 'undefined' && typeof (window as never as { gtag?: unknown }).gtag === 'function') {
-        (window as unknown as { gtag: (...a: unknown[]) => void }).gtag('event', 'generate_lead', {
-          method: 'quick_book',
-          area: area.name,
-        });
+        const g = (window as unknown as { gtag: (...a: unknown[]) => void }).gtag;
+        g('event', 'generate_lead', { method: 'quick_book', area: area.name });
+        /* Google Ads conversion. Separate from the GA4 event above — a GA4
+           event does not reach Smart Bidding, which is why the ad budget was
+           being spent with no signal. Fires only once the IDs are filled in. */
+        if (/^AW-\d{9,}$/i.test(ANALYTICS.adsId) && ANALYTICS.adsFormLabel) {
+          g('event', 'conversion', {
+            send_to: `${ANALYTICS.adsId}/${ANALYTICS.adsFormLabel}`,
+            value: ANALYTICS.conversionValue,
+            currency: 'INR',
+          });
+        }
       }
     } catch {
       setError(`Network problem. Seedha call karo: ${CONTACT.primaryPhone}`);

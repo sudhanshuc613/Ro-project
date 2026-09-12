@@ -167,8 +167,13 @@ for a in kankarbagh marufganj; do
   hasf "$a AggregateRating"     /tmp/ad_$a.html 'AggregateRating'
   hasf "$a Service @id"         /tmp/ad_$a.html '/#service'
 done
+# Review count/rating ab constants.ts se DERIVE hota hai, hardcode nahi.
+# 12 Sep 2026: site 44/4.8 bol rahi thi jabki Google par 50/5.0 tha — test
+# hardcoded 44 pass kar raha tha, isliye bug pakda nahi gaya. Ab nahi hoga.
+RC=$(grep -oP 'reviewCount: \K[0-9]+' src/lib/constants.ts | head -1)
+RV=$(grep -oP 'ratingValue: \K[0-9.]+' src/lib/constants.ts | head -1)
 # The count must stay real. Competitor ships reviewCount 187134 on this query.
-hasf   "real reviewCount 44"    /tmp/ad_kankarbagh.html '"reviewCount":"44"'
+hasf   "real reviewCount $RC"   /tmp/ad_kankarbagh.html "\"reviewCount\":\"$RC\""
 hasntf "no inflated reviewCount" /tmp/ad_kankarbagh.html '187134'
 
 echo

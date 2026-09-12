@@ -11,7 +11,7 @@
  *  • Call / WhatsApp escape hatches always visible for users who won't fill forms.
  */
 import { useState, useTransition } from 'react';
-import { CONTACT, ISSUE_CATEGORIES, TIME_SLOTS, SERVICE } from '@/lib/constants';
+import {ANALYTICS, CONTACT, ISSUE_CATEGORIES, TIME_SLOTS, SERVICE } from '@/lib/constants';
 
 type Status = 'idle' | 'checking' | 'serviceable' | 'not-serviceable';
 
@@ -98,6 +98,13 @@ export default function ServiceBookingForm() {
         setForm(INITIAL);
         setPinStatus('idle');
           window.gtag?.('event', 'generate_lead', { value: SERVICE.visitCharge, currency: 'INR' });
+          if (/^AW-\d{9,}$/i.test(ANALYTICS.adsId) && ANALYTICS.adsFormLabel) {
+            window.gtag?.('event', 'conversion', {
+              send_to: `${ANALYTICS.adsId}/${ANALYTICS.adsFormLabel}`,
+              value: ANALYTICS.conversionValue,
+              currency: 'INR',
+            });
+          }
       } catch (err) {
         setSubmitError(err instanceof Error ? err.message : 'Could not submit. Please call us.');
       }

@@ -27,7 +27,7 @@ import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
 import AreaWorkProof, { areaShots, imageObjectSchema } from '@/components/home/AreaWorkProof';
-import { BRAND, CONTACT, SERVICE, GBP } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { tdsVerdict, costForecast, faultProfile, responseDetail } from '@/lib/seo/area-depth';
 
@@ -155,7 +155,7 @@ export default function AreaPage({ params }: { params: { area: string } }) {
              would take out all 173 pages, not just this one. */
           aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: String(GBP.ratingValue),
+            ratingValue: GBP_RATING_TEXT,
             reviewCount: String(GBP.reviewCount),
             bestRating: '5',
             worstRating: '1',

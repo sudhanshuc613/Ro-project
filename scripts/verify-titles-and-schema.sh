@@ -61,7 +61,8 @@ chkge "Review objects"        "$(grep -o '\"@type\":\"Review\"' /tmp/h.html | wc
 chkge "Rating objects"        "$(grep -o '\"@type\":\"Rating\"' /tmp/h.html | wc -l)" "3"
 chkge "Person (reviewers)"    "$(grep -o '\"@type\":\"Person\"' /tmp/h.html | wc -l)" "3"
 chkge "AggregateRating"       "$(grep -o 'AggregateRating' /tmp/h.html | wc -l)" "1"
-chk   "review count = real 44" "$(grep -o '\"reviewCount\":\"44\"' /tmp/h.html | wc -l)" "2"
+RC=$(grep -oP 'reviewCount: \K[0-9]+' src/lib/constants.ts | head -1)
+chk   "review count = real $RC" "$(grep -o "\"reviewCount\":\"$RC\"" /tmp/h.html | wc -l)" "2"
 chk   "fake 312 gone"          "$(grep -o '312' /tmp/h.html | wc -l)" "0"
 
 echo

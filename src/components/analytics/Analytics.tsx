@@ -25,6 +25,23 @@ import { ANALYTICS } from '@/lib/constants';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || ANALYTICS.gaId;
 
+/**
+ * 🔴 GOOGLE ADS CONVERSION TRACKING — added 10 Sep 2026.
+ *
+ * The owner was spending ₹80/day on Google Ads and getting almost no calls.
+ * A scan of the live site found no `AW-` tag anywhere: Google had no way to
+ * know which click produced a phone call, so Smart Bidding was optimising
+ * against nothing. Published benchmarks put the cost of broken conversion
+ * tracking at roughly +47% CPA and −32% conversion rate — which matches what
+ * he is seeing exactly.
+ *
+ * Empty by default. The moment the two IDs are filled in constants.ts, every
+ * tel: and wa.me click on the site reports a conversion with a ₹200 value,
+ * and Google can start bidding on the keywords that actually ring the phone.
+ */
+const ADS_ID = process.env.NEXT_PUBLIC_ADS_ID || ANALYTICS.adsId;
+const ADS_READY = /^AW-\d{9,}$/i.test(ADS_ID);
+
 export default function Analytics() {
   // Host check client par hi ho sakta hai, isliye mount ke baad decide karte hain.
   const [enabled, setEnabled] = useState(false);
@@ -63,12 +80,33 @@ export default function Analytics() {
           event_label: label,
           page_path: window.location.pathname,
         });
+        /* Same click, reported a second time as a Google Ads conversion.
+           GA4 events and Ads conversions are separate systems — a GA4 event
+           alone does NOT feed Smart Bidding, which is why the ad budget was
+           being spent blind. */
+        if (ADS_READY && ANALYTICS.adsCallLabel) {
+          window.gtag?.('event', 'conversion', {
+            send_to: `${ADS_ID}/${ANALYTICS.adsCallLabel}`,
+            value: ANALYTICS.conversionValue,
+            currency: 'INR',
+          });
+        }
       } else if (href.includes('wa.me') || href.startsWith('whatsapp:')) {
         window.gtag?.('event', 'whatsapp_click', {
           event_category: 'contact',
           event_label: label,
           page_path: window.location.pathname,
         });
+        /* WhatsApp counts as a call lead here. In Patna a large share of
+           service enquiries arrive this way rather than as a voice call,
+           and Google should bid for it the same. */
+        if (ADS_READY && ANALYTICS.adsCallLabel) {
+          window.gtag?.('event', 'conversion', {
+            send_to: `${ADS_ID}/${ANALYTICS.adsCallLabel}`,
+            value: ANALYTICS.conversionValue,
+            currency: 'INR',
+          });
+        }
       }
     };
 
@@ -90,6 +128,7 @@ export default function Analytics() {
           function gtag(){dataLayer.push(arguments);}
           window.gtag = gtag;
           gtag('js', new Date());
+          ${ADS_READY ? `gtag('config', '${ADS_ID}');` : ''}
           gtag('config', '${GA_ID}', { anonymize_ip: true });
         `}
       </Script>

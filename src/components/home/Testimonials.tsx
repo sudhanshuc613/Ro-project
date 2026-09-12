@@ -1,4 +1,4 @@
-import { GBP } from '@/lib/constants';
+import { GBP, GBP_RATING_TEXT } from '@/lib/constants';
 
 /** Exported so the homepage can feed these into Review schema.
     These are real customer reviews — never add fabricated ones here,
@@ -34,7 +34,7 @@ export default function Testimonials() {
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <h2 className="font-display text-3xl font-extrabold text-navy-700">What Our Customers Say</h2>
           <p className="mt-2 text-muted">
-            {GBP.ratingValue}★ average from {GBP.reviewCount} Google reviews
+            {GBP_RATING_TEXT}★ average from {GBP.reviewCount} Google reviews
           </p>
         </div>
 

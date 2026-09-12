@@ -113,14 +113,94 @@ export const ANALYTICS = {
   /** In domains par hi GA chalega — localhost aur Vercel preview ka
    *  data asli report kharab na kare isliye. */
   allowedHosts: ['rokadoctor.in', 'www.rokadoctor.in'],
+
+  /**
+   * 🔴 GOOGLE ADS CONVERSION TRACKING — abhi KHALI hai, bharna zaroori hai.
+   * ═══════════════════════════════════════════════════════════════════════
+   *
+   * KYUN YE SABSE ZAROORI HAI
+   * Owner ₹80/day Google Ads pe kharch kar raha hai aur call nahi aa rahe.
+   * Site scan (10 Sep 2026) me koi `AW-` tag nahi mila — matlab Google ko
+   * pata hi nahi ki kaunse click se call aayi.
+   *
+   * Iska asar sirf reporting pe nahi padta. Google ka Smart Bidding
+   * conversion data ko hi sach maanta hai. Conversion signal na mile to:
+   *   • algorithm ko pata nahi chalta kaunsa keyword kaam kar raha hai
+   *   • budget har keyword pe barabar bat jaata hai, achhe-bure dono pe
+   *   • research: tracking tootne se CPA 47% tak badh jaata hai
+   *     aur conversion rate 32% gir jaata hai
+   *
+   * Matlab bina iske ₹80 ho ya ₹800 — paisa andhere me ja raha hai.
+   *
+   * 🔴 KAISE BHARNA HAI (10 minute, ek baar ka kaam)
+   * ─────────────────────────────────────────────────
+   * 1. ads.google.com → Tools (🔧) → Conversions → + New conversion action
+   * 2. "Website" chuno → rokadoctor.in daalo → Scan
+   * 3. "Add a conversion action manually" pe click karo
+   * 4. Do banao:
+   *
+   *    Conversion 1:
+   *      Goal        : Contact → Phone call leads
+   *      Name        : Phone Call Click
+   *      Value       : Use a value → ₹200   (tera visit charge)
+   *      Count       : One
+   *
+   *    Conversion 2:
+   *      Goal        : Submit lead form
+   *      Name        : Booking Form
+   *      Value       : Use a value → ₹200
+   *      Count       : One
+   *
+   * 5. Har ek ka "Tag setup" → "Use Google Tag Manager" ke neeche
+   *    Conversion ID (AW-XXXXXXXXX) aur Label dikhega — dono copy karo
+   * 6. Neeche bhar do, save karo, push karo
+   *
+   * Ye ID public hoti hai (har visitor page source me dekh sakta hai),
+   * isliye code me rakhna bilkul safe hai — GA ID ki tarah.
+   */
+  adsId: '',              // 'AW-XXXXXXXXX'
+  adsCallLabel: '',       // phone call conversion ka label
+  adsFormLabel: '',       // booking form conversion ka label
+  /** Ek lead ki keemat. Visit charge se match rakha hai. */
+  conversionValue: 200,
 } as const;
 
 export const GBP = {
   /** GBP par jo naam likha hai — hu-ba-hu. */
   name: 'Aqua Perl',
-  ratingValue: 4.8,
-  reviewCount: 44,
+
+  /*
+   * ASLI NUMBERS — 12 Sep 2026 ko Google Search se DO BAAR live measure kiye.
+   *
+   *   Query "ro service patna"                 → Aqua Perl | Ro Service Centre  5.0(50)
+   *   Query "aqua perl ro service centre patna" → Aqua Perl | Ro Service Centre  5.0(50)
+   *
+   * Pehle yahan 4.8 / 44 likha tha. Wo purana data tha — GBP par 6 naye review
+   * aa chuke the aur average 4.8 se 5.0 ho gaya tha, lekin site purana hi bol
+   * rahi thi. Yaani site apne aap ko ASLI se KAM bata rahi thi.
+   *
+   * Rule wahi hai jo hamesha se hai: number kabhi badhaya nahi jaata, sirf
+   * Google par jo dikh raha hai wahi likha jaata hai. Aaj wo 5.0 aur 50 hai.
+   * Jab count badhe to sirf yahan badalna — poore site par apne aap chala
+   * jaata hai (schema, hero, review section, admin tracker sab yahi padhte hain).
+   */
+  ratingValue: 5.0,
+  reviewCount: 50,
 } as const;
+
+/**
+ * Rating ka DISPLAY string — "5.0", "4.8" wagairah.
+ *
+ * Kyun alag: JavaScript me `5.0` ek number hai aur number ka `.0` gir jata hai.
+ * `String(5.0)` deta hai `"5"`, `5.0` na ki `"5.0"`. Iska matlab jaise hi rating
+ * 4.8 se badhkar 5.0 hui, poori site par "⭐ 5 · 50 Google reviews" dikhne lagta
+ * — jo adhoora lagta hai aur schema me bhi `"ratingValue":"5"` jaata hai.
+ *
+ * `toFixed(1)` se hamesha ek decimal rehta hai aur ye `ratingValue` se apne aap
+ * derive hota hai, isliye dono kabhi alag nahi ho sakte. Rating badle to sirf
+ * upar wali line badalni hai.
+ */
+export const GBP_RATING_TEXT = GBP.ratingValue.toFixed(1);
 
 export const SERVICE = {
   visitCharge: 200,

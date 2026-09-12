@@ -25,7 +25,7 @@
  * in schema against 44 real reviews; that is exactly the kind of thing Google's
  * July 2026 review-spam update issues site-wide manual actions for.
  */
-import { GBP } from '@/lib/constants';
+import { GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { reviewProgress, REVIEW_TARGET } from '@/lib/reviews/review-request';
 
 export default function ReviewTracker({
@@ -56,7 +56,7 @@ export default function ReviewTracker({
             <span className="ml-1 text-lg font-bold text-muted">/ {REVIEW_TARGET}</span>
           </p>
           <p className="mt-1 text-xs text-muted">
-            {GBP.ratingValue}★ rating · {p.remaining} aur chahiye
+            {GBP_RATING_TEXT}★ rating · {p.remaining} aur chahiye
           </p>
         </div>
         <span className="text-3xl" aria-hidden="true">⭐</span>
