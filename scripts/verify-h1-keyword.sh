@@ -114,6 +114,11 @@ done <<'ROWS'
 /ro-amc-patna|RO AMC in Patna
 /ro-installation-patna|RO Installation in Patna
 /ro-services-patna|RO Services in Patna
+/ro-service-patna/kankarbagh|RO Service in Kankarbagh, Patna
+/ro-service-patna/boring-road|RO Service in Boring Road, Patna
+/ro-service-patna/rajendra-nagar|RO Service in Rajendra Nagar, Patna
+/ro-service-patna/danapur|RO Service in Danapur, Patna
+/ro-service-patna/machhuatoli|RO Service in Machhuatoli, Patna
 ROWS
 
 echo

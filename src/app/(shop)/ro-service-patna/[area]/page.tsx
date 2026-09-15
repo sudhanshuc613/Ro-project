@@ -208,8 +208,26 @@ export default function AreaPage({ params }: { params: { area: string } }) {
               <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold ring-1 ring-white/20">
                 📍 {area.name}, Patna · {area.pincodes.join(' / ')}
               </p>
+              {/*
+                H1 — 12 Sep 2026: yahan bhi wahi glued-word bug tha jo homepage
+                par mila tha.
+
+                "RO Service in Kankarbagh, Patna" ke turant baad ek <span> me
+                "Visit Charge Only ₹200" aata tha, beech me koi space nahi.
+                Browser me theek dikhta hai kyunki span `block` hai, par
+                Googlebot text jod kar padhta hai:
+
+                    "RO Service in Kankarbagh, PatnaVisit Charge Only ₹200"
+                                               ^^^^^^^^^^^ chipak gaya
+
+                Matlab 73 area page ka H1 "…, Patna" par khatam nahi ho raha
+                tha — exact phrase "RO Service in {Area}, Patna" toot raha tha.
+
+                `{' '}` ek asli space deta hai jo JSX trim nahi karta.
+                scripts/verify-h1-keyword.sh ab ye pakadta hai.
+              */}
               <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight md:text-4xl">
-                RO Service in {area.name}, Patna
+                RO Service in {area.name}, Patna{' '}
                 <span className="mt-1 block text-xl text-aqua-300 md:text-2xl">
                   Visit Charge Only ₹{SERVICE.visitCharge}
                 </span>
