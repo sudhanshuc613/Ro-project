@@ -83,14 +83,46 @@ export default function ServiceHero() {
             </span>
           </div>
 
-          {/* The "Now in Patna" moment — city name is the loudest element,
-              exactly like the reference creative, but as a real <h1>. */}
+          {/*
+            H1 — 12 Sep 2026 ko theek kiya.
+
+            PEHLE YE THA:
+              <span>RO Service &amp; Repair</span>
+              <span>Now in <span>Patna</span></span>
+
+            Do <span> ke beech koi space nahi tha, isliye browser aur Googlebot
+            dono ne isko ek shabd ki tarah joda:
+
+                "RO Service & RepairNow in Patna"
+                              ^^^^^^^^^^ — "Repair" aur "Now" chipak gaye
+
+            Nateeja: homepage ke H1 me "RO Service in Patna" phrase THA HI NAHI.
+            Site ka sabse bada ranking signal ek typo ki wajah se bekaar tha.
+
+            Ab H1 me exact target phrase hai — "RO Service in Patna" — aur
+            "Now" design line neeche alag chali gayi hai, jahan wo SEO ko
+            nuksaan nahi karti.
+          */}
           <h1 className="mt-5 font-display font-extrabold leading-[0.95] tracking-[-0.03em] text-navy-700">
+            {/*
+              NOTE — do NOT remove the {' '} below.
+
+              Ye do <span> alag-alag block hain, par Google inka text jod kar
+              padhta hai. Agar beech me space nahi hua to phrase chipak jata
+              hai: pehle "RepairNow in Patna" tha, phir fix karte waqt
+              "Repair inPatna" ho gaya. Dono baar exact keyword toot gaya.
+
+              `{' '}` ek asli space character render karta hai jo JSX
+              whitespace-trim se nahi girta. Iske saath H1 ka plain text
+              banta hai: "RO Service & Repair in Patna" — jisme target
+              phrase "RO Service ... in Patna" poora maujood hai.
+
+              Isko badalne se pehle `scripts/verify-h1-keyword.sh` chala lena.
+            */}
             <span className="block text-[clamp(1.4rem,1.1rem+1.4vw,2rem)] font-bold text-muted">
-              RO Service &amp; Repair
+              RO Service &amp; Repair in{' '}
             </span>
             <span className="mt-1 block text-[clamp(3.2rem,2.2rem+5.4vw,6rem)]">
-              Now in{' '}
               <span className="relative inline-block">
                 <span className="relative z-10">Patna</span>
                 {/* Hand-drawn underline — the detail that separates designed

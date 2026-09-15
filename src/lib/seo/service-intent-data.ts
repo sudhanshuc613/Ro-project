@@ -693,6 +693,111 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     serviceType: 'Commercial RO Plant Service',
     related: ['ro-amc-patna', 'ro-installation-patna', 'ro-membrane-replacement-patna'],
   },
+  /* ═════════════════════════════════════════════════════════════════════
+     7. RO SERVICE IN PATNA — the head term itself
+     ─────────────────────────────────────────────────────────────────────
+     12 Sep 2026. Owner searched "ro service in patna" and we were nowhere in
+     the top 30. Measured reason: the site had a page for every JOB TYPE
+     (repair, AMC, installation, filter, membrane, commercial) and a page for
+     every AREA (73 of them), but NOT ONE page whose single purpose was the
+     plain head term "RO Service in Patna".
+
+     The homepage was supposed to carry it and its <title> did. But its <h1>
+     rendered as "RO Service & RepairNow in Patna" — two spans with no space
+     between them — so the exact phrase was missing from the strongest
+     on-page signal the page has.
+
+     Meanwhile the live top 10 for that query is JustDial, a Facebook page,
+     OneDios, Service On Wheel and Sulekha (all directories) plus three thin
+     local sites of 571, 614 and 1,579 words. The gap was never content
+     depth — the homepage alone has 4,642 words. The gap was that no single
+     URL was pointed at the phrase. This page is that URL.
+     ═════════════════════════════════════════════════════════════════════ */
+  {
+    slug: 'ro-service-in-patna',
+    path: '/ro-service-in-patna',
+    footerLabel: 'RO Service Patna',
+    title: `RO Service in Patna — ₹${V} Visit, All Brands`,
+    h1: 'RO Service in Patna',
+    description:
+      `RO service in Patna at ₹${V} visit charge — all brands, 90-minute response, 30-day warranty on every repair. Kankarbagh to Danapur. Call 8969821440.`,
+    keywords: [
+      'ro service in patna', 'ro service patna', 'ro servicing in patna',
+      'water purifier service in patna', 'ro service near me patna',
+      'ro service centre in patna', 'ro service center patna',
+      'best ro service in patna', 'ro water purifier service in patna',
+      'ro service charge in patna', 'ro service cost patna',
+      'ro technician in patna', 'ro service home visit patna',
+    ],
+    lede: `₹${V} visit charge · 90-minute response · every brand · pay after the job`,
+    intro: [
+      'This is the plain answer page for RO service in Patna: what it costs, what is actually done, how long it takes, and what to check before you pay anybody — us or the next technician.',
+      'Most searches for RO service in Patna land on directory listings where twenty numbers are shown and none of them belongs to the person who will arrive at your door. The number there is usually a call centre that forwards the job to whichever freelancer is free, at whatever rate they decide on the spot. That is why the same service costs one customer ₹400 and the next ₹900 on the same street.',
+      `We work differently because we are small and local. The visit charge is ₹${V}, fixed, and you are told it before the technician leaves. Parts are quoted from a written rate list before anything is opened, and nothing is replaced without your permission. Payment happens after the work is done and the water is running.`,
+      'If the machine cannot be fixed the same day we say so on the visit, instead of fitting a temporary part and returning next week for a second charge.',
+    ],
+    steps: [
+      { title: 'You call, we confirm the fault and the address', minutes: 2,
+        detail: 'Two minutes on the phone. What the machine is doing, which brand, which area of Patna. That decides which technician goes and what spares go in the bag, so common repairs finish on the first visit instead of needing a parts trip.' },
+      { title: 'Technician reaches within 90 minutes', minutes: 90,
+        detail: 'Across most of Patna the response is inside 90 minutes in working hours. Kankarbagh, Boring Road, Rajendra Nagar and Buddha Colony are usually faster because technicians are stationed there. Danapur, Khagaul and Phulwari Sharif can run longer in traffic, and we give an honest window rather than a comfortable one.' },
+      { title: 'TDS reading taken before anything is opened', minutes: 5,
+        detail: 'Raw inlet TDS and current output TDS, both measured and written on your service card. These two numbers decide whether this is a filter job, a membrane job, or neither. A technician who starts opening housings without a meter is guessing, and guessing is what leads to parts being sold that were not needed.' },
+      { title: 'Fault diagnosis and a written quote', minutes: 15,
+        detail: `Inlet pressure, pump behaviour, solenoid, float, housing seals, tubing. You are told what is wrong, which part fixes it, what that part costs, and the total including the ₹${V} visit. You approve before any part is opened.` },
+      { title: 'The repair, with genuine parts', minutes: 45,
+        detail: 'Whatever was agreed. Old parts are left with you so you can see what came out. Every part carries its own warranty and the make is written on your card, which matters when the same part is checked at the next service.' },
+      { title: 'Output TDS re-checked and leak test', minutes: 15,
+        detail: 'Post-repair TDS measured and written next to the before reading, so the improvement is on paper and not just a claim. Every joint touched is checked under working pressure, wiped dry, and checked again after ten minutes.' },
+      { title: '30-day warranty on the work', minutes: 0,
+        detail: 'If the same fault returns inside 30 days the revisit is free and there is no second visit charge. Written on the card, not a verbal promise.' },
+    ],
+    prices: [
+      { item: 'Visit + full diagnosis + TDS report', price: `₹${V}`, note: 'Fixed. Told to you on the phone before we come.' },
+      { item: 'General service (clean, flush, re-seal, TDS set)', price: '₹499 onwards', note: 'Includes the visit. Housings opened, cleaned, re-sealed; tank sanitised; TDS controller set correctly.' },
+      { item: 'Sediment + carbon filter change', price: '₹450 onwards', note: 'Both pre-filters. The job most Patna homes need twice a year on borewell supply.' },
+      { item: 'RO membrane replacement (75 GPD)', price: '₹1,600 onwards', note: 'Genuine membrane with warranty. Only after TDS proves it is needed.' },
+      { item: 'Booster pump replacement', price: '₹900 onwards', note: 'Common on upper floors and in low-pressure pockets like Kidwaipuri and R Block.' },
+      { item: 'SMPS / adaptor', price: '₹550 onwards', note: 'Machine completely dead with no light is usually this, not the pump.' },
+      { item: 'Solenoid valve', price: '₹450 onwards', note: 'Machine keeps running or will not stop filling.' },
+      { item: 'Float valve', price: '₹350 onwards', note: 'Overflowing tank.' },
+      { item: 'Annual AMC (all filters + 3 visits)', price: '₹2,499 onwards', note: 'Cheaper than two separate filter changes plus visits.' },
+    ],
+    priceFrom: V,
+    priceTo: 2499,
+    signals: [
+      { sign: 'Water tastes salty, metallic or flat', meaning: 'Membrane is passing dissolved solids. A TDS reading settles it in thirty seconds — do not let anyone sell a membrane without showing you the number.' },
+      { sign: 'Flow has dropped to a trickle', meaning: 'Usually a choked sediment filter, sometimes low inlet pressure, occasionally a failing pump. The cheapest cause is checked first.' },
+      { sign: 'Machine runs continuously and never stops', meaning: 'Float valve or solenoid. Left alone it wastes several hundred litres a day and shortens membrane life.' },
+      { sign: 'Water is cloudy or smells off', meaning: 'Carbon exhausted, or the storage tank needs sanitising. Both are part of a general service.' },
+      { sign: 'Noise from the pump has changed', meaning: 'Pump straining. Catching it early is a pump service; leaving it is a pump replacement.' },
+      { sign: 'Visible drip at any housing or joint', meaning: 'A seal or an over-tightened thread. Small now, a cracked housing later.' },
+      { sign: 'No light, nothing happens', meaning: 'Adaptor or SMPS nine times out of ten. Inexpensive — do not accept a quote for a new machine on this symptom.' },
+      { sign: 'Last service was over 8 months ago', meaning: 'On Patna borewell water filters are usually finished by then even if the machine still appears to work.' },
+    ],
+    watchOut: [
+      'A technician who quotes a membrane before taking a TDS reading is selling, not diagnosing. Ask for the number in front of you.',
+      'Directory listings and call centres forward your job to whoever is free. You cannot ask for the same person next time, and nobody has your machine history.',
+      '"Free service visit" almost always means the visit cost is folded into an inflated parts bill. A stated visit charge with a written parts list is cheaper in practice.',
+      'Insist the old part is left with you. A technician who takes the old part away is the one to be careful with.',
+      'Ask what warranty is on the work, not just on the part. Thirty days on labour is the minimum you should accept.',
+      'Be careful with a quote to replace the whole machine when the symptom is no light or no water. Both are almost always a sub-₹1,000 component.',
+    ],
+    faqs: [
+      { q: 'What is the RO service charge in Patna?', a: `Our visit charge is ₹${V} and it is fixed. It covers travel, full diagnosis and a written TDS report, and you are told it on the phone before the technician leaves. A general service is ₹499 onwards including that visit. Parts are extra, quoted from a written rate list before anything is opened. The Patna market rate for a visit is ₹300 to ₹400, and several aggregators charge ₹399 just to arrive.` },
+      { q: 'How quickly can you reach for RO service in Patna?', a: 'Within 90 minutes across most of Patna during working hours, 8 AM to 9 PM, all seven days. Kankarbagh, Boring Road, Rajendra Nagar, Kadamkuan and Buddha Colony are usually faster. Danapur, Khagaul and Phulwari Sharif can take longer and we give you a realistic window when you call.' },
+      { q: 'Which brands do you service in Patna?', a: 'Kent, Aquaguard, Livpure, Pureit, AO Smith, Blue Star, Havells, Aquafresh, Aquasure, Nasaka, Zero B, Tata Swach, LG, Whirlpool, Panasonic, Faber, V-Guard, Konvio Neer, AquaUltra and unbranded local assemblies. Twenty-one brands with stocked spares, plus commercial plants from 25 LPH to 1000 LPH.' },
+      { q: 'Do you charge if the RO cannot be repaired?', a: `Only the ₹${V} visit charge, and you are told on the visit itself rather than after a part has been fitted. If the machine is genuinely beyond economical repair we say so and show you why, instead of replacing components one at a time across three visits.` },
+      { q: 'Is there a warranty on RO service?', a: 'Thirty days on the work. If the same fault returns within that window the revisit is free with no second visit charge. Parts carry their own manufacturer warranty on top, and the make of every part fitted is written on your service card.' },
+      { q: 'How often should an RO be serviced in Patna?', a: 'Every six months on municipal supply, every four on borewell. Patna groundwater runs hard across large parts of the city — Kankarbagh, Rajendra Nagar and Phulwari Sharif especially — and sediment filters choke faster there than the generic annual advice assumes. The honest test is your TDS reading, not the calendar.' },
+      { q: 'Do you provide RO service in all areas of Patna?', a: 'Seventy-three localities with a dedicated page each — Kankarbagh, Boring Road, Patliputra Colony, Rajendra Nagar, Kadamkuan, Danapur, Khagaul, Phulwari Sharif, Bailey Road, Ashiana Nagar, Rajiv Nagar, Gardanibagh, Anisabad, Machhuatoli and more. If your locality is not listed, call — we still come, we just have not written the page yet.' },
+      { q: 'Can I pay after the service is done?', a: 'Yes. Payment is after the work is finished and the water is running. Cash, UPI or card. Nothing is taken in advance and no deposit is asked for.' },
+      { q: 'Do you provide RO service on Sunday in Patna?', a: 'Yes, all seven days including most holidays, 8 AM to 9 PM. Weekend slots fill up early, so call in the morning if you need a same-day visit.' },
+      { q: 'What is the difference between RO service and RO repair?', a: 'A service is scheduled maintenance — filters cleaned or changed, tank sanitised, TDS re-set, seals checked. A repair is fixing something that has broken: a pump, an SMPS, a solenoid, a leak. Most calls that come in as "repair" turn out to be a service that was left too long.' },
+    ],
+    serviceType: 'RO Water Purifier Service',
+    related: ['ro-repair-patna', 'ro-amc-patna', 'ro-filter-change-patna', 'ro-membrane-replacement-patna'],
+  },
 ];
 
 /** Lookup by slug. Returns null rather than throwing, for notFound() paths. */
