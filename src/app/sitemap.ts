@@ -5,6 +5,7 @@ import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import { getPosts, AUTHOR } from '@/lib/seo/blog-data';
 import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
+import { SYMPTOMS } from '@/lib/seo/symptom-data';
 
 export const revalidate = 3600;
 
@@ -24,7 +25,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BRAND.url}/products`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
     { url: `${BRAND.url}/amc-plans`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BRAND.url}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
+    /* Symptom-query hub. Measured 16 Sep 2026: the Hinglish problem queries
+       ("ro me pani nahi aa raha hai") have ZERO websites in the top 5 — only
+       YouTube and Facebook. High priority because it is the only part of the
+       site with no web competition at all. */
+    { url: `${BRAND.url}/ro-problem-checker`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
   ];
+
+  /* One page per symptom. National reach — these queries carry no city. */
+  const symptomPages: MetadataRoute.Sitemap = SYMPTOMS.map((s) => ({
+    url: `${BRAND.url}/ro-problem/${s.slug}`,
+    lastModified: now,
+    changeFrequency: 'weekly' as const,
+    priority: 0.88,
+  }));
 
   // Local SEO pages — high priority, they drive the service business
   const areaPages: MetadataRoute.Sitemap = SERVICE_AREAS.map((a) => ({
@@ -99,7 +113,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   return [
-    ...staticPages, ...intentPages, ...areaPages, ...brandPages,
+    ...staticPages, ...symptomPages, ...intentPages, ...areaPages, ...brandPages,
     ...blogPages, ...categoryPages, ...productPages,
   ];
 }
