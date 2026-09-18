@@ -41,6 +41,7 @@ import Link from 'next/link';
 import { SYMPTOMS, getSymptom } from '@/lib/seo/symptom-data';
 import {
   localBusinessSchema, faqSchema, breadcrumbSchema, howToSchema, jsonLd,
+  organizationSchema, websiteSchema,
 } from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
@@ -79,6 +80,8 @@ export default function SymptomPage({ params }: { params: { symptom: string } })
   return (
     <>
       <script {...jsonLd([
+        organizationSchema(),
+        websiteSchema(),
         localBusinessSchema({
           name: SERVICE.city,
           pincodes: [CONTACT.address.pincode],

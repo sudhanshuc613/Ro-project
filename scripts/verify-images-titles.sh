@@ -158,9 +158,28 @@ print(len(html.unescape(m.group(1)).strip()) if m else 999)")
 lt "longest area name title length" "$LEN" 60
 
 echo
-echo "════ E) Service + other pages keep the brand suffix ════"
-# Only the area pages drop it. A brand query should still find the brand.
-hasf "intent page keeps suffix"  /tmp/it_ro-repair-patna.html '| Aqua Perl</title>'
+echo "════ E) Title strategy per page type ════"
+# 18 Sep 2026 — this assertion was INVERTED.
+#
+# It used to require the intent pages to keep " | Aqua Perl". A live scan of
+# the seven pages outranking us for "ro service in patna" showed four of them
+# carry the PHONE NUMBER in the title instead:
+#
+#   roservicecentrepatna.in  "RO Service Centre Patna @7880004551/RO Repair"
+#   rocareindia.com          "RO Service Patna @9311587744 | Water Purifier…"
+#   rocarepoint.in           "RO Service in Patna@8920748252 | RO Service Near Me"
+#   aquaglowroservice.in     "…Ro On rent In Patna @7033653521 - AquaGlow"
+#
+# On mobile an emergency "no water" search converts on the number itself —
+# the click never has to load the page. The 12-char " | Aqua Perl" suffix was
+# spending the character budget that the number needs, and pushing titles past
+# the 60-char mark where Google rewrites ~55% of them.
+#
+# So intent pages now use title.absolute with the phone, exactly like the area
+# pages already did. The homepage still carries the brand, because a brand
+# query must still resolve.
+hasf "intent page has phone"     /tmp/it_ro-repair-patna.html '8969821440</title>'
+hasntf "intent page drops suffix" /tmp/it_ro-repair-patna.html '| Aqua Perl</title>'
 curl -sS -m 20 $B/ -o /tmp/it_home.html
 hasf "homepage keeps brand"      /tmp/it_home.html 'Aqua Perl'
 

@@ -22,7 +22,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SERVICE_AREAS, SERVICED_BRANDS, buildAreaFaqs, subLocalities } from '@/lib/seo/patna-service-data';
-import { localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
+import {
+  localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd,
+  organizationSchema, websiteSchema,
+} from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
@@ -123,6 +126,10 @@ export default function AreaPage({ params }: { params: { area: string } }) {
   return (
     <>
       <script {...jsonLd([
+        /* Entity + sitelinks-searchbox markup — see the note in [intent]/page.tsx.
+           4 of 7 ranking competitors carry Organization; 2 carry WebSite. */
+        organizationSchema(),
+        websiteSchema(),
         localBusinessSchema({
           name: area.name, lat: area.lat, lng: area.lng,
           pincodes: area.pincodes, path: areaPath(area.slug),

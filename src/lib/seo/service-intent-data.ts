@@ -105,7 +105,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     slug: 'ro-installation-patna',
     path: '/ro-installation-patna',
     footerLabel: 'RO Installation',
-    title: 'RO Installation in Patna — ₹500 Fitting Charge',
+    title: 'RO Installation in Patna — ₹500 Fitting',
     h1: 'RO Installation in Patna',
     description:
       'New RO installation in Patna at ₹500 fitting charge. Wall mounting, tapping, drain line, pressure check and first TDS reading. Same-day. Call 8969821440.',
@@ -209,7 +209,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     slug: 'ro-amc-patna',
     path: '/ro-amc-patna',
     footerLabel: 'RO AMC Plans',
-    title: 'RO AMC in Patna — Plans From ₹1,499 a Year',
+    title: 'RO AMC in Patna — Plans From ₹1,499',
     h1: 'RO AMC in Patna',
     description:
       'RO annual maintenance contract in Patna from ₹1,499. Scheduled filter changes, priority visits, discounted parts. Honest advice on whether AMC is worth it for you.',
@@ -399,7 +399,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     slug: 'ro-filter-change-patna',
     path: '/ro-filter-change-patna',
     footerLabel: 'RO Filter Change',
-    title: 'RO Filter Change in Patna — From ₹150 Fitted',
+    title: 'RO Filter Change in Patna — From ₹150',
     h1: 'RO Filter Change in Patna',
     description:
       'RO filter replacement in Patna from ₹150 fitted. Sediment, carbon and post-carbon. Patna water exhausts filters faster than the manual says — here are the real intervals.',
@@ -498,7 +498,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     slug: 'ro-membrane-replacement-patna',
     path: '/ro-membrane-replacement-patna',
     footerLabel: 'RO Membrane Change',
-    title: 'RO Membrane Replacement Patna — ₹1,100 Up',
+    title: 'RO Membrane Replacement Patna — ₹1,100',
     h1: 'RO Membrane Replacement in Patna',
     description:
       'RO membrane replacement in Patna from ₹1,100 fitted. 75 vs 100 GPD explained, TDS proof before and after, and how to tell whether you actually need one.',
@@ -598,7 +598,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     slug: 'commercial-ro-service-patna',
     path: '/commercial-ro-service-patna',
     footerLabel: 'Commercial RO Service',
-    title: 'Commercial RO Plant Service in Patna — 25–1000 LPH',
+    title: 'Commercial RO Plant Service Patna',
     h1: 'Commercial RO Plant Service in Patna',
     description:
       'Commercial RO plant service in Patna for 25 to 1000 LPH systems. Schools, hotels, hospitals, water plants. Breakdown response, AMC, membrane cleaning. Call 8969821440.',

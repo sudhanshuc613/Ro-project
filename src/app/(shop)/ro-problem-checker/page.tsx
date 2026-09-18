@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { SYMPTOMS, CHECKER_INTRO, diyCount } from '@/lib/seo/symptom-data';
 import {
   localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd,
+  organizationSchema, websiteSchema,
 } from '@/lib/seo/schema';
 import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
@@ -68,6 +69,8 @@ export default function CheckerPage() {
   return (
     <>
       <script {...jsonLd([
+        organizationSchema(),
+        websiteSchema(),
         localBusinessSchema({
           name: SERVICE.city,
           pincodes: [CONTACT.address.pincode],

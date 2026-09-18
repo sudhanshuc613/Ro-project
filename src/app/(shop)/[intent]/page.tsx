@@ -48,6 +48,7 @@ import {
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import {
   localBusinessSchema, faqSchema, breadcrumbSchema, howToSchema, jsonLd,
+  organizationSchema, websiteSchema,
 } from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
@@ -73,8 +74,28 @@ export function generateMetadata({ params }: { params: { intent: string } }): Me
   const intent = getIntent(params.intent);
   if (!intent) return { title: 'Not Found' };
 
+  /*
+    title.absolute — 18 Sep 2026.
+
+    Measured on the SERP for "ro service in patna": 4 of the 7 pages that
+    outrank us carry the phone number inside the <title>:
+
+      roservicecentrepatna.in  "RO Service Centre Patna @7880004551/RO Repair"
+      rocareindia.com          "RO Service Patna @9311587744 | Water Purifier…"
+      rocarepoint.in           "RO Service in Patna@8920748252 | RO Service Near Me"
+      aquaglowroservice.in     "…Ro On rent In Patna @7033653521 - AquaGlow"
+
+    On a mobile SERP for an emergency "no water" search, a visible number is
+    a call that never needs the page to load — that IS the transaction.
+
+    The blocker was character budget: the layout appends " | Aqua Perl" (12
+    chars), which pushed title + phone past the 60-char mark where Google
+    rewrites ~55% of titles. `absolute` drops the suffix, so intent titles
+    land at 47-57 chars including the number — inside the 51-55 window Zyppy
+    measured as the lowest rewrite rate.
+  */
   return {
-    title: intent.title,
+    title: { absolute: `${intent.title} · ${CONTACT.primaryPhone}` },
     description: intent.description,
     keywords: intent.keywords,
     alternates: { canonical: intent.path },
@@ -112,6 +133,25 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
   return (
     <>
       <script {...jsonLd([
+        /*
+          Organization + WebSite added 18 Sep 2026.
+
+          Measured on the seven pages that outrank us for "ro service in patna":
+            rocareindia          Organization ✅
+            roservicecentrepatna Organization ✅  WebSite ✅  SearchAction ✅
+            aquaglowroservice    Organization ✅  WebSite ✅  SearchAction ✅
+            rocarepoint          Organization ✅
+            rokadoctor (us)      neither, on any page except the homepage
+
+          Organization is what ties every page to one entity in Google's
+          Knowledge Graph — without it each URL looks like a standalone
+          document. WebSite + SearchAction is what makes the sitelinks search
+          box eligible. Both were already written in schema.ts and used on the
+          homepage only; the 7 intent pages and 73 area pages shipped without
+          them, which is the single biggest schema gap the scan found.
+        */
+        organizationSchema(),
+        websiteSchema(),
         localBusinessSchema({
           name: SERVICE.city,
           pincodes: [CONTACT.address.pincode],
