@@ -728,6 +728,12 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
       'best ro service in patna', 'ro water purifier service in patna',
       'ro service charge in patna', 'ro service cost patna',
       'ro technician in patna', 'ro service home visit patna',
+      /* Synonym head terms. Measured 16 Sep 2026: these appeared 0 times on
+         our page and 1-20 times on every competitor ranking above us. */
+      'water purifier service patna', 'water purifier repair patna',
+      'ro water purifier service patna', 'ro water purifier repair',
+      'water purifier service near me', 'ro service center in patna',
+      'ro servicing patna', 'purifier service patna',
     ],
     lede: `₹${V} visit charge · 90-minute response · every brand · pay after the job`,
     intro: [
@@ -735,6 +741,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
       'Most searches for RO service in Patna land on directory listings where twenty numbers are shown and none of them belongs to the person who will arrive at your door. The number there is usually a call centre that forwards the job to whichever freelancer is free, at whatever rate they decide on the spot. That is why the same service costs one customer ₹400 and the next ₹900 on the same street.',
       `We work differently because we are small and local. The visit charge is ₹${V}, fixed, and you are told it before the technician leaves. Parts are quoted from a written rate list before anything is opened, and nothing is replaced without your permission. Payment happens after the work is done and the water is running.`,
       'If the machine cannot be fixed the same day we say so on the visit, instead of fitting a temporary part and returning next week for a second charge.',
+      'People search for this job under several names — RO service in Patna, water purifier service in Patna, RO service near me, RO service centre in Patna, or simply an RO technician in Patna. It is all the same visit and the same fixed rate. Whether your machine is a domestic RO water purifier, a UV or UF unit, or a commercial plant, the diagnosis starts with the same TDS reading and the same written quote.',
     ],
     steps: [
       { title: 'You call, we confirm the fault and the address', minutes: 2,
@@ -794,6 +801,11 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
       { q: 'Can I pay after the service is done?', a: 'Yes. Payment is after the work is finished and the water is running. Cash, UPI or card. Nothing is taken in advance and no deposit is asked for.' },
       { q: 'Do you provide RO service on Sunday in Patna?', a: 'Yes, all seven days including most holidays, 8 AM to 9 PM. Weekend slots fill up early, so call in the morning if you need a same-day visit.' },
       { q: 'What is the difference between RO service and RO repair?', a: 'A service is scheduled maintenance — filters cleaned or changed, tank sanitised, TDS re-set, seals checked. A repair is fixing something that has broken: a pump, an SMPS, a solenoid, a leak. Most calls that come in as "repair" turn out to be a service that was left too long.' },
+      { q: 'Is water purifier service in Patna the same as RO service?', a: 'Yes, the same visit. "Water purifier" is the general name and "RO" is the technology inside most of them. We also service UV and UF units that are not RO at all, and gravity purifiers like Pureit Classic. The visit charge is the same ₹' + String(V) + ' whichever you have.' },
+      { q: 'Are you an RO service centre in Patna or an individual technician?', a: 'We are a service centre with our own technicians, working out of Buddha Colony since 2019. You get the same person on repeat visits where possible, and your machine history stays on one service card. That is the difference from a call-centre listing that forwards your job to whoever is free that day.' },
+      { q: 'Do you do RO service near me in my area of Patna?', a: 'Seventy-three localities have their own page with local response times — Kankarbagh, Boring Road, Rajendra Nagar, Patliputra Colony, Danapur, Khagaul, Phulwari Sharif, Ashiana Nagar and more. If yours is not listed, call anyway. The whole of Patna is inside our 25 km service radius.' },
+      { q: 'Do you handle water purifier repair as well as routine RO servicing?', a: 'Both. Water purifier repair is the breakdown job — no water, a leak, a dead pump, a burnt SMPS. RO servicing is the planned visit where filters are changed, the tank is sanitised and the TDS is reset. Most people call us for the first and then move to a schedule for the second, because planned servicing is what stops breakdowns.' },
+      { q: 'Is there an RO service center near Kankarbagh or Boring Road?', a: 'Our RO service center is in Buddha Colony and technicians are stationed towards Kankarbagh, Boring Road and Rajendra Nagar, which is why those areas usually see a faster response. You do not need to bring the machine anywhere — every job listed on this page is done at your home.' },
     ],
     serviceType: 'RO Water Purifier Service',
     related: ['ro-repair-patna', 'ro-amc-patna', 'ro-filter-change-patna', 'ro-membrane-replacement-patna'],

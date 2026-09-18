@@ -233,7 +233,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         <section className="bg-sand-100 py-12 md:py-16">
           <div className="container mx-auto px-4">
             <h2 className="mb-2 text-center font-display text-3xl font-extrabold text-navy-700">
-              What the job actually involves
+              {intent.h1} — what the job actually involves
             </h2>
             <p className="mx-auto mb-10 max-w-2xl text-center text-muted">
               Step by step, in the order it is done — so you can check that it was.
@@ -306,7 +306,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         <section className="bg-navy-50 py-12 md:py-16">
           <div className="container mx-auto px-4">
             <h2 className="mb-9 text-center font-display text-3xl font-extrabold text-navy-700">
-              How to tell you need this
+              How to tell you need {intent.h1.replace(' in Patna', '')} in Patna
             </h2>
             <div className="mx-auto grid max-w-4xl gap-3 md:grid-cols-2">
               {intent.signals.map((s) => (
@@ -323,7 +323,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         <section className="py-12 md:py-16">
           <div className="container mx-auto max-w-3xl px-4">
             <h2 className="mb-3 font-display text-3xl font-extrabold text-navy-700">
-              Where people get overcharged
+              {intent.h1} — where people get overcharged
             </h2>
             <p className="mb-7 text-muted">
               This costs us work sometimes. We would rather you knew.
@@ -381,7 +381,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         <section className="bg-sand-100 py-12 md:py-14">
           <div className="container mx-auto px-4">
             <h2 className="mb-7 text-center font-display text-2xl font-extrabold text-navy-700">
-              Every brand, same job
+              {intent.h1} for every brand
             </h2>
             <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-2">
               {topBrands.map((b) => (
@@ -407,7 +407,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
             <h2 className="mb-8 text-center font-display text-2xl font-extrabold text-navy-700">
-              Other things we do
+              Other RO services in Patna
             </h2>
             <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-3">
               {related.map((r) => (
