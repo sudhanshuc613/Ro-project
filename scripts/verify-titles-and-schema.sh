@@ -46,8 +46,24 @@ echo "════ 2) NAYE KEYWORD titles mein aa gaye? ════"
 curl -sS -m 20 $B/ -o /tmp/h.html
 curl -sS -m 20 $B/service-patna -o /tmp/sp.html
 curl -sS -m 20 $B/ro-service-patna/kankarbagh -o /tmp/ka.html
-chkge "homepage: 'Water Purifier' in title"  "$(grep -oiE '<title>[^<]*Water Purifier[^<]*' /tmp/h.html | wc -l)" "1"
-chkge "pillar: 'Water Purifier' in title"    "$(grep -oiE '<title>[^<]*Water Purifier[^<]*' /tmp/sp.html | wc -l)" "1"
+# 18 Sep 2026 — this pair was rewritten after the cannibalisation fix.
+#
+# Both the homepage and /service-patna used to carry the identical title
+# "RO Service in Patna — Water Purifier Repair ₹200", and /ro-service-in-patna
+# targets that phrase too. Three URLs on one query splits the signal and lets
+# Google pick one as canonical while demoting the rest.
+#
+# The split now mirrors what rosaleandservices.com does (they outrank us):
+#   /                     → "ro service near me"     (10 autocomplete variants)
+#   /service-patna        → "water purifier repair"  (rocareindia uses it 15x)
+#   /ro-service-in-patna  → "ro service in patna"    (the city head term)
+#
+# So the homepage must now carry "Near Me" and NOT the city head phrase, and
+# the pillar keeps "Water Purifier". Asserting the old shape would re-create
+# the collision.
+chkge "homepage: 'Near Me' in title"        "$(grep -oiE '<title>[^<]*Near Me[^<]*' /tmp/h.html | wc -l)" "1"
+chk   "homepage: not the city head phrase"  "$(grep -oiE '<title>RO Service in Patna' /tmp/h.html | wc -l)" "0"
+chkge "pillar: 'Water Purifier' in title"   "$(grep -oiE '<title>[^<]*Water Purifier[^<]*' /tmp/sp.html | wc -l)" "1"
 # Area titles changed 10 Sep 2026: "RO Repair in X, Patna — ₹200 Visit | Aqua Perl"
 # became "RO Service X Patna ₹200 · 8969821440". Every competitor ranking above
 # us puts the phone number in the title; we now do too, and keep the ₹200 hook

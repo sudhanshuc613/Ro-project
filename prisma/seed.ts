@@ -357,10 +357,26 @@ async function main() {
     /* Titles kept in the 50-60 char window (Zyppy 2026: lowest rewrite rate).
        "Water Purifier" carries a query term every competitor ranking above us
        had and we did not. */
-    { path: '/', metaTitle: 'RO Service in Patna — Water Purifier Repair ₹200',
-      metaDescription: 'Expert RO repair & water purifier service across Patna at ₹200 visit charge — others charge ₹350+. All brands, 90-min response, 30-day warranty. Call 8969821440.' },
-    { path: '/service-patna', metaTitle: 'RO Service in Patna — Water Purifier Repair ₹200',
-      metaDescription: 'RO repair, installation & AMC across Patna. ₹200 visit charge, same-day service, 30-day warranty. All brands. Call 8969821440.' },
+    /* 18 Sep 2026 — keyword cannibalisation fix.
+
+       Both rows below used to carry the SAME title, "RO Service in Patna —
+       Water Purifier Repair ₹200", and /ro-service-in-patna targets that
+       phrase too. Three URLs chasing one query means Google picks one as
+       canonical for it (usually the homepage, which has the most links) and
+       demotes the others, while the ranking signal is split across all three.
+
+       rosaleandservices.com, which outranks us, splits it cleanly:
+         /                     → "RO Service Near Me | RO Water Purifier Repair"
+         /ro-service-in-patna  → "Best RO Service in Patna starts @ ₹299/-"
+
+       So the dedicated page keeps the city phrase, the homepage takes
+       "ro service near me" (10 autocomplete variants, we rank for none), and
+       /service-patna takes "water purifier repair" (rocareindia uses it 15x,
+       we used it twice). Three pages, three queries, no internal fight. */
+    { path: '/', metaTitle: 'RO Service Near Me in Patna — ₹200 Visit, 90 Min',
+      metaDescription: 'RO service near me in Patna — technician at your door in 90 minutes, ₹200 visit charge, all brands, 30-day warranty. Call 8969821440.' },
+    { path: '/service-patna', metaTitle: 'Water Purifier Repair Patna — RO Service Centre',
+      metaDescription: 'Water purifier repair in Patna by a local RO service centre. ₹200 visit, same-day, genuine parts, 30-day warranty on the work. Call 8969821440.' },
   ];
   for (const pg of pages) {
     /* `update` stays empty on purpose: once the site is live the owner edits

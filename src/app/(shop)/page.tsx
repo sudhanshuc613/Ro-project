@@ -76,7 +76,21 @@ export async function generateMetadata(): Promise<Metadata> {
     entityType: 'STATIC_PAGE',
     path: '/',
     fallback: {
-      title: 'RO Service in Patna — Water Purifier Repair ₹200',
+      /*
+        18 Sep 2026 — moved OFF "RO Service in Patna".
+
+        That exact phrase was in the title of four of our pages at once
+        (/, /service-patna, /ro-service-in-patna, /ro-services-patna). Google
+        then has to choose a canonical for the query and split the signal
+        across the rest. rosaleandservices.com, which outranks us, points its
+        homepage at "RO Service Near Me" and its /ro-service-in-patna page at
+        the city phrase — two queries, no internal fight.
+
+        "ro service near me" returns 10 autocomplete variants and we rank for
+        none of them, so the homepage now owns it and the dedicated page keeps
+        "RO Service in Patna" to itself.
+      */
+      title: 'RO Service Near Me in Patna — ₹200 Visit, 90 Min',
       description:
         'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹350+. All brands, 90-min response, 30-day warranty. Call 8969821440.',
       keywords: [

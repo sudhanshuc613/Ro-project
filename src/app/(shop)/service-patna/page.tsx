@@ -21,7 +21,13 @@ import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: `RO Service in Patna — Water Purifier Repair ₹${SERVICE.visitCharge}`,
+  /*
+    18 Sep 2026 — moved OFF "RO Service in Patna" for the same reason as the
+    homepage (see the note in (shop)/page.tsx). This page is 8,058 words and
+    is the deepest thing on the site, so it takes the "water purifier repair /
+    service centre" angle, which rocareindia uses 15 times and we used twice.
+  */
+  title: `Water Purifier Repair Patna — RO Service Centre ₹${SERVICE.visitCharge}`,
   description: `RO repair, installation & AMC across Patna. ₹${SERVICE.visitCharge} visit charge, same-day service, 30-day warranty. All brands. Call ${CONTACT.primaryPhone}.`,
   keywords: [
     'RO service in Patna', 'RO repair Patna', 'water purifier service Patna',
@@ -117,8 +123,16 @@ export default function ServicePatnaPillar() {
                 Technicians available now across Patna
               </span>
 
+              {/*
+                {' '} below is load-bearing. Googlebot joins adjacent element
+                text with no separator, so without it this H1 read
+                "…RO Service in PatnaVisit Charge Only ₹200" and the exact
+                phrase "RO Service in Patna" was broken. Same bug bit the
+                homepage hero and all 73 area pages before this.
+                scripts/verify-h1-keyword.sh fails the build if it returns.
+              */}
               <h1 className="mt-5 font-display text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
-                Expert RO Service in Patna
+                Expert RO Service in Patna{' '}
                 <span className="mt-2 block text-orange-300">Visit Charge Only ₹{SERVICE.visitCharge}</span>
               </h1>
 

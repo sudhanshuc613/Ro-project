@@ -120,7 +120,7 @@ export default function ServiceHero() {
               Isko badalne se pehle `scripts/verify-h1-keyword.sh` chala lena.
             */}
             <span className="block text-[clamp(1.4rem,1.1rem+1.4vw,2rem)] font-bold text-muted">
-              RO Service &amp; Repair in{' '}
+              RO Service Near Me in{' '}
             </span>
             <span className="mt-1 block text-[clamp(3.2rem,2.2rem+5.4vw,6rem)]">
               <span className="relative inline-block">

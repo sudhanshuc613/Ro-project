@@ -108,12 +108,13 @@ while IFS='|' read -r path want; do
   check_glued  "$path" "$txt"
   check_phrase "$path" "$txt" "$want"
 done <<'ROWS'
-/|RO Service & Repair in Patna
+/|RO Service Near Me in Patna
 /ro-service-in-patna|RO Service in Patna
 /ro-repair-patna|RO Repair in Patna
 /ro-amc-patna|RO AMC in Patna
 /ro-installation-patna|RO Installation in Patna
 /ro-services-patna|RO Services in Patna
+/service-patna|Expert RO Service in Patna
 /ro-service-patna/kankarbagh|RO Service in Kankarbagh, Patna
 /ro-service-patna/boring-road|RO Service in Boring Road, Patna
 /ro-service-patna/rajendra-nagar|RO Service in Rajendra Nagar, Patna
