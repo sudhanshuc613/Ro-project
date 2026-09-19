@@ -8,7 +8,8 @@ TOTAL_P=0; TOTAL_F=0
 for s in verify-h1-keyword verify-keyword-coverage verify-images-titles verify-robots-media verify-forms-and-features verify-area-depth verify-new-areas \
          verify-service-intent verify-seo-packages verify-ux-upgrade \
          verify-seo-indexing verify-product-admin verify-titles-and-schema \
-         verify-brand-rename verify-admin-full verify-password-features; do
+         verify-brand-rename verify-admin-full verify-password-features \
+         verify-sitemap-lastmod; do
   OUT=$(bash "scripts/$s.sh" 2>&1)
   LINE=$(echo "$OUT" | grep -E "^  PASS: " | tail -1)
   P=$(echo "$LINE" | sed -n 's/.*PASS: \([0-9]*\).*/\1/p')

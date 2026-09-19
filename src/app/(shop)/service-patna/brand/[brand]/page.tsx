@@ -113,8 +113,13 @@ export default function BrandServicePage({ params }: { params: { brand: string }
             <span className="inline-flex rounded-full bg-cta-orange/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-orange-200 ring-1 ring-cta-orange/40">
               All Patna areas covered
             </span>
+            {/* GLUE-BUG GUARD (paanchvi baar — 19 Sep 2026)
+                Do adjacent inline nodes ko Googlebot bina space ke jodta hai:
+                "...in Patna" + "Visit Charge..." → "PatnaVisit".
+                {' '} JSX whitespace-trim me bhi zinda rehta hai. Mat hatao.
+                scripts/verify-h1-keyword.sh ab brand pages bhi check karta hai. */}
             <h1 className="mt-5 max-w-3xl font-display text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
-              {short} RO Service &amp; Repair in Patna
+              {short} RO Service &amp; Repair in Patna{' '}
               <span className="mt-2 block text-orange-300">Visit Charge Only ₹{SERVICE.visitCharge}</span>
             </h1>
             <p className="mt-5 max-w-2xl text-navy-100 sm:text-lg">{brand.note}</p>

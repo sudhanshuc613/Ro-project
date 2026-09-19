@@ -131,8 +131,15 @@ export default function ServicePatnaPillar() {
                 homepage hero and all 73 area pages before this.
                 scripts/verify-h1-keyword.sh fails the build if it returns.
               */}
+              {/* 19 Sep 2026 — cannibalization fix ka doosra hissa.
+                  Title ab "Water Purifier Repair Patna — RO Service Centre"
+                  hai, par H1 "Expert RO Service in Patna" bola — yaani title
+                  aur H1 do alag phrase pe the, aur "ro service in patna"
+                  /ro-service-in-patna se ladta raha.
+                  Ab H1 apne hi title wale phrase pe hai.
+                  {' '} glue-bug guard hai — mat hatao. */}
               <h1 className="mt-5 font-display text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
-                Expert RO Service in Patna{' '}
+                Water Purifier Repair in Patna{' '}
                 <span className="mt-2 block text-orange-300">Visit Charge Only ₹{SERVICE.visitCharge}</span>
               </h1>
 

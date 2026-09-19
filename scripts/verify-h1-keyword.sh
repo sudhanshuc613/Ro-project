@@ -114,12 +114,24 @@ done <<'ROWS'
 /ro-amc-patna|RO AMC in Patna
 /ro-installation-patna|RO Installation in Patna
 /ro-services-patna|RO Services in Patna
-/service-patna|Expert RO Service in Patna
+/service-patna|Water Purifier Repair in Patna
 /ro-service-patna/kankarbagh|RO Service in Kankarbagh, Patna
 /ro-service-patna/boring-road|RO Service in Boring Road, Patna
 /ro-service-patna/rajendra-nagar|RO Service in Rajendra Nagar, Patna
 /ro-service-patna/danapur|RO Service in Danapur, Patna
 /ro-service-patna/machhuatoli|RO Service in Machhuatoli, Patna
+/service-patna/brand/kent|Kent RO Service
+/service-patna/brand/aquaguard|Aquaguard RO Service
+/service-patna/brand/livpure|Livpure RO Service
+/service-patna/brand/pureit|Pureit RO Service
+/service-patna/brand/ao-smith|AO Smith RO Service
+/service-patna/brand/blue-star|Blue Star RO Service
+/service-patna/brand/havells|Havells RO Service
+/ro-problem-checker|RO Problem Checker
+/ro-service-patna-faq|RO Service in Patna
+/commercial-ro-service-patna|Commercial RO Plant Service in Patna
+/ro-filter-change-patna|RO Filter Change in Patna
+/ro-membrane-replacement-patna|RO Membrane Replacement in Patna
 ROWS
 
 echo
