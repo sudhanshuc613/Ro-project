@@ -216,3 +216,59 @@ Pehli cheez badalne layak nahi. **Doosri cheez ₹0 me theek hoti hai, aur wo te
 Agar kuch bhi galat lage:
 
 **Vercel → Deployments → pichhla 🟢 Ready → ⋯ → Promote to Production** (30 second, git ki zarurat nahi)
+
+---
+
+## 11. Test report — asli numbers
+
+```
+Clean build (.next delete karke)  : EXIT 0, zero warning, 191 pages
+Test suite                        : 1106/1106 PASS, ZERO FAIL
+                                    (pehle 1074 — 32 naye checks jude)
+  verify-h1-keyword               : 39 → 63  (brand pages ab covered)
+  verify-sitemap-lastmod          : 0 → 8    (naya script)
+
+Live site (rokadoctor.in)         : 133/133 URLs → HTTP 200
+                                    0 noindex, 0 redirect chain
+                                    canonical har page pe sahi
+Brand pages glue fix (local)      : 21/21 theek
+Sitemap lastmod (do fetch)        : sthir ✅
+Admin security                    : 16/16 guarded, 0 leak
+Booking flow                      : POST 201 → SRV-2026-00001 → track 200 → cleanup ✅
+```
+
+### Zip
+
+```
+File : aquaperl-DEEPSCAN-19SEP.zip
+MD5  : f6fad6ee8f93c7737fbb3ffaa515065a
+Size : 14.22 MB
+```
+
+---
+
+## 12. Ab tera kaam — 45 minute, ₹0
+
+Ye main nahi kar sakta. Tere GBP/email access chahiye. **Aur yahi #1 aur hamare beech ka asli farq hai.**
+
+NAP bilkul ye — ek bhi akshar idhar-udhar nahi:
+
+```
+Aqua Perl RO Service Centre
+Sai Gali, Opposite B-62, Buddha Colony, Patna, Bihar 800001
+8969821440
+https://rokadoctor.in
+```
+
+| # | Site | Time | Kyu |
+|---|---|---|---|
+| 1 | justdial.com/Free-Listing | 10 min | Patna me sabse zyada traffic |
+| 2 | sulekha.com (business signup) | 10 min | **tera screenshot #6 — ye "ro service patna" pe rank karta hai** |
+| 3 | dir.indiamart.com | 10 min | **tera screenshot #5 — ye bhi rank karta hai** |
+| 4 | bingplaces.com | 5 min | Bing + ChatGPT search dono isse padhte hain |
+| 5 | Apple Business Connect | 10 min | iPhone Maps |
+
+**0 → 5 mentions. #1 ke paas 50 hain aur uska domain hamse naya hai.**
+
+Ye karne ke baad GSC → URL Inspection → Request Indexing:
+`/` · `/service-patna` · `/ro-service-in-patna`

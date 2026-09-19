@@ -132,7 +132,50 @@ done <<'ROWS'
 /commercial-ro-service-patna|Commercial RO Plant Service in Patna
 /ro-filter-change-patna|RO Filter Change in Patna
 /ro-membrane-replacement-patna|RO Membrane Replacement in Patna
+/amc-plans|RO Annual Maintenance Plans in Patna
 ROWS
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SITE-WIDE GLUE SWEEP
+#
+# Kyu (19 Sep 2026): upar wali list me sirf woh paths the jo kisi ne haath se
+# likhe. Isi wajah se glue bug 5 baar bacha nikla — 21 brand pages list me the
+# hi nahi, aur /amc-plans bhi nahi tha (wahan "PlansPatna" chipak raha tha,
+# yaani us page ke H1 me "Patna" keyword tha hi nahi).
+#
+# Ab sitemap se HAR URL uthta hai. Naya page banega to wo apne aap is check me
+# aa jayega — kisi ko yaad rakh kar list update nahi karni padegi.
+# ─────────────────────────────────────────────────────────────────────────────
+echo
+echo "════ Site-wide H1 glue sweep (sitemap ke har URL pe) ════"
+
+SWEEP=$(curl -sS -m 30 "$B/sitemap.xml" 2>/dev/null \
+        | grep -o '<loc>[^<]*</loc>' | sed 's|<[^>]*>||g' \
+        | sed "s|https://rokadoctor.in||" | sed 's|^$|/|')
+
+swept=0; glued=0
+for path in $SWEEP; do
+  txt=$(h1text "$path")
+  swept=$((swept+1))
+  [ "$txt" = "__NO_H1__" ] && continue
+  g=$(python3 -c "
+import re,sys
+t=sys.argv[1]
+allow={'AquaPerl','AquaGuard','AquaFresh','AquaSure','AquaUltra','AquaPearl','AquaBizz','TDS','RO','AMC','GPD','LPH'}
+bad=[m.group(0) for m in re.finditer(r'[a-z]{2,}[A-Z][a-z]{2,}', t)
+     if m.group(0) not in allow and not any(a[1:] in m.group(0) for a in allow)]
+print(','.join(bad))
+" "$txt")
+  if [ -n "$g" ]; then
+    echo "  FAIL  $path — glued: $g"
+    echo "        H1 = '$txt'"
+    glued=$((glued+1)); fail=$((fail+1))
+  fi
+done
+if [ "$glued" -eq 0 ]; then
+  echo "  PASS  $swept pages swept — koi glued H1 nahi"
+  pass=$((pass+1))
+fi
 
 echo
 echo "════ Target phrase in homepage body ════"

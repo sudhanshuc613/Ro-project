@@ -108,11 +108,20 @@ else:
     ok(f"{uniq} alag lastmod dates (build-time stamping nahi)")
 
 # 5) "abhi-abhi" stamps
-rec = len([x for x in lms if (p := parse(x)) and (now - p).total_seconds() < 600])
-if rec > 5:
-    bad(f"{rec} URLs ka lastmod pichhle 10 min ka hai — build-time leak")
+#
+# Sirf STATIC routes pe check karo. /products/* aur /category/* ka lastmod
+# DB ke apne `updatedAt` se aata hai — wo bilkul sahi hai. Local test me
+# seed abhi-abhi chalta hai, isliye un rows ka updatedAt "abhi" hota hai
+# aur ye check jhootha FAIL deta tha (19 Sep 2026 ko pakda gaya).
+# Asli bug sirf tab hai jab HARD-CODED static pages build-time stamp bhejein.
+pairs = re.findall(r'<loc>([^<]*)</loc>\s*<lastmod>([^<]*)</lastmod>', a)
+db_driven = ('/products/', '/category/', '/blog/')
+static_pairs = [(u, t) for u, t in pairs if not any(s in u for s in db_driven)]
+rec = len([t for _, t in static_pairs if (p := parse(t.strip())) and (now - p).total_seconds() < 600])
+if rec > 0:
+    bad(f"{rec} static URLs ka lastmod pichhle 10 min ka hai — build-time leak")
 else:
-    ok(f"build-time leak nahi ({rec} URLs recent)")
+    ok(f"build-time leak nahi ({len(static_pairs)} static URLs checked, 0 recent)")
 
 # 6) host
 off = [u for u in locs if not u.startswith('https://rokadoctor.in')]

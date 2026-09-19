@@ -107,9 +107,14 @@ export default function AmcPlansPage() {
 
         <section className="bg-hero-deep py-14">
           <div className="container mx-auto px-4 text-center text-white">
+            {/* GLUE-BUG GUARD (chhati baar — 19 Sep 2026)
+                Pehle yahan "Plans" + "Patna" chipak kar "PlansPatna" ban raha
+                tha, yaani is page ke H1 me "Patna" keyword tha hi nahi.
+                Ye tab pakda gaya jab poore 133 pages ka sweep chalaya.
+                {' '} JSX whitespace-trim me bhi zinda rehta hai. Mat hatao. */}
             <h1 className="font-display text-3xl font-extrabold sm:text-4xl">
-              RO Annual Maintenance Plans
-              <span className="mt-2 block text-aqua-300">Patna — from ₹1,499/year</span>
+              RO Annual Maintenance Plans in Patna{' '}
+              <span className="mt-2 block text-aqua-300">From ₹1,499/year</span>
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-navy-100">
               Scheduled servicing so your purifier never breaks down unexpectedly.
