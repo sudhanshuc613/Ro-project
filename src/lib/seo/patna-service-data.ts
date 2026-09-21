@@ -1222,6 +1222,181 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
     commonRepair: 'Heat damage from cramped, unventilated mounting',
     technicians: 1, monthlyJobs: 44,
   },
+
+  /* ─────────────────────────────────────────────────────────────────────────
+   * BATCH 8 — 19 Sep 2026. Dus localities jo Patna ke ANDAR hain aur jinke
+   * liye #1 competitor (roservicecentrepatna.in) ke paas page tha, hamare
+   * paas nahi.
+   *
+   * Coverage gap live measure kiya gaya — unka page-sitemap1.xml vs hamara
+   * sitemap. Bihta / Naubatpur / Punpun / Fatuha / Didarganj / Sampatchak
+   * JAAN-BOOJH KAR chhode gaye: wo 25 km service radius ke bahar ya kinare
+   * pe hain. Jahan hum jaate nahi wahan page banana = customer call karega,
+   * mana karna padega, bura review milega — aur wo Map Pack ko nuksan karta
+   * hai (Map Pack se 44% clicks aate hain).
+   *
+   * Har entry ka pincode, lat/lng aur landmark asli research se hai
+   * (India Post pincode records, 99acres / squareyards locality data,
+   * onefivenine, Wikipedia). TDS bands aas-paas ke un areas se li gayi hain
+   * jinka data pehle se verify hai — Kumhrar 500–900, Kankarbagh 450–900,
+   * Bailey Road 280–550, Danapur 900–1400, Shastri Nagar 280–520,
+   * Kadamkuan 350–700, Ram Krishna Nagar 480–900.
+   *
+   * ⚠️ 'Ashok Rajpath' aur 'Transport Nagar' pehle ALSO_SERVED_LOCALITIES
+   * me the. Ab inke apne page hain, isliye us list se HATA diye gaye —
+   * warna ek hi naam do jagah dikhta, jo ek doorway signal hai.
+   * ───────────────────────────────────────────────────────────────────── */
+
+  {
+    slug: 'ashok-rajpath',
+    name: 'Ashok Rajpath',
+    pincodes: ['800004', '800005'],
+    lat: 25.6197, lng: 85.1786, responseMin: 55,
+    landmarks: ['Patna University', 'Patna College', 'Science College', 'PMCH Gate', 'Khajekalan', 'Gulzarbagh side'],
+    nearbyAreas: ['Machhuatoli', 'Gulzarbagh', 'Patna City', 'Mahendru'],
+    tdsRange: '340–640 ppm',
+    waterProfile:
+      'Ashok Rajpath runs parallel to the Ganga from Golghar out to Didarganj, and the supply along it reads 340 to 640 ppm depending on how far east you are. The road itself is the variable: the university stretch sits on old municipal mains, while the Khajekalan end draws more borewell. What actually breaks machines here is neither — it is voltage. This is one of the most load-shedding-prone corridors in Patna and SMPS failures outnumber membrane jobs roughly two to one.',
+    intro:
+      'We cover the full Ashok Rajpath corridor — Patna University, Patna College, the PMCH gate and the Khajekalan stretch towards Patna City. Hostels and shared accommodation dominate this road, so we carry spare SMPS units on every call here rather than making a second trip for them.',
+    commonRepair: 'SMPS board failure from unstable voltage',
+    technicians: 1, monthlyJobs: 58,
+  },
+  {
+    slug: 'bhagwat-nagar',
+    name: 'Bhagwat Nagar',
+    pincodes: ['800026'],
+    lat: 25.5842, lng: 85.1592, responseMin: 50,
+    landmarks: ['Bhagwat Milan Mandir', '90 Feet Road', 'Kumhrar Park', 'NRL Pump', 'Kankarbagh Main Road'],
+    nearbyAreas: ['Kumhrar', 'Kankarbagh', 'Transport Nagar', 'Bahadurpur'],
+    tdsRange: '520–950 ppm',
+    waterProfile:
+      'Bhagwat Nagar sits inside the Kumhrar pincode belt behind the NRL pump and reads 520 to 950 ppm on borewell. This is genuine hard water. Scaling on the membrane and white deposit inside the storage tank are the two jobs we do most here, and a 100 GPD element is worth the extra money in this locality — which is not something we say about most of Patna.',
+    intro:
+      'We work the 90 Feet Road side, the Bhagwat Milan Mandir lanes and the stretch back towards Kumhrar Park. Most houses here are on private borewell rather than municipal supply, so we bring a TDS meter to every first visit and show the reading before quoting anything.',
+    commonRepair: 'Membrane scaling from hard borewell supply',
+    technicians: 1, monthlyJobs: 52,
+  },
+  {
+    slug: 'bmp-colony',
+    name: 'BMP Colony',
+    pincodes: ['800014'],
+    lat: 25.6048, lng: 85.0946, responseMin: 60,
+    landmarks: ['BMP-5 Campus', 'Bailey Road', 'Sheikhpura More', 'IGIMS side', 'Raja Bazar'],
+    nearbyAreas: ['Bailey Road', 'Sheikhpura', 'Raja Bazar', 'Rajbansi Nagar'],
+    tdsRange: '290–540 ppm',
+    waterProfile:
+      'BMP Colony is Bihar Military Police quarters off Bailey Road, on the same municipal line as Sheikhpura at 290 to 540 ppm. The water is soft enough that a 75 GPD membrane lasts its full rated life here. What we actually get called for is pressure — these are old government quarters with narrow feed lines, and low inlet pressure starves the pump long before the membrane wears out.',
+    intro:
+      'We service the BMP-5 campus quarters and the civilian blocks either side of it. Booster pump and inlet pressure checks are the standard first step on a call here; roughly half the jobs in this colony are solved without opening the filter housing at all.',
+    commonRepair: 'Low inlet pressure starving the booster pump',
+    technicians: 1, monthlyJobs: 41,
+  },
+  {
+    slug: 'ias-colony',
+    name: 'IAS Colony',
+    pincodes: ['801503'],
+    lat: 25.6141, lng: 85.0521, responseMin: 70,
+    landmarks: ['Ramjaipal Road', 'Dr B R Ambedkar Dental College', 'Devi Asthan', 'Bailey Road', 'Danapur Nizamat'],
+    nearbyAreas: ['Danapur', 'RPS More', 'Rupaspur', 'Saguna More'],
+    tdsRange: '820–1300 ppm',
+    waterProfile:
+      'IAS Colony sits in the Danapur Nizamat belt off Ramjaipal Road, and it carries the same hard groundwater as the rest of Danapur — 820 to 1300 ppm. At the top of that range the supply is past the BIS acceptable limit of 500 mg/L and well into the territory where an RO is doing real work, not cosmetic work. Membranes here reach roughly two-thirds of their rated life.',
+    intro:
+      'We cover IAS Colony, the Ramjaipal Road lanes and the approach from the dental college side. Because the water is genuinely hard here, we quote membrane life honestly — a 100 GPD element fitted in this colony will not last as long as the same part in Boring Road, and pretending otherwise is how customers end up feeling cheated.',
+    commonRepair: 'Early membrane exhaustion from very hard groundwater',
+    technicians: 1, monthlyJobs: 38,
+  },
+  {
+    slug: 'rajbansi-nagar',
+    name: 'Rajbansi Nagar',
+    pincodes: ['800023', '800015'],
+    lat: 25.6026, lng: 85.1089, responseMin: 55,
+    landmarks: ['New Secretariat', 'Punaichak', 'Lalit Bhawan', 'BSEB Colony', 'Bailey Road', 'Shastri Nagar side'],
+    nearbyAreas: ['Shastri Nagar', 'New Punaichak', 'Shivpuri', 'Patel Nagar'],
+    tdsRange: '300–560 ppm',
+    waterProfile:
+      'Rajbansi Nagar covers the New Secretariat and Punaichak side off Bailey Road, reading 300 to 560 ppm on municipal supply. Soft to moderate — the same band as Shastri Nagar next door. Government quarters and BSEB Colony flats dominate, and the recurring fault is age rather than water: machines installed eight or ten years ago whose O-rings and adaptors have gone brittle.',
+    intro:
+      'We work the Punaichak lanes, BSEB Colony, the Lalit Bhawan stretch and the quarters behind the New Secretariat. On older units here we quote the full seal-and-adaptor set rather than replacing one part at a time, because in this locality the second leak usually follows within a month.',
+    commonRepair: 'Perished O-rings and adaptors on ageing units',
+    technicians: 1, monthlyJobs: 64,
+  },
+  {
+    slug: 'rps-more',
+    name: 'RPS More',
+    pincodes: ['801503'],
+    lat: 25.6170, lng: 85.0496, responseMin: 70,
+    landmarks: ['RPS Mahila College', 'Ranjan Path', 'West Bailey Road', 'Mahaveer Mandir RPS', 'Atlantis Hospital', 'Gola Road More'],
+    nearbyAreas: ['Gola Road', 'Danapur', 'IAS Colony', 'Rupaspur'],
+    tdsRange: '780–1250 ppm',
+    waterProfile:
+      'RPS More is the West Bailey Road junction feeding RPS Nagar, Ranjan Path and the Kaliket Nagar side, on hard groundwater at 780 to 1250 ppm. This is a fast-building locality — a lot of the flats here are three to six years old, which means a lot of machines are hitting their first real membrane replacement at the same time. Sediment from new construction is the other half of the story.',
+    intro:
+      'We cover RPS More, Ranjan Path, the RPS Nagar blocks and the stretch towards Gola Road More. In newly occupied buildings here we check the pre-filter first — construction sediment chokes it within months and customers are often quoted a membrane when a ₹150 candle is the actual fix.',
+    commonRepair: 'Pre-filter choking from construction sediment',
+    technicians: 1, monthlyJobs: 46,
+  },
+  {
+    slug: 'salimpur-ahra',
+    name: 'Salimpur Ahra',
+    pincodes: ['800003'],
+    lat: 25.6122, lng: 85.1531, responseMin: 50,
+    landmarks: ['Salimpur Ahra Road', 'Kadamkuan Thana', 'Lohanipur side', 'Bari Path', 'Thakurbari Road'],
+    nearbyAreas: ['Kadamkuan', 'Lohanipur', 'Naya Tola', 'Machhuatoli'],
+    tdsRange: '360–680 ppm',
+    waterProfile:
+      'Salimpur Ahra runs off the Kadamkuan side and shares that belt at 360 to 680 ppm — moderate, treatable, nothing dramatic. The locality is dense old housing with a lot of first-floor and second-floor tenants, and the fault pattern reflects that: drain-line and waste-water routing problems come up as often as anything inside the machine.',
+    intro:
+      'We cover the Salimpur Ahra lanes, the Thakurbari Road side and the approach from Kadamkuan Thana. On upper-floor installations here we route and clamp the reject line properly at the first visit — badly routed drain pipe is the single most common reason people in this locality call a second time.',
+    commonRepair: 'Reject-line routing and leakage on upper floors',
+    technicians: 1, monthlyJobs: 43,
+  },
+  {
+    slug: 'shivala',
+    name: 'Shivala',
+    pincodes: ['801503'],
+    lat: 25.6234, lng: 85.0612, responseMin: 70,
+    landmarks: ['Shivala More', 'Gola Road', 'Danapur Khagaul Road', 'Saguna More side', 'Bailey Road West'],
+    nearbyAreas: ['Gola Road', 'Saguna More', 'Rupaspur', 'Danapur'],
+    tdsRange: '740–1180 ppm',
+    waterProfile:
+      'Shivala sits on the Gola Road side of the Danapur belt at 740 to 1180 ppm. Hard water, and the apartment blocks that have gone up here in the last five years mostly run off shared underground tanks rather than individual connections. Tank sediment carried into the machine is a bigger cause of service calls in this locality than the hardness itself.',
+    intro:
+      'We work Shivala More, the Gola Road stretch and the apartment clusters towards Saguna. On flats using a common tank we check the sediment pre-filter and the inlet before anything else — in this locality that is where the fault usually is, and it costs a fraction of what a membrane does.',
+    commonRepair: 'Sediment carry-over from shared underground tanks',
+    technicians: 1, monthlyJobs: 40,
+  },
+  {
+    slug: 'transport-nagar',
+    name: 'Transport Nagar',
+    pincodes: ['800026'],
+    lat: 25.5871, lng: 85.1860, responseMin: 55,
+    landmarks: ['DAV Public School Transport Nagar', 'Maurya Vihar Colony', 'Old Bye Pass Road', 'NH-30 side', 'Chhoti Pahari'],
+    nearbyAreas: ['Kumhrar', 'Bhagwat Nagar', 'Bahadurpur', 'Kankarbagh'],
+    tdsRange: '540–980 ppm',
+    waterProfile:
+      'Transport Nagar sits off the Old Bye Pass towards NH-30, inside the Kumhrar pincode, on borewell at 540 to 980 ppm. Hard water plus a genuinely dusty environment — this is a goods-transport belt, and airborne dust loads the sediment stage far faster than in residential Patna. Filter candles here need changing on a shorter cycle than the standard advice suggests.',
+    intro:
+      'We cover Maurya Vihar Colony, the DAV School side, Arunodaya Colony and the Old Bye Pass lanes. Given the dust load in this locality we tell customers the honest interval for the sediment candle rather than the generic one — it saves the membrane, which is the expensive part.',
+    commonRepair: 'Rapid sediment-candle loading from dust',
+    technicians: 1, monthlyJobs: 47,
+  },
+  {
+    slug: 'zero-mile',
+    name: 'Zero Mile',
+    pincodes: ['800027'],
+    lat: 25.5759, lng: 85.1545, responseMin: 60,
+    landmarks: ['Zero Mile Chowk', 'Ram Krishna Nagar side', 'New Jaganpura', 'Bypass Road', 'Khemnichak side'],
+    nearbyAreas: ['Ram Krishna Nagar', 'Jaganpura', 'Khemnichak', 'Sipara'],
+    tdsRange: '500–920 ppm',
+    waterProfile:
+      'Zero Mile is the bypass junction between Ram Krishna Nagar and New Jaganpura, on borewell at 500 to 920 ppm. It shares the Ram Krishna Nagar water profile almost exactly. The distinguishing feature is the building stock — a lot of recently completed apartment towers on the bypass, where the pressure at the top floors is noticeably lower than at ground level.',
+    intro:
+      'We cover Zero Mile Chowk, the New Jaganpura side and the bypass towers. On high-floor flats in this locality we check delivered pressure at the tap before quoting a pump, because the fault is often the building supply, not the machine — and a customer should not pay for a pump that will not fix anything.',
+    commonRepair: 'Low delivered pressure on upper apartment floors',
+    technicians: 1, monthlyJobs: 45,
+  },
 ];
 
 /**
@@ -1238,10 +1413,21 @@ export const SERVICE_AREAS: ServiceAreaContent[] = [
  * a locality, and giving one its own page is how a legitimate area cluster
  * turns into a doorway cluster.
  */
+/*
+ * 19 Sep 2026 — do naam yahan se HATAYE gaye: Transport Nagar aur Ashok
+ * Rajpath. Dono ko ab apna page mil gaya hai (SERVICE_AREAS batch 8). Ek hi
+ * locality ka naam dedicated page pe AUR "yahan bhi jaate hain" list me,
+ * dono jagah hona doorway signal hai — Google ke liye do competing surfaces.
+ *
+ * ⚠️ Is comment me kisi bhi hate hue naam ko single quote me mat likhna.
+ * scripts/verify-new-areas.sh (A12) is block me quoted strings dhoondhta hai
+ * aur comment ko data se alag nahi karta — quoted naam likhne se test jhootha
+ * FAIL deta hai. Ye galti isi push me ek baar ho chuki hai.
+ */
 export const ADDITIONAL_AREAS = [
   'Nageshwar Colony', 'Mansarovar Colony', 'Gaighat', 'Chhajju Bagh',
-  'SP Verma Road', 'Nasriganj', 'Transport Nagar', 'Parsa Bazar',
-  'Adarsh Colony', 'Boring Canal Road', 'Ashok Rajpath',
+  'SP Verma Road', 'Nasriganj', 'Parsa Bazar',
+  'Adarsh Colony', 'Boring Canal Road',
   'Sabalpur', 'Punadih', 'Sherpur', 'Jamsaut', 'Ramanchak',
 ];
 

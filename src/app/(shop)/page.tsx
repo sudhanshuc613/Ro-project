@@ -34,6 +34,8 @@ import HowItWorks from '@/components/home/HowItWorks';
 import Testimonials, { REVIEWS } from '@/components/home/Testimonials';
 import ShopStrip from '@/components/home/ShopStrip';
 import FaqAccordion from '@/components/home/FaqAccordion';
+import SearchAnswers from '@/components/home/SearchAnswers';
+import { searchAnswerFaq } from '@/lib/seo/search-queries';
 
 import { buildMetadata } from '@/lib/seo/metadata';
 import {
@@ -142,7 +144,11 @@ export default async function HomePage() {
         // Individual Review objects — AI engines (ChatGPT, Perplexity, Gemini)
         // read these when deciding which local business to name.
         reviewSchema(REVIEWS),
-        faqSchema(FAQS),
+        /* Do FAQPage block: ek hamare apne FAQs ka, doosra un exact sawaalon
+           ka jo log Google me type karte hain (autocomplete se liye gaye).
+           Dono ka text page pe visible hai — schema aur dikhne wale content
+           me farq nahi hai. */
+        faqSchema([...FAQS, ...searchAnswerFaq().map((x) => ({ q: x.question, a: x.answer }))]),
       ])} />
 
       <main className="flex flex-col">
@@ -312,7 +318,16 @@ export default async function HomePage() {
         {/* 10 — E-commerce (deliberately last) */}
         <ShopStrip />
 
-        {/* 11 — FAQ */}
+        {/* 11 — Search-query answers.
+            19 Sep 2026: Google Autocomplete ki chhe phrases poori site pe ZERO
+            thi ("ro service patna near me", "ro repair patna", "ro service
+            centre patna", "water purifier service patna"...). Wajah grammar —
+            hum "RO Repair in Patna" likhte hain, log "ro repair patna" type
+            karte hain. Ye block wo gap poore vaakya me bharta hai.
+            Text: src/lib/seo/search-queries.ts */}
+        <SearchAnswers />
+
+        {/* 12 — FAQ */}
         <FaqAccordion faqs={FAQS} title="RO Service in Patna — Common Questions" />
       </main>
     </>

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { BRAND, CONTACT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
+import { COVERAGE_SENTENCE } from '@/lib/seo/search-queries';
 
 const SHOP = [
   { label: 'New RO Purifiers', href: '/category/new-ro-purifiers' },
@@ -109,6 +110,16 @@ export default function Footer() {
             {CONTACT.emailWorks && <> · {CONTACT.email}</>}
           </address>
         </div>
+
+        {/* 19 Sep 2026 — ek imaandaar vaakya jisme "ro service", "ro repair"
+            aur "water purifier service" Patna ke saath ek hi jagah aa jaate
+            hain. Ye har page pe dikhta hai, isliye JAAN-BOOJH KAR chhota hai:
+            ek vaakya, list nahi. Keyword list footer me chipkana doorway
+            signal hai — wo hum nahi kar rahe.
+            Text: src/lib/seo/search-queries.ts */}
+        <p className="border-t border-white/10 pt-5 text-xs leading-relaxed text-navy-300">
+          {COVERAGE_SENTENCE}
+        </p>
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 py-5 text-xs text-navy-200">
           <span>© {new Date().getFullYear()} {BRAND.name} · {BRAND.domain} — All rights reserved.</span>

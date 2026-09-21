@@ -30,15 +30,33 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding Aqua Perl…');
 
-  /* ── Admin user ── */
+  /* ── Admin user ──
+   *
+   * 🔴 19 Sep 2026 — `update` me passwordHash JAAN-BOOJH KAR hai.
+   *
+   * Pehle `update: { role: 'SUPER_ADMIN' }` tha. Iska matlab: jis DB me admin
+   * row pehle se hai, wahan re-seed karne par password NAHI badalta tha.
+   * Local test environment me har baar admin login fail hota tha aur 44 tests
+   * FAIL dikhate the — jo code ka bug nahi, seed ka gap tha. Har session me
+   * haath se password reset karna padta tha.
+   *
+   * ⚠️ PRODUCTION SAFETY: `npm run build` me seed NAHI chalta
+   * (build script = `prisma generate && next build`). Seed sirf tab chalta
+   * hai jab koi khud `npx tsx prisma/seed.ts` type kare. Production par ye
+   * kabhi apne aap nahi chalega, isliye owner ka badla hua password surakshit
+   * hai. Agar kabhi seed ko build pipeline me daala jaye, to ye line PEHLE
+   * hatani hogi. */
+  const ADMIN_SEED_PASSWORD = process.env.SEED_ADMIN_PASSWORD || 'ChangeMe@123';
+  const adminHash = await bcrypt.hash(ADMIN_SEED_PASSWORD, 12);
+
   const admin = await prisma.user.upsert({
     where: { phone: '8969821440' },
-    update: { role: 'SUPER_ADMIN' },
+    update: { role: 'SUPER_ADMIN', passwordHash: adminHash },
     create: {
       phone: '8969821440',
       fullName: 'Aqua Perl Admin',
       email: 'admin@rokadoctor.in',
-      passwordHash: await bcrypt.hash('ChangeMe@123', 12),
+      passwordHash: adminHash,
       role: 'SUPER_ADMIN',
       phoneVerifiedAt: new Date(),
     },

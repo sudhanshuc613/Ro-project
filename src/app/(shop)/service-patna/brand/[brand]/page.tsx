@@ -14,6 +14,7 @@ import FaqAccordion from '@/components/home/FaqAccordion';
 import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
+import { BRAND_QUERY_LINES } from '@/lib/seo/search-queries';
 
 export const revalidate = 86400;
 
@@ -123,6 +124,17 @@ export default function BrandServicePage({ params }: { params: { brand: string }
               <span className="mt-2 block text-orange-300">Visit Charge Only ₹{SERVICE.visitCharge}</span>
             </h1>
             <p className="mt-5 max-w-2xl text-navy-100 sm:text-lg">{brand.note}</p>
+
+            {/* 19 Sep 2026 — search-query gap.
+                Autocomplete "kent ro service patna" suggest karta hai (bina "in"),
+                hamare page pe "Kent RO Service in Patna" tha — exact match ZERO.
+                Ye line wo phrase apne shabdon me rakhti hai aur ek kaam ki baat
+                bolti hai. Text: src/lib/seo/search-queries.ts */}
+            {BRAND_QUERY_LINES[brand.slug] && (
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-navy-200">
+                {BRAND_QUERY_LINES[brand.slug]}
+              </p>
+            )}
             <div className="mt-8 flex flex-wrap gap-4">
               <a href={CONTACT.primaryTel} className="rounded-xl bg-cta-green px-7 py-4 font-bold text-white hover:bg-cta-greenDark">
                 📞 Call {CONTACT.primaryPhone}
