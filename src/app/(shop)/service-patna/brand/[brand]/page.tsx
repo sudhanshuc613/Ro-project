@@ -15,6 +15,7 @@ import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { BRAND_QUERY_LINES } from '@/lib/seo/search-queries';
+import { brandLabel } from '@/lib/seo/brand-labels';
 
 export const revalidate = 86400;
 
@@ -27,14 +28,36 @@ export function generateMetadata({ params }: { params: { brand: string } }): Met
   if (!brand) return { title: 'Brand Not Found' };
 
   const short = brand.name.split(' (')[0];
-  // Keep the SERP title under ~60 chars even for long brand labels
-  const label = short.length > 22 ? 'All Brands' : short;
+  /* 🔴 22 Sep 2026 — DUPLICATE TITLE BUG FIX.
+     Pehle yahan `short.length > 22 ? 'All Brands' : short` tha. Do brands ka
+     naam 22 se lamba hai (Commercial & Industrial RO Plants = 33,
+     All Other Brands & Local Assembled Units = 40), isliye DONO ka title
+     bilkul ek jaisa ban gaya tha — "All Brands RO Service Patna — ₹200 Visit".
+     Live measure kiya: 143 pages me yahi ek duplicate-title jodi thi.
+     Ab har lambe naam ka apna UNIQUE label hai — src/lib/seo/brand-labels.ts */
+  const label = brandLabel(brand.slug, brand.name);
+  /* Agar label me pehle se "RO" hai (jaise "Industrial RO Plant") to dobara
+     "RO Service" likhne se "RO Plant RO Service" ban jaata hai — bekaar
+     angrezi. Aise me sirf "Service" lagao. */
+  const svc = /\bRO\b/i.test(label) ? 'Service' : 'RO Service';
+
   /* Same 48-char budget as area pages (layout appends ' | Aqua Perl').
      "Repair & Filters" carries two extra query terms that plain
      "Visit Charge" did not. */
-  const long = `${label} RO Service in Patna — Repair & Filters`;
-  const title = long.length <= 48 ? long : `${label} RO Service Patna — ₹${SERVICE.visitCharge} Visit`;
-  const description = `${label} RO repair & service in Patna. ₹${SERVICE.visitCharge} visit charge, genuine parts, 30-day warranty, same-day visit. Call ${CONTACT.primaryPhone}.`;
+  const long = `${label} ${svc} in Patna — Repair & Filters`;
+  const title = long.length <= 48 ? long : `${label} ${svc} Patna — ₹${SERVICE.visitCharge} Visit`;
+
+  /* 22 Sep 2026 — description 160 ke andar rakhna hai, warna SERP me kat
+     jaati hai aur Google apna snippet bana leta hai. Lambe label pe chhota
+     version use hota hai. */
+  /* "RO" ko upper-case hi rehna chahiye — `.toLowerCase()` "AquaUltra ro
+     service" bana deta tha, jo padhne me galat lagta hai. */
+  const svcDesc = svc === 'RO Service' ? 'RO service' : 'service';
+  const longDesc = `${label} ${svcDesc} & repair in Patna. ₹${SERVICE.visitCharge} visit charge, genuine parts, 30-day warranty, same-day visit. Call ${CONTACT.primaryPhone}.`;
+  const description =
+    longDesc.length <= 158
+      ? longDesc
+      : `${label} repair & service in Patna. ₹${SERVICE.visitCharge} visit, genuine parts, 30-day warranty. Call ${CONTACT.primaryPhone}.`;
 
   return {
     title,

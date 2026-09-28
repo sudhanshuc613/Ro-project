@@ -27,7 +27,11 @@ export const metadata: Metadata = {
     is the deepest thing on the site, so it takes the "water purifier repair /
     service centre" angle, which rocareindia uses 15 times and we used twice.
   */
-  title: `Water Purifier Repair Patna — RO Service Centre ₹${SERVICE.visitCharge}`,
+  /* 22 Sep 2026 — 64 char tha (+ ' | Aqua Perl'), SERP me kat raha tha.
+     Zyppy ka 2026 data: 61-70 char titles 70% baar Google khud rewrite karta
+     hai, 51-55 sabse behtar (~40%). "Centre" hataya — phrase "water purifier
+     repair patna" abhi bhi poora hai, jo is page ka target hai. */
+  title: `Water Purifier Repair in Patna — ₹${SERVICE.visitCharge} Visit`,
   description: `RO repair, installation & AMC across Patna. ₹${SERVICE.visitCharge} visit charge, same-day service, 30-day warranty. All brands. Call ${CONTACT.primaryPhone}.`,
   keywords: [
     'RO service in Patna', 'RO repair Patna', 'water purifier service Patna',

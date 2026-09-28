@@ -19,6 +19,14 @@ export function organizationSchema(): Json {
     name: BRAND.name,
     legalName: BRAND.legalName,
     url: BRAND.url,
+    /* 28 Sep 2026 — entity properties. 2026 ki local-schema guidance ye kehti
+       hai ki AI answer engines (Gemini, ChatGPT Search, Perplexity) in fields
+       se business ko "samajhte" hain — sirf rank ke liye nahi, cite hone ke
+       liye. Har value asli hai: 2019 se kaam, Hindi+English dono bolte hain. */
+    foundingDate: '2019',
+    knowsLanguage: ['hi', 'en'],
+    slogan: `RO service in Patna — ₹${SERVICE.visitCharge} visit, ${SERVICE.warrantyDays}-day warranty`,
+    areaServed: { '@type': 'City', name: 'Patna' },
     logo: { '@type': 'ImageObject', url: `${BRAND.url}${BRAND.logo}`, width: 512, height: 512 },
     description:
       'Aqua Perl sells RO water purifiers, commercial RO plants and genuine spare parts across India, and provides expert RO repair & installation service in Patna, Bihar.',
@@ -67,6 +75,14 @@ export function localBusinessSchema(area?: {
     priceRange: '₹₹',
     currenciesAccepted: 'INR',
     paymentAccepted: 'Cash, UPI, Card, Net Banking',
+    /* 28 Sep 2026 — LocalBusiness par bhi wahi entity fields jo Organization
+       par hain. Dono nodes ek hi business hain, isliye dono ka description
+       ek jaisa hona chahiye — warna AI engines ko do alag tasveer milti hai.
+       `sameAs` tabhi nikalta hai jab SOCIAL array me asli profile ho; abhi
+       khali hai, isliye field render hi nahi hoti (jhoota link nahi jaata). */
+    foundingDate: '2019',
+    knowsLanguage: ['hi', 'en'],
+    ...(SOCIAL.length ? { sameAs: SOCIAL } : {}),
     // Service Area Business: Google Business Profile pe address chhupa hai,
     // isliye schema mein bhi streetAddress nahi bhejte. GBP aur website ka
     // address alag hona local ranking ka seedha nuksan hai.
@@ -338,7 +354,17 @@ export function reviewSchema(
   return {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': `${BRAND.url}/#reviews`,
+    /* 🔴 28 Sep 2026 — ENTITY FRAGMENTATION FIX.
+       Pehle yahan `@id: ${BRAND.url}/#reviews` tha — yaani homepage par DO
+       alag LocalBusiness entity ban rahi thi:
+           #localbusiness  (main, hasOfferCatalog + geo ke saath)
+           #reviews        (sirf reviews ke saath)
+       Google JSON-LD nodes ko @id se merge karta hai. Do alag @id = do alag
+       business. Isse entity signal bat jaata hai — ek node ke paas geo aur
+       offers, doosre ke paas reviews, kisi ke paas poori tasveer nahi.
+       Ab wahi @id use hota hai, isliye dono node EK entity me merge ho jaate
+       hain aur reviews main business par lagti hain. */
+    '@id': `${BRAND.url}/#localbusiness`,
     name: BRAND.name,
     image: `${BRAND.url}${BRAND.logoPng}`,
     telephone: `+91${CONTACT.primaryPhone}`,

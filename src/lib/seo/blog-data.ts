@@ -172,7 +172,7 @@ export const BLOG_POSTS: BlogPost[] = [
   /* ══════════════════════════════════════════════════════════════════════ */
   {
     slug: 'patna-me-tds-kitna-hona-chahiye',
-    title: 'Patna Me TDS Kitna Hona Chahiye — Area-Wise Asli Data',
+    title: 'Patna Me TDS Kitna Hona Chahiye — Asli Data',
     description:
       'Patna ke paani ka TDS kitna hai aur peene ke liye kitna sahi hai? 55 area ka asli measured data, BIS limit, aur kaunsa purifier lena chahiye.',
     published: '2026-09-03',
@@ -444,7 +444,7 @@ export const BLOG_POSTS: BlogPost[] = [
   /* ══════════════════════════════════════════════════════════════════════ */
   {
     slug: 'ro-uv-uf-me-kya-farak-hai',
-    title: 'RO, UV, UF Me Kya Farak Hai — Kaunsa Aapke Liye Sahi',
+    title: 'RO, UV, UF Me Kya Farak Hai — Kaunsa Sahi',
     description:
       'RO, UV, UF aur TDS controller me kya farak hai? Apne paani ke hisaab se kaunsa lena chahiye — aur kaunsa lena paisa barbaad karna hai.',
     published: '2026-09-03',

@@ -212,7 +212,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     title: 'RO AMC in Patna — Plans From ₹1,499',
     h1: 'RO AMC in Patna',
     description:
-      'RO annual maintenance contract in Patna from ₹1,499. Scheduled filter changes, priority visits, discounted parts. Honest advice on whether AMC is worth it for you.',
+      'RO annual maintenance contract in Patna from ₹1,499. Scheduled filter changes, priority visits, discounted parts. Honest AMC advice.',
     keywords: [
       'ro amc patna', 'ro amc price patna', 'water purifier amc patna',
       'ro annual maintenance contract patna', 'ro amc plan cost',
@@ -297,7 +297,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     footerLabel: 'RO Repair',
     title: `RO Repair in Patna — ₹${V} Visit, Same Day`,
     h1: 'RO Repair in Patna',
-    description: `RO repair in Patna at ₹${V} visit charge including diagnosis and TDS test. Same-day visit, 30-day warranty, all brands. Quote before work starts. Call 8969821440.`,
+    description: `RO repair in Patna at ₹${V} visit including diagnosis and TDS test. Same-day visit, 30-day warranty, all brands. Call 8969821440.`,
     keywords: [
       'ro repair patna', 'ro repair near me patna', 'water purifier repair patna',
       'ro not working patna', 'ro mechanic patna', 'ro technician patna',
@@ -402,7 +402,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     title: 'RO Filter Change in Patna — From ₹150',
     h1: 'RO Filter Change in Patna',
     description:
-      'RO filter replacement in Patna from ₹150 fitted. Sediment, carbon and post-carbon. Patna water exhausts filters faster than the manual says — here are the real intervals.',
+      'RO filter replacement in Patna from ₹150 fitted. Sediment, carbon and post-carbon. Patna water exhausts filters faster — real intervals.',
     keywords: [
       'ro filter change patna', 'ro filter replacement patna',
       'ro filter price patna', 'water purifier filter change patna',
@@ -601,7 +601,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     title: 'Commercial RO Plant Service Patna',
     h1: 'Commercial RO Plant Service in Patna',
     description:
-      'Commercial RO plant service in Patna for 25 to 1000 LPH systems. Schools, hotels, hospitals, water plants. Breakdown response, AMC, membrane cleaning. Call 8969821440.',
+      'Commercial RO plant service in Patna, 25 to 1000 LPH. Schools, hotels, hospitals. Breakdown response, AMC, membrane cleaning.',
     keywords: [
       'commercial ro service patna', 'ro plant service patna',
       'commercial ro plant repair patna', 'industrial ro service patna',

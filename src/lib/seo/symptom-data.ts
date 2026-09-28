@@ -384,7 +384,7 @@ export const SYMPTOMS: Symptom[] = [
     title: 'RO Leakage Problem — Kahan Se Aur Kitna',
     h1: 'RO Leakage Problem — Kahan Se Pani Tapak Raha Hai',
     description:
-      'RO se pani tapak raha hai? Leak ki jagah se pata chalta hai kya kharab hai — housing O-ring ₹150, tubing ₹200, tank ₹1,200. Turant plug nikalo agar board ke paas hai.',
+      'RO se pani tapak raha hai? Leak ki jagah batati hai kya kharab hai — O-ring ₹150, tubing ₹200, tank ₹1,200. Patna me same-day fix.',
     shortAnswer:
       'RO ka leak lagbhag hamesha teen jagah se hota hai: housing ka O-ring, push-fit tubing ka joint, ya tank ka connector. Teeno sasti cheezein hain — ₹150 se ₹400. Khatra leak ka nahi, uske neeche ke electrical board ka hai. Agar paani board ki taraf ja raha hai to pehle plug nikalo, phir call karo.',
     icon: '💦',

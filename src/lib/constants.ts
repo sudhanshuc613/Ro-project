@@ -93,9 +93,35 @@ export const CONTACT = {
  * SIRF wo URL daalna jo sach mein zinda ho. Khali array bilkul theek hai;
  * jhoota link Google ko 404 dikhata hai aur bharosa girta hai.
  */
+/*
+ * ⚠️ 28 Sep 2026 — YE HAMARA SABSE SASTA BACHA HUA SEO KAAM HAI.
+ *
+ * Live measure kiya: rosaleandservices.com (jo hamse upar hai) apne homepage
+ * se 6 profile link karta hai — facebook, instagram, linkedin, twitter,
+ * youtube, pinterest. Hamare paas ZERO hai.
+ *
+ * `sameAs` wahi field hai jisse Google confirm karta hai ki website, Google
+ * Business Profile aur social pages SAB EK HI business hain. Iske bina Google
+ * ko hamari website aur hamare GBP ko jodne ka koi pakka signal nahi milta —
+ * aur wahi "entity" signal local ranking ka bada hissa hai.
+ *
+ * ── Owner ko kya karna hai ────────────────────────────────────────────────
+ * Ye 4 line neeche uncomment kar dena, jaise-jaise profile banti jaayein:
+ *
+ *   1. Facebook page      →  facebook.com/<page>      (20 min, free)
+ *   2. Instagram business →  instagram.com/<handle>   (10 min, free)
+ *   3. Google Maps link   →  GBP kholo → Share → link copy karo
+ *   4. JustDial / Sulekha →  listing ban jaane ke baad uska public URL
+ *
+ * 🔴 NIYAM: sirf wahi URL daalna jo SACH ME khulta ho. Jhoota ya dead link
+ * Google follow karta hai, 404 milta hai, aur bharosa ULTA girta hai.
+ * Khali array bilkul theek hai — tab ye field render hi nahi hoti.
+ */
 export const SOCIAL: readonly string[] = [
   // 'https://www.facebook.com/<your-page>',
   // 'https://www.instagram.com/<your-handle>',
+  // 'https://maps.app.goo.gl/<your-gbp-share-link>',
+  // 'https://www.justdial.com/Patna/<your-listing>',
 ];
 
 /**

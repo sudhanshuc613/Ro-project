@@ -120,7 +120,7 @@ export const CATEGORY_SEO: Record<string, CategorySeoBlock> = {
     slug: 'new-ro-purifiers',
     metaTitle: 'RO Water Purifier Price in India — Buy Online 2026',
     metaDescription:
-      'Buy RO water purifiers online at genuine prices. RO + UV + UF, alkaline and copper models with TDS control. Delivery across India, expert support. Call 8969821440.',
+      'Buy RO water purifiers online at genuine prices. RO + UV + UF, alkaline and copper with TDS control. Delivery across India.',
     heading: 'RO Water Purifiers — Buy Online at Genuine Prices',
     intro:
       'We repair water purifiers every day, which means we see exactly which models keep running at five years and which ones become a parts problem at eighteen months. The purifiers listed here are chosen on that basis, not on brochure claims. Read the TDS guidance below before you pick a model — buying the wrong purification type for your water is the most expensive mistake in this category.',
@@ -372,7 +372,7 @@ export const CATEGORY_SEO: Record<string, CategorySeoBlock> = {
   /* ══════════════════════════════════════════════════════════════════════ */
   accessories: {
     slug: 'accessories',
-    metaTitle: 'RO Accessories Online — Pipes, Taps, Fittings India',
+    metaTitle: 'RO Accessories Online — Pipes, Taps, Fittings',
     metaDescription:
       'RO accessories online — tubing, taps, elbows, connectors, tanks and mounting kits. Standard sizes fit all brands. Delivery across India. Call 8969821440.',
     heading: 'RO Accessories — Tubing, Taps, Fittings and Tanks',
