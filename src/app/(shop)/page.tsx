@@ -35,6 +35,7 @@ import Testimonials, { REVIEWS } from '@/components/home/Testimonials';
 import ShopStrip from '@/components/home/ShopStrip';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import SearchAnswers from '@/components/home/SearchAnswers';
+import BrandLogoGrid from '@/components/home/BrandLogoGrid';
 import { searchAnswerFaq } from '@/lib/seo/search-queries';
 
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -281,6 +282,13 @@ export default async function HomePage() {
 
         {/* 6 — Area coverage (internal links) */}
         <AreaCoverage />
+
+        {/* Brand logo grid — 28 Sep 2026.
+            Owner ne 10 asli brand logo diye. Ye grid 10 naye internal link
+            bhi deta hai (har logo apne brand page pe), jo un pages ki crawl
+            demand badhata hai — aur wahi "Discovered, not indexed" ka ilaaj hai.
+            ⚖️ Neeche ka disclaimer HATANA MAT — legal mitigation hai. */}
+        <BrandLogoGrid />
 
         {/* 7 — Brands we repair (internal links) */}
         <section className="bg-navy-50 py-14 md:py-16">
