@@ -9,6 +9,7 @@ import { listProducts, parseListParams, getAllBrands, getAllCategories } from '@
 import { CONTACT } from '@/lib/constants';
 import { breadcrumbSchema, itemListSchema, faqSchema, jsonLd } from '@/lib/seo/schema';
 import { PRODUCTS_PAGE_SEO } from '@/lib/seo/catalog-seo';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 300;
 
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     description: PRODUCTS_PAGE_SEO.metaDescription,
     url: '/products',
     type: 'website',
+    images: ogImage(),
   },
 };
 

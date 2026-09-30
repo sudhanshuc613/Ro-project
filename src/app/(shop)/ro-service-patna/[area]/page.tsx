@@ -33,6 +33,7 @@ import AreaWorkProof, { areaShots, imageObjectSchema } from '@/components/home/A
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { tdsVerdict, costForecast, faultProfile, responseDetail } from '@/lib/seo/area-depth';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -86,7 +87,7 @@ export function generateMetadata({ params }: { params: { area: string } }): Meta
       ...area.pincodes.map((p) => `RO service ${p}`),
     ],
     alternates: { canonical: areaPath(area.slug) },
-    openGraph: { title, description, url: areaPath(area.slug), type: 'website' },
+    openGraph: { title, description, url: areaPath(area.slug), type: 'website', images: ogImage() },
   };
 }
 

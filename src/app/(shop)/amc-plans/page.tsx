@@ -4,6 +4,8 @@ import { CONTACT, SERVICE } from '@/lib/constants';
 import { faqSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import AmcPurchaseForm from '@/components/home/AmcPurchaseForm';
+import { ogImage } from '@/lib/seo/og-image';
+import { BRAND } from '@/lib/constants';
 
 export const revalidate = 86400;
 
@@ -13,6 +15,16 @@ export const metadata: Metadata = {
     'Annual Maintenance Contract for your RO purifier in Patna. Scheduled filter changes, priority service, discounted parts. Plans from ₹1,499. Call 8969821440.',
   keywords: ['RO AMC Patna', 'water purifier AMC', 'RO annual maintenance Patna', 'RO service plan Patna'],
   alternates: { canonical: '/amc-plans' },
+  /* 30 Sep 2026 — pehle yahan openGraph tha hi nahi, isliye Next.js root
+     layout wala use karta tha jisme url = homepage aur koi image nahi thi.
+     WhatsApp pe link bhejne par galat URL aur khaali card dikhta tha. */
+  openGraph: {
+    title: 'RO AMC Plans in Patna — From ₹1,499/Year',
+    description: 'Annual Maintenance Contract for your RO purifier in Patna. Scheduled filter changes, priority service, discounted parts.',
+    url: `${BRAND.url}/amc-plans`,
+    type: 'website',
+    images: ogImage(),
+  },
 };
 
 const PLANS = [

@@ -44,6 +44,7 @@ import {
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import TdsChecker from '@/components/home/TdsChecker';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -63,6 +64,7 @@ export const metadata: Metadata = {
     description: 'Every common question about RO service in Patna, answered with real numbers.',
     url: `${BRAND.url}/ro-service-patna-faq`,
     type: 'website',
+    images: ogImage(),
   },
   other: {
     'geo.region': 'IN-BR',

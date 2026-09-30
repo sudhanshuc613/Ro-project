@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { getPosts, AUTHOR } from '@/lib/seo/blog-data';
 import { breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
 import { BRAND, CONTACT } from '@/lib/constants';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
     description: 'Patna ke asli service data se likhe gaye RO guides.',
     url: '/blog',
     type: 'website',
+    images: ogImage(),
   },
 };
 

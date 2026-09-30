@@ -56,6 +56,7 @@ import TrustBadges from '@/components/ui/TrustBadges';
 import AreaWorkProof, { serviceShots, imageObjectSchema } from '@/components/home/AreaWorkProof';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -104,6 +105,7 @@ export function generateMetadata({ params }: { params: { intent: string } }): Me
       description: intent.description,
       url: `${BRAND.url}${intent.path}`,
       type: 'website',
+      images: ogImage(),
     },
     other: {
       'geo.region': 'IN-BR',

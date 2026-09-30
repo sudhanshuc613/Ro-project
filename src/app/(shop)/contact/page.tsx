@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BRAND, CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
 import { localBusinessSchema, jsonLd } from '@/lib/seo/schema';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -9,6 +10,14 @@ export const metadata: Metadata = {
   title: 'Contact Us — Aqua Perl Patna',
   description: `Call ${CONTACT.primaryPhone} or ${CONTACT.secondaryPhone} for RO service in Patna or orders across India. Open ${CONTACT.hours}.`,
   alternates: { canonical: '/contact' },
+  /* 30 Sep 2026 — dekho amc-plans wali wajah. */
+  openGraph: {
+    title: 'Contact Us — Aqua Perl Patna',
+    description: `Call ${CONTACT.primaryPhone} for RO service in Patna or orders across India.`,
+    url: `${BRAND.url}/contact`,
+    type: 'website',
+    images: ogImage(),
+  },
 };
 
 const POLICIES = [

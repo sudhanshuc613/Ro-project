@@ -5,6 +5,7 @@ import './globals.css';
 import { BRAND } from '@/lib/constants';
 import Providers from './providers';
 import Analytics from '@/components/analytics/Analytics';
+import { ogImage } from '@/lib/seo/og-image';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -46,6 +47,9 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     siteName: BRAND.name,
     url: BRAND.url,
+    /* Safety net. Next.js me child ka openGraph parent ko REPLACE karta hai,
+       isliye ye sirf un pages ko bachata hai jo apna openGraph likhte hi nahi. */
+    images: ogImage(),
   },
   icons: {
     icon: [

@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import { breadcrumbSchema, faqSchema, jsonLd } from '@/lib/seo/schema';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     ...SERVICED_BRANDS.map((b) => `${b.name.split(' (')[0]} RO service Patna`),
   ],
   alternates: { canonical: '/service-patna/brand' },
-  openGraph: { title, description, url: `${BRAND.url}/service-patna/brand` },
+  openGraph: { title, description, url: `${BRAND.url}/service-patna/brand`, images: ogImage() },
   other: { 'geo.region': 'IN-BR', 'geo.placename': 'Patna' },
 };
 

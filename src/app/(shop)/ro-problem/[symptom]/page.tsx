@@ -47,6 +47,7 @@ import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -66,7 +67,7 @@ export function generateMetadata({ params }: { params: { symptom: string } }): M
     description: s.description,
     keywords: [s.primaryQuery, ...s.altQueries],
     alternates: { canonical: url },
-    openGraph: { title: s.title, description: s.description, url, type: 'article' },
+    openGraph: { title: s.title, description: s.description, url, type: 'article', images: ogImage() },
   };
 }
 

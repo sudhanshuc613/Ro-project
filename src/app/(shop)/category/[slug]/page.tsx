@@ -13,6 +13,7 @@ import {
 } from '@/server/services/catalog.service';
 import { breadcrumbSchema, itemListSchema, faqSchema, jsonLd } from '@/lib/seo/schema';
 import { CATEGORY_SEO } from '@/lib/seo/catalog-seo';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 300;
 
@@ -42,6 +43,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: seo?.metaDescription ?? undefined,
       url: `/category/${cat.slug}`,
       type: 'website',
+      images: ogImage(),
     },
   };
 }

@@ -24,6 +24,7 @@ import {
 } from '@/lib/seo/schema';
 import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     'ro repair guide hindi', 'ro troubleshooting hindi', 'ro fault kaise pata kare',
   ],
   alternates: { canonical: URL },
-  openGraph: { title: 'RO Problem Checker', url: URL, type: 'website' },
+  openGraph: { title: 'RO Problem Checker', url: URL, type: 'website', images: ogImage() },
 };
 
 const HUB_FAQS = [

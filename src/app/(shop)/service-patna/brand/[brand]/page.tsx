@@ -16,6 +16,7 @@ import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { BRAND_QUERY_LINES } from '@/lib/seo/search-queries';
 import { brandLabel } from '@/lib/seo/brand-labels';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -71,7 +72,7 @@ export function generateMetadata({ params }: { params: { brand: string } }): Met
       ...brand.popularModels.map((m) => `${m} service Patna`),
     ],
     alternates: { canonical: `/service-patna/brand/${brand.slug}` },
-    openGraph: { title, description, url: `${BRAND.url}/service-patna/brand/${brand.slug}` },
+    openGraph: { title, description, url: `${BRAND.url}/service-patna/brand/${brand.slug}`, images: ogImage() },
     other: { 'geo.region': 'IN-BR', 'geo.placename': 'Patna' },
   };
 }

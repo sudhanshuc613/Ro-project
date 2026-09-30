@@ -30,6 +30,7 @@ import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -48,6 +49,7 @@ export const metadata: Metadata = {
     description: 'Repair, installation, filter change, membrane, AMC and commercial plant service — with real Patna rates.',
     url: `${BRAND.url}/ro-services-patna`,
     type: 'website',
+    images: ogImage(),
   },
   other: {
     'geo.region': 'IN-BR',

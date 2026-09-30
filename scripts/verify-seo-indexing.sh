@@ -225,8 +225,8 @@ print(json.dumps({
  "stockQuantity":r[7],"lowStockThreshold":r[8],"purificationTech":[],
  "isPanIndia":True,"requiresInstallation":False,"freeShipping":False,"isFeatured":False,
  "status":"DRAFT",
- "images":[{"url":"/products/a.png","altText":"test image one","isPrimary":True},
-           {"url":"/products/b.png","altText":"test image two","isPrimary":False}],
+ "images":[{"url":"/products/ro-domestic.png","altText":"test image one","isPrimary":True},
+           {"url":"/products/ro-commercial.png","altText":"test image two","isPrimary":False}],
  "specifications":[]}))
 PY
 )

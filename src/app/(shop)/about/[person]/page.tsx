@@ -22,6 +22,8 @@ import { personSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import { CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { REPAIRS_COMPLETED, FOUNDED_YEAR } from '@/lib/social-proof';
+import { ogImage } from '@/lib/seo/og-image';
+import { BRAND } from '@/lib/constants';
 
 export const revalidate = 86400;
 
@@ -35,6 +37,16 @@ export function generateMetadata({ params }: { params: { person: string } }): Me
     title: `${AUTHOR.name} — RO Technician, Patna`,
     description: `${AUTHOR.name}, ${AUTHOR.role}. ${AUTHOR.yearsExperience}+ saal, ${REPAIRS_COMPLETED.toLocaleString('en-IN')}+ RO units, ${SERVICE_AREAS.length} Patna areas. Call ${CONTACT.primaryPhone}.`,
     alternates: { canonical: `/about/${AUTHOR.slug}` },
+    /* 30 Sep 2026 — pehle openGraph tha hi nahi, isliye Next.js root layout
+       wala use hota tha jisme og:url = HOMEPAGE thi. WhatsApp pe is page ka
+       link bhejne par homepage ka card dikhta tha. */
+    openGraph: {
+      title: `${AUTHOR.name} — RO Technician, Patna`,
+      description: `${AUTHOR.name}, ${AUTHOR.role}. ${AUTHOR.yearsExperience}+ saal ka anubhav, Patna me RO service.`,
+      url: `${BRAND.url}/about/${AUTHOR.slug}`,
+      type: 'profile',
+      images: ogImage(),
+    },
   };
 }
 

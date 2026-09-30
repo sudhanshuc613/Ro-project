@@ -19,6 +19,7 @@ import {
 import FaqAccordion from '@/components/home/FaqAccordion';
 import TrustBadges from '@/components/ui/TrustBadges';
 import { CONTACT, SERVICE } from '@/lib/constants';
+import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
 
@@ -43,6 +44,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       publishedTime: post.published,
       modifiedTime: post.updated,
       authors: [AUTHOR.name],
+      images: ogImage(),
     },
   };
 }
