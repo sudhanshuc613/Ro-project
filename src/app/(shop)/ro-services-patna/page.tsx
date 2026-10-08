@@ -18,10 +18,24 @@
  * costs. Someone who does not yet know whether they need a filter change or a
  * membrane lands here and leaves knowing.
  */
+/**
+ * 🔴 8 Oct 2026 — ye page ab ek PAID LANDING PAGE bhi hai.
+ * Google Ads ka sitelink "All RO Services We Do" seedha yahan bhejta hai.
+ * Isliye teen cheezein add hui:
+ *   1. Hero me asli technician poster (/banners/hero-technician.png — wahi
+ *      jo homepage ServiceHero use karta hai, competitor-branding wali
+ *      service-tech.png NAHI)
+ *   2. Teen proof cards pehli screen par — ₹200 / 90 min / 30 din
+ *   3. Homepage wala poora BrandLogoGrid (10 logo + 12 text tile + disclaimer)
+ * QuickBookForm hero se nikaal ke apne section me daala — hero me image aur
+ * form dono rakhne se mobile par dono chhote ho jaate the.
+ */
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
+import BrandLogoGrid from '@/components/home/BrandLogoGrid';
 import {
   localBusinessSchema, faqSchema, breadcrumbSchema, serviceListSchema, jsonLd,
 } from '@/lib/seo/schema';
@@ -132,21 +146,44 @@ export default function ServiceHubPage() {
           </ol>
         </nav>
 
-        {/* ── Hero ── */}
+        {/* ── Hero — poster + proof cards ── */}
         <section className="bg-navy-gradient py-12 text-white md:py-16">
-          <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="container mx-auto grid items-center gap-10 px-4 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
-              <h1 className="font-display text-3xl font-extrabold leading-tight md:text-5xl">
+              <p className="text-sm font-bold uppercase tracking-wider text-aqua-300">
+                Best RO Service in Patna
+              </p>
+              <h1 className="mt-2 font-display text-3xl font-extrabold leading-tight md:text-5xl">
                 RO Services in Patna
               </h1>
               <p className="mt-3 text-lg font-semibold text-aqua-200">
                 Har kaam, uska asli rate · ₹{SERVICE.visitCharge} visit charge
               </p>
               <p className="mt-4 max-w-xl leading-relaxed text-navy-100">
-                Six different jobs, six different prices. Most sites bury all of them
-                on one page and quote a range. Here each one has its own page with
-                what it involves, what it costs and how to tell you need it.
+                Repair, installation, filter change, membrane, AMC aur commercial
+                plant — chhe alag kaam, chhe alag daam. Zyadatar site sab ek page
+                par daal ke ek range likh deti hai. Yahan har kaam ka apna page hai,
+                uska kaam kya hota hai, kitna lagta hai, aur kaise pata chale ki
+                aapko wahi chahiye.
               </p>
+
+              {/* Proof cards — pehli screen par number chahiye */}
+              <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {[
+                  { icon: '₹', t: `₹${SERVICE.visitCharge} Visit Charge`, s: 'Inspection + TDS test' },
+                  { icon: '⏱', t: `${SERVICE.responseTime} Response`, s: 'Zyadatar Patna areas' },
+                  { icon: '🛡', t: `${SERVICE.warrantyDays}-Day Warranty`, s: 'Har repair par' },
+                ].map((f) => (
+                  <div
+                    key={f.t}
+                    className="rounded-xl bg-white/10 px-4 py-3 ring-1 ring-white/15 backdrop-blur-sm"
+                  >
+                    <span aria-hidden="true" className="text-lg text-aqua-300">{f.icon}</span>
+                    <p className="mt-0.5 font-display text-sm font-extrabold text-white">{f.t}</p>
+                    <p className="text-[11px] text-navy-300">{f.s}</p>
+                  </div>
+                ))}
+              </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
@@ -164,6 +201,43 @@ export default function ServiceHubPage() {
               </div>
             </div>
 
+            {/* Poster — wahi image jo homepage hero me hai */}
+            <div className="relative mx-auto w-full max-w-lg">
+              <Image
+                src="/banners/hero-technician.png"
+                alt={`Aqua Perl RO technician in Patna — ₹${SERVICE.visitCharge} visit charge, ${SERVICE.responseTime} response`}
+                width={760}
+                height={760}
+                className="h-auto w-full object-contain drop-shadow-2xl"
+                priority
+                sizes="(max-width: 1024px) 90vw, 46vw"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Booking form — hero se nikaal ke apna section ── */}
+        <section className="bg-sand-100 py-12 md:py-14">
+          <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
+                Abhi book kar lijiye
+              </h2>
+              <p className="mt-3 leading-relaxed text-navy-600">
+                Form bharne me ek minute lagta hai. Problem likh dijiye, hum phone
+                par hi bata denge ki kaam kya hai aur kitna lagega — technician
+                bhejne se pehle. Jaldi ho to seedha{' '}
+                <a href={CONTACT.primaryTel} className="font-bold text-aqua-700 underline-offset-2 hover:underline">
+                  {CONTACT.primaryPhone}
+                </a>{' '}
+                par call kar dijiye.
+              </p>
+              <ul className="mt-5 space-y-2 text-sm text-navy-600">
+                <li>✅ Rate kaam shuru hone se pehle bataya jaata hai</li>
+                <li>✅ Genuine ya OEM part — dono ka daam dikhate hain</li>
+                <li>✅ Warranty me ho to hum khud brand centre bhejte hain</li>
+              </ul>
+            </div>
             <div className="rounded-2xl bg-white p-1 shadow-2xl">
               <QuickBookForm />
             </div>
@@ -296,29 +370,25 @@ export default function ServiceHubPage() {
           </div>
         </section>
 
-        {/* ── Brands ── */}
-        <section className="bg-sand-100 py-12 md:py-14">
-          <div className="container mx-auto px-4">
-            <h2 className="mb-7 text-center font-display text-2xl font-extrabold text-navy-700">
-              {SERVICED_BRANDS.length} brand, sab ka kaam
-            </h2>
-            <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-2">
-              {SERVICED_BRANDS.slice(0, 12).map((b) => (
-                <Link
-                  key={b.slug}
-                  href={`/service-patna/brand/${b.slug}`}
-                  className="rounded-full border border-navy-100 bg-white px-4 py-2 text-sm font-semibold text-navy-600 transition hover:border-aqua-300 hover:text-aqua-600"
-                >
-                  {b.name.split(' (')[0]}
-                </Link>
-              ))}
-              <Link
-                href="/service-patna/brand"
-                className="rounded-full bg-navy-700 px-4 py-2 text-sm font-bold text-white transition hover:bg-navy-600"
-              >
-                Sabhi brand →
-              </Link>
-            </div>
+        {/* ── Brands — homepage wala poora logo grid ──────────────────
+            Logo + text tile + legal disclaimer, sab ek hi shared component
+            se aata hai taaki teeno jagah (home, yahan, brand hub) ek jaisa
+            rahe aur disclaimer kabhi chhoote nahi. */}
+        <BrandLogoGrid />
+
+        <section className="bg-white pb-12">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-sm text-muted">
+              {SERVICED_BRANDS.length} brand ki machine par kaam hota hai — branded,
+              imported ya locally assembled. Visit charge sab ke liye ek hi,
+              ₹{SERVICE.visitCharge}.
+            </p>
+            <Link
+              href="/service-patna/brand"
+              className="mt-4 inline-block rounded-xl bg-navy-700 px-6 py-3 text-sm font-bold text-white transition hover:bg-navy-600"
+            >
+              Sabhi {SERVICED_BRANDS.length} brand dekho →
+            </Link>
           </div>
         </section>
 
