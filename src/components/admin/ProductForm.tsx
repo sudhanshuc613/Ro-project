@@ -28,6 +28,9 @@ import {
   SPEC_KEY_SUGGESTIONS, SPEC_VALUE_SUGGESTIONS,
   type ProductKind,
 } from '@/lib/seo/spec-autofill';
+/* 9 Oct 2026 — live product "Apple Alfa" me 3 spec galat bhare gaye the
+   (Power Consumption me ₹30, Technology me "Korea"). Ab form khud pakadta hai. */
+import { validateSpec, validateAllSpecs } from '@/lib/seo/spec-validate';
 
 interface Option { id: string; name: string }
 
@@ -586,6 +589,26 @@ export default function ProductForm({
               Jo value <strong>khaali</strong> hai use khud bharo — engine sirf wahi bharta hai
               jo naam se pakka pata chalta hai.
             </p>
+            {(() => {
+              const { errors: specErr, warns: specWarn } = validateAllSpecs(f.specifications, f.name);
+              if (!specErr && !specWarn) {
+                return f.specifications.some((x) => x.specKey.trim() && x.specValue.trim()) ? (
+                  <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-800 ring-1 ring-emerald-200">
+                    ✓ Sab spec value theek lag rahi hain
+                  </p>
+                ) : null;
+              }
+              return (
+                <p className={`rounded-xl px-3 py-2 text-xs font-bold ring-1 ${
+                  specErr ? 'bg-red-50 text-red-800 ring-red-200' : 'bg-amber-50 text-amber-900 ring-amber-200'
+                }`}>
+                  {specErr > 0 && `🔴 ${specErr} value galat lag rahi hai`}
+                  {specErr > 0 && specWarn > 0 && ' · '}
+                  {specWarn > 0 && `⚠️ ${specWarn} par dhyan do`}
+                  {' '}— neeche us row ke saath likha hai kya karna hai. Save rukega nahi, par theek kar lo.
+                </p>
+              );
+            })()}
             {Object.entries(SPEC_KEY_SUGGESTIONS).map(([g, keys]) => (
               <datalist key={g} id={`speckeys-${g}`}>
                 {keys.map((k) => <option key={k} value={k} />)}
@@ -620,6 +643,29 @@ export default function ProductForm({
                     {SPEC_VALUE_SUGGESTIONS[sp.specKey].map((v) => <option key={v} value={v} />)}
                   </datalist>
                 )}
+                {(() => {
+                  const issue = validateSpec(sp.specKey, sp.specValue, f.name);
+                  if (!issue) return null;
+                  const bad = issue.level === 'error';
+                  return (
+                    <div className={`sm:col-span-4 -mt-1 rounded-lg px-3 py-2 text-xs leading-relaxed ring-1 ${
+                      bad ? 'bg-red-50 text-red-800 ring-red-200' : 'bg-amber-50 text-amber-900 ring-amber-200'
+                    }`}>
+                      <span className="font-bold">{bad ? '🔴 Ye galat lag raha hai: ' : '⚠️ Dhyan do: '}</span>
+                      {issue.message}
+                      {issue.suggestion && (
+                        <button
+                          type="button"
+                          onClick={() => up('specifications', f.specifications.map((x, j) =>
+                            j === i ? { ...x, specValue: issue.suggestion as string } : x))}
+                          className="ml-2 rounded-md bg-navy-900 px-2 py-0.5 font-bold text-white hover:bg-navy-800"
+                        >
+                          &ldquo;{issue.suggestion}&rdquo; laga do
+                        </button>
+                      )}
+                    </div>
+                  );
+                })()}
                 <button
                   type="button"
                   onClick={() => up('specifications', f.specifications.filter((_, j) => j !== i))}
