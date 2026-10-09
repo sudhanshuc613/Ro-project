@@ -329,10 +329,25 @@ export function websiteSchema(): Json {
   };
 }
 
-/** Helper for embedding in JSX: <script {...jsonLd(schema)} /> */
+/**
+ * Helper for embedding in JSX: <script {...jsonLd(schema)} />
+ *
+ * 🔴 SECURITY — 9 Oct 2026, security audit me mila.
+ * ─────────────────────────────────────────────────
+ * Pehle ye seedha `JSON.stringify(data)` daalta tha. Dikkat ye thi ki schema
+ * ke andar DB se aaya hua text bhi jaata hai — product ka naam, admin ka
+ * likha meta title/description, review text. Agar us text me kabhi
+ * `</script>` aa gaya (galti se ya jaan boojh kar), to browser wahin script
+ * tag band kar deta aur uske baad ka sab HTML ban jaata — yani stored XSS.
+ *
+ * Fix: `<` ko `\u003c` me badal dete hain. Ye JSON ka bilkul valid escape hai,
+ * har parser isko waapas `<` hi padhta hai, aur Google ka structured-data
+ * parser bhi. Matlab schema ka matlab RATTI BHAR nahi badalta, bas script tag
+ * tootna band ho jaata hai. Yahi tarika React aur Next khud use karte hain.
+ */
 export const jsonLd = (data: Json | Json[]) => ({
   type: 'application/ld+json',
-  dangerouslySetInnerHTML: { __html: JSON.stringify(data) },
+  dangerouslySetInnerHTML: { __html: JSON.stringify(data).replace(/</g, '\\u003c') },
 });
 
 /* ── REVIEW SCHEMA ────────────────────────────────────────────────────────

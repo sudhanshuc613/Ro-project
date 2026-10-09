@@ -282,35 +282,63 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
                   {intent.h1}
                 </h1>
               )}
-              <p className="mt-3 text-lg font-semibold text-aqua-200">{intent.lede}</p>
+              {/* 🔴 9 Oct 2026 — owner: "ye banner bhi do do home button wagreh".
+                  Ads page par AdsHeroBanner upar pehle se lede, CTA aur
+                  ₹200/90min/30din wale teen card dikha chuka hai. Yahan dobara
+                  dikhana duplicate tha. Ab ads page par yahan sirf booking form
+                  ka context rehta hai. Baaki 6 intent pages par sab pehle jaisa. */}
+              {isAdsLanding ? (
+                <p className="mt-3 text-lg font-semibold text-aqua-200">
+                  Neeche form bhariye &mdash; 30 second lagte hain, aur hum khud call karte hain.
+                </p>
+              ) : (
+                <p className="mt-3 text-lg font-semibold text-aqua-200">{intent.lede}</p>
+              )}
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <a
-                  href={CONTACT.primaryTel}
-                  className="rounded-xl bg-cta-green px-6 py-3.5 font-bold text-white shadow-lg transition hover:bg-cta-greenDark"
-                >
-                  📞 Call {CONTACT.primaryPhone}
-                </a>
-                <a
-                  href={CONTACT.whatsappLink(`Hi Aqua Perl, mujhe ${intent.h1} chahiye.`)}
-                  className="rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 font-bold text-white transition hover:bg-white/20"
-                >
-                  WhatsApp
-                </a>
-              </div>
+              {!isAdsLanding && (
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <a
+                    href={CONTACT.primaryTel}
+                    className="rounded-xl bg-cta-green px-6 py-3.5 font-bold text-white shadow-lg transition hover:bg-cta-greenDark"
+                  >
+                    📞 Call {CONTACT.primaryPhone}
+                  </a>
+                  <a
+                    href={CONTACT.whatsappLink(`Hi Aqua Perl, mujhe ${intent.h1} chahiye.`)}
+                    className="rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 font-bold text-white transition hover:bg-white/20"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
+              )}
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                {[
-                  { k: 'Visit charge', v: `₹${SERVICE.visitCharge}` },
-                  { k: 'Response', v: SERVICE.responseTime },
-                  { k: 'Warranty', v: `${SERVICE.warrantyDays} days` },
-                ].map((x) => (
-                  <div key={x.k} className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
-                    <p className="text-xs uppercase tracking-wide text-navy-200">{x.k}</p>
-                    <p className="font-display text-xl font-extrabold text-white">{x.v}</p>
-                  </div>
-                ))}
-              </div>
+              {isAdsLanding ? (
+                <ul className="mt-6 space-y-2 text-[15px] text-aqua-50">
+                  {[
+                    'Form bharne ke baad hum 10 minute me call karte hain',
+                    'Area aur dikkat pata ho to technician sahi part leke nikalta hai',
+                    'Koi advance payment nahi — kaam ke baad paisa',
+                  ].map((t) => (
+                    <li key={t} className="flex items-start gap-2">
+                      <span aria-hidden="true" className="mt-0.5 text-aqua-300">&#10003;</span>
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  {[
+                    { k: 'Visit charge', v: `₹${SERVICE.visitCharge}` },
+                    { k: 'Response', v: SERVICE.responseTime },
+                    { k: 'Warranty', v: `${SERVICE.warrantyDays} days` },
+                  ].map((x) => (
+                    <div key={x.k} className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
+                      <p className="text-xs uppercase tracking-wide text-navy-200">{x.k}</p>
+                      <p className="font-display text-xl font-extrabold text-white">{x.v}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="rounded-2xl bg-white p-1 shadow-2xl">

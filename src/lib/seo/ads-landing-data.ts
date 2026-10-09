@@ -158,70 +158,134 @@ export const SYMPTOM_RATES: SymptomRate[] = [
    ══════════════════════════════════════════════════════════════════════════ */
 export interface ServiceCard {
   title: string;
-  /** Jo card par bada dikhega */
+  /**
+   * Card par dikhne wala rate.
+   * 🔴 9 Oct 2026 — owner: "pricing kiyu sab pe likh deta hai ... koi customer bol
+   * dega aapne waha pe to ye mention kiya hai aap yaha kuch or le rahe ho"
+   *
+   * Wo bilkul sahi hai. "₹120 se" likhne se customer ka dimag ₹120 par atak jaata
+   * hai aur ₹1,400 ka bill dekh kar jhagda hota hai. Isliye ab har jagah RANGE hai,
+   * aur sirf ek cheez FIXED hai — visit charge. Baaki sab "reference" hai.
+   */
   priceLabel: string;
+  /** 'fixed' = ye rate pakka hai · 'range' = sirf reference, final inspection ke baad */
+  priceKind: 'fixed' | 'range';
   href: string;
   blurb: string;
   /** Imaandar baat — kya shaamil nahi hai */
   note: string;
   icon: 'service' | 'repair' | 'install' | 'filter' | 'membrane' | 'amc';
+  /** Card ke upar ki image — public/services/ */
+  image: string;
+  /** Image ka alt — SEO aur screen reader dono ke liye */
+  alt: string;
 }
 
 export const SERVICE_CARDS: ServiceCard[] = [
   {
     title: 'RO Service (full check-up)',
-    priceLabel: `₹${SERVICE.visitCharge} visit`,
+    priceLabel: `₹${SERVICE.visitCharge}`,
+    priceKind: 'fixed',
     href: '/ro-services-patna',
     icon: 'service',
+    image: '/services/ro-service.png',
+    alt: 'RO water purifier full service check-up with TDS meter in Patna',
     blurb:
       'TDS input-output naapte hain, teeno pre-filter stage kholte hain, membrane ka flow test, tank saaf, leak aur pressure check. Sab kuch likhit card par.',
-    note: `Visit charge ₹${SERVICE.visitCharge}. Part lagega to uska rate alag, par kaam shuru hone se pehle bataya jaata hai.`,
+    note: `Visit charge fixed hai — ₹${SERVICE.visitCharge}. Isme koi part shaamil nahi. Part lagega to uska rate alag se, kaam shuru hone se pehle.`,
   },
   {
     title: 'RO Repair',
     priceLabel: '₹200 – ₹2,400',
+    priceKind: 'range',
     href: '/ro-repair-patna',
     icon: 'repair',
+    image: '/services/ro-repair.png',
+    alt: 'RO water purifier repair with wrench and open filter panel in Patna',
     blurb:
       'Paani nahi aa raha, awaaz aa rahi hai, swad kharab, leakage — sab isme aata hai. Pump, SMPS, solenoid, float valve, housing sab van me rehte hain.',
-    note: 'Range isliye hai kyunki machine ki umar aur fault dono farak daalte hain. Exact number inspection ke baad.',
+    note: 'Ye sirf reference range hai. O-ring ka kaam ₹200 me nipat jaata hai, pump + SMPS dono gaye to ₹2,400 tak jaata hai. Aapka exact number machine kholne ke baad.',
   },
   {
     title: 'RO Installation',
-    priceLabel: '₹399 se',
+    priceLabel: '₹399 – ₹2,500',
+    priceKind: 'range',
     href: '/ro-installation-patna',
     icon: 'install',
+    image: '/services/ro-installation.png',
+    alt: 'RO water purifier wall mount installation with drill in Patna',
     blurb:
       'Nayi machine ya ghar shift — wall drilling, inlet tapping, drain line, electrical point aur TDS setting sab shaamil.',
-    note: 'Galat jagah lagi machine baad me leakage aur pump failure deti hai. Point pehle check karte hain.',
+    note: 'Seedha wall point ho to neeche wala rate. Lambi pipe line, extra tapping ya RCC wall drilling ho to upar jaata hai. Point dekh kar hi rate batate hain.',
   },
   {
     title: 'RO Filter Change',
-    priceLabel: '₹120 se',
+    priceLabel: '₹120 – ₹700',
+    priceKind: 'range',
     href: '/ro-filter-change-patna',
     icon: 'filter',
+    image: '/services/ro-filter-change.png',
+    alt: 'RO sediment and carbon filter cartridge replacement in Patna',
     blurb:
       'Sediment, pre-carbon, post-carbon. Patna ke paani me sediment 3-4 mahine chalta hai, carbon 5-8 mahine — box par likhe se kam.',
-    note: 'Teeno ka set ek saath lena sasta padta hai — teen alag visit se behtar.',
+    note: 'Ek akela inline filter neeche wale rate me, teeno ka poora set upar wale me. Kaunsa chahiye ye TDS aur flow dekh kar tay hota hai, pehle nahi.',
   },
   {
     title: 'RO Membrane Change',
-    priceLabel: '₹1,100 se',
+    priceLabel: '₹1,100 – ₹2,400',
+    priceKind: 'range',
     href: '/ro-membrane-replacement-patna',
     icon: 'membrane',
+    image: '/services/ro-membrane.png',
+    alt: 'RO membrane cartridge replacement 75 80 100 GPD in Patna',
     blurb:
       '75, 80 aur 100 GPD teeno size stock me. Sealed pouch aapke saamne khulta hai aur purana membrane aapko wapas milta hai.',
-    note: 'Membrane tabhi badalte hain jab TDS reading sach me kehti ho. Bina reading ke hum bhi nahi badalte.',
+    note: '75 GPD neeche wale rate me, 100 GPD aur imported brand-specific membrane upar wale me. Membrane tabhi badalte hain jab TDS reading sach me kehti ho.',
   },
   {
     title: 'RO AMC Plan',
-    priceLabel: '₹1,499 / saal',
+    priceLabel: '₹1,499 – ₹4,499',
+    priceKind: 'fixed',
     href: '/amc-plans',
     icon: 'amc',
+    image: '/services/ro-amc.png',
+    alt: 'RO annual maintenance contract plans with scheduled visits in Patna',
     blurb:
-      'Saal bhar ke scheduled visits, filter, TDS testing aur priority response ek fixed rate me. Teen plan hain.',
-    note: '3 saal se nayi machine par AMC aksar faayde ka sauda nahi hota — hum saaf bata dete hain.',
+      'Saal bhar ke scheduled visits, filter, TDS testing aur priority response ek fixed rate me. Teen plan hain — Basic, Gold, Platinum.',
+    note: 'Teeno plan ka rate fixed hai, saal bhar ke liye. 3 saal se nayi machine par AMC aksar faayde ka sauda nahi hota — hum saaf bata dete hain.',
   },
+];
+
+/* ══════════════════════════════════════════════════════════════════════════
+   2b. SPARE PARTS — reference rate
+   ──────────────────────────────────────────────────────────────────────────
+   Owner: "spare parts wagreh ka tu refence diya kar itna se itna tak lag sakta hai"
+
+   Har part ka rate brand, GPD rating aur quality (company vs equivalent) se
+   badalta hai. Ek number likhna jhooth hoga. Isliye range + wajah dono di hai
+   taaki customer ko pata ho ki rate upar-neeche kyun hota hai.
+   ══════════════════════════════════════════════════════════════════════════ */
+export interface PartRate {
+  part: string;
+  from: number;
+  to: number;
+  /** Rate upar-neeche kis cheez se hota hai */
+  depends: string;
+}
+
+export const PART_RATES: PartRate[] = [
+  { part: 'Sediment filter (spun)', from: 150, to: 300, depends: 'brand ka standard 10-inch ya company ka proprietary housing' },
+  { part: 'Pre-carbon / post-carbon', from: 180, to: 400, depends: 'carbon block ya granular, aur brand' },
+  { part: 'Teeno filter ka set', from: 350, to: 900, depends: 'alag-alag lene se set sasta padta hai' },
+  { part: 'RO membrane', from: 1100, to: 2400, depends: '75 GPD / 80 GPD / 100 GPD aur company vs equivalent' },
+  { part: 'Booster pump', from: 900, to: 1600, depends: '75 GPD ya 100 GPD pump' },
+  { part: 'SMPS adaptor', from: 450, to: 750, depends: '24V 1.5A ya 24V 2A' },
+  { part: 'Solenoid valve', from: 300, to: 600, depends: 'brand aur fitting size' },
+  { part: 'Float valve', from: 150, to: 350, depends: 'tank ka type' },
+  { part: 'UV lamp + ballast', from: 400, to: 1200, depends: 'sirf lamp ya ballast bhi, 11W ya 14W' },
+  { part: 'Filter housing / bowl', from: 250, to: 700, depends: 'standard ya brand-specific push-fit' },
+  { part: 'Tubing, elbow, connector', from: 20, to: 250, depends: 'kitni length aur kitne fitting lagte hain' },
+  { part: 'Storage tank', from: 700, to: 1800, depends: '8L / 10L / 12L aur material' },
 ];
 
 /* ══════════════════════════════════════════════════════════════════════════

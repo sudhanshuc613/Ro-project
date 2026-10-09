@@ -29,6 +29,7 @@ import { findGtin } from '@/lib/seo/product-seo';
 import { lookupRedirect } from '@/lib/seo/redirects';
 import { formatINR } from '@/lib/utils/format';
 import { CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
+import { sanitizeHtml } from '@/lib/security/sanitize-html';
 
 export const revalidate = 900; // 15 min ISR
 
@@ -295,7 +296,12 @@ export default async function ProductPage({ params }: Props) {
               <h2 className="font-display text-2xl font-bold text-navy-700">Product Description</h2>
               <div
                 className="prose prose-slate mt-4 max-w-none prose-headings:font-display prose-headings:text-navy-700 prose-a:text-aqua-600"
-                dangerouslySetInnerHTML={{ __html: product.description ?? '' }}
+                /* 🔴 9 Oct 2026 security audit — pehle ye DB ka HTML seedha
+                   render karta tha. Admin account haath lagne par koi bhi
+                   <script> daal kar har customer ke browser me chala sakta tha
+                   (stored XSS). Ab allowlist sanitizer se guzarta hai.
+                   Detail: src/lib/security/sanitize-html.ts */
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.description) }}
               />
             </div>
 

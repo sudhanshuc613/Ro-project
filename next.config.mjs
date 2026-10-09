@@ -6,10 +6,31 @@ const nextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      { protocol: 'https', hostname: 'res.cloudinary.com' },
-      { protocol: 'https', hostname: '**.amazonaws.com' },
-    ],
+    /*
+     * 🔴 SECURITY — 9 Oct 2026, audit me badla gaya.
+     * ──────────────────────────────────────────────
+     * Pehle yahan do remotePatterns the:
+     *     res.cloudinary.com
+     *     **.amazonaws.com        ← ye wildcard khatarnaak tha
+     *
+     * Dikkat: `**.amazonaws.com` ka matlab hai KOI BHI S3 bucket. Hamlaavar
+     * apna bucket bana kar uska URL hamare /_next/image optimizer me daal
+     * sakta tha. Next.js 14.2.35 me Image Optimization API ki ek knowni
+     * kamzori hai (AVIF file ke zariye), aur hamne `formats` me avif rakha
+     * hua hai — matlab wo raasta khula tha.
+     *
+     * Maine check kiya (9 Oct, live DB):
+     *     product_images  →  9 rows, external http URL: 0
+     *     src/ me cloudinary ya amazonaws ka koi reference: 0
+     *     media upload ka raasta: /api/media/<id> (same-origin) ya Vercel Blob
+     *
+     * Yaani ye dono pattern kabhi use hi nahi ho rahe the — bas khula darwaza
+     * pade the. Hata diye. Site par ek bhi image par koi farak nahi padta.
+     *
+     * Aage kabhi bahar ka image host chahiye ho, to usi ek exact hostname ko
+     * yahan likhna — `**.` wildcard dobara mat lagana.
+     */
+    remotePatterns: [],
     deviceSizes: [360, 420, 640, 750, 828, 1080, 1200, 1920],
   },
 
