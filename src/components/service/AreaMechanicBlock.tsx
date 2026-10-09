@@ -158,7 +158,7 @@ export default function AreaMechanicBlock({
                 <span className="shrink-0 rounded-md bg-aqua-100 px-1.5 py-0.5 text-xs text-aqua-800">
                   {i + 1}
                 </span>
-                {x.h}
+                {' '}{x.h}
               </h4>
               <p className="mt-1.5 text-sm leading-relaxed text-navy-700">{x.p}</p>
             </li>

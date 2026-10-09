@@ -292,18 +292,24 @@ export default function RoCustomerCarePatnaPage() {
                       <h3 className="text-lg font-black text-navy-900">
                         {b.name} &mdash; Customer Care Number
                       </h3>
-                      <p className="mt-1 text-sm text-navy-700">
-                        <a
-                          href={`tel:+91${(b.phone as string).replace(/\D/g, '').slice(-10)}`}
-                          data-analytics={`care-brand-${b.name}`}
-                          className="text-xl font-black text-aqua-700 hover:underline"
-                        >
-                          {b.phone}
-                        </a>
-                        {b.altPhone && (
-                          <span className="ml-2 text-sm text-muted">· {b.altPhone}</span>
-                        )}
+                      {/* 🔴 9 Oct 2026 — owner ka order: "waha pe mera phone no rakh".
+                          Brand ka number PROOF ke liye rehta hai (yahi is page ko
+                          rank karata hai — log yahi dhoondh rahe hote hain), par
+                          ab wo TAPPABLE NAHI hai. Tap sirf hamare number par hota
+                          hai. Isse query bhi satisfy hoti hai aur call bhi hum tak
+                          aati hai. */}
+                      <p className="mt-1 text-sm text-navy-600">
+                        Official helpline:{' '}
+                        <span className="font-bold text-navy-800">{b.phone}</span>
+                        {b.altPhone && <span className="text-muted"> · {b.altPhone}</span>}
                       </p>
+                      <a
+                        href={CONTACT.primaryTel}
+                        data-analytics={`care-brand-ourcall-${b.name}`}
+                        className="mt-2 inline-block rounded-xl bg-navy-900 px-4 py-2.5 text-sm font-black text-white transition hover:bg-navy-800"
+                      >
+                        {b.name} repair chahiye? Call {CONTACT.primaryPhone}
+                      </a>
                     </div>
                     <span className="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-200">
                       ✓ official site se verified
@@ -313,20 +319,15 @@ export default function RoCustomerCarePatnaPage() {
                   <p className="mt-3 text-sm leading-relaxed text-navy-700">{b.reality}</p>
 
                   <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-                    <a
-                      href={b.officialUrl}
-                      target="_blank"
-                      rel="noopener nofollow"
-                      className="font-semibold text-navy-600 hover:underline"
-                    >
-                      Official support page ↗
-                    </a>
+                    {/* Bahar jaane wala link hata diya gaya — visitor ko brand ki
+                        site par bhejna hamara hi nuksan hai. Source text proof ke
+                        liye rehta hai. */}
                     {b.ourPath && (
                       <Link href={b.ourPath} className="font-bold text-aqua-600 hover:underline">
                         {b.name} RO service in Patna &mdash; hamara page →
                       </Link>
                     )}
-                    <span className="text-muted">Source: {b.source}</span>
+                    <span className="text-muted">Verified: {b.source}</span>
                   </div>
                 </article>
               ))}
@@ -347,21 +348,21 @@ export default function RoCustomerCarePatnaPage() {
                 <article key={b.name} className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
                   <h4 className="text-base font-black text-navy-900">{b.name}</h4>
                   <p className="mt-1.5 text-sm leading-relaxed text-navy-700">{b.reality}</p>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                    <a
-                      href={b.officialUrl}
-                      target="_blank"
-                      rel="noopener nofollow"
-                      className="font-semibold text-navy-600 hover:underline"
+                  <a
+                    href={CONTACT.primaryTel}
+                    data-analytics={`care-unver-call-${b.name}`}
+                    className="mt-3 inline-block rounded-xl bg-navy-900 px-4 py-2.5 text-sm font-black text-white transition hover:bg-navy-800"
+                  >
+                    {b.name} repair &mdash; call {CONTACT.primaryPhone}
+                  </a>
+                  {b.ourPath && (
+                    <Link
+                      href={b.ourPath}
+                      className="mt-2 block text-xs font-bold text-aqua-600 hover:underline"
                     >
-                      Official site ↗
-                    </a>
-                    {b.ourPath && (
-                      <Link href={b.ourPath} className="font-bold text-aqua-600 hover:underline">
-                        Hamara {b.name} page →
-                      </Link>
-                    )}
-                  </div>
+                      Hamara {b.name} page →
+                    </Link>
+                  )}
                 </article>
               ))}
             </div>
@@ -448,7 +449,7 @@ export default function RoCustomerCarePatnaPage() {
                     <span className="shrink-0 rounded-lg bg-aqua-400 px-2 py-0.5 text-sm text-navy-900">
                       {i + 1}
                     </span>
-                    {x.h}
+                    {' '}{x.h}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-aqua-50">{x.p}</p>
                 </li>

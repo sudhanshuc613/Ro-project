@@ -527,6 +527,9 @@ export default function AreaPage({ params }: { params: { area: string } }) {
                     <div>
                       <h3 className="font-display text-lg font-bold text-navy-700">
                         {f.fault}
+                        {/* 🔴 9 Oct 2026 — {' '} ke bina Googlebot "Membrane scaling₹1,100"
+                            padhta tha. ml-2 sirf CSS margin hai, text boundary nahi. */}
+                        {f.cost !== '—' && ' '}
                         {f.cost !== '—' && (
                           <span className="ml-2 align-middle text-sm font-bold text-cta-green">
                             {f.cost}

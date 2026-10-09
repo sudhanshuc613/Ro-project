@@ -57,6 +57,28 @@ import AreaWorkProof, { serviceShots, imageObjectSchema } from '@/components/hom
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { ogImage } from '@/lib/seo/og-image';
+/* ══════════════════════════════════════════════════════════════════════════
+   9 Oct 2026 — ADS LANDING UPGRADE, sirf /ro-service-in-patna ke liye.
+   ──────────────────────────────────────────────────────────────────────────
+   Owner: "ye page add pe show hoga" — Google Ads (AW-610913435) ka landing
+   page yahi hai. Reference diya: rosaleandservices.com/ro-service-in-patna/
+
+   Live scan 9 Oct:   rosale 3,366 words / 37 images / 2 schema
+                      HUM    2,988 words /  5 images / 26 schema
+   Content me hum aage the, DIKHNE me peeche. Isliye ye 6 visual block.
+
+   🔴 Ye sab `isAdsLanding` ke peeche gated hain. Baaki 6 intent pages
+      (ro-repair-patna, ro-amc-patna, ...) bilkul waise ke waise hain —
+      ek pixel nahi badla. Owner: "purana content mai kuch gadbadi nhi karna"
+   ══════════════════════════════════════════════════════════════════════════ */
+import AdsHeroBanner from '@/components/service/AdsHeroBanner';
+import ServicePriceGrid from '@/components/service/ServicePriceGrid';
+import PatnaRateCheck, { type RateCheckArea } from '@/components/service/PatnaRateCheck';
+import WhyChooseGrid from '@/components/service/WhyChooseGrid';
+import BrandCallCards from '@/components/service/BrandCallCards';
+import AmcQuickCards from '@/components/service/AmcQuickCards';
+import ReviewShowcase from '@/components/home/ReviewShowcase';
+import { tdsBand } from '@/lib/seo/area-depth';
 
 export const revalidate = 86400;
 
@@ -118,6 +140,24 @@ export function generateMetadata({ params }: { params: { intent: string } }): Me
 
 export default function ServiceIntentPage({ params }: { params: { intent: string } }) {
   const intent = getIntent(params.intent);
+
+  /* Ads landing page — sirf isi slug par extra visual blocks lagte hain. */
+  const isAdsLanding = params.intent === 'ro-service-in-patna';
+
+  /* Rate-check tool ka data. Har area ka APNA TDS, apna response time —
+     yahi wo cheez hai jo koi competitor copy nahi kar sakta, kyunki unke
+     area pages me koi area-specific number hai hi nahi (99.3% identical). */
+  const rateCheckAreas: RateCheckArea[] = isAdsLanding
+    ? SERVICE_AREAS.map((a) => ({
+        slug: a.slug,
+        name: a.name,
+        tdsRange: a.tdsRange,
+        responseMin: a.responseMin,
+        band: tdsBand(a.tdsRange),
+        commonRepair: a.commonRepair,
+        pincode: a.pincodes[0] ?? '800001',
+      }))
+    : [];
   if (!intent) notFound();
 
   const related = intent.related
@@ -204,6 +244,17 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
       ])} />
 
       <main className="bg-white">
+        {/* 🆕 9 Oct 2026 — Ads landing hero. Sirf /ro-service-in-patna par.
+            Phone number asli <a href="tel:"> hai, image ke andar nahi —
+            tabhi mobile par tap hota hai aur Google use padh sakta hai. */}
+        {isAdsLanding && (
+          <AdsHeroBanner
+            h1={intent.h1}
+            areaCount={SERVICE_AREAS.length}
+            brandCount={SERVICED_BRANDS.length}
+          />
+        )}
+
         {/* ── Breadcrumb ── */}
         <nav aria-label="Breadcrumb" className="border-b border-navy-50 bg-navy-50/50">
           <ol className="container mx-auto flex flex-wrap gap-2 px-4 py-3 text-sm">
@@ -219,9 +270,18 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         <section className="bg-navy-gradient py-12 text-white md:py-16">
           <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
-              <h1 className="font-display text-3xl font-extrabold leading-tight md:text-5xl">
-                {intent.h1}
-              </h1>
+              {/* 🔴 9 Oct 2026 — ads page par H1 upar AdsHeroBanner me hai.
+                  Do H1 ek page par SEO galti hai, isliye yahan H2 banta hai.
+                  Baaki 6 intent pages par bilkul pehle jaisa H1 hi rehta hai. */}
+              {isAdsLanding ? (
+                <h2 className="font-display text-3xl font-extrabold leading-tight md:text-4xl">
+                  {intent.h1}{' '}&mdash; Abhi Book Kijiye
+                </h2>
+              ) : (
+                <h1 className="font-display text-3xl font-extrabold leading-tight md:text-5xl">
+                  {intent.h1}
+                </h1>
+              )}
               <p className="mt-3 text-lg font-semibold text-aqua-200">{intent.lede}</p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -268,6 +328,17 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
               </p>
             ))}
             <TrustBadges variant="row" className="mt-6" />
+            {isAdsLanding && (
+              <p className="mt-6 rounded-2xl bg-aqua-50 p-4 text-sm leading-relaxed text-navy-700 ring-1 ring-aqua-100">
+                <strong>Jaldi me hain?</strong> Neeche &ldquo;Call karne se pehle apna rate dekh
+                lijiye&rdquo; wala box kholiye &mdash; apna mohalla aur dikkat chuniye, rate turant
+                dikh jayega. Ya seedha{' '}
+                <a href={CONTACT.primaryTel} data-analytics="ads-intro-call"
+                   className="font-black text-aqua-700 underline decoration-2 underline-offset-2">
+                  {CONTACT.primaryPhone}
+                </a>{' '}par call kijiye.
+              </p>
+            )}
           </div>
         </section>
 
@@ -290,6 +361,8 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
                   <div>
                     <h3 className="font-display text-lg font-bold text-navy-700">
                       {s.title}
+                      {/* 🔴 9 Oct 2026 — isi space ke bina "address~2 min" jud jaata tha. */}
+                      {s.minutes ? ' ' : ''}
                       {s.minutes ? (
                         <span className="ml-2 align-middle text-xs font-semibold text-muted">
                           ~{s.minutes} min
@@ -344,6 +417,12 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
           </div>
         </section>
 
+        {isAdsLanding && <ServicePriceGrid />}
+
+        {/* 🆕 Sabse alag hissa — koi competitor ye bana hi nahi sakta,
+            kyunki unke paas per-area TDS data hai hi nahi. */}
+        {isAdsLanding && <PatnaRateCheck areas={rateCheckAreas} />}
+
         {/* ── Signals ── */}
         <section className="bg-navy-50 py-12 md:py-16">
           <div className="container mx-auto px-4">
@@ -386,6 +465,13 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
           heading={`${intent.h1} — kaam kaisa dikhta hai`}
           sub="Har visit pe TDS test, har badla part aapke haath me."
         />
+
+        {isAdsLanding && <WhyChooseGrid />}
+        {isAdsLanding && <AmcQuickCards />}
+        {/* 🔴 Brand cards par SIRF hamara number. Paid click brand ke
+            helpline par nahi jaana chahiye. */}
+        {isAdsLanding && <BrandCallCards brands={SERVICED_BRANDS} />}
+        {isAdsLanding && <ReviewShowcase />}
 
         {/* ── FAQ (mirrors FAQPage schema) ── */}
         <FaqAccordion faqs={intent.faqs} title={`${intent.h1} — common questions`} />
