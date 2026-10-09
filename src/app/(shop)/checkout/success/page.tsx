@@ -5,6 +5,9 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db/prisma';
 import { formatINR, formatDateIN } from '@/lib/utils/format';
 import { getContactSettings, telLink, waLink } from '@/lib/settings';
+/* 9 Oct 2026 — Google Ads Purchase conversion (AW-610913435). Sirf yahan,
+   sirf ek baar per order. Detail: components/analytics/PurchaseConversion.tsx */
+import PurchaseConversion from '@/components/analytics/PurchaseConversion';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
@@ -57,6 +60,10 @@ export default async function SuccessPage({
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
+        <PurchaseConversion
+          orderNumber={order.orderNumber}
+          value={Number(order.totalAmount)}
+        />
         <h1 className="mt-5 font-display text-2xl font-extrabold text-emerald-900">
           Order Confirmed!
         </h1>

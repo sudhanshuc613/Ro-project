@@ -30,6 +30,9 @@ import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
 import AreaWorkProof, { areaShots, imageObjectSchema } from '@/components/home/AreaWorkProof';
+/* 9 Oct 2026 — 996-check area keyword audit: "RO mechanic {area}" 82/83 MISS,
+   "Best RO service near {area}" 58/83 MISS. Naya block, purana kuch nahi badla. */
+import AreaMechanicBlock from '@/components/service/AreaMechanicBlock';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { tdsVerdict, costForecast, faultProfile, responseDetail } from '@/lib/seo/area-depth';
@@ -551,6 +554,8 @@ export default function AreaPage({ params }: { params: { area: string } }) {
           heading={`${area.name} me hamara kaam`}
           sub={`Stock photo nahi — asli kaam, asli TDS reading. ${area.name} me har mahine lagbhag ${area.monthlyJobs} job.`}
         />
+
+        <AreaMechanicBlock area={area} nearby={linkOut} />
 
         <section className="border-t border-navy-50 bg-sand-100 py-10">
           <div className="container mx-auto px-4">

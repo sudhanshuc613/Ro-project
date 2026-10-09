@@ -36,6 +36,8 @@ const AREAS = [
 const SERVICES = [
   ...SERVICE_INTENTS.map((s) => ({ label: s.footerLabel, href: s.path })),
   { label: 'Rates & Answers', href: '/ro-service-patna-faq' },
+  /* 9 Oct 2026 — har page se ek internal link, warna naya page orphan reh jata. */
+  { label: 'Customer Care Number', href: '/ro-customer-care-patna' },
 ];
 
 const BRANDS = [

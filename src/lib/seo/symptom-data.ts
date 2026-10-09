@@ -227,7 +227,7 @@ export const SYMPTOMS: Symptom[] = [
     description:
       'RO se pani boond boond aa raha hai? 90% cases me sediment filter choke hota hai (₹450), membrane nahi (₹1,600). Pehle TDS check karwao. Patna ₹200 visit.',
     shortAnswer:
-      'Dheema paani lagbhag hamesha choke sediment filter se hota hai, membrane se nahi. Filter ₹450 ka hai, membrane ₹1,600 ka — isliye koi bhi technician jo TDS naapе bina seedha membrane bechne lage, usse savdhan raho. Sahi tareeka: pehle filter badlo, 24 ghante dekho, tab hi membrane ki baat.',
+      'Dheema paani lagbhag hamesha choke sediment filter se hota hai, membrane se nahi. Filter ₹450 ka hai, membrane ₹1,600 ka — isliye koi bhi technician jo TDS naape bina seedha membrane bechne lage, usse savdhan raho. Sahi tareeka: pehle filter badlo, 24 ghante dekho, tab hi membrane ki baat.',
     icon: '💧',
     label: 'Paani boond boond aa raha hai',
     steps: [

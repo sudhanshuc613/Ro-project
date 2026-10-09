@@ -48,6 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BRAND.url}/products`, lastModified: contentDate('/products'), changeFrequency: 'daily', priority: 0.9 },
     { url: `${BRAND.url}/amc-plans`, lastModified: contentDate('/amc-plans'), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BRAND.url}/contact`, lastModified: contentDate('/contact'), changeFrequency: 'yearly', priority: 0.5 },
+    /* Customer-care / helpline hub — added 9 Oct 2026. Keyword audit: poori
+       TRUST category me exact-phrase coverage 0/8 thi. Autocomplete harvest
+       (8 Oct) me "customer care number" cluster = 117 queries, aur Patna ka
+       koi competitor is par nahi hai. rocareindia.com ke paas 804 aise URLs
+       hain — matlab cluster asli hai. */
+    { url: `${BRAND.url}/ro-customer-care-patna`, lastModified: contentDate('/ro-customer-care-patna'), changeFrequency: 'weekly', priority: 0.9 },
     /* Symptom-query hub. Measured 16 Sep 2026: the Hinglish problem queries
        ("ro me pani nahi aa raha hai") have ZERO websites in the top 5 — only
        YouTube and Facebook. High priority because it is the only part of the

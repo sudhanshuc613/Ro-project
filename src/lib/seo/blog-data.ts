@@ -363,7 +363,7 @@ export const BLOG_POSTS: BlogPost[] = [
         { name: 'Inlet valve dekho', text: 'Purifier ke peeche wala nal poora khula hai? Kabhi safai ke waqt band ho jata hai.' },
         { name: 'Inlet pressure check karo', text: 'Purifier se pehle wale nal se paani ki dhaar dekho. Patli dhaar = pressure kam hai, RO ko 5 psi chahiye.' },
         { name: 'Pre-filter dekho', text: 'Pehla housing khol ke filter nikalo. Bhura/kaala ho gaya hai to choke hai — yahi 40% case hai.' },
-        { name: 'Tank tap khol ke dekho', text: 'Tank ka tap khol ke sunо — hawa ki awaaz aa rahi hai par paani nahi? Tank ka air pressure gaya hai.' },
+        { name: 'Tank tap khol ke dekho', text: 'Tank ka tap khol ke suno — hawa ki awaaz aa rahi hai par paani nahi? Tank ka air pressure gaya hai.' },
       ],
     },
     sections: [

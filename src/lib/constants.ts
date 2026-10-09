@@ -184,9 +184,43 @@ export const ANALYTICS = {
    * Ye ID public hoti hai (har visitor page source me dekh sakta hai),
    * isliye code me rakhna bilkul safe hai — GA ID ki tarah.
    */
-  adsId: '',              // 'AW-XXXXXXXXX'
+  /* ✅ 9 Oct 2026 — owner ne Google Ads ka tag bheja. Live kar diya gaya.
+     Source: "Google tag.txt" → gtag('config', 'AW-610913435')
+     Iske aate hi Analytics.tsx ka ADS_READY true ho jaata hai aur base
+     Ads tag har page par load hota hai. Yahi tag Google ko "Calls from
+     ads" aur remarketing audience banane deta hai. */
+  adsId: 'AW-610913435',
+
+  /* 🔴 ABHI BHI KHAALI — aur ye JAAN BOOJH KAR khaali hai.
+     ────────────────────────────────────────────────────
+     Owner ne jo label bheja (a2mmCJe5zfgaEJuZp6MC) wo "Purchase" conversion
+     ka hai — yaani e-commerce order ka. Usko phone-call par firing karna
+     seedha galat hoga: har tel: click Google ko "Purchase" dikhega, Smart
+     Bidding e-commerce par optimise karne lagega, aur asli service leads
+     ka data kharab ho jayega.
+
+     Isliye Purchase label neeche `adsPurchaseLabel` me gaya hai (checkout
+     success par firing ke liye), aur call/form ke liye alag conversion
+     action banana zaroori hai:
+
+       ads.google.com → Tools (🔧) → Conversions → + New conversion action
+       → Website → rokadoctor.in
+
+       Conversion 1   Goal : Contact → Phone call leads
+                      Name : Phone Call Click
+                      Value: ₹200 · Count: One
+       Conversion 2   Goal : Submit lead form
+                      Name : Booking Form
+                      Value: ₹200 · Count: One
+
+     Dono ka "Tag setup → Use Google Tag Manager" me Label dikhega.
+     Dono label bhej do, usi din yahan bhar denge. */
   adsCallLabel: '',       // phone call conversion ka label
   adsFormLabel: '',       // booking form conversion ka label
+
+  /* ✅ Purchase conversion — owner ke "Event snippet - Purchase.txt" se.
+     Sirf checkout success par firing hota hai, asli order value ke saath. */
+  adsPurchaseLabel: 'a2mmCJe5zfgaEJuZp6MC',
   /** Ek lead ki keemat. Visit charge se match rakha hai. */
   conversionValue: 200,
 } as const;

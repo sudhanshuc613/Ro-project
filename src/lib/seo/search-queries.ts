@@ -128,6 +128,61 @@ export const SEARCH_ANSWERS: SearchAnswer[] = [
       `apna page hai jisme uska pincode, wahan ka TDS range aur wahan sabse zyada hone wali ` +
       `kharabi likhi hai. Apna area khol kar dekh lijiye — agar wo list me hai to hum wahan jaate hain.`,
   },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     9 Oct 2026 — 94-keyword coverage scan me NEARME category me 4 keywords
+     ka exact phrase site par kahin nahi mila:
+         #111 RO mechanic near me        #114 Nearby RO service centre
+         #113 Best RO service near me    #118 Aquaguard service near me
+     Homepage hi "near me" ka canonical page hai (19 Sep ka cannibalization
+     fix), isliye naya page banane ke bajay yahi 4 jawab add kiye gaye.
+     Alag /ro-service-near-me page banate to wo homepage se hi ladta.
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    query: 'ro mechanic near me',
+    heading: 'RO Mechanic Near Me — Mistri Aur Technician Me Farak',
+    answer:
+      `Patna me log "RO mechanic near me" aur "RO mistri near me" dono likhte hain, aur dono ka ` +
+      `matlab ek hi hai. Par kaam karne wale do tarah ke hote hain. Pehla — wo jo sirf filter ` +
+      `badalna jaanta hai. Doosra — wo jo TDS meter se naap kar batata hai ki asli kharabi kahan ` +
+      `hai. Hamare paas har area ke liye trained technician hai jo meter saath leke chalta hai, ` +
+      `aur input-output reading likh kar deta hai. Bina reading ke "membrane gaya" bolna andaza ` +
+      `hai, diagnosis nahi.`,
+  },
+  {
+    query: 'best ro service near me',
+    heading: 'Best RO Service Near Me — Dawa Nahi, Check List',
+    answer:
+      `"Best RO service near me" ya "best RO repair in Patna" — ye dono search karne wale ko hum ` +
+      `apne aap ko best nahi bolte, kyunki wo koi bhi bol sakta hai. Iske bajay 4 cheez khud check ` +
+      `kijiye: TDS meter saath laaya ya nahi, rate kaam se pehle bataya ya baad me, purana nikala ` +
+      `hua part wapas diya ya nahi, aur bill par warranty likhi hai ya sirf zubani. ` +
+      `Hum chaaron karte hain — ${SERVICE.warrantyDays} din ki likhit warranty aur ₹${SERVICE.visitCharge} ` +
+      `ka fixed visit charge. Google par ${GBP_RATING_TEXT} rating aur ${GBP.reviewCount} reviews hain, ` +
+      `jo aap khud padh sakte hain.`,
+  },
+  {
+    query: 'nearby ro service centre',
+    heading: 'Nearby RO Service Centre — Asli Dukaan Hai Ya Sirf Number',
+    answer:
+      `"Nearby RO service centre" dhoondhte waqt ek cheez zaroor dekhiye — unka pata hai ya sirf ` +
+      `ek mobile number. Bahut saare listings call centre ke hote hain jo aapki request kisi bhi ` +
+      `freelancer ko bech dete hain, aur baad me koi zimmedar nahi hota. Hamara pata ` +
+      `${CONTACT.address.street}, ${CONTACT.address.locality}, ${SERVICE.city} ${CONTACT.address.pincode} hai. ` +
+      `Aap machine leke aa bhi sakte hain. Jab koi galti ho jaye to aapko jana kahan hai, ye pata ` +
+      `hona hi asli farak hai.`,
+  },
+  {
+    query: 'aquaguard service near me',
+    heading: 'Aquaguard Service Near Me — Company Se Ya Humse',
+    answer:
+      `"Aquaguard service near me" search karne par pehla sawaal ye hai ki machine warranty me hai ` +
+      `ya nahi. Warranty me hai to Eureka Forbes ko hi call kijiye, wahan kaam free hai — unka ` +
+      `number hamare customer care page par bhi likha hua hai. Warranty khatam ho chuki hai to ` +
+      `hum sasta aur tez padte hain: ₹${SERVICE.visitCharge} visit, ${SERVICE.responseTime} ka target, ` +
+      `aur Aquaguard ke saath Kent, Pureit, Livpure aur AO Smith bhi ek hi visit me dekh lete hain. ` +
+      `Yahi baat Kent RO service near me dhoondhne walon par bhi laagu hoti hai.`,
+  },
 ];
 
 /**

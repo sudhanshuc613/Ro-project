@@ -10,6 +10,10 @@ import { CONTACT } from '@/lib/constants';
 import { breadcrumbSchema, itemListSchema, faqSchema, jsonLd } from '@/lib/seo/schema';
 import { PRODUCTS_PAGE_SEO } from '@/lib/seo/catalog-seo';
 import { ogImage } from '@/lib/seo/og-image';
+/* 9 Oct 2026 — 94-keyword audit: SHOP category me 13 keywords ka exact
+   phrase kahin nahi tha. /products ek DB listing hai, product naam me
+   "Patna" kabhi nahi aata — isliye neeche ek asli content block. */
+import PatnaShopBlock from '@/components/product/PatnaShopBlock';
 
 export const revalidate = 300;
 
@@ -183,6 +187,8 @@ export default async function AllProductsPage({
           </div>
         </section>
       </div>
+
+      <PatnaShopBlock />
     </main>
   );
 }

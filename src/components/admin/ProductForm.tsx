@@ -20,6 +20,14 @@ import {
   SPEC_TEMPLATES, HSN_HINTS, suggestAltText, scoreProductSeo,
   type ProductSeoInput,
 } from '@/lib/seo/product-seo';
+/* 9 Oct 2026 — owner: "specification ko suggest kiya kar ya khud si bhar diya
+   kar ki ye ye to hota hi hai". SPEC_TEMPLATES sirf khaali rows deta tha;
+   ye engine product ke NAAM se values bhi bhar deta hai. */
+import {
+  autofillSpecs, mergeSpecs, countFilled,
+  SPEC_KEY_SUGGESTIONS, SPEC_VALUE_SUGGESTIONS,
+  type ProductKind,
+} from '@/lib/seo/spec-autofill';
 
 interface Option { id: string; name: string }
 
@@ -132,6 +140,22 @@ export default function ProductForm({
     const merged = [...existing, ...tpl.filter((t) => !have.has(t.specKey.toLowerCase()))];
     up('specifications', merged);
     toast.success(`${tpl.length} spec rows aa gaye — value bhar do`);
+  }
+
+  /**
+   * SMART AUTO-FILL — product ke naam se values khud bhar deta hai.
+   * Jo naam se pakka pata nahi chalta (dimensions, EAN, exact warranty) wo
+   * khaali rehta hai, taki galat data save na ho.
+   */
+  function smartFillSpecs() {
+    if (!f.name.trim()) {
+      toast.error('Pehle product ka naam likho — usi se spec nikalta hai');
+      return;
+    }
+    const rows = autofillSpecs(f.name, (f.type as ProductKind) || 'NEW_RO');
+    const { filled, total } = countFilled(rows);
+    up('specifications', mergeSpecs(f.specifications, rows));
+    toast.success(`${filled}/${total} spec khud bhar gaye — baaki khaali hain, check kar lo`);
   }
 
   /** Write a unique, descriptive alt text into every image that has none. */
@@ -539,17 +563,34 @@ export default function ProductForm({
                 &ldquo;2000 tds ro&rdquo; jaise search yahi se match hote hain. GTIN/EAN row bharoge to
                 Google Shopping me ~20% zyada click aate hain.
               </p>
-              <button
-                type="button"
-                onClick={loadSpecTemplate}
-                className="shrink-0 rounded-lg bg-aqua-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-aqua-600"
-              >
-                {f.type === 'SPARE_PART' ? 'Spare part' : f.type === 'COMMERCIAL_PLANT' ? 'RO plant' : f.type === 'ACCESSORY' ? 'Accessory' : 'RO purifier'} ka template bharo
-              </button>
+              <div className="flex shrink-0 flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={smartFillSpecs}
+                  title="Product ke naam se spec values khud bhar deta hai"
+                  className="rounded-lg bg-navy-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-navy-800"
+                >
+                  ✨ Naam se khud bharo
+                </button>
+                <button
+                  type="button"
+                  onClick={loadSpecTemplate}
+                  className="rounded-lg bg-aqua-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-aqua-600"
+                >
+                  {f.type === 'SPARE_PART' ? 'Spare part' : f.type === 'COMMERCIAL_PLANT' ? 'RO plant' : f.type === 'ACCESSORY' ? 'Accessory' : 'RO purifier'} ka khaali template
+                </button>
+              </div>
             </div>
             <p className="text-sm text-muted">
               These appear in the specification table on the product page.
+              Jo value <strong>khaali</strong> hai use khud bharo — engine sirf wahi bharta hai
+              jo naam se pakka pata chalta hai.
             </p>
+            {Object.entries(SPEC_KEY_SUGGESTIONS).map(([g, keys]) => (
+              <datalist key={g} id={`speckeys-${g}`}>
+                {keys.map((k) => <option key={k} value={k} />)}
+              </datalist>
+            ))}
             {f.specifications.map((sp, i) => (
               <div key={i} className="grid gap-2 sm:grid-cols-[130px,1fr,1fr,auto]">
                 <select
@@ -563,15 +604,22 @@ export default function ProductForm({
                   <option>Dimensions</option>
                 </select>
                 <input
+                  list={`speckeys-${sp.specGroup}`}
                   value={sp.specKey}
                   onChange={(e) => up('specifications', f.specifications.map((x, j) => j === i ? { ...x, specKey: e.target.value } : x))}
                   placeholder="Storage Capacity" className={inp}
                 />
                 <input
+                  list={SPEC_VALUE_SUGGESTIONS[sp.specKey] ? `specvals-${i}` : undefined}
                   value={sp.specValue}
                   onChange={(e) => up('specifications', f.specifications.map((x, j) => j === i ? { ...x, specValue: e.target.value } : x))}
                   placeholder="8 Litres" className={inp}
                 />
+                {SPEC_VALUE_SUGGESTIONS[sp.specKey] && (
+                  <datalist id={`specvals-${i}`}>
+                    {SPEC_VALUE_SUGGESTIONS[sp.specKey].map((v) => <option key={v} value={v} />)}
+                  </datalist>
+                )}
                 <button
                   type="button"
                   onClick={() => up('specifications', f.specifications.filter((_, j) => j !== i))}

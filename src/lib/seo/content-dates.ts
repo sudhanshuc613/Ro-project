@@ -51,6 +51,8 @@ export const CONTENT_DATES: Record<string, Date> = {
 
   /* 18 Sep 2026 — H2 keyword density 5/10 → 10/10, 9 synonym keywords. */
   '/ro-services-patna': d('2026-09-18'),
+  /* Naya page, 9 Oct 2026 — RO customer care / helpline hub. */
+  '/ro-customer-care-patna': d('2026-10-09'),
   '/ro-service-patna-faq': d('2026-09-18'),
 
   /* 16 Sep 2026 — symptom hub live (Hinglish queries, zero web competition). */

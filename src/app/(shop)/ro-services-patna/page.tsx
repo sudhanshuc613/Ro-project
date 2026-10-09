@@ -45,6 +45,10 @@ import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { ogImage } from '@/lib/seo/og-image';
+/* 9 Oct 2026 — 94-keyword audit: SERVICE-INTENT category me 13 keywords ka
+   exact phrase kahin nahi tha (rate card / visit charge / pump repair wala
+   cluster). Naya block, purana kuch nahi badla. */
+import ServiceRateCard from '@/components/service/ServiceRateCard';
 
 export const revalidate = 86400;
 
@@ -391,6 +395,8 @@ export default function ServiceHubPage() {
             </Link>
           </div>
         </section>
+
+        <ServiceRateCard />
 
         <FaqAccordion faqs={HUB_FAQS} title="RO services Patna — common questions" />
 

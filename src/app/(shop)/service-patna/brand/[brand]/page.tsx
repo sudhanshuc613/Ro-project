@@ -17,6 +17,10 @@ import { areaPath } from '@/lib/seo/area-url';
 import { BRAND_QUERY_LINES } from '@/lib/seo/search-queries';
 import { brandLabel } from '@/lib/seo/brand-labels';
 import { ogImage } from '@/lib/seo/og-image';
+/* 9 Oct 2026 — 94-keyword audit: BRAND category me 12 keywords ka exact
+   phrase kahin nahi tha ("Kent RO repair Patna", "Pureit service Patna"...).
+   Naya block, purana kuch nahi badla. */
+import BrandJobMatrix from '@/components/service/BrandJobMatrix';
 
 export const revalidate = 86400;
 
@@ -274,6 +278,8 @@ export default function BrandServicePage({ params }: { params: { brand: string }
             </div>
           </div>
         </section>
+
+        <BrandJobMatrix brand={brand} />
 
         <FaqAccordion faqs={faqs} title={`${short} RO Service — Questions`} />
 
