@@ -85,12 +85,17 @@ export default function AdsHeroBanner({
             <span>{SERVICE.city} me {since}+ saal</span>
           </div>
 
-          <h1 className="font-display text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
+          {/* 🔴 10 Oct 2026 — ye H2 hai, H1 NAHI.
+              Page ka asli H1 neeche hero section me hai aur wo pehle se tha.
+              Pehle maine usko H2 bana diya tha taaki banner H1 ban sake —
+              wo galat tha, purana cheed-chaad nahi karni thi. Ab ulta:
+              banner H2 hai, page ka purana H1 jaisa ka waisa. */}
+          <h2 className="font-display text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
             {h1}{' '}
             <span className="mt-2 block bg-gradient-to-r from-aqua-300 via-aqua-200 to-amber-300 bg-clip-text text-transparent">
               Visit Charge Sirf ₹{SERVICE.visitCharge}
             </span>
-          </h1>
+          </h2>
 
           <p className="mt-4 max-w-xl text-base leading-relaxed text-aqua-50 md:text-lg">
             Ghar par technician, {SERVICE.responseTime} ke andar. Har brand ki machine &mdash;

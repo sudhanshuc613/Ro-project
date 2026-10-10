@@ -76,12 +76,6 @@ export default function Navbar() {
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
-  /* Service / landing raaste — yahan category bar nahi dikhta. Shop ke
-     raaston par (/products, /category, /cart, /checkout) dikhta hai. */
-  const isServicePage =
-    pathname === '/' ||
-    /^\/(ro-|service-patna|amc-plans|contact|blog|about)/.test(pathname);
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -190,25 +184,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── Tier 3: category bar with mega-menus ──
-          🔴 9 Oct 2026 — owner: "ye do do jagah navbar hai isko thik kar"
-
-          Wo sahi hai. Teen tier (announcement + main bar + category bar) ek
-          ke neeche ek lagte hain, aur service page par ye DOOSRA navbar jaisa
-          dikhta hai. Content 160px neeche chala jaata hai.
-
-          Ye bar shop ke liye bana tha — New RO, Spare Parts, Commercial
-          Plants ke mega-menu. Service page par aane wala banda (aur khaaskar
-          Google Ads se aaya hua, jiska click ka paisa lagta hai) ko in 10
-          link ki zaroorat nahi — wo sirf nikalne ke raaste hain.
-
-          Isliye ab ye bar sirf SHOP waale raaston par dikhta hai. Service
-          page par header do tier ka rehta hai, saaf aur halka. Mobile drawer
-          me saare link waise ke waise hain, kuch gaya nahi. */}
-      <nav
-        className={`${isServicePage ? 'hidden' : 'hidden lg:block'} border-b border-navy-100 bg-sand-100`}
-        aria-label="Product categories"
-      >
+      {/* ── Tier 3: category bar with mega-menus ── */}
+      <nav className="hidden border-b border-navy-100 bg-sand-100 lg:block" aria-label="Product categories">
         <div className="container mx-auto flex items-center gap-1 px-4">
           {/* Saaf-saaf "Home" — logo pe click karna sabko nahi pata hota */}
           <Link

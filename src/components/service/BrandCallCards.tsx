@@ -46,7 +46,7 @@ export default function BrandCallCards({ brands }: { brands: BrandServiceContent
   /* Top 6 brands jinke card detail ke saath dikhenge — baaki logo grid me. */
   const featured = brands
     .filter((b) => !['commercial-ro', 'other-brands'].includes(b.slug))
-    .slice(0, 4);
+    .slice(0, 6);
 
   return (
     <section className="bg-white px-4 py-12 md:py-16">

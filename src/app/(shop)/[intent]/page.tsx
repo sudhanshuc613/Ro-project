@@ -270,75 +270,38 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         <section className="bg-navy-gradient py-12 text-white md:py-16">
           <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
-              {/* 🔴 9 Oct 2026 — ads page par H1 upar AdsHeroBanner me hai.
-                  Do H1 ek page par SEO galti hai, isliye yahan H2 banta hai.
-                  Baaki 6 intent pages par bilkul pehle jaisa H1 hi rehta hai. */}
-              {isAdsLanding ? (
-                <h2 className="font-display text-3xl font-extrabold leading-tight md:text-4xl">
-                  {intent.h1}{' '}&mdash; Abhi Book Kijiye
-                </h2>
-              ) : (
-                <h1 className="font-display text-3xl font-extrabold leading-tight md:text-5xl">
-                  {intent.h1}
-                </h1>
-              )}
-              {/* 🔴 9 Oct 2026 — owner: "ye banner bhi do do home button wagreh".
-                  Ads page par AdsHeroBanner upar pehle se lede, CTA aur
-                  ₹200/90min/30din wale teen card dikha chuka hai. Yahan dobara
-                  dikhana duplicate tha. Ab ads page par yahan sirf booking form
-                  ka context rehta hai. Baaki 6 intent pages par sab pehle jaisa. */}
-              {isAdsLanding ? (
-                <p className="mt-3 text-lg font-semibold text-aqua-200">
-                  Neeche form bhariye &mdash; 30 second lagte hain, aur hum khud call karte hain.
-                </p>
-              ) : (
-                <p className="mt-3 text-lg font-semibold text-aqua-200">{intent.lede}</p>
-              )}
+              <h1 className="font-display text-3xl font-extrabold leading-tight md:text-5xl">
+                {intent.h1}
+              </h1>
+              <p className="mt-3 text-lg font-semibold text-aqua-200">{intent.lede}</p>
 
-              {!isAdsLanding && (
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <a
-                    href={CONTACT.primaryTel}
-                    className="rounded-xl bg-cta-green px-6 py-3.5 font-bold text-white shadow-lg transition hover:bg-cta-greenDark"
-                  >
-                    📞 Call {CONTACT.primaryPhone}
-                  </a>
-                  <a
-                    href={CONTACT.whatsappLink(`Hi Aqua Perl, mujhe ${intent.h1} chahiye.`)}
-                    className="rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 font-bold text-white transition hover:bg-white/20"
-                  >
-                    WhatsApp
-                  </a>
-                </div>
-              )}
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a
+                  href={CONTACT.primaryTel}
+                  className="rounded-xl bg-cta-green px-6 py-3.5 font-bold text-white shadow-lg transition hover:bg-cta-greenDark"
+                >
+                  📞 Call {CONTACT.primaryPhone}
+                </a>
+                <a
+                  href={CONTACT.whatsappLink(`Hi Aqua Perl, mujhe ${intent.h1} chahiye.`)}
+                  className="rounded-xl border border-white/25 bg-white/10 px-6 py-3.5 font-bold text-white transition hover:bg-white/20"
+                >
+                  WhatsApp
+                </a>
+              </div>
 
-              {isAdsLanding ? (
-                <ul className="mt-6 space-y-2 text-[15px] text-aqua-50">
-                  {[
-                    'Form bharne ke baad hum 10 minute me call karte hain',
-                    'Area aur dikkat pata ho to technician sahi part leke nikalta hai',
-                    'Koi advance payment nahi — kaam ke baad paisa',
-                  ].map((t) => (
-                    <li key={t} className="flex items-start gap-2">
-                      <span aria-hidden="true" className="mt-0.5 text-aqua-300">&#10003;</span>
-                      <span>{t}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  {[
-                    { k: 'Visit charge', v: `₹${SERVICE.visitCharge}` },
-                    { k: 'Response', v: SERVICE.responseTime },
-                    { k: 'Warranty', v: `${SERVICE.warrantyDays} days` },
-                  ].map((x) => (
-                    <div key={x.k} className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
-                      <p className="text-xs uppercase tracking-wide text-navy-200">{x.k}</p>
-                      <p className="font-display text-xl font-extrabold text-white">{x.v}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {[
+                  { k: 'Visit charge', v: `₹${SERVICE.visitCharge}` },
+                  { k: 'Response', v: SERVICE.responseTime },
+                  { k: 'Warranty', v: `${SERVICE.warrantyDays} days` },
+                ].map((x) => (
+                  <div key={x.k} className="rounded-xl border border-white/15 bg-white/5 px-4 py-3">
+                    <p className="text-xs uppercase tracking-wide text-navy-200">{x.k}</p>
+                    <p className="font-display text-xl font-extrabold text-white">{x.v}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="rounded-2xl bg-white p-1 shadow-2xl">
@@ -350,34 +313,11 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         {/* ── Intro ── */}
         <section className="py-12 md:py-14">
           <div className="container mx-auto max-w-3xl px-4">
-            {/* 🔴 9 Oct 2026 — owner: "itna kuch faltu likha hai utna koi nhi padhta".
-                Wo sahi hai. Hamara ads page 4,978 words ka tha, rosale 3,366 ka.
-                Par text DELETE karna SEO ka nuksan hai — Google ko depth chahiye.
-
-                Isliye text hataya nahi, CHHUPAYA hai. Native <details> ka
-                matlab: saara text HTML me rehta hai (Google poora padhta hai),
-                par user ko pehle sirf 2 paragraph dikhte hain. Jisko aur
-                chahiye wo khol leta hai. JS ki zaroorat nahi. */}
-            {(isAdsLanding ? intent.intro.slice(0, 2) : intent.intro).map((p) => (
+            {intent.intro.map((p) => (
               <p key={p.slice(0, 40)} className="mb-4 text-[17px] leading-relaxed text-navy-700">
                 {p}
               </p>
             ))}
-            {isAdsLanding && intent.intro.length > 2 && (
-              <details className="group mb-2">
-                <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-xl bg-navy-50 px-4 py-2 text-sm font-bold text-navy-700 hover:bg-navy-100">
-                  Poora padhein
-                  <span aria-hidden="true" className="transition-transform group-open:rotate-180">&#9662;</span>
-                </summary>
-                <div className="mt-4">
-                  {intent.intro.slice(2).map((p) => (
-                    <p key={p.slice(0, 40)} className="mb-4 text-[17px] leading-relaxed text-navy-700">
-                      {p}
-                    </p>
-                  ))}
-                </div>
-              </details>
-            )}
             <TrustBadges variant="row" className="mt-6" />
             {isAdsLanding && (
               <p className="mt-6 rounded-2xl bg-aqua-50 p-4 text-sm leading-relaxed text-navy-700 ring-1 ring-aqua-100">
@@ -420,16 +360,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
                         </span>
                       ) : null}
                     </h3>
-                    {isAdsLanding ? (
-                      <details className="group mt-1">
-                        <summary className="cursor-pointer list-none text-sm font-bold text-aqua-600 hover:underline">
-                          Isme kya hota hai <span aria-hidden="true" className="inline-block transition-transform group-open:rotate-180">&#9662;</span>
-                        </summary>
-                        <p className="mt-1.5 text-[15px] leading-relaxed text-navy-600">{s.detail}</p>
-                      </details>
-                    ) : (
-                      <p className="mt-1.5 text-[15px] leading-relaxed text-navy-600">{s.detail}</p>
-                    )}
+                    <p className="mt-1.5 text-[15px] leading-relaxed text-navy-600">{s.detail}</p>
                   </div>
                 </li>
               ))}
