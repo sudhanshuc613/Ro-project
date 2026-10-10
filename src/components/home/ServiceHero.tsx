@@ -48,7 +48,22 @@ const QUICK_ISSUES = [
   { icon: '🔊', label: 'Noise', msg: 'My RO is making noise.' },
 ];
 
-export default function ServiceHero() {
+/**
+ * 🔴 11 Oct 2026 — `image` prop joda gaya.
+ *
+ * Pehle hero ki photo yahan HARDCODED thi (`/banners/hero-technician.png`).
+ * Matlab admin panel ke "Homepage ka main hero" slot me nayi photo daalne
+ * par kuch hota hi nahi tha — owner ko lagta tha badal gayi, par site par
+ * purani hi rehti thi. Ab page us slot ki image yahan bhejta hai.
+ *
+ * Default waise ka waisa rakha hai, isliye agar kabhi prop na aaye to
+ * purani photo hi chalegi — kuch toota nahi.
+ */
+export default function ServiceHero({
+  image,
+}: {
+  image?: { url: string; alt: string };
+} = {}) {
   const competitorLow = 350;
   const saving = competitorLow - SERVICE.visitCharge;
 
@@ -215,8 +230,8 @@ export default function ServiceHero() {
         <div className="animate-riseIn lg:pt-1" style={{ animationDelay: '.08s' }}>
           <div className="relative mx-auto max-w-[520px]">
             <Image
-              src="/banners/hero-technician.png"
-              alt="Aqua Perl RO service technician in Patna holding a wrench beside a wall-mounted RO water purifier"
+              src={image?.url || '/banners/hero-technician.png'}
+              alt={image?.alt || 'Aqua Perl RO service technician in Patna holding a wrench beside a wall-mounted RO water purifier'}
               width={1024}
               height={1024}
               priority
@@ -239,8 +254,14 @@ export default function ServiceHero() {
               <span className="text-[10px] font-bold uppercase tracking-wide text-muted">rating</span>
             </span>
 
+            {/* 11 Oct 2026 — ye float pehle se tha aur waisa hi hai.
+                Sirf `data-phone-badge` marker joda gaya taaki test pakad sake
+                ki har banner ke upar number maujood hai. Image badalne par
+                bhi ye yahin rehta hai, kyunki HTML me hai image me nahi. */}
             <a
               href={CONTACT.primaryTel}
+              data-phone-badge="1"
+              aria-label={`Call Aqua Perl ${SERVICE.city} on ${CONTACT.primaryPhone}`}
               className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2.5 rounded-2xl bg-white px-4 py-2.5 shadow-card-hover ring-1 ring-navy-100 transition hover:shadow-lift"
             >
               <span className="grid h-9 w-9 place-items-center rounded-full bg-cta-green text-white">📞</span>

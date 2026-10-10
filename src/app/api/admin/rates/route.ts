@@ -23,6 +23,7 @@ import { RATE_KEYS, type RateMap } from '@/lib/seo/rate-overrides';
 
 const guard = (r?: string) => r === 'ADMIN' || r === 'SUPER_ADMIN';
 
+
 const schema = z
   .object({
     part: z.string().refine((p) => RATE_KEYS.includes(p), 'Unknown part'),
@@ -37,6 +38,37 @@ const schema = z
 async function readMap(): Promise<RateMap> {
   const row = await prisma.siteSetting.findUnique({ where: { key: 'rateCard' } });
   return ((row?.value as unknown as RateMap) ?? {}) as RateMap;
+}
+
+/**
+ * 🔴🔴 11 Oct 2026 — YAHAN EK KHATARNAAK GALTI HUI THI, PADH LENA
+ *
+ * Maine pehle socha ki `revalidateTag('settings')` kaafi nahi hai aur
+ * `revalidatePath('/', 'layout')` jod diya. Test suite ne turant pakda:
+ *
+ *     /ro-service-in-patna   404
+ *     /ro-repair-patna       404
+ *     /ro-amc-patna          404     ... saare 6 intent pages mar gaye
+ *
+ * WAJAH: `src/app/(shop)/[intent]/page.tsx` me `dynamicParams = false` hai
+ * (jaan-boojh ke — taaki /koi-bhi-ulta-slug par page na bane). Jab
+ * `revalidatePath('/', 'layout')` poore site ka route cache uda deta hai, to
+ * un pages ka prerender bhi ud jaata hai — aur `dynamicParams = false` ki
+ * wajah se Next unhe DOBARA bana hi nahi sakta. Natija: 404, aur naya deploy
+ * kiye bina wapas nahi aate.
+ *
+ * Matlab: owner banner badalta, aur usi second Google Ads ka landing page
+ * (jahan uska paisa lagta hai) 404 ho jaata.
+ *
+ * ISLIYE SIRF `revalidateTag('settings')`. Yeh tag `getSiteImages()` /
+ * `getRateCard()` ke `unstable_cache` par laga hai, aur Next in tags ko
+ * route cache tak le jaata hai — yaani jo page ye data padhte hain unka HTML
+ * bhi dobara ban jaata hai, bina kisi doosre page ko chhue.
+ *
+ * NIYAM: is project me `revalidatePath('/', 'layout')` kabhi mat likhna.
+ */
+function purgeSettingsCache() {
+  revalidateTag('settings');
 }
 
 export async function GET() {
@@ -66,7 +98,7 @@ export async function PUT(req: NextRequest) {
     update: { value: next as never },
     create: { key: 'rateCard', value: next as never, description: 'Admin-editable spare part rates' },
   });
-  revalidateTag('settings');
+  purgeSettingsCache();
   await logAudit({
     actorId: s!.user.id,
     action: 'rateCard.update',
@@ -90,6 +122,6 @@ export async function DELETE(req: NextRequest) {
     update: { value: current as never },
     create: { key: 'rateCard', value: {} as never, description: 'Admin-editable spare part rates' },
   });
-  revalidateTag('settings');
+  purgeSettingsCache();
   return NextResponse.json({ ok: true, part, reset: true });
 }

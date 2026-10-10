@@ -43,6 +43,7 @@
  *         rang hai. Reference se layout ka idea liya, rang nahi.
  */
 import Image from 'next/image';
+import BannerPhoneBadge from '@/components/common/BannerPhoneBadge';
 import Link from 'next/link';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 
@@ -76,6 +77,18 @@ export default function AdsHeroBanner({
         />
         {/* Left se gradient taaki text ke peeche image halki ho jaaye */}
         <div className="absolute inset-0 bg-gradient-to-r from-navy-900 via-navy-900/85 to-transparent md:from-navy-900 md:via-navy-900/70 md:to-navy-900/10" />
+      </div>
+
+      {/* 🆕 11 Oct 2026 — banner ke UPAR tairta phone number.
+          Owner: "koi bhi photo upload karu, no uske upper hi rahe chahyie".
+          Number image me chhapa nahi hai — HTML me alag hai, isliye banner
+          kitni bhi baar badlo, ye yahin rahega. Desktop par hi dikhta hai;
+          mobile par neeche pehle se bada Call button maujood hai, do call
+          button ek screen par bekaar lagte. */}
+      <div className="pointer-events-none absolute inset-0 hidden md:block">
+        <div className="pointer-events-auto absolute bottom-5 right-5">
+          <BannerPhoneBadge position="bottom-right" scrim={false} className="!static !translate-x-0" />
+        </div>
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 py-12 md:py-16 lg:py-20">

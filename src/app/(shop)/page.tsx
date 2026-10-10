@@ -21,6 +21,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import ServiceHero from '@/components/home/ServiceHero';
+import { getSiteImages } from '@/lib/settings';
 import TrustBar from '@/components/home/TrustBar';
 import ProofStats from '@/components/home/ProofStats';
 import ReviewShowcase from '@/components/home/ReviewShowcase';
@@ -135,7 +136,10 @@ const FAQS = [
 ];
 
 export default async function HomePage() {
-  const slots = await getTodaySlots();
+  /* siteImages: admin ke /admin/site-images se aata hai. DB khaali ho to
+     resolveSiteImages() code ke default laut aata hai — homepage kabhi
+     khaali nahi dikhti. */
+  const [slots, siteImages] = await Promise.all([getTodaySlots(), getSiteImages()]);
   return (
     <>
       <script {...jsonLd([
@@ -154,7 +158,7 @@ export default async function HomePage() {
 
       <main className="flex flex-col">
         {/* 1 — Service hero */}
-        <ServiceHero />
+        <ServiceHero image={siteImages.homeHero} />
 
         {/*
           2 — PROOF STATS, immediately under the hero.

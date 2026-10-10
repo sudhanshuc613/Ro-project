@@ -140,6 +140,74 @@ export default function BlogIndex() {
             ))}
           </div>
 
+          {/* ── 10 Oct 2026 — NAYA BLOCK (sirf joda, kuch hataya nahi) ───────
+              Wajah: live audit me /blog sirf 586 word ka tha — listing page
+              hone ki wajah se body text na ke barabar. Google ke liye ek
+              index page bina apne content ke "thin" hota hai. Neeche jo likha
+              hai woh asli faisla-lene wala content hai (kaun sa guide kis
+              dikkat me padhein), filler nahi. */}
+          <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">
+            Aapki Dikkat Ke Hisaab Se Kaun Sa Guide Padhein
+          </h2>
+          <p className="mt-2 text-navy-600">
+            Har guide {CONTACT.address.city} ke asli service data se likha gaya hai — yahan ke
+            mohallon ka napa hua TDS, jo kharaabi sach me sabse zyada aati hai, aur 2026 ke
+            asli rate. Niche dekh ke seedha apni dikkat wala guide kholiye.
+          </p>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            {[
+              {
+                t: 'Paani bilkul nahi aa raha, ya bahut dheema',
+                d: 'Zyadatar logon ko lagta hai membrane gaya. 10 me se 6 baar aisa nahi hota — SMPS, adaptor ya inlet valve hota hai, jo membrane se kaafi sasta hai. Pehle khud 6 cheez check kar lijiye.',
+                href: '/blog/ro-me-paani-nahi-aa-raha-kya-kare',
+                cta: 'Khud check karne wala guide',
+              },
+              {
+                t: 'Paani ka swaad bhaari lag raha hai',
+                d: 'Swaad badalna aam taur par membrane ka signal hai, par hamesha nahi. Membrane kab sach me badalna chahiye aur kab bechne wala jaldi kar raha hai — dono ka farak yahan likha hai.',
+                href: '/blog/ro-membrane-kab-badalna-chahiye',
+                cta: 'Membrane ka sach',
+              },
+              {
+                t: 'Rate theek hai ya zyada maang rahe hain',
+                d: `Poori rate list — filter, membrane, SMPS, pump, motor, AMC. Saath me ye bhi ki ${CONTACT.address.city} me market kya leta hai, taaki aap turant compare kar sakein.`,
+                href: '/blog/ro-service-charge-patna-rate-list',
+                cta: 'Poori rate list 2026',
+              },
+              {
+                t: 'Naya purifier lena hai — RO, UV ya UF',
+                d: 'Teeno alag cheez hain aur dukandaar aksar sabse mehenga bechta hai. Aapke paani ke TDS par kaun sa sahi hai, aur kaun sa paisa barbaad hai — saaf-saaf.',
+                href: '/blog/ro-uv-uf-me-kya-farak-hai',
+                cta: 'RO vs UV vs UF',
+              },
+            ].map((x) => (
+              <div key={x.t} className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">{x.t}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">{x.d}</p>
+                <Link href={x.href} className="mt-3 inline-block text-sm font-bold text-aqua-600 hover:underline">
+                  {x.cta} →
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">
+            Ye Guide Internet Ke Baaki Guide Se Alag Kyun Hain
+          </h2>
+          <p className="mt-2 text-navy-600">
+            Zyadatar &ldquo;RO tips&rdquo; wale article kisi bhi shahar ke liye likhe gaye hote hain —
+            unme na koi number hota hai, na koi local baat. Hamare guide {CONTACT.address.city} ke
+            ghar-ghar jaake kiye gaye kaam se bane hain: kis mohalle ka borewell paani kitne TDS par
+            aata hai, us paani me filter kitne mahine chalta hai (box par likhe se kam), kaun sa
+            part yahan sabse zyada jalta hai, aur kis kaam ka kya rate chalna chahiye.
+          </p>
+          <p className="mt-3 text-navy-600">
+            Rate hamesha <strong>range</strong> me likhe gaye hain — &ldquo;itne se itne tak&rdquo; —
+            kyunki part ki quality aur brand se daam badalta hai. Jo dukaan ek hi number bolti hai
+            woh ya to baad me badalti hai, ya sabse mehenga part hi lagati hai. Aap jo bhi faisla
+            lein, rate kaam shuru hone se pehle likhwa lijiye — hamse ho ya kisi aur se.
+          </p>
+
           <div className="mt-10 rounded-2xl bg-navy-700 p-6 text-center text-white">
             <p className="font-display text-lg font-bold">Padh ke bhi samajh na aaye?</p>
             <p className="mt-1 text-sm text-navy-100">

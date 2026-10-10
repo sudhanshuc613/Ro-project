@@ -16,6 +16,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { prepareImageForUpload, prettySize } from '@/lib/images/prepare-upload';
 
 export interface UploadedImage {
   id: string;
@@ -40,17 +41,26 @@ export default function ImageUploader({
   multiple = true,
   onUploaded,
   compact = false,
+  targetW,
+  targetH,
+  fit = 'cover',
 }: {
   folder?: string;
   multiple?: boolean;
   onUploaded: (images: UploadedImage[]) => void;
   compact?: boolean;
+  /** Slot ki asli size — di gayi to image bhejne se PEHLE isi ratio me cut hogi. */
+  targetW?: number;
+  targetH?: number;
+  fit?: 'cover' | 'contain';
 }) {
   const [dragging, setDragging] = useState(false);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
   const [compress, setCompress] = useState(true);
   const [lastResult, setLastResult] = useState<UploadedImage[] | null>(null);
+  const [prepping, setPrepping] = useState(false);
+  const [prepNote, setPrepNote] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
   const zoneRef = useRef<HTMLDivElement>(null);
@@ -71,9 +81,52 @@ export default function ImageUploader({
       setBusy(true);
       setProgress(0);
       setLastResult(null);
+      setPrepNote(null);
+
+      /* ── 🔴 11 Oct 2026 — BHEJNE SE PEHLE BROWSER ME HI CHHOTA KARO ──────
+         Owner ka 6.6 MB ka banner "Server sent an unreadable response" de
+         raha tha. Wajah Vercel ka 4.5 MB request limit tha — file hamare
+         code tak pahunchti hi nahi thi. Ab yahin 200-350 KB ki ban jaati
+         hai, aur saath me slot ka theek ratio bhi cut ho jaata hai. */
+      let toSend = images.slice(0, 10);
+      if (targetW && targetH) {
+        setPrepping(true);
+        try {
+          const prepared = await Promise.all(
+            toSend.map((f) => prepareImageForUpload(f, { targetWidth: targetW, targetHeight: targetH, fit })),
+          );
+          const inB = prepared.reduce((a, r) => a + r.originalBytes, 0);
+          const outB = prepared.reduce((a, r) => a + r.bytes, 0);
+          const anyCrop = prepared.some((r) => r.cropped);
+          const skipped = prepared.filter((r) => r.skipped);
+          toSend = prepared.map((r) => r.file);
+          if (skipped.length === 0) {
+            setPrepNote(
+              `${prettySize(inB)} → ${prettySize(outB)} · ${targetW}×${targetH} me set` +
+                (anyCrop ? ' (ratio ke liye kinare thode cut hue)' : ''),
+            );
+          } else {
+            setPrepNote(`${skipped.length} file browser me taiyaar nahi ho payi — waise hi bheji ja rahi hai`);
+          }
+        } catch {
+          /* taiyaari fail ho to original hi bhejo — upload rukna nahi chahiye */
+        } finally {
+          setPrepping(false);
+        }
+      }
+
+      const tooBig = toSend.find((f) => f.size > 4_000_000);
+      if (tooBig) {
+        toast.error(
+          `${tooBig.name} abhi bhi ${prettySize(tooBig.size)} ki hai. Hosting 4.5 MB se badi file nahi leti — ` +
+            'thodi chhoti image chunein ya screenshot leke upload karein.',
+        );
+        setBusy(false);
+        return;
+      }
 
       const body = new FormData();
-      for (const f of images.slice(0, 10)) body.append('file', f);
+      for (const f of toSend) body.append('file', f);
       body.append('folder', folder);
       body.append('compress', String(compress));
 
@@ -92,7 +145,19 @@ export default function ImageUploader({
               try {
                 parsed = JSON.parse(xhr.responseText);
               } catch {
-                reject(new Error('Server sent an unreadable response.'));
+                /* 🔴 Server ne JSON nahi, HTML/khaali bheja. Pehle yahan bas
+                   "Server sent an unreadable response" likha tha, jisse kuch
+                   pata hi nahi chalta tha. Ab HTTP code se asli wajah batate
+                   hain — 90% baar ye file ka bada hona hota hai. */
+                const code = xhr.status;
+                let why: string;
+                if (code === 413) why = 'File hosting ki 4.5 MB limit se badi hai. Chhoti image chunein.';
+                else if (code === 504 || code === 408) why = 'Server ne jawab dene me bahut der lagai. Dobara koshish karein.';
+                else if (code === 502 || code === 503) why = 'Server abhi busy hai. 10 second baad dobara try karein.';
+                else if (code === 401 || code === 403) why = 'Login khatm ho gaya. Page refresh karke dobara login karein.';
+                else if (code === 0) why = 'Internet beech me toot gaya. Connection check karke dobara bhejein.';
+                else why = `Server ne HTTP ${code} bheja (JSON nahi). Dobara koshish karein, phir bhi na ho to batayein.`;
+                reject(new Error(why));
                 return;
               }
               if (xhr.status >= 200 && xhr.status < 300) {
@@ -210,8 +275,15 @@ export default function ImageUploader({
               Drag photo here, or <span className="text-aqua-600 underline">click to browse</span>
             </p>
             <p className="mt-1 text-xs text-muted">
-              JPG · PNG · WebP · up to 12 MB {multiple && '· multiple allowed'} · Ctrl+V works too
+              JPG · PNG · WebP · AVIF {multiple && '· multiple allowed'} · Ctrl+V works too
             </p>
+            {targetW && targetH ? (
+              <p className="mt-1 text-[11px] font-semibold text-emerald-700">
+                ✅ Kitni bhi badi photo chalegi — yahin {targetW}×{targetH} me set hokar halki ho jaayegi
+              </p>
+            ) : (
+              <p className="mt-1 text-[11px] text-muted">4.5 MB tak ki file (hosting ki limit)</p>
+            )}
 
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
               <button
@@ -226,6 +298,13 @@ export default function ImageUploader({
               </button>
             </div>
           </>
+        )}
+
+        {prepping && (
+          <p className="mb-2 text-xs font-semibold text-aqua-700">Image taiyaar ki ja rahi hai…</p>
+        )}
+        {prepNote && !busy && (
+          <p className="mb-2 text-xs font-semibold text-emerald-700">✅ {prepNote}</p>
         )}
 
         <input

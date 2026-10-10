@@ -33,6 +33,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import BannerPhoneBadge from '@/components/common/BannerPhoneBadge';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import BrandLogoGrid from '@/components/home/BrandLogoGrid';
@@ -45,6 +46,7 @@ import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { ogImage } from '@/lib/seo/og-image';
+import { getSiteImages } from '@/lib/settings';
 /* 9 Oct 2026 — 94-keyword audit: SERVICE-INTENT category me 13 keywords ka
    exact phrase kahin nahi tha (rate card / visit charge / pump repair wala
    cluster). Naya block, purana kuch nahi badla. */
@@ -83,7 +85,7 @@ export const metadata: Metadata = {
 const HUB_FAQS = [
   {
     q: 'Which RO service do I actually need?',
-    a: 'Work from the symptom. No water at all or a leak means a repair visit — that is a diagnosis job, ₹200 including the TDS test. Water is fine but it has been three to four months means a filter change, ₹350 to ₹900. Water tastes heavy and your TDS reading has climbed means a membrane, ₹1,100 to ₹2,400. A new machine or one you are shifting means installation, ₹500. If you are calling more than twice a year, an AMC from ₹1,499 works out cheaper than the individual visits.',
+    a: 'Work from the symptom. No water at all or a leak means a repair visit — that is a diagnosis job, ₹200 including the TDS test. Water is fine but it has been three to four months means a filter change, ₹350 to ₹900. Water tastes heavy and your TDS reading has climbed means a membrane, ₹1,100 to ₹2,400. A new machine or one you are shifting means installation, ₹500. If you are calling more than twice a year, an AMC at ₹1,499 to ₹4,499 works out cheaper than the individual visits.',
   },
   {
     q: 'What is the cheapest RO service in Patna?',
@@ -111,7 +113,11 @@ const HUB_FAQS = [
   },
 ];
 
-export default function ServiceHubPage() {
+export default async function ServiceHubPage() {
+  /* 11 Oct 2026 — hero poster ab admin ke slot se aata hai (pehle hardcoded
+     tha). `revalidate = 86400` ke saath ye ISR me chalta hai: banner badalne
+     par agli revalidation par dikhta hai, ya Vercel se "Purge Cache". */
+  const siteImages = await getSiteImages();
   return (
     <>
       <script {...jsonLd([
@@ -205,17 +211,22 @@ export default function ServiceHubPage() {
               </div>
             </div>
 
-            {/* Poster — wahi image jo homepage hero me hai */}
+            {/* Poster — wahi image jo homepage hero me hai.
+                🔴 11 Oct 2026: pehle path hardcoded tha, isliye admin se
+                badalne par yahan kuch nahi hota tha. Ab slot se aata hai.
+                Saath me phone ka float bhi — owner: "kitni bhi image laga lu,
+                no uske upper hi rahe chahyie". */}
             <div className="relative mx-auto w-full max-w-lg">
               <Image
-                src="/banners/hero-technician.png"
-                alt={`Aqua Perl RO technician in Patna — ₹${SERVICE.visitCharge} visit charge, ${SERVICE.responseTime} response`}
+                src={siteImages.homeHero.url}
+                alt={siteImages.homeHero.alt}
                 width={760}
                 height={760}
                 className="h-auto w-full object-contain drop-shadow-2xl"
                 priority
                 sizes="(max-width: 1024px) 90vw, 46vw"
               />
+              <BannerPhoneBadge position="bottom-center" scrim={false} />
             </div>
           </div>
         </section>

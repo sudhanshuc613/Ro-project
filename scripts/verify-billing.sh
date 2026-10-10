@@ -38,6 +38,25 @@ echo "════ 0a) Pricing wording — owner ka \"itna se itna tak\" niyam �
 ONW=$(grep -rno "onwards" src/ --include=*.ts --include=*.tsx | wc -l)
 if [ "$ONW" -le 17 ]; then echo "  PASS  'onwards' sirf $ONW bachi (commercial plant/AMC, jinka upper rate owner se poochna hai)"; pass=$((pass+1));
 else echo "  FAIL  'onwards' $ONW hain — spare parts pe range honi chahiye"; fail=$((fail+1)); fi
+# "₹X se" ka wahi haal — ye "₹X onwards" ka hinglish roop hai.
+# 4 allowed: 3 commercial/service (owner ka rate chahiye) + 1 sahi hindi
+# ("Membrane ke ₹2,500 se zyada maange" = "₹2,500 se ZYADA", price claim nahi).
+SE=$(python3 - <<'PYSE'
+import re, glob
+# "₹1,100 se ₹2,400" ek RANGE hai — theek hai. "₹350 se" ek-tarfa hai — galat.
+# "₹2,500 se zyada" = "more than" — sahi hindi, price claim nahi.
+n = 0
+for f in glob.glob('src/**/*.ts', recursive=True) + glob.glob('src/**/*.tsx', recursive=True):
+    for line in open(f, encoding='utf8'):
+        st = line.strip()
+        if st.startswith(('*', '//', '/*')):
+            continue
+        n += len(re.findall(r'₹[\d,]+\s*se(?!\s*₹)(?!\s*zyada)(?![a-z])', line))
+print(n)
+PYSE
+)
+if [ "$SE" -le 3 ]; then echo "  PASS  ek-tarfa '₹X se' sirf $SE bachi (owner ka upper rate chahiye)"; pass=$((pass+1));
+else echo "  FAIL  ek-tarfa '₹X se' $SE hain — range honi chahiye"; fail=$((fail+1)); fi
 # 10 Oct ko badle gaye rate kahin purane roop me na reh jayein
 # PriceComparison.tsx ka "them:" column COMPETITOR ka rate hai — woh jaan-boojh ke
 # nahi badla gaya (hamare paas naya competitor data nahi hai). Isliye use chhoda.

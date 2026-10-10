@@ -93,7 +93,31 @@ export function generateStaticParams() {
  * The guard that makes a root-level dynamic segment safe. Without this, any
  * unmatched top-level URL would be rendered by this route instead of 404ing.
  */
-export const dynamicParams = false;
+/**
+ * 🔴🔴 11 Oct 2026 — `false` se `true` kiya gaya. Wajah padh lena.
+ *
+ * Pehle `dynamicParams = false` tha. Soch achhi thi: list ke bahar ka koi
+ * slug render hi na ho. Par uska ek ghaatak side-effect tha:
+ *
+ *   admin panel se banner ya part-rate badlo
+ *        → API `revalidateTag('settings')` chalata hai
+ *        → in pages ka prerender cache se ud jaata hai
+ *        → `dynamicParams = false` ki wajah se Next unhe DOBARA nahi banata
+ *        → /ro-service-in-patna aur baaki 6 intent pages PERMANENT 404
+ *
+ * Yaani jis din owner banner badalta, usi din uska Google Ads landing page
+ * (jahan ka paisa lagta hai) mar jaata — aur naye deploy ke bina wapas nahi
+ * aata. Test me live `next start` par ye hu-ba-hu hota dikha.
+ *
+ * Ab `true` hai, par suraksha bilkul utni hi hai: neeche page me pehle se
+ * `if (!intent) notFound();` likha hai (guard #3). Koi ulta-seedha slug aaye
+ * to wahi asli 404 deta hai. Farak sirf itna ki ab ye saat pages cache saaf
+ * hone par apne aap dobara ban jaate hain.
+ *
+ * verify-service-intent.sh me `/some-random-url` ka 404 test isi liye hai —
+ * wo ab bhi pass hota hai.
+ */
+export const dynamicParams = true;
 
 export function generateMetadata({ params }: { params: { intent: string } }): Metadata {
   const intent = getIntent(params.intent);

@@ -57,6 +57,9 @@ export default function ServiceRateCard() {
      aur intent page ek doosre se alag bolne lagte hain. */
   const filterFrom = SERVICE_INTENTS.find((s2) => s2.slug === 'ro-filter-change-patna')?.priceFrom ?? cheapest;
   const membraneFrom = SERVICE_INTENTS.find((s2) => s2.slug === 'ro-membrane-replacement-patna')?.priceFrom ?? 1100;
+  /* Upper bound bhi data se — owner ka niyam: "itna se itna tak", ek-tarfa nahi. */
+  const filterTo = SERVICE_INTENTS.find((s2) => s2.slug === 'ro-filter-change-patna')?.priceTo ?? 900;
+  const membraneTo = SERVICE_INTENTS.find((s2) => s2.slug === 'ro-membrane-replacement-patna')?.priceTo ?? 2400;
   /* UV lamp ka rate filter-change page ki apni price list se. */
   const uvRow = SERVICE_INTENTS
     .find((s2) => s2.slug === 'ro-filter-change-patna')
@@ -156,7 +159,7 @@ export default function ServiceRateCard() {
             },
             {
               h: 'RO filter change cost Patna aur membrane me kya farak hai?',
-              p: `Filter (sediment + carbon) sasta hai aur 4–6 mahine me badalta hai. Membrane mehenga hai aur 18–24 mahine chalta hai. RO filter change cost Patna me ₹${filterFrom} se shuru hota hai; RO membrane change Patna me ₹${membraneFrom.toLocaleString('en-IN')} se. Dono ek saath badalna zaroori nahi — bahut log yahi galti karte hain.`,
+              p: `Filter (sediment + carbon) sasta hai aur 4–6 mahine me badalta hai. Membrane mehenga hai aur 18–24 mahine chalta hai. RO filter change cost Patna me ₹${filterFrom} se ₹${filterTo.toLocaleString('en-IN')} tak padta hai; RO membrane change Patna me ₹${membraneFrom.toLocaleString('en-IN')} se ₹${membraneTo.toLocaleString('en-IN')} tak. Dono ek saath badalna zaroori nahi — bahut log yahi galti karte hain.`,
             },
           ].map((x) => (
             <div key={x.h} className="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">

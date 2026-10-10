@@ -161,10 +161,18 @@ export default function SiteImageManager({ initial }: { initial: Row[] }) {
                       </div>
                     ) : (
                       <div className="mt-3 space-y-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+                        {/* 🆕 11 Oct 2026 — slot ki asli size uploader ko di ja
+                            rahi hai. Isse image BHEJNE SE PEHLE browser me hi
+                            isi ratio me cut hoti hai aur WebP ban jaati hai.
+                            Owner ka 6.6 MB wala banner isi wajah se fail ho
+                            raha tha (Vercel ka 4.5 MB request limit). */}
                         <ImageUploader
                           folder="site"
                           multiple={false}
                           compact
+                          targetW={r.targetW}
+                          targetH={r.targetH}
+                          fit={r.fit}
                           onUploaded={(imgs) => onUploaded(r.key, imgs)}
                         />
                         {bytes != null && (

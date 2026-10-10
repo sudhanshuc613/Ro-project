@@ -57,8 +57,35 @@ export interface ImageSlot {
   defaultUrl: string;
   /** Default alt text */
   defaultAlt: string;
-  /** Recommended pixel size */
+  /** Recommended pixel size — admin ko dikhane ke liye (insaani bhaasha) */
   size: string;
+  /**
+   * 🆕 11 Oct 2026 — machine ke liye wahi size, number me.
+   *
+   * KYUN: `size` ek string hai ("1600 × 900 (16:9)"), usse code crop nahi kar
+   * sakta. Owner ne kaha tha *"jitna ratio isko chahyie utna khud le lega"* —
+   * uske liye browser ko asli number chahiye. Upload se pehle image yahin ke
+   * hisaab se crop + resize hoti hai (src/lib/images/prepare-upload.ts).
+   */
+  targetW: number;
+  targetH: number;
+  /**
+   * 'cover'   = frame poora bhar do, bahar ka kat jaye (banner, card)
+   * 'contain' = poori image rahe, kinare khaali (logo/OG jaisi cheezein)
+   */
+  fit: 'cover' | 'contain';
+  /**
+   * 🆕 Is image ke UPAR clickable phone number ka float dikhana hai ya nahi.
+   *
+   * Owner: *"koi bhi photo upload karu uske upper jo no hai float wala wo bhi
+   * rahe ... banner dusri bhi lagau to ... no uske upper hi rahe"*
+   *
+   * Number image me CHHAPA nahi jaata — HTML me alag rehta hai. Isliye:
+   *   • image kuch bhi badlo, number hamesha upar rehta hai
+   *   • number par ungli rakhte hi call lagti hai (tel: link)
+   *   • Google number ko PADH sakta hai (image ke andar ka text nahi padhta)
+   */
+  overlayPhone?: boolean;
   /** Kis group me dikhani hai admin UI me */
   group: 'Banner' | 'Service card' | 'Kaam ki photo' | 'Brand / OG';
   /** Kitne page is image ko use karte hain — impact samajhne ke liye */
@@ -76,6 +103,10 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/banners/patna-service-hero.png',
     defaultAlt: 'RO service in Patna — water purifier repair, TDS testing and filter change by Aqua Perl',
     size: '1600 × 900 (16:9)',
+    targetW: 1600,
+    targetH: 900,
+    fit: 'cover',
+    overlayPhone: true,
     group: 'Banner',
     pages: '1 page — par yahi wo page hai jahan Ads ka paisa lagta hai',
     tip: 'Dayein taraf machine/tools, bayein taraf khaali jagah chhodna — wahan text aata hai. Image me koi text mat daalna, wo HTML me hai.',
@@ -87,20 +118,34 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/banners/hero-technician.png',
     defaultAlt: 'Aqua Perl RO technician servicing a water purifier in Patna',
     size: '1200 × 900',
+    targetW: 1200,
+    targetH: 900,
+    fit: 'cover',
+    overlayPhone: true,
     group: 'Banner',
     pages: '2 pages — homepage sabse zyada dekha jaata hai',
     tip: 'Asli technician ki photo sabse achhi chalti hai. Chehra saaf dikhe aur machine bhi.',
   },
   {
     key: 'carouselHero',
-    label: 'Homepage carousel slide',
-    usedOn: 'Homepage ka slider, aur /service-patna ka share-image',
+    label: 'Share photo — /service-patna',
+    /* 🔴 11 Oct 2026 — pehle "Homepage carousel slide" likha tha, jo galat tha.
+       HeroCarousel component kahin render hi nahi hota (dead code). Ye file
+       asal me sirf DO jagah use hoti hai, dono me SHARE/OG image ke roop me:
+       /service-patna ka openGraph aur organizationSchema ka `image`.
+       Owner ko sach pata hona chahiye, warna wo banner badal ke homepage par
+       dhoondta rahega. */
+    usedOn: 'WhatsApp/Facebook par /service-patna share karne par dikhne wali photo (page par nahi dikhti)',
     defaultUrl: '/banners/service-tech.png',
     defaultAlt: 'RO water purifier service and repair in Patna',
-    size: '1200 × 800',
+    size: '1200 × 630 (share ke liye exact)',
+    targetW: 1200,
+    targetH: 630,
+    fit: 'cover',
+    overlayPhone: true,
     group: 'Banner',
-    pages: '2 pages',
-    tip: '🔴 Abhi wali photo me technician ki shirt par "ROCARE" likha hai — wo competitor ka naam hai. Isko badalna sabse pehle karna chahiye.',
+    pages: 'Share preview — page par nahi dikhti',
+    tip: '🔴 Is photo me technician ki shirt par "ROCARE" likha hai — competitor ka naam. Share karne par wahi dikhta hai, isliye badalna zaroori hai. 1200x630 rakhein warna WhatsApp par kati hui dikhegi.',
   },
 
   /* ── SERVICE CARDS (ads page) ── */
@@ -111,6 +156,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/services/ro-service.png',
     defaultAlt: 'RO water purifier full service check-up with TDS meter in Patna',
     size: '800 × 800 (square)',
+    targetW: 800,
+    targetH: 800,
+    fit: 'cover',
     group: 'Service card',
     pages: '1 page',
     tip: 'Square image. Machine + TDS meter dikhe to achha.',
@@ -122,6 +170,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/services/ro-repair.png',
     defaultAlt: 'RO water purifier repair with tools and open filter panel in Patna',
     size: '800 × 800 (square)',
+    targetW: 800,
+    targetH: 800,
+    fit: 'cover',
     group: 'Service card',
     pages: '1 page',
     tip: 'Khuli machine ya tools wali photo.',
@@ -133,6 +184,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/services/ro-installation.png',
     defaultAlt: 'RO water purifier wall mount installation in Patna',
     size: '800 × 800 (square)',
+    targetW: 800,
+    targetH: 800,
+    fit: 'cover',
     group: 'Service card',
     pages: '1 page',
     tip: 'Deewar par lagti hui machine.',
@@ -144,6 +198,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/services/ro-filter-change.png',
     defaultAlt: 'RO sediment and carbon filter cartridge replacement in Patna',
     size: '800 × 800 (square)',
+    targetW: 800,
+    targetH: 800,
+    fit: 'cover',
     group: 'Service card',
     pages: '1 page',
     tip: 'Purana aur naya filter saath me — farak dikhe.',
@@ -155,6 +212,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/services/ro-membrane.png',
     defaultAlt: 'RO membrane cartridge replacement 75 80 100 GPD in Patna',
     size: '800 × 800 (square)',
+    targetW: 800,
+    targetH: 800,
+    fit: 'cover',
     group: 'Service card',
     pages: '1 page',
     tip: 'Membrane ka close-up.',
@@ -166,6 +226,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/services/ro-amc.png',
     defaultAlt: 'RO annual maintenance contract plans with scheduled visits in Patna',
     size: '800 × 800 (square)',
+    targetW: 800,
+    targetH: 800,
+    fit: 'cover',
     group: 'Service card',
     pages: '1 page',
     tip: 'Calendar ya shield jaisa kuch — saal bhar ka matlab nikle.',
@@ -179,6 +242,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/service/technician-working.jpg',
     defaultAlt: 'Aqua Perl technician repairing a RO water purifier at a home in Patna',
     size: '1200 × 900 (4:3)',
+    targetW: 1200,
+    targetH: 900,
+    fit: 'cover',
     group: 'Kaam ki photo',
     pages: '🔴 90+ pages — ye badalne se poore site par asar padta hai',
     tip: 'Asli job ki photo. Mobile se kheenchi hui chalegi — stock photo se kahin behtar, kyunki Google reverse-image-search se stock pakad leta hai.',
@@ -190,6 +256,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/service/tds-testing.jpg',
     defaultAlt: 'Technician measuring TDS of RO water in Patna with a digital meter',
     size: '1200 × 900 (4:3)',
+    targetW: 1200,
+    targetH: 900,
+    fit: 'cover',
     group: 'Kaam ki photo',
     pages: '🔴 90+ pages',
     tip: 'Meter ki reading saaf dikhe — yahi hamara sabse bada bharosa wala point hai.',
@@ -201,6 +270,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/service/membrane-old-new.jpg',
     defaultAlt: 'Old and new RO membrane shown side by side during replacement in Patna',
     size: '1200 × 900 (4:3)',
+    targetW: 1200,
+    targetH: 900,
+    fit: 'cover',
     group: 'Kaam ki photo',
     pages: '🔴 90+ pages',
     tip: 'Ganda purana part aur saaf naya part saath me. Customer ko yahi sabse zyada convince karta hai.',
@@ -214,6 +286,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/brand/og-default.jpg',
     defaultAlt: 'Aqua Perl — RO service in Patna',
     size: '🔴 1200 × 630 (exact — warna kat jaati hai)',
+    targetW: 1200,
+    targetH: 630,
+    fit: 'cover',
     group: 'Brand / OG',
     pages: 'Saare 144 pages ka default',
     tip: 'Isme bada text chalega (brand naam + ₹200 visit + phone), kyunki ye chhoti dikhai deti hai. 1200×630 se alag size mat daalna.',
@@ -225,6 +300,9 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     defaultUrl: '/products/ro-domestic.png',
     defaultAlt: 'Domestic RO water purifier for home in Patna',
     size: '800 × 800',
+    targetW: 800,
+    targetH: 800,
+    fit: 'contain',
     group: 'Brand / OG',
     pages: '1 page',
     tip: 'Safed background par machine — product jaisa saaf look.',

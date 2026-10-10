@@ -128,6 +128,94 @@ export default function ContactPage() {
             </a>
           </div>
 
+          {/* ── 10 Oct 2026 — NAYA BLOCK (kuch hataya nahi, sirf joda) ────────
+              Wajah: live audit me /contact sabse kamzor page tha — 523 word
+              aur sirf 2 H2. Contact page local SEO ka NAP page hota hai;
+              Google isi se naam-pata-phone ki consistency jaanchta hai.
+              Yahan jo sawaal hain wo woh hain jo phone par roz poochhe jaate
+              hain, isliye ye content asli kaam ka hai, bharti ka nahi. */}
+          <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">
+            Call Karne Se Pehle Ye 4 Cheez Taiyaar Rakhein
+          </h2>
+          <p className="mt-2 text-navy-600">
+            Phone par pehle hi ye bata dene se technician sahi part leke nikalta hai aur
+            kaam ek hi visit me ho jaata hai. Doosri visit ka koi charge nahi lagta, par
+            aapka din bach jaata hai.
+          </p>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            {[
+              {
+                t: '1. Machine ka brand aur model',
+                d: 'Machine ke peeche ya side me sticker lagi hoti hai. Kent, Aquaguard, Pureit, Livpure, AO Smith, Nasaka ya locally assembled — model number bhi mil jaye to aur achha. Isse pata chal jaata hai ki kaun sa filter housing lagta hai.',
+              },
+              {
+                t: '2. Dikkat kya hai, apne shabdon me',
+                d: 'Paani bilkul nahi aa raha, dheema aa raha hai, swad badal gaya, leak ho raha hai, ya machine band hi nahi hoti — jo dikh raha hai wahi bata dijiye. Technical naam jaanna zaroori nahi.',
+              },
+              {
+                t: '3. Aakhri service kab hui thi',
+                d: 'Yaad na ho to "lagbhag" bata dijiye. 6 mahine se zyada ho gaye to filter ki ummeed rakhiye; 18 mahine se upar ho to membrane bhi dekhna padega.',
+              },
+              {
+                t: '4. Pata aur landmark',
+                d: `${CONTACT.address.city} me gali ka naam Google Maps par kabhi-kabhi galat dikhta hai. Nazdeeki dukaan, school ya mandir ka naam bata dijiye — technician seedha pahunch jayega.`,
+              },
+            ].map((x) => (
+              <div key={x.t} className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">{x.t}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">{x.d}</p>
+              </div>
+            ))}
+          </div>
+
+          <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">
+            Phone, WhatsApp Ya Form — Kaunsa Kab
+          </h2>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {[
+              {
+                t: '📞 Phone',
+                w: 'Aaj hi technician chahiye',
+                d: `Sabse tez. ${CONTACT.hours} ke beech call uthti hai. Patna me technician aam taur par ${SERVICE.responseTime} me pahunch jaata hai, aur visit charge ₹${SERVICE.visitCharge} fixed hai — usme poori checking aur TDS test shaamil hai.`,
+              },
+              {
+                t: '💬 WhatsApp',
+                w: 'Machine ka photo bhejna hai',
+                d: 'Leak kahan se ho raha hai, ya kaun sa part kharab dikh raha hai — photo bhej dijiye. Aadha diagnosis phone par hi ho jaata hai aur technician sahi spare leke aata hai.',
+              },
+              {
+                t: '🧾 Booking form',
+                w: 'Raat ko ya baad me baat karni hai',
+                d: `Form bharke chhod dijiye — subah ${CONTACT.hours.split('–')[0].replace('Mon–Sun ', '')} ke baad call aayegi. Order ya spare part ke liye bhi yahi theek hai.`,
+              },
+            ].map((x) => (
+              <div key={x.t} className="rounded-2xl bg-navy-50 p-5">
+                <p className="text-lg font-bold text-navy-700">{x.t}</p>
+                <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-aqua-700">{x.w}</p>
+                <p className="mt-2 text-sm leading-relaxed text-navy-600">{x.d}</p>
+              </div>
+            ))}
+          </div>
+
+          <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">
+            Patna Ke Kaunse Area Me Hum Aate Hain
+          </h2>
+          <p className="mt-2 text-navy-600">
+            Buddha Colony hamara base hai. Wahan se {SERVICE.city} ke lagbhag har mohalle tak
+            usi din pahunchte hain — Kankarbagh, Boring Road, Patliputra, Rajendra Nagar,
+            Bailey Road, Danapur, Kadamkuan, Gardanibagh, Ashok Rajpath, Rukanpura,
+            Khagaul, Phulwari Sharif aur beech ke saare chhote mohalle. Shahar se 25 km
+            se zyada door (Fatuha, Bihta, Punpun, Naubatpur taraf) abhi service nahi dete —
+            jhooth bolne se achha hai pehle hi bata dena.
+          </p>
+          <p className="mt-3 text-sm text-navy-600">
+            Apne area ka TDS, aam dikkat aur rate dekhna ho to{' '}
+            <Link href="/ro-service-patna" className="font-semibold text-aqua-600 hover:underline">
+              area-wise RO service page
+            </Link>{' '}
+            kholiye — har mohalle ka apna page hai.
+          </p>
+
           <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">Policies</h2>
           <div className="mt-5 grid gap-5 md:grid-cols-2">
             {POLICIES.map((p) => (

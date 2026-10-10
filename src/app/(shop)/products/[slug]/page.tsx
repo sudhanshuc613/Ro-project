@@ -311,6 +311,77 @@ export default async function ProductPage({ params }: Props) {
             </div>
           </section>
 
+          {/* ═══ 10 Oct 2026 — NAYA BLOCK (sirf joda, kuch hataya nahi) ═══
+              Wajah: live audit me 5 me se 4 product page 506–573 word ke the
+              (Google ki "thin content" seema 600 maani jaati hai). Yahan jo
+              likha hai woh constants se aata hai — shipping, COD, visit
+              charge, warranty — isliye na koi product ka jhootha dawa hai,
+              na kisi do product ka text ek jaisa (daam aur category alag).
+              Yahi cheezein grahak khareedne se pehle sabse zyada poochhta hai. */}
+          <section className="mt-14 border-t border-navy-50 pt-10">
+            <h2 className="font-display text-2xl font-bold text-navy-700">
+              Order, Delivery aur Installation — Kaise Hota Hai
+            </h2>
+            <div className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">🚚 Delivery</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">
+                  Poore India me delivery hoti hai.{' '}
+                  {formatINR(SHIPPING.freeAbove)} se upar ke order par shipping{' '}
+                  <strong>free</strong>; usse kam par {formatINR(SHIPPING.flatRate)} flat lagta hai.
+                  Pincode box me apna pin daal kar delivery ka samay abhi dekh sakte hain.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">💵 Cash on Delivery</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">
+                  COD {formatINR(SHIPPING.codMaxOrder)} tak ke order par milta hai,{' '}
+                  {formatINR(SHIPPING.codCharge)} handling ke saath. Online payment par ye charge
+                  nahi lagta. Dabba kholne se pehle delivery wale ke saamne seal check kar lijiye.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">🔧 {SERVICE.city} me installation</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">
+                  {SERVICE.city} me hamare yahan se khareede gaye purifier ki installation{' '}
+                  <strong>free</strong> hai — technician {SERVICE.responseTime} me pahunchta hai.
+                  Plumbing point, drain aur bijli ka socket aapki taraf se hona chahiye.
+                  {SERVICE.city} se bahar local plumber se lagwana padta hai; hum phone par guide
+                  kar dete hain.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">🛡️ Warranty</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">
+                  Company warranty product ke saath aati hai (box me card milega). Hamare lagaye
+                  hue naye part par {SERVICE.partsWarrantyMonths} mahine aur service/labour par{' '}
+                  {SERVICE.warrantyDays} din ki warranty alag se rehti hai. Filter aur membrane
+                  consumable hain — unki life paani ke TDS par depend karti hai, isliye unpe
+                  manufacturing defect ke alawa warranty nahi hoti.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">🧰 Baad me service</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">
+                  {SERVICE.city} me visit charge sirf ₹{SERVICE.visitCharge} hai aur usme poori
+                  checking + TDS test shaamil hai. Rate kaam shuru hone se pehle bataya jaata hai.
+                  Spare parts stock me rehte hain, isliye zyadatar kaam ek hi visit me ho jaata hai.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-navy-100 p-5">
+                <h3 className="font-display text-base font-bold text-navy-700">❓ Confusion hai?</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-navy-600">
+                  Apne paani ka TDS bata dijiye, hum bata denge ye model aapke liye sahi hai ya
+                  nahi — galat model bechne se achha hai mana kar dena.{' '}
+                  <a href={CONTACT.primaryTel} className="font-bold text-aqua-600 hover:underline">
+                    {CONTACT.primaryPhone}
+                  </a>{' '}
+                  par call ya WhatsApp kijiye.
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* ═══ Reviews ═══ */}
           <section id="reviews" className="mt-14 border-t border-navy-50 pt-10">
             <h2 className="font-display text-2xl font-bold text-navy-700">
