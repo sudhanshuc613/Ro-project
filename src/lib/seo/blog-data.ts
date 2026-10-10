@@ -379,7 +379,7 @@ export const BLOG_POSTS: BlogPost[] = [
         body: [
           'Sabse pehla aur sabse zyada ignore kiya jane wala. Switch on hai? Adaptor ki chhoti LED jal rahi hai?',
           'Socket me mobile charger laga ke dekho. Kabhi-kabhi wo ek socket hi dead hota hai.',
-          'Ram Krishna Nagar aur Jaganpura jaise area me voltage fluctuation zyada hai — wahan adaptor sabse pehle jata hai. Agar LED nahi jal rahi to SMPS/adaptor gaya, ₹450 ka kaam hai.',
+          'Ram Krishna Nagar aur Jaganpura jaise area me voltage fluctuation zyada hai — wahan adaptor sabse pehle jata hai. Agar LED nahi jal rahi to SMPS/adaptor gaya, ₹700 se ₹1,100 tak ka kaam hai.',
         ],
       },
       {
@@ -387,7 +387,7 @@ export const BLOG_POSTS: BlogPost[] = [
         body: [
           'Purifier ke paas kaan le jao aur suno.',
           'Halki gungunahat (humming) aa rahi hai — pump chal raha hai, problem aage hai. Point 3-5 dekho.',
-          'Bilkul chup hai — pump ko bijli nahi mil rahi. SMPS ya adaptor. Ye ₹450-700 ka kaam hai, membrane ka ₹1,100 nahi.',
+          'Bilkul chup hai — pump ko bijli nahi mil rahi. SMPS ya adaptor. Ye ₹700 se ₹1,100 tak ka kaam hai, membrane ka ₹1,100 se ₹2,400 nahi.',
           'Tez khadkhadahat ya jhatke wali awaaz — pump khud kharab ho raha hai. ₹1,000 se ₹2,800 tak.',
         ],
       },
@@ -433,7 +433,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
     faqs: [
-      { q: 'RO se paani bilkul nahi aa raha, kya karu?', a: 'Pehle bijli aur pump ki awaaz check karo. Pump chup hai to SMPS gaya (₹450). Pump chal raha hai par paani nahi to pre-filter choke hai (₹150) ya inlet pressure kam hai. Membrane sabse aakhri sambhavna hai.' },
+      { q: 'RO se paani bilkul nahi aa raha, kya karu?', a: 'Pehle bijli aur pump ki awaaz check karo. Pump chup hai to SMPS gaya (₹700 se ₹1,100). Pump chal raha hai par paani nahi to pre-filter choke hai (₹150) ya inlet pressure kam hai. Membrane sabse aakhri sambhavna hai.' },
       { q: 'Paani bahut dheere aa raha hai, kya problem hai?', a: 'Zyadatar pre-filter choke hai — ₹150 ka kaam. Ya inlet pressure kam hai. Agar flow dheere hai par TDS theek hai to membrane ki problem NAHI hai.' },
       { q: 'Pump ki awaaz aa rahi hai par paani nahi aa raha?', a: 'Iska matlab bijli theek hai. Ab check karo: inlet valve khula hai? Pre-filter choke to nahi? Inlet pressure 5 psi se zyada hai? Teeno theek hain to solenoid valve ya membrane dekhna padega.' },
       { q: 'Kya main khud filter badal sakta hoon?', a: 'Haan, sediment aur carbon filter badalna aasan hai. Inlet band karo, pressure release karo, housing kholo, badlo, kaso. 10 minute ka kaam. Membrane aur SMPS thoda technical hai.' },

@@ -198,7 +198,7 @@ export const SYMPTOMS: Symptom[] = [
       { brand: 'Pureit', note: 'Pureit ke germkill kit khatam hone par machine jaan-boojh kar band ho jati hai. Ye fault nahi, design hai — kit badalni padegi.' },
     ],
     faqs: [
-      { q: 'RO me pani nahi aa raha, sabse pehle kya check karu?', a: 'Inlet valve. RO ke peeche wali chhoti tap. Har 10 me se 1 case me yahi band hota hai aur ye bilkul muft me theek ho jata hai. Uske baad adaptor ki light dekho — nahi jal rahi to SMPS gaya hai, ₹550 ka part.' },
+      { q: 'RO me pani nahi aa raha, sabse pehle kya check karu?', a: 'Inlet valve. RO ke peeche wali chhoti tap. Har 10 me se 1 case me yahi band hota hai aur ye bilkul muft me theek ho jata hai. Uske baad adaptor ki light dekho — nahi jal rahi to SMPS gaya hai, ₹700 se ₹1,100 tak ka part.' },
       { q: 'RO chalu hai par pani nahi aa raha, kya matlab?', a: 'Pump chal raha hai lekin paani pass nahi ho raha. Do hi wajah hoti hai: ya to sediment filter poori tarah choke hai, ya solenoid valve nahi khul raha. Pehla ₹450 ka kaam hai, doosra ₹450 ka.' },
       { q: 'Kya main khud theek kar sakta hu?', a: 'Saat me se teen cheez haan — inlet valve kholna, socket check karna, tank ka pressure dekhna. Baaki chaar me tool aur spare chahiye. Filter kholne me koi khatra nahi hai, par electrical part khud mat chhedna.' },
       { q: 'Patna me is kaam ka kitna lagega?', a: `Visit ₹${V} fixed — isme poora diagnosis aur TDS report shamil hai. Uske baad jo part lage: SMPS ₹700–₹1,100, filter ₹350–₹900, solenoid ₹300–₹600, pump ₹1,000–₹2,800. Part badalne se pehle aapki permission li jati hai, aur purana part aapko diya jata hai.` },
@@ -341,7 +341,7 @@ export const SYMPTOMS: Symptom[] = [
         how: 'Purani awaz yaad karo. Ab zyada mehnat karti lag rahi hai?',
         means: 'Pump strain me hai — aksar isliye ki filter choke hai aur pump ko zyada kheenchna pad raha hai. Filter badlo, pump bach jayega.',
         diy: false,
-        cost: '₹450 (filter) ya ₹900 (pump)',
+        cost: '₹350 – ₹900 (filter) ya ₹1,000 – ₹2,800 (pump)',
         frequency: 'Har 4 me se 1',
       },
       {
@@ -362,7 +362,7 @@ export const SYMPTOMS: Symptom[] = [
     faqs: [
       { q: 'RO ki normal awaz kaisi honi chahiye?', a: 'Halki lagatar gunjan jab tank bhar raha ho, aur phir poori khamoshi jab tank bhar jaye. Agar tank bharne ke baad bhi awaz aati rahe to float valve check karwao.' },
       { q: 'Raat me RO ki awaz zyada aati hai, problem hai?', a: 'Aksar nahi. Raat me ghar shant hota hai aur municipal supply ka pressure bhi badalta hai, isliye machine alag time par chalti hai. Awaz ka type wahi hai to chinta ki baat nahi.' },
-      { q: 'Bar bar chalu band ho rahi hai, kitna nuksan hai?', a: 'Do tarah ka. Ek, paani barbaad — cycling machine din me 200-400 litre reject kar sakti hai. Do, pump ki life adhi ho jati hai. ₹350 ka float valve ₹900 ka pump bacha leta hai.' },
+      { q: 'Bar bar chalu band ho rahi hai, kitna nuksan hai?', a: 'Do tarah ka. Ek, paani barbaad — cycling machine din me 200-400 litre reject kar sakti hai. Do, pump ki life adhi ho jati hai. ₹150 se ₹350 ka float valve ₹1,000 se ₹2,800 ka pump bacha leta hai.' },
     ],
     related: ['ro-me-pani-nahi-aa-raha', 'ro-leakage-problem', 'ro-se-pani-kam-aa-raha'],
   },

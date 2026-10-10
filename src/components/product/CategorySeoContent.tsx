@@ -11,6 +11,8 @@
  * carried only a BreadcrumbList and ~985 words. There was nothing on the page
  * for a national query like "80 gpd ro membrane price" to match against.
  */
+import Link from 'next/link';
+import { SERVICE } from '@/lib/constants';
 import type { CategorySeoBlock } from '@/lib/seo/catalog-seo';
 
 export default function CategorySeoContent({ seo }: { seo: CategorySeoBlock }) {
@@ -39,6 +41,23 @@ export default function CategorySeoContent({ seo }: { seo: CategorySeoBlock }) {
           <p className="mt-1.5 text-sm text-muted">
             Indicative market rates so you can judge a quote before you accept it.
             Our listed prices are shown on each product above.
+          </p>
+
+          {/* 🔴 11 Oct 2026 — ye line jaan-boojh ke daali gayi hai.
+              Yahan PART ka akela daam hai (aap mangwa ke khud lagwa lein).
+              Service page par Patna me LAGAKAR dene ka rate hai, jo zyada hai
+              kyunki usme technician, visit aur warranty bhi shaamil hai —
+              jaise SMPS yahan ₹350–₹700 par service page par ₹700–₹1,100.
+              Bina is line ke grahak do page kholke jhagda kar sakta hai, aur
+              owner ka saaf niyam hai ki aisa kabhi na ho. */}
+          <p className="mt-2 rounded-xl bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-900 ring-1 ring-amber-200">
+            <strong>Dhyan dein:</strong> yahan sirf <strong>part ka daam</strong> hai (India me kahin bhi
+            delivery). {SERVICE.city} me hamara technician aake <strong>lagakar</strong> de, to rate alag
+            hota hai — usme visit, fitting, testing aur warranty shaamil hoti hai. Woh poora rate{' '}
+            <Link href="/ro-services-patna" className="font-bold underline">
+              service rate card
+            </Link>{' '}
+            par likha hai.
           </p>
 
           <div className="mt-4 overflow-x-auto">

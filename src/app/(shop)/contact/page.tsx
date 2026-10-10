@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BRAND, CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
-import { localBusinessSchema, jsonLd } from '@/lib/seo/schema';
+import { breadcrumbSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
@@ -62,7 +62,15 @@ const POLICIES = [
 export default function ContactPage() {
   return (
     <>
-      <script {...jsonLd(localBusinessSchema())} />
+      {/* 11 Oct 2026 — BreadcrumbList joda. Page par breadcrumb dikh raha tha
+          par schema me nahi tha; Google SERP me trail isi se banti hai. */}
+      <script {...jsonLd([
+        localBusinessSchema(),
+        breadcrumbSchema([
+          { name: 'Home', url: BRAND.url },
+          { name: 'Contact', url: `${BRAND.url}/contact` },
+        ]),
+      ])} />
 
       <main className="bg-white">
         <nav aria-label="Breadcrumb" className="border-b border-navy-50 bg-navy-50/50">

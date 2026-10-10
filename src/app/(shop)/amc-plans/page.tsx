@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CONTACT, SERVICE } from '@/lib/constants';
-import { faqSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
+import { breadcrumbSchema, faqSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import AmcPurchaseForm from '@/components/home/AmcPurchaseForm';
 import { ogImage } from '@/lib/seo/og-image';
@@ -106,7 +106,17 @@ const FAQS = [
 export default function AmcPlansPage() {
   return (
     <>
-      <script {...jsonLd([localBusinessSchema(), faqSchema(FAQS)])} />
+      {/* 11 Oct 2026 — BreadcrumbList schema joda. Page par breadcrumb DIKH raha
+          tha par schema me nahi tha, isliye Google ke SERP me URL ki jagah
+          breadcrumb trail nahi aati thi. Baaki 141 page par ye pehle se hai. */}
+      <script {...jsonLd([
+        localBusinessSchema(),
+        breadcrumbSchema([
+          { name: 'Home', url: BRAND.url },
+          { name: 'AMC Plans', url: `${BRAND.url}/amc-plans` },
+        ]),
+        faqSchema(FAQS),
+      ])} />
 
       <main className="bg-white">
         <nav aria-label="Breadcrumb" className="border-b border-navy-50 bg-navy-50/50">

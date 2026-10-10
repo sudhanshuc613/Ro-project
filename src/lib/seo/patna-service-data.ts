@@ -1799,7 +1799,7 @@ export const SERVICED_BRANDS: BrandServiceContent[] = [
       { issue: 'Low water flow', cause: 'Cartridge saturated', typicalCost: '₹900 – ₹2,000' },
       { issue: 'Ionizer function not working', cause: 'Electrode plate scaling', typicalCost: '₹1,200 – ₹2,800' },
       { issue: 'Leakage at inlet connection', cause: 'Worn washer or loose adaptor', typicalCost: '₹200 – ₹550' },
-      { issue: 'Unit not powering on', cause: 'Adaptor failure', typicalCost: '₹600 – ₹1,300' },
+      { issue: 'Unit not powering on', cause: 'Adaptor failure', typicalCost: '₹700 – ₹1,300' },
     ],
     note:
       'Panasonic units are less common in Patna, so many local shops refuse them or guess at repairs. We handle them properly and will tell you upfront if a part needs to be ordered rather than pretending it is in stock.',
@@ -1837,7 +1837,7 @@ export const SERVICED_BRANDS: BrandServiceContent[] = [
       { issue: 'Reduced output', cause: 'Membrane or pre-filter exhausted', typicalCost: '₹800 – ₹2,100' },
       { issue: 'Purifier tripping', cause: 'Adaptor or voltage fluctuation damage', typicalCost: '₹700 – ₹1,500' },
       { issue: 'Leakage from housing', cause: 'O-ring worn', typicalCost: '₹250 – ₹600' },
-      { issue: 'Noise from pump', cause: 'Pump wear', typicalCost: '₹900 – ₹1,800' },
+      { issue: 'Noise from pump', cause: 'Pump wear', typicalCost: '₹1,000 – ₹2,800' },
     ],
     note:
       'V-Guard purifiers are sensitive to the voltage swings common in parts of Patna. If we see repeated adaptor failures we will recommend a stabiliser rather than just replacing the same part again.',

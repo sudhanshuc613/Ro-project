@@ -174,7 +174,7 @@ export default function PatnaShopBlock() {
           <p className="text-sm leading-relaxed text-aqua-50">
             <strong className="text-white">Pehle ye socho:</strong> nayi machine lene se pehle
             apni purani machine ek baar dikha lijiye. Bahut baar ₹{SERVICE.visitCharge} ki visit me
-            pata chalta hai ki sirf SMPS ya pump gaya hai &mdash; ₹600 ka kaam, aur machine 3 saal
+            pata chalta hai ki sirf SMPS ya pump gaya hai &mdash; ₹700 se ₹2,800 tak ka kaam, aur machine 3 saal
             aur chal jaati hai. Hum bina zaroorat nayi machine nahi bechte.
           </p>
           <div className="mt-3 flex flex-wrap gap-3">
