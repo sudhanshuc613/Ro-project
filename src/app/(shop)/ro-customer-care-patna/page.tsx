@@ -211,7 +211,7 @@ export default function RoCustomerCarePatnaPage() {
               {[
                 { k: 'Visit charge', v: `₹${SERVICE.visitCharge}`, s: 'TDS test + inspection + likhit quote' },
                 { k: 'Pahunchne ka target', v: SERVICE.responseTime, s: `${SERVICE.city} city limits ke andar` },
-                { k: 'Service warranty', v: `${SERVICE.warrantyDays} din`, s: 'part aur labour dono par' },
+                { k: 'Warranty', v: `${SERVICE.warrantyDays} din + ${SERVICE.partsWarrantyMonths} mahine`, s: 'labour 30 din · part 1 saal' },
               ].map((x) => (
                 <div key={x.k} className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/20">
                   <dt className="text-[11px] font-bold uppercase tracking-wide text-aqua-200">{x.k}</dt>
@@ -441,7 +441,7 @@ export default function RoCustomerCarePatnaPage() {
                 },
                 {
                   h: 'Bill mila ya sirf cash gaya',
-                  p: `Bina bill ke koi warranty claim nahi hoti. Har kaam ka bill milta hai jisme part ka naam, rate aur ${SERVICE.warrantyDays}-din ki warranty alag line me likhi hoti hai.`,
+                  p: `Bina bill ke koi warranty claim nahi hoti. Har kaam ka bill milta hai jisme part ka naam, rate, aur dono warranty alag line me likhi hoti hain — labour par ${SERVICE.warrantyDays} din, part par ${SERVICE.partsWarrantyMonths} mahine.`,
                 },
               ].map((x, i) => (
                 <li key={x.h} className="rounded-2xl bg-white/10 p-5 ring-1 ring-white/15">

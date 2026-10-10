@@ -58,8 +58,8 @@ import { SERVICE, CONTACT } from '@/lib/constants';
      membrane  ₹1,100–₹2,400 (ro-membrane-replacement-patna)
      leakage   ₹150–₹400     (ServiceRateCard)
      solenoid  ₹300–₹600     (ServiceRateCard)
-     SMPS      ₹450–₹750     (ServiceRateCard)
-     pump      ₹900–₹1,600   (ServiceRateCard)
+     SMPS      ₹700–₹1,100   (owner confirm, 9 Oct)
+     pump/motor ₹1,000–₹2,800 (owner confirm, 9 Oct)
      UV lamp   ₹400 se       (ro-filter-change-patna prices[] me "UV lamp")
    ══════════════════════════════════════════════════════════════════════════ */
 export interface SymptomRate {
@@ -129,7 +129,7 @@ export const SYMPTOM_RATES: SymptomRate[] = [
     label: 'Machine bilkul dead, koi light nahi',
     cause: 'SMPS adaptor jal gaya',
     alsoCould: 'Power socket ya cable me fault',
-    priceFrom: 450, priceTo: 750, minutes: 30,
+    priceFrom: 700, priceTo: 1100, minutes: 30,
     insider:
       'Patna ke voltage fluctuation me SMPS sabse pehle jaata hai. Ye 20 minute ka kaam hai. Puri machine badalne ki salah dene wale se bachiye.',
   },
@@ -138,7 +138,7 @@ export const SYMPTOM_RATES: SymptomRate[] = [
     label: 'Machine se awaaz aa rahi hai',
     cause: 'Booster pump ghis gaya ya garam ho raha hai',
     alsoCould: 'Pump mounting loose, ya air lock',
-    priceFrom: 900, priceTo: 1600, minutes: 50,
+    priceFrom: 1000, priceTo: 2800, minutes: 50,
     insider:
       'Pump ke saath SMPS bhi check karwaiye — aksar SMPS kharab hone se hi pump jalta hai. Sirf pump badla to 6 mahine me phir jalega.',
   },
@@ -190,9 +190,8 @@ export const SERVICE_CARDS: ServiceCard[] = [
     icon: 'service',
     image: '/services/ro-service.png',
     alt: 'RO water purifier full service check-up with TDS meter in Patna',
-    blurb:
-      'TDS input-output naapte hain, teeno pre-filter stage kholte hain, membrane ka flow test, tank saaf, leak aur pressure check. Sab kuch likhit card par.',
-    note: `Visit charge fixed hai — ₹${SERVICE.visitCharge}. Isme koi part shaamil nahi. Part lagega to uska rate alag se, kaam shuru hone se pehle.`,
+    blurb: 'TDS test, teeno filter stage, membrane flow test, tank safai, leak check. Sab likhit card par.',
+    note: `Isme part shaamil nahi. Part lagega to rate pehle batayenge.`,
   },
   {
     title: 'RO Repair',
@@ -202,9 +201,8 @@ export const SERVICE_CARDS: ServiceCard[] = [
     icon: 'repair',
     image: '/services/ro-repair.png',
     alt: 'RO water purifier repair with wrench and open filter panel in Patna',
-    blurb:
-      'Paani nahi aa raha, awaaz aa rahi hai, swad kharab, leakage — sab isme aata hai. Pump, SMPS, solenoid, float valve, housing sab van me rehte hain.',
-    note: 'Ye sirf reference range hai. O-ring ka kaam ₹200 me nipat jaata hai, pump + SMPS dono gaye to ₹2,400 tak jaata hai. Aapka exact number machine kholne ke baad.',
+    blurb: 'Paani nahi aa raha, awaaz, swad kharab, leakage. Pump, SMPS, valve, housing sab van me.',
+    note: 'O-ring ₹200 me, pump + SMPS dono gaye to upar. Exact number machine kholne ke baad.',
   },
   {
     title: 'RO Installation',
@@ -214,9 +212,8 @@ export const SERVICE_CARDS: ServiceCard[] = [
     icon: 'install',
     image: '/services/ro-installation.png',
     alt: 'RO water purifier wall mount installation with drill in Patna',
-    blurb:
-      'Nayi machine ya ghar shift — wall drilling, inlet tapping, drain line, electrical point aur TDS setting sab shaamil.',
-    note: 'Seedha wall point ho to neeche wala rate. Lambi pipe line, extra tapping ya RCC wall drilling ho to upar jaata hai. Point dekh kar hi rate batate hain.',
+    blurb: 'Nayi machine ya ghar shift. Drilling, inlet tapping, drain line, TDS setting sab shaamil.',
+    note: 'Seedha point neeche wale rate me. Lambi line ya RCC wall ho to upar.',
   },
   {
     title: 'RO Filter Change',
@@ -226,9 +223,8 @@ export const SERVICE_CARDS: ServiceCard[] = [
     icon: 'filter',
     image: '/services/ro-filter-change.png',
     alt: 'RO sediment and carbon filter cartridge replacement in Patna',
-    blurb:
-      'Sediment, pre-carbon, post-carbon. Patna ke paani me sediment 3-4 mahine chalta hai, carbon 5-8 mahine — box par likhe se kam.',
-    note: 'Ek akela inline filter neeche wale rate me, teeno ka poora set upar wale me. Kaunsa chahiye ye TDS aur flow dekh kar tay hota hai, pehle nahi.',
+    blurb: 'Sediment, pre-carbon, post-carbon. Patna me sediment 3-4 mahine chalta hai, box par likhe 6 se kam.',
+    note: 'Ek filter neeche, teeno ka set upar. Kaunsa chahiye — TDS dekh kar tay hota hai.',
   },
   {
     title: 'RO Membrane Change',
@@ -238,9 +234,8 @@ export const SERVICE_CARDS: ServiceCard[] = [
     icon: 'membrane',
     image: '/services/ro-membrane.png',
     alt: 'RO membrane cartridge replacement 75 80 100 GPD in Patna',
-    blurb:
-      '75, 80 aur 100 GPD teeno size stock me. Sealed pouch aapke saamne khulta hai aur purana membrane aapko wapas milta hai.',
-    note: '75 GPD neeche wale rate me, 100 GPD aur imported brand-specific membrane upar wale me. Membrane tabhi badalte hain jab TDS reading sach me kehti ho.',
+    blurb: '75, 80, 100 GPD stock me. Pouch aapke saamne khulta hai, purana membrane aapko wapas.',
+    note: '75 GPD neeche, 100 GPD upar. Membrane tabhi badalte hain jab TDS reading kahe.',
   },
   {
     title: 'RO AMC Plan',
@@ -250,9 +245,8 @@ export const SERVICE_CARDS: ServiceCard[] = [
     icon: 'amc',
     image: '/services/ro-amc.png',
     alt: 'RO annual maintenance contract plans with scheduled visits in Patna',
-    blurb:
-      'Saal bhar ke scheduled visits, filter, TDS testing aur priority response ek fixed rate me. Teen plan hain — Basic, Gold, Platinum.',
-    note: 'Teeno plan ka rate fixed hai, saal bhar ke liye. 3 saal se nayi machine par AMC aksar faayde ka sauda nahi hota — hum saaf bata dete hain.',
+    blurb: 'Saal bhar ke visits, filter, TDS test aur priority response ek rate me. Teen plan.',
+    note: '3 saal se nayi machine par AMC aksar faayde ka sauda nahi — hum saaf bata dete hain.',
   },
 ];
 
@@ -278,8 +272,8 @@ export const PART_RATES: PartRate[] = [
   { part: 'Pre-carbon / post-carbon', from: 180, to: 400, depends: 'carbon block ya granular, aur brand' },
   { part: 'Teeno filter ka set', from: 350, to: 900, depends: 'alag-alag lene se set sasta padta hai' },
   { part: 'RO membrane', from: 1100, to: 2400, depends: '75 GPD / 80 GPD / 100 GPD aur company vs equivalent' },
-  { part: 'Booster pump', from: 900, to: 1600, depends: '75 GPD ya 100 GPD pump' },
-  { part: 'SMPS adaptor', from: 450, to: 750, depends: '24V 1.5A ya 24V 2A' },
+  { part: 'Booster pump / motor', from: 1000, to: 2800, depends: '75 GPD, 100 GPD ya heavy-duty motor; company vs equivalent' },
+  { part: 'SMPS adaptor', from: 700, to: 1100, depends: '24V 1.5A, 2A ya auto-cut wala; brand ke hisaab se' },
   { part: 'Solenoid valve', from: 300, to: 600, depends: 'brand aur fitting size' },
   { part: 'Float valve', from: 150, to: 350, depends: 'tank ka type' },
   { part: 'UV lamp + ballast', from: 400, to: 1200, depends: 'sirf lamp ya ballast bhi, 11W ya 14W' },
@@ -300,32 +294,32 @@ export interface WhyPoint { h: string; p: string; proof: string }
 export const WHY_POINTS: WhyPoint[] = [
   {
     h: 'TDS meter har visit par',
-    p: 'Input aur output TDS naap kar aapke card par likha jaata hai — kaam se pehle aur kaam ke baad. Isi se pata chalta hai ki membrane sach me gaya tha ya nahi.',
+    p: 'Kaam se pehle aur baad ka TDS card par likha jaata hai. Isi se pata chalta hai membrane sach me gaya tha ya nahi.',
     proof: 'Before-after reading likhit',
   },
   {
     h: 'Rate kaam se pehle, likhit',
-    p: `Visit charge ₹${SERVICE.visitCharge} call par hi bata diya jaata hai. Part ka rate machine kholne ke baad, kaam shuru hone se pehle. Aap mana kar dein to sirf visit charge lagta hai.`,
+    p: `Visit charge call par hi. Part ka rate kaam shuru hone se pehle. Mana kar dein to sirf ₹${SERVICE.visitCharge}.`,
     proof: 'Rate card poori site par khula hai',
   },
   {
     h: 'Purana part wapas milta hai',
-    p: 'Jo filter ya membrane nikala gaya wo aapka hai. Hum aapke saamne nikalte hain aur chhod kar jaate hain — do cheez saath rakh kar farak khud dikh jaata hai.',
+    p: 'Nikala hua filter ya membrane aapka hai. Saamne nikalte hain, chhod kar jaate hain — farak khud dikh jaata hai.',
     proof: 'Nikala hua part aapke paas',
   },
   {
     h: 'Asli dukaan, asli pata',
-    p: `${CONTACT.address.street}, ${CONTACT.address.locality}, ${SERVICE.city} ${CONTACT.address.pincode}. Aap aa kar machine dikha sakte hain. Hum call centre nahi hain jo kaam kisi freelancer ko bech de.`,
+    p: `${CONTACT.address.locality}, ${SERVICE.city} me apni dukaan. Aa kar machine dikha sakte hain. Hum call centre nahi hain.`,
     proof: 'Buddha Colony me physical shop',
   },
   {
     h: `${SERVICE.warrantyDays}-din warranty, bill par`,
-    p: `Har kaam par ${SERVICE.warrantyDays} din ki warranty — part aur labour dono par. Wahi dikkat dobara aayi to visit bhi free, kaam bhi free. Bill par alag line me likhi hoti hai.`,
+    p: `Do alag warranty milti hai, aur dono bill par likhi hoti hai. Hamare kaam (labour) par ${SERVICE.warrantyDays} din — wahi dikkat dobara aayi to visit aur kaam dono free. Aur jo part laga hai us par poore ${SERVICE.partsWarrantyMonths} mahine.`,
     proof: 'Zubani nahi, likhit',
   },
   {
     h: '2019 se Patna me, 2,400+ machine',
-    p: 'Chhe saal se yahi kaam, yahi sheher. 83 mohallon me jaate hain aur har mohalle ka apna paani, apna fault pattern hum jaante hain.',
+    p: 'Chhe saal, yahi sheher. 83 mohalle, aur har mohalle ka apna paani aur fault pattern pata hai.',
     proof: 'Google par 5.0 rating, 50 review',
   },
 ];

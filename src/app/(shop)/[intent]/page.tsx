@@ -350,11 +350,34 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
         {/* ── Intro ── */}
         <section className="py-12 md:py-14">
           <div className="container mx-auto max-w-3xl px-4">
-            {intent.intro.map((p) => (
+            {/* 🔴 9 Oct 2026 — owner: "itna kuch faltu likha hai utna koi nhi padhta".
+                Wo sahi hai. Hamara ads page 4,978 words ka tha, rosale 3,366 ka.
+                Par text DELETE karna SEO ka nuksan hai — Google ko depth chahiye.
+
+                Isliye text hataya nahi, CHHUPAYA hai. Native <details> ka
+                matlab: saara text HTML me rehta hai (Google poora padhta hai),
+                par user ko pehle sirf 2 paragraph dikhte hain. Jisko aur
+                chahiye wo khol leta hai. JS ki zaroorat nahi. */}
+            {(isAdsLanding ? intent.intro.slice(0, 2) : intent.intro).map((p) => (
               <p key={p.slice(0, 40)} className="mb-4 text-[17px] leading-relaxed text-navy-700">
                 {p}
               </p>
             ))}
+            {isAdsLanding && intent.intro.length > 2 && (
+              <details className="group mb-2">
+                <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-xl bg-navy-50 px-4 py-2 text-sm font-bold text-navy-700 hover:bg-navy-100">
+                  Poora padhein
+                  <span aria-hidden="true" className="transition-transform group-open:rotate-180">&#9662;</span>
+                </summary>
+                <div className="mt-4">
+                  {intent.intro.slice(2).map((p) => (
+                    <p key={p.slice(0, 40)} className="mb-4 text-[17px] leading-relaxed text-navy-700">
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              </details>
+            )}
             <TrustBadges variant="row" className="mt-6" />
             {isAdsLanding && (
               <p className="mt-6 rounded-2xl bg-aqua-50 p-4 text-sm leading-relaxed text-navy-700 ring-1 ring-aqua-100">
@@ -397,7 +420,16 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
                         </span>
                       ) : null}
                     </h3>
-                    <p className="mt-1.5 text-[15px] leading-relaxed text-navy-600">{s.detail}</p>
+                    {isAdsLanding ? (
+                      <details className="group mt-1">
+                        <summary className="cursor-pointer list-none text-sm font-bold text-aqua-600 hover:underline">
+                          Isme kya hota hai <span aria-hidden="true" className="inline-block transition-transform group-open:rotate-180">&#9662;</span>
+                        </summary>
+                        <p className="mt-1.5 text-[15px] leading-relaxed text-navy-600">{s.detail}</p>
+                      </details>
+                    ) : (
+                      <p className="mt-1.5 text-[15px] leading-relaxed text-navy-600">{s.detail}</p>
+                    )}
                   </div>
                 </li>
               ))}

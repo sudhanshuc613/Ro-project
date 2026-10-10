@@ -46,7 +46,7 @@ export default function BrandCallCards({ brands }: { brands: BrandServiceContent
   /* Top 6 brands jinke card detail ke saath dikhenge — baaki logo grid me. */
   const featured = brands
     .filter((b) => !['commercial-ro', 'other-brands'].includes(b.slug))
-    .slice(0, 6);
+    .slice(0, 4);
 
   return (
     <section className="bg-white px-4 py-12 md:py-16">
@@ -55,7 +55,7 @@ export default function BrandCallCards({ brands }: { brands: BrandServiceContent
           Har Brand Ki RO Service &mdash; Ek Hi Number
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-center text-base text-navy-600">
-          Kent ho ya Aquaguard, Pureit ho ya bina sticker wali local machine &mdash; sabke liye{' '}
+          Kent, Aquaguard, Pureit ya bina sticker wali local machine &mdash; sabke liye{' '}
           <a
             href={CONTACT.primaryTel}
             data-analytics="ads-brand-intro-call"
@@ -63,7 +63,7 @@ export default function BrandCallCards({ brands }: { brands: BrandServiceContent
           >
             {CONTACT.primaryPhone}
           </a>
-          . Alag-alag company ke alag-alag number dhoondhne ki zaroorat nahi.
+          .
         </p>
 
         {/* ── LOGO GRID ── */}
@@ -176,11 +176,10 @@ export default function BrandCallCards({ brands }: { brands: BrandServiceContent
             Machine par koi brand nahi likha? Koi baat nahi.
           </h3>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-aqua-50">
-            {SERVICE.city} me bika hua har doosra purifier kisi company ka nahi, assembled hota hai
-            &mdash; bina sticker, bina manual, aur aksar wo dealer ab dukaan band kar chuka hota
-            hai. Achhi baat ye hai ki in machines ka membrane, filter, pump aur SMPS sab{' '}
-            <strong className="text-white">standard size</strong> ke hote hain. Inhe theek karna
-            bilkul mushkil nahi &mdash; bas koi lene se mana na kare. Hum nahi karte.
+            {SERVICE.city} me bika hua har doosra purifier assembled hota hai &mdash; bina
+            sticker, bina manual, aur dealer aksar gaayab. Par inka membrane, filter, pump aur
+            SMPS sab <strong className="text-white">standard size</strong> ke hote hain. Theek
+            karna mushkil nahi &mdash; bas koi mana na kare. Hum nahi karte.
           </p>
           <a
             href={CONTACT.primaryTel}

@@ -302,7 +302,7 @@ export const CHANNEL_COMPARE: { point: string; brand: string; us: string }[] = [
   {
     point: 'Warranty',
     brand: 'Part par company warranty, labour par aksar kuch nahi',
-    us: `${SERVICE.warrantyDays} din ki service warranty — part aur labour dono par`,
+    us: `${SERVICE.warrantyDays} din service warranty (labour) + laga hue part par ${SERVICE.partsWarrantyMonths} mahine`,
   },
   {
     point: 'Agar brand hi band ho gaya',
@@ -358,7 +358,7 @@ export const CARE_FAQS: { q: string; a: string }[] = [
   {
     q: 'RO warranty Patna me kya cover hota hai?',
     a:
-      `Hamare har repair par ${SERVICE.warrantyDays} din ki warranty hai, aur wo labour aur part dono par lagti hai. ` +
+      `Hamare yahan do alag warranty milti hai. Hamare kaam (labour) par ${SERVICE.warrantyDays} din — us dauraan wahi dikkat dobara aaye to visit bhi free aur kaam bhi free. Aur jo part humne lagaya hai us par poore ${SERVICE.partsWarrantyMonths} mahine. Dono bill par alag line me likhi jaati hain. ` +
       'Matlab agar wahi dikkat dobara aa gayi to visit bhi free aur kaam bhi free. Nayi machine par manufacturer warranty ' +
       'alag chalti hai (aam taur par 1 saal product par, membrane par alag) — usme hum chhedchhad nahi karte, ' +
       'uske liye brand ke number par hi bhejte hain. Yahi imaandari ka tarika hai.',

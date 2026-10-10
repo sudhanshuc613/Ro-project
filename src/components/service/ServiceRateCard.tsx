@@ -195,12 +195,12 @@ export default function ServiceRateCard() {
             },
             {
               h: 'RO pump repair Patna',
-              r: '₹900 – ₹1,600',
+              r: '₹1,000 – ₹2,800',
               p: 'Pump fail ki nishani — machine chalu rehti hai par pani nahi banta, ya pump garam ho jaata hai. RO pump repair Patna me 75 GPD aur 100 GPD dono pump stock me hain. Pump aksar SMPS kharab hone se jalta hai, isliye dono saath check karte hain.',
             },
             {
               h: 'SMPS / adaptor badalna',
-              r: '₹450 – ₹750',
+              r: '₹700 – ₹1,100',
               p: 'Patna ke voltage fluctuation me SMPS sabse pehle jaata hai. Nishani — machine bilkul dead, koi light nahi. 24V 1.5A aur 24V 2A dono rakhte hain.',
             },
             {

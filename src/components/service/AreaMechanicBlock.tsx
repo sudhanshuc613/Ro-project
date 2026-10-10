@@ -94,7 +94,7 @@ export default function AreaMechanicBlock({
             { k: 'Mechanic available', v: String(area.technicians), s: `${A} ke liye dedicated` },
             { k: 'Pahunchne ka time', v: `${area.responseMin} min`, s: `${A} tak ka target` },
             { k: 'Visit charge', v: `₹${SERVICE.visitCharge}`, s: 'TDS test + inspection' },
-            { k: 'Warranty', v: `${SERVICE.warrantyDays} din`, s: 'part aur labour par' },
+            { k: 'Warranty', v: `${SERVICE.warrantyDays}d + ${SERVICE.partsWarrantyMonths}m`, s: 'labour 30 din · part 1 saal' },
           ].map((x) => (
             <div key={x.k} className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
               <p className="text-[11px] font-bold uppercase tracking-wide text-muted">{x.k}</p>
@@ -150,7 +150,7 @@ export default function AreaMechanicBlock({
             },
             {
               h: 'Warranty likhit hai ya zubani',
-              p: `${A} ki har job ke bill par ${SERVICE.warrantyDays} din ki warranty alag line me likhi jaati hai, part aur labour dono par. Zubani kuch nahi.`,
+              p: `${A} ki har job ke bill par do warranty alag line me likhi jaati hai — labour par ${SERVICE.warrantyDays} din, aur laga hue part par ${SERVICE.partsWarrantyMonths} mahine. Zubani kuch nahi.`,
             },
           ].map((x, i) => (
             <li key={x.h} className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">

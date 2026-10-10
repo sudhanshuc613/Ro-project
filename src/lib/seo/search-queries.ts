@@ -98,7 +98,7 @@ export const SEARCH_ANSWERS: SearchAnswer[] = [
     answer:
       `RO repair Patna me karane se pehle rate jaan lijiye: visit charge ₹${SERVICE.visitCharge}, ` +
       `filter/candle ₹150 se, membrane ₹1,100 se, booster pump ₹1,400 se, SMPS ₹800 se. ` +
-      `Har kaam pe ${SERVICE.warrantyDays} din ki service warranty likhit me milti hai. ` +
+      `Har kaam pe ${SERVICE.warrantyDays} din ki service warranty aur laga hue part pe ${SERVICE.partsWarrantyMonths} mahine ki warranty likhit me milti hai. ` +
       `Agar machine theek nahi ho paayi to sirf visit charge lagta hai, aur kuch nahi.`,
   },
   {
@@ -157,7 +157,7 @@ export const SEARCH_ANSWERS: SearchAnswer[] = [
       `apne aap ko best nahi bolte, kyunki wo koi bhi bol sakta hai. Iske bajay 4 cheez khud check ` +
       `kijiye: TDS meter saath laaya ya nahi, rate kaam se pehle bataya ya baad me, purana nikala ` +
       `hua part wapas diya ya nahi, aur bill par warranty likhi hai ya sirf zubani. ` +
-      `Hum chaaron karte hain — ${SERVICE.warrantyDays} din ki likhit warranty aur ₹${SERVICE.visitCharge} ` +
+      `Hum chaaron karte hain — labour par ${SERVICE.warrantyDays} din aur part par ${SERVICE.partsWarrantyMonths} mahine ki likhit warranty, aur ₹${SERVICE.visitCharge} ` +
       `ka fixed visit charge. Google par ${GBP_RATING_TEXT} rating aur ${GBP.reviewCount} reviews hain, ` +
       `jo aap khud padh sakte hain.`,
   },

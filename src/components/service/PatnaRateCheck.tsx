@@ -100,10 +100,9 @@ export default function PatnaRateCheck({ areas }: { areas: RateCheckArea[] }) {
             Call Karne Se Pehle Apna Rate Dekh Lijiye
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-aqua-50">
-            Apna mohalla aur apni dikkat chuniye. Hum aapke ilaake ka{' '}
-            <strong className="text-white">asli TDS</strong>, sabse sambhavit wajah, aur{' '}
-            <strong className="text-white">rate ka range</strong> turant dikha denge &mdash;
-            bina call kiye, bina form bhare.
+            Mohalla aur dikkat chuniye &mdash; aapke ilaake ka{' '}
+            <strong className="text-white">asli TDS</strong> aur{' '}
+            <strong className="text-white">rate ka range</strong> turant dikhega. Bina call, bina form.
           </p>
         </div>
 
@@ -265,8 +264,8 @@ export default function PatnaRateCheck({ areas }: { areas: RateCheckArea[] }) {
                   </a>
                 </div>
                 <p className="text-center text-xs text-muted">
-                  WhatsApp button aapka area, dikkat aur rate pehle se bhar deta hai &mdash;
-                  isse technician sahi part leke nikalta hai aur kaam ek hi visit me khatam hota hai.
+                  WhatsApp button area, dikkat aur rate pehle se bhar deta hai &mdash; technician
+                  sahi part leke nikalta hai.
                 </p>
               </div>
             </div>

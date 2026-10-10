@@ -105,7 +105,7 @@ export default function AdsHeroBanner({
             {[
               { v: `₹${SERVICE.visitCharge}`, k: 'Visit charge', s: 'TDS test + poora inspection' },
               { v: SERVICE.responseTime.replace(' minutes', ' min'), k: 'Pahunchne ka target', s: `${SERVICE.city} city ke andar` },
-              { v: `${SERVICE.warrantyDays} din`, k: 'Service warranty', s: 'part aur labour dono par' },
+              { v: `${SERVICE.warrantyDays} din + 1 saal`, k: 'Warranty', s: `labour ${SERVICE.warrantyDays} din · part ${SERVICE.partsWarrantyMonths} mahine` },
             ].map((x) => (
               <div
                 key={x.k}

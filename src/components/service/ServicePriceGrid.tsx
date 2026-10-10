@@ -62,10 +62,9 @@ export default function ServicePriceGrid() {
           RO Service in {SERVICE.city} &mdash; Har Kaam Ka Reference Rate
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-center text-base text-navy-600">
-          Neeche har kaam ka <strong>range</strong> diya hai &mdash; &ldquo;itne se itne tak lag
-          sakta hai&rdquo;. Ye ek fix keemat nahi hai, kyunki machine ki umar, brand aur aapke
-          mohalle ka TDS teeno rate badal dete hain.{' '}
-          <strong>Aapka exact number inspection ke baad, kaam shuru hone se pehle.</strong>
+          Har kaam ka <strong>&ldquo;itne se itne tak&rdquo;</strong> range &mdash; fix keemat nahi.
+          Machine ki umar aur aapke mohalle ka TDS rate badal dete hain.{' '}
+          <strong>Exact number kaam shuru hone se pehle.</strong>
         </p>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -129,10 +128,9 @@ export default function ServicePriceGrid() {
         <h3 className="mt-12 text-center font-display text-xl font-black text-navy-900 md:text-2xl">
           Spare Parts Ka Reference Rate &mdash; Aur Rate Badalta Kyun Hai
         </h3>
-        <p className="mx-auto mt-3 max-w-3xl text-center text-sm leading-relaxed text-navy-600">
-          Ek hi part ka rate do gharon me alag ho sakta hai &mdash; brand, GPD rating, aur company
-          part lena hai ya equivalent, teeno farak daalte hain. Isliye hum ek number nahi, range
-          dete hain, aur saath me ye bhi ki wo range kis cheez par depend karti hai.
+        <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-navy-600">
+          Brand, GPD rating, aur company part ya equivalent &mdash; teeno rate badal dete hain.
+          Isliye range, aur saath me wajah bhi.
         </p>
 
         <div className="mt-6 overflow-x-auto rounded-2xl ring-1 ring-slate-200">
@@ -168,28 +166,19 @@ export default function ServicePriceGrid() {
           <h3 className="font-display text-lg font-black text-white">
             Rate ke baare me hamari saaf baat
           </h3>
-          <ul className="mt-4 grid gap-3 md:grid-cols-2">
+          <ul className="mt-4 grid gap-2.5 md:grid-cols-2">
             {[
-              {
-                h: 'Upar ke sab number REFERENCE hain',
-                p: 'Ye Patna me hamare apne kaam se nikle hue range hain. Ye quotation nahi hain aur in par order confirm nahi hota.',
-              },
-              {
-                h: `Sirf visit charge fixed hai — ₹${SERVICE.visitCharge}`,
-                p: 'Yahi ek number hai jis par hum pehle se khade rehte hain. Isme TDS test, poora inspection aur likhit quote shaamil hai.',
-              },
-              {
-                h: 'Exact rate kab milta hai',
-                p: 'Machine kholne, TDS naapne aur fault confirm karne ke baad — aur hamesha kaam shuru hone se PEHLE. Aapki haan ke bina koi part nahi khulta.',
-              },
-              {
-                h: 'Mana karne ka poora haq',
-                p: `Quote sun kar aap mana kar sakte hain. Us case me sirf ₹${SERVICE.visitCharge} visit charge lagta hai, aur kuch nahi. Koi dabav nahi.`,
-              },
-            ].map((x) => (
-              <li key={x.h} className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
-                <p className="text-sm font-black text-white">{x.h}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-aqua-50">{x.p}</p>
+              ['Upar ke sab number reference hain', 'quotation nahi'],
+              [`Sirf visit charge fixed — ₹${SERVICE.visitCharge}`, 'isme TDS test + inspection'],
+              ['Exact rate kaam se PEHLE', 'machine kholne aur TDS naapne ke baad'],
+              ['Mana karne ka poora haq', `tab sirf ₹${SERVICE.visitCharge}, aur kuch nahi`],
+            ].map(([h, p]) => (
+              <li key={h} className="flex items-start gap-2.5 rounded-xl bg-white/10 px-4 py-3 ring-1 ring-white/15">
+                <span aria-hidden="true" className="mt-0.5 text-aqua-300">&#10003;</span>
+                <span className="text-sm leading-snug text-white">
+                  <strong>{h}</strong>
+                  <span className="text-aqua-100"> &mdash; {p}</span>
+                </span>
               </li>
             ))}
           </ul>

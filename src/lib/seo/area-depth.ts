@@ -326,7 +326,7 @@ export function faultProfile(area: ServiceAreaContent): FaultRow[] {
       {
         fault: 'Booster pump strain from a choked pre-filter',
         why: `A pump feeding a blocked filter works against pressure it was never rated for. In hard-water ${area.name} the pump usually dies indirectly, through a sediment stage nobody changed.`,
-        cost: '₹900 – ₹1,600',
+        cost: '₹1,000 – ₹2,800',
       },
     ],
     'very-hard': [

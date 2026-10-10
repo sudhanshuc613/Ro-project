@@ -335,7 +335,7 @@ export const BLOG_POSTS: BlogPost[] = [
       { q: 'RO ka filter kitne me badalta hai?', a: 'Ek filter ₹150-400 ka hota hai. Poora set (sediment + pre-carbon + post-carbon) ₹350 se ₹900 tak. 6 mahine me ek baar badalna chahiye.' },
       { q: 'AMC lena faydemand hai kya?', a: 'Agar aapke area ka TDS 500 se zyada hai (Kankarbagh, Beur, Chitkohra) to haan — saal me 2-3 service lagti hai, AMC sasta padta hai. Municipal supply wale area me shayad zaroorat nahi.' },
       { q: 'Kya visit charge kaam karwane par bhi lagta hai?', a: `Hamare yahan visit charge ₹${SERVICE.visitCharge} alag hai, jisme diagnosis aur TDS test shamil hai. Parts ka paisa uske upar, aur sirf aapki permission ke baad.` },
-      { q: 'Warranty milti hai kya?', a: `Kaam par ${SERVICE.warrantyDays} din ki warranty. Us dauraan wahi problem dobara aaye to hum bina charge ke aate hain. Parts par manufacturer warranty alag se.` },
+      { q: 'Warranty milti hai kya?', a: `Do warranty milti hai — hamare kaam (labour) par ${SERVICE.warrantyDays} din, aur laga hue part par ${SERVICE.partsWarrantyMonths} mahine. Us dauraan wahi problem dobara aaye to hum bina charge ke aate hain.` },
     ],
   },
 

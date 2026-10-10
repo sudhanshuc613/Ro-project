@@ -267,7 +267,27 @@ export const SERVICE = {
   city: 'Patna',
   state: 'Bihar',
   responseTime: '90 minutes',
+  /**
+   * SERVICE (labour) warranty — hamara apna kaam. 30 din.
+   * Matlab: wahi dikkat dobara aayi to visit free, labour free.
+   */
   warrantyDays: 30,
+
+  /**
+   * 🔴 PARTS warranty — 9 Oct 2026 me add kiya gaya, owner ne galti pakdi.
+   *
+   * Pehle poori site par likha tha "30 din ki warranty — part aur labour
+   * dono par". Ye GALAT tha aur customer ko kam bataya ja raha tha.
+   *
+   * Asli baat:
+   *     labour / service ka kaam  →  30 din
+   *     laga hua part (membrane, pump, SMPS, filter)  →  1 SAAL
+   *
+   * Do alag cheez hain aur dono alag-alag likhni chahiye. Part par 1 saal
+   * batana customer ke liye bada bharosa hai — aur hum wo de rahe the par
+   * website par likh hi nahi rahe the.
+   */
+  partsWarrantyMonths: 12,
 } as const;
 
 export const SHIPPING = {

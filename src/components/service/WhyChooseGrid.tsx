@@ -20,6 +20,7 @@
  *
  * Data `WHY_POINTS` se aata hai (ads-landing-data.ts).
  */
+import Image from 'next/image';
 import { WHY_POINTS } from '@/lib/seo/ads-landing-data';
 import { CONTACT, SERVICE } from '@/lib/constants';
 
@@ -30,10 +31,9 @@ export default function WhyChooseGrid() {
         <h2 className="text-center font-display text-2xl font-black text-navy-900 md:text-3xl">
           Hum Kyun &mdash; Aur Har Baat Ka Saboot
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-base text-navy-600">
-          &ldquo;Best service&rdquo; aur &ldquo;trusted technician&rdquo; har koi likh deta hai.
-          Neeche har point ke saath wo cheez di hai jo aap{' '}
-          <strong>apni aankh se check kar sakte hain</strong>.
+        <p className="mx-auto mt-3 max-w-xl text-center text-base text-navy-600">
+          &ldquo;Best service&rdquo; har koi likh deta hai. Neeche har point ke saath{' '}
+          <strong>dekh sakne layak saboot</strong> hai.
         </p>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -55,7 +55,26 @@ export default function WhyChooseGrid() {
           ))}
         </div>
 
-        <div className="mt-8 rounded-3xl bg-navy-900 p-6 text-center md:p-8">
+        {/* 🔴 9 Oct 2026 — owner: "jaha gap hai waha ache ache images laga".
+            Yahan tak page sirf text tha. Ye teen ASLI kaam ki photo hain
+            (stock nahi) jo pehle se site par thi par is page par nahi dikh
+            rahi thi. Text ka block todti hain aur saboot bhi deti hain. */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          {[
+            { src: '/service/tds-testing.jpg', cap: 'TDS naapna — har visit par, pehle aur baad', alt: 'Technician measuring TDS of RO water in Patna with a digital meter' },
+            { src: '/service/membrane-old-new.jpg', cap: 'Purana aur naya part saath me', alt: 'Old and new RO membrane shown side by side during replacement in Patna' },
+            { src: '/service/technician-working.jpg', cap: 'Kaam ghar par, aapke saamne', alt: 'Aqua Perl technician repairing a RO water purifier at a home in Patna' },
+          ].map((x) => (
+            <figure key={x.src} className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-navy-100">
+              <div className="relative aspect-[4/3] w-full">
+                <Image src={x.src} alt={x.alt} fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover" />
+              </div>
+              <figcaption className="px-3 py-2.5 text-xs font-semibold text-navy-700">{x.cap}</figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div className="mt-6 rounded-3xl bg-navy-900 p-6 text-center md:p-8">
           <h3 className="font-display text-xl font-black text-white">
             Ek sawaal jo aapko har technician se poochna chahiye
           </h3>

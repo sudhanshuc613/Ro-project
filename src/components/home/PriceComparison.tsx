@@ -15,8 +15,13 @@ const ROWS = [
   { service: 'Sediment / carbon filter change', us: '₹450 – ₹600', them: '₹500 – ₹1,200' },
   { service: 'RO membrane (75 GPD)', us: '₹1,200 – ₹1,800', them: '₹1,500 – ₹2,500' },
   { service: 'RO membrane (100 GPD)', us: '₹1,600 – ₹2,400', them: '₹2,000 – ₹3,000' },
-  { service: 'Booster pump replacement', us: '₹1,500 – ₹2,000', them: '₹1,500 – ₹2,500' },
-  { service: 'SMPS / adaptor', us: '₹700 – ₹1,300', them: '₹900 – ₹1,600' },
+  /* 🔴 9 Oct 2026 — owner ne asli rate confirm kiye: motor ₹1,000–₹2,800,
+     SMPS ₹700–₹1,100. Hamara ("us") column unhi se update kiya hai.
+     "them" column chhua NAHI — wo 2026 ki competitor listing se liya gaya
+     hai aur uska koi naya data nahi hai. Competitor ka rate andaze se
+     badalna matlab jhoota comparison banana. */
+  { service: 'Booster pump / motor', us: '₹1,000 – ₹2,800', them: '₹1,500 – ₹2,500' },
+  { service: 'SMPS / adaptor', us: '₹700 – ₹1,100', them: '₹900 – ₹1,600' },
   { service: 'New RO installation', us: '₹350 – ₹600', them: '₹599 – ₹1,000' },
   { service: 'Annual Maintenance (AMC)', us: '₹1,499 – ₹4,499', them: '₹2,499 – ₹6,999' },
 ];
