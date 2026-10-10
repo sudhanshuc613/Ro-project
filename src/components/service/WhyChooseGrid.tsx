@@ -24,7 +24,12 @@ import Image from 'next/image';
 import { WHY_POINTS } from '@/lib/seo/ads-landing-data';
 import { CONTACT, SERVICE } from '@/lib/constants';
 
-export default function WhyChooseGrid() {
+export default function WhyChooseGrid({
+  images,
+}: {
+  /* 10 Oct 2026 — teeno proof photo admin se badalti hain. */
+  images?: Record<string, { url: string; alt: string }>;
+}) {
   return (
     <section className="bg-slate-50 px-4 py-12 md:py-16">
       <div className="mx-auto max-w-6xl">
@@ -61,13 +66,13 @@ export default function WhyChooseGrid() {
             rahi thi. Text ka block todti hain aur saboot bhi deti hain. */}
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            { src: '/service/tds-testing.jpg', cap: 'TDS naapna — har visit par, pehle aur baad', alt: 'Technician measuring TDS of RO water in Patna with a digital meter' },
-            { src: '/service/membrane-old-new.jpg', cap: 'Purana aur naya part saath me', alt: 'Old and new RO membrane shown side by side during replacement in Patna' },
-            { src: '/service/technician-working.jpg', cap: 'Kaam ghar par, aapke saamne', alt: 'Aqua Perl technician repairing a RO water purifier at a home in Patna' },
+            { k: 'proofTds', src: '/service/tds-testing.jpg', cap: 'TDS naapna — har visit par, pehle aur baad', alt: 'Technician measuring TDS of RO water in Patna with a digital meter' },
+            { k: 'proofMembrane', src: '/service/membrane-old-new.jpg', cap: 'Purana aur naya part saath me', alt: 'Old and new RO membrane shown side by side during replacement in Patna' },
+            { k: 'proofTechnician', src: '/service/technician-working.jpg', cap: 'Kaam ghar par, aapke saamne', alt: 'Aqua Perl technician repairing a RO water purifier at a home in Patna' },
           ].map((x) => (
             <figure key={x.src} className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-navy-100">
               <div className="relative aspect-[4/3] w-full">
-                <Image src={x.src} alt={x.alt} fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover" />
+                <Image src={images?.[x.k]?.url || x.src} alt={images?.[x.k]?.alt || x.alt} fill sizes="(max-width:640px) 100vw, 33vw" className="object-cover" />
               </div>
               <figcaption className="px-3 py-2.5 text-xs font-semibold text-navy-700">{x.cap}</figcaption>
             </figure>

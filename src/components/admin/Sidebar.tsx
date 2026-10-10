@@ -38,6 +38,9 @@ export const NAV_SECTIONS: NavSection[] = [
       { label: 'Categories', href: '/admin/categories', icon: '🗂️' },
       { label: 'Inventory',  href: '/admin/inventory',  icon: '🏷️', badgeKey: 'lowStock' },
       { label: 'Images',     href: '/admin/media',      icon: '🖼️' },
+      /* 10 Oct 2026 — har banner/photo ek jagah se badalne ke liye. */
+      { label: 'Banners & Photos', href: '/admin/site-images', icon: '🏞️' },
+      { label: 'Part Rates', href: '/admin/rates',       icon: '💰' },
     ],
   },
   {

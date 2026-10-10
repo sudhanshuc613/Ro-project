@@ -69,6 +69,8 @@ export default function CommandPalette() {
       { id: 'amc', label: 'AMC contracts', icon: '📋', group: 'Pages', run: go('/admin/amc') },
       { id: 'categories', label: 'Categories', icon: '🗂️', group: 'Pages', run: go('/admin/categories') },
       { id: 'media', label: 'Media library', icon: '🖼️', group: 'Pages', run: go('/admin/media') },
+      { id: 'site-images', label: 'Banners & Photos', icon: '🏞️', group: 'Pages', run: go('/admin/site-images') },
+      { id: 'rates', label: 'Spare part rates', icon: '💰', group: 'Pages', run: go('/admin/rates') },
       { id: 'settings', label: 'Settings', icon: '⚙️', group: 'Pages', run: go('/admin/settings') },
       { id: 'security', label: 'Password badlo', icon: '🔐', group: 'Pages', run: go('/admin/security') },
       { id: 'site', label: 'Website kholo', hint: 'Naya tab', icon: '🌐', group: 'Shortcut', run: () => { setOpen(false); window.open('/', '_blank'); } },

@@ -50,10 +50,14 @@ export default function AdsHeroBanner({
   h1,
   areaCount,
   brandCount,
+  image,
 }: {
   h1: string;
   areaCount: number;
   brandCount: number;
+  /* 10 Oct 2026 — admin /admin/site-images se badal sakta hai.
+     Prop na mile to code ka default chalta hai. */
+  image?: { url: string; alt: string };
 }) {
   const since = new Date().getFullYear() - 2019;
 
@@ -63,8 +67,8 @@ export default function AdsHeroBanner({
           nahi hai, bas opacity kam hai taaki text padha jaaye. */}
       <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[58%] lg:w-[54%]">
         <Image
-          src="/banners/patna-service-hero.png"
-          alt={`RO service in ${SERVICE.city} — water purifier repair, TDS testing and filter change by ${BRAND.name}`}
+          src={image?.url || '/banners/patna-service-hero.png'}
+          alt={image?.alt || `RO service in ${SERVICE.city} — water purifier repair, TDS testing and filter change by ${BRAND.name}`}
           fill
           priority
           sizes="(max-width: 768px) 100vw, 58vw"

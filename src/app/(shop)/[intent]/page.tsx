@@ -79,6 +79,8 @@ import BrandCallCards from '@/components/service/BrandCallCards';
 import AmcQuickCards from '@/components/service/AmcQuickCards';
 import ReviewShowcase from '@/components/home/ReviewShowcase';
 import { tdsBand } from '@/lib/seo/area-depth';
+/* 10 Oct 2026 — banner aur card ki images ab admin se badalti hain. */
+import { getSiteImages, getRateCard } from '@/lib/settings';
 
 export const revalidate = 86400;
 
@@ -138,11 +140,14 @@ export function generateMetadata({ params }: { params: { intent: string } }): Me
   };
 }
 
-export default function ServiceIntentPage({ params }: { params: { intent: string } }) {
+export default async function ServiceIntentPage({ params }: { params: { intent: string } }) {
   const intent = getIntent(params.intent);
 
   /* Ads landing page — sirf isi slug par extra visual blocks lagte hain. */
   const isAdsLanding = params.intent === 'ro-service-in-patna';
+
+  /* Admin-editable images. DB na chale to code ke default aate hain. */
+  const [siteImages, rateCard] = await Promise.all([getSiteImages(), getRateCard()]);
 
   /* Rate-check tool ka data. Har area ka APNA TDS, apna response time —
      yahi wo cheez hai jo koi competitor copy nahi kar sakta, kyunki unke
@@ -252,6 +257,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
             h1={intent.h1}
             areaCount={SERVICE_AREAS.length}
             brandCount={SERVICED_BRANDS.length}
+            image={siteImages.adsHero}
           />
         )}
 
@@ -408,7 +414,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
           </div>
         </section>
 
-        {isAdsLanding && <ServicePriceGrid />}
+        {isAdsLanding && <ServicePriceGrid images={siteImages} rates={rateCard} />}
 
         {/* 🆕 Sabse alag hissa — koi competitor ye bana hi nahi sakta,
             kyunki unke paas per-area TDS data hai hi nahi. */}
@@ -457,7 +463,7 @@ export default function ServiceIntentPage({ params }: { params: { intent: string
           sub="Har visit pe TDS test, har badla part aapke haath me."
         />
 
-        {isAdsLanding && <WhyChooseGrid />}
+        {isAdsLanding && <WhyChooseGrid images={siteImages} />}
         {isAdsLanding && <AmcQuickCards />}
         {/* 🔴 Brand cards par SIRF hamara number. Paid click brand ke
             helpline par nahi jaana chahiye. */}

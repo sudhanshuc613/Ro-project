@@ -10,6 +10,8 @@
  */
 import { prisma } from '@/lib/db/prisma';
 import { CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
+import { resolveSiteImages, type SiteImageMap } from '@/lib/seo/site-images';
+import { resolveRates, type RateMap } from '@/lib/seo/rate-overrides';
 import { unstable_cache } from 'next/cache';
 
 export interface ContactSettings {
@@ -160,6 +162,42 @@ export const getServiceSettings = unstable_cache(
   () => fetchSetting<ServiceSettings>('service', FALLBACK_SERVICE),
   ['settings:service'],
   { tags: ['settings'], revalidate: 3600 },
+);
+
+/**
+ * 🖼️ SITE IMAGES — 10 Oct 2026.
+ * Har banner aur photo ka admin-editable override. Key `siteImages`.
+ * DB khaali ho ya DB hi na chale — `resolveSiteImages(null)` sab default
+ * laut aata hai, isliye site kabhi image ke bina nahi dikhegi.
+ */
+export const getSiteImages = unstable_cache(
+  async () => {
+    try {
+      const row = await prisma.siteSetting.findUnique({ where: { key: 'siteImages' } });
+      return resolveSiteImages((row?.value as unknown as SiteImageMap) ?? null);
+    } catch {
+      return resolveSiteImages(null);
+    }
+  },
+  ['settings:siteImages'],
+  { tags: ['settings'], revalidate: 300 },
+);
+
+/**
+ * 💰 RATE CARD — 10 Oct 2026. Spare parts ka rate admin se badalta hai.
+ * DB khaali ho to code ke PART_RATES hi chalte hain.
+ */
+export const getRateCard = unstable_cache(
+  async () => {
+    try {
+      const row = await prisma.siteSetting.findUnique({ where: { key: 'rateCard' } });
+      return resolveRates((row?.value as unknown as RateMap) ?? null);
+    } catch {
+      return resolveRates(null);
+    }
+  },
+  ['settings:rateCard'],
+  { tags: ['settings'], revalidate: 300 },
 );
 
 export const getBannerSettings = unstable_cache(

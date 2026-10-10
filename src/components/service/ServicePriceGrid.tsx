@@ -49,12 +49,27 @@
  */
 import Image from 'next/image';
 import Link from 'next/link';
-import { SERVICE_CARDS, PART_RATES } from '@/lib/seo/ads-landing-data';
+import { SERVICE_CARDS, PART_RATES, type PartRate } from '@/lib/seo/ads-landing-data';
 import { CONTACT, SERVICE } from '@/lib/constants';
 
 const inr = (n: number) => `₹${n.toLocaleString('en-IN')}`;
 
-export default function ServicePriceGrid() {
+/* 10 Oct 2026 — har card ki image admin se badalti hai.
+   SERVICE_CARDS ka `icon` hi slot key banata hai: cardService, cardRepair... */
+const SLOT: Record<string, string> = {
+  service: 'cardService', repair: 'cardRepair', install: 'cardInstallation',
+  filter: 'cardFilter', membrane: 'cardMembrane', amc: 'cardAmc',
+};
+
+export default function ServicePriceGrid({
+  images,
+  rates,
+}: {
+  images?: Record<string, { url: string; alt: string }>;
+  /* 10 Oct 2026 — admin /admin/rates se badal sakta hai. Na mile to code ka. */
+  rates?: PartRate[];
+}) {
+  const partRates = rates?.length ? rates : PART_RATES;
   return (
     <section className="bg-white px-4 py-12 md:py-16">
       <div className="mx-auto max-w-6xl">
@@ -76,8 +91,8 @@ export default function ServicePriceGrid() {
               {/* ── Card image ── */}
               <div className="relative aspect-[16/10] w-full bg-navy-900">
                 <Image
-                  src={c.image}
-                  alt={c.alt}
+                  src={images?.[SLOT[c.icon]]?.url || c.image}
+                  alt={images?.[SLOT[c.icon]]?.alt || c.alt}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -146,7 +161,7 @@ export default function ServicePriceGrid() {
               </tr>
             </thead>
             <tbody>
-              {PART_RATES.map((r, i) => (
+              {partRates.map((r, i) => (
                 <tr key={r.part} className={i % 2 ? 'bg-slate-50' : 'bg-white'}>
                   <th scope="row" className="px-4 py-3 align-top font-bold text-navy-900">
                     {r.part}
