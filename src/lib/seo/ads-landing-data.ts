@@ -86,7 +86,7 @@ export const SYMPTOM_RATES: SymptomRate[] = [
     alsoCould: 'Membrane poori tarah choke, ya inlet valve band',
     priceFrom: 450, priceTo: 2400, minutes: 60,
     insider:
-      'Pehle SMPS check hona chahiye, membrane nahi. SMPS ₹450 ka hai aur membrane ₹1,100 ka — bahut log seedha membrane bech dete hain.',
+      'Pehle SMPS check hona chahiye, membrane nahi. SMPS ₹700 se ₹1,100 ka hai aur membrane ₹1,100 se ₹2,400 ka — bahut log seedha membrane bech dete hain.',
   },
   {
     id: 'slow-water',

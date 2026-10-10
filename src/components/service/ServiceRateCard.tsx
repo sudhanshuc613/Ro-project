@@ -61,7 +61,7 @@ export default function ServiceRateCard() {
   const uvRow = SERVICE_INTENTS
     .find((s2) => s2.slug === 'ro-filter-change-patna')
     ?.prices.find((r) => /uv lamp/i.test(r.item));
-  const uvPrice = uvRow?.price ?? '₹400 onwards';
+  const uvPrice = uvRow?.price ?? '₹400 – ₹1,200';
 
   return (
     <section className="bg-white px-4 py-12">

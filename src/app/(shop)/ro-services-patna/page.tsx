@@ -83,7 +83,7 @@ export const metadata: Metadata = {
 const HUB_FAQS = [
   {
     q: 'Which RO service do I actually need?',
-    a: 'Work from the symptom. No water at all or a leak means a repair visit — that is a diagnosis job, ₹200 including the TDS test. Water is fine but it has been three to four months means a filter change from ₹350. Water tastes heavy and your TDS reading has climbed means a membrane, ₹1,100 onwards. A new machine or one you are shifting means installation, ₹500. If you are calling more than twice a year, an AMC from ₹1,499 works out cheaper than the individual visits.',
+    a: 'Work from the symptom. No water at all or a leak means a repair visit — that is a diagnosis job, ₹200 including the TDS test. Water is fine but it has been three to four months means a filter change, ₹350 to ₹900. Water tastes heavy and your TDS reading has climbed means a membrane, ₹1,100 to ₹2,400. A new machine or one you are shifting means installation, ₹500. If you are calling more than twice a year, an AMC from ₹1,499 works out cheaper than the individual visits.',
   },
   {
     q: 'What is the cheapest RO service in Patna?',
@@ -95,7 +95,7 @@ const HUB_FAQS = [
   },
   {
     q: 'Can one visit cover more than one job?',
-    a: 'Yes, and it is usually cheaper that way. Membrane plus a full filter set together is ₹1,400 onwards rather than two separate visits, and it is also better practice — a new membrane behind exhausted carbon does not last, because chlorine passes straight through to it. Tell us the symptom when you call and we will bring parts for the likely combination.',
+    a: 'Yes, and it is usually cheaper that way. Membrane plus a full filter set together is ₹1,400 to ₹2,400 rather than two separate visits, and it is also better practice — a new membrane behind exhausted carbon does not last, because chlorine passes straight through to it. Tell us the symptom when you call and we will bring parts for the likely combination.',
   },
   {
     q: 'How fast can someone reach me in Patna?',

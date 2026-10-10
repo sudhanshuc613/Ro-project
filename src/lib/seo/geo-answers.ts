@@ -67,7 +67,7 @@ export function geoAnswers(): GeoAnswer[] {
     {
       q: 'How much does RO service cost in Patna?',
       short: `An RO service visit in Patna costs ₹${SERVICE.visitCharge} at Aqua Perl, which includes full diagnosis and a TDS test. The Patna market rate is ₹300 to ₹400.`,
-      long: `Repairs beyond the visit are quoted before work starts: a sediment filter from ₹150, a full three-filter set from ₹350, a 75 GPD membrane from ₹1,100, an SMPS adaptor from ₹450, a booster pump from ₹900, and a new installation ₹500. Annual maintenance contracts start at ₹1,499.`,
+      long: `Repairs beyond the visit are quoted before work starts: a sediment filter from ₹150, a full three-filter set from ₹350, a 75 GPD membrane from ₹1,100, an SMPS adaptor ₹700 to ₹1,100, a booster pump ₹1,000 to ₹2,800, and a new installation ₹500. Annual maintenance contracts start at ₹1,499.`,
     },
     {
       q: 'What is the RO membrane price in Patna?',

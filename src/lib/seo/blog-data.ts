@@ -129,7 +129,7 @@ export const BLOG_POSTS: BlogPost[] = [
         heading: 'Membrane badalne se pehle ye 3 cheez check karo',
         body: [
           'Sabse mehngi galti jo hum roz dekhte hain: SMPS kharab hai aur customer se membrane ka paisa liya gaya.',
-          'Agar paani bilkul nahi aa raha aur pump ki koi awaaz nahi — ye SMPS ya adaptor hai, membrane nahi. Membrane ₹1,100 ka hai, SMPS ₹450 ka. Farak dekh lo.',
+          'Agar paani bilkul nahi aa raha aur pump ki koi awaaz nahi — ye SMPS ya adaptor hai, membrane nahi. Membrane ₹1,100 se ₹2,400 ka hai, SMPS ₹700 se ₹1,100 ka. Farak dekh lo.',
           'Agar pump chal raha hai par paani patla-patla aa raha hai — pre-filter choke hai. ₹150 ka kaam hai.',
           'Membrane sirf tab badlo jab flow theek ho par TDS badh gaya ho. Yahi ek pakka signal hai.',
         ],

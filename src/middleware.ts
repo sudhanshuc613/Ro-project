@@ -56,10 +56,18 @@ export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
 
   // Never touch API routes, Next internals, or static files.
+  //
+  // 🔴 /bill/ bhi yahan hai (10 Oct 2026). Grahak ka bill-share link
+  // /bill/<random token> hai. Neeche wala "sab lowercase karo" rule — jo
+  // purana aur zaroori SEO fix hai — token ka case badal deta aur WhatsApp
+  // pe bheja hua link 404 ho jaata. Token ab hex (lowercase) hai, par yeh
+  // chhoot doosra taala hai taaki kal koi token format badle to bhi link
+  // na toote.
   if (
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/admin/') ||
+    pathname.startsWith('/bill/') ||
     /\.[a-zA-Z0-9]+$/.test(pathname)
   ) {
     return NextResponse.next();

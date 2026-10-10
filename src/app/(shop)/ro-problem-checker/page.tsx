@@ -58,7 +58,7 @@ const HUB_FAQS = [
   },
   {
     q: 'Patna me RO repair ka kya rate hai?',
-    a: `Visit ₹${SERVICE.visitCharge} fixed — isme diagnosis aur likhit TDS report shamil hai. Uske baad: filter ₹450, SMPS ₹550, solenoid ₹450, float ₹350, pump ₹900, membrane ₹1,600 onwards. Sab kuch part badalne se pehle bataya jata hai.`,
+    a: `Visit ₹${SERVICE.visitCharge} fixed — isme diagnosis aur likhit TDS report shamil hai. Uske baad: filter ₹350–₹900, SMPS ₹700–₹1,100, solenoid ₹300–₹600, float ₹150–₹350, pump ₹1,000–₹2,800, membrane ₹1,100–₹2,400. Sab kuch part badalne se pehle bataya jata hai.`,
   },
   {
     q: 'Aap Patna ke bahar bhi help karte ho?',

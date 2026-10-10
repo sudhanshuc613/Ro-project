@@ -61,6 +61,17 @@ export const NAV_SECTIONS: NavSection[] = [
 
     ],
   },
+  /* 10 Oct 2026 — counter billing. `/admin/orders` online order ke liye hai;
+     yeh wahan jaake kiye gaye kaam ka kaagaz hai. Dono alag rehna zaroori
+     hai, warna e-commerce ke numbers field ke bill se mil jayenge. */
+  {
+    title: 'Billing (Counter)',
+    items: [
+      { label: 'Bill / Invoice',  href: '/admin/billing',      icon: '🧾' },
+      { label: 'Grahak Record',   href: '/admin/clients',      icon: '📒' },
+      { label: 'Warranty & AMC',  href: '/admin/warranty-amc', icon: '🛡️' },
+    ],
+  },
   {
     title: 'Customers',
     items: [

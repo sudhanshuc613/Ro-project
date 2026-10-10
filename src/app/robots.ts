@@ -62,6 +62,12 @@ export default function robots(): MetadataRoute.Robots {
           '/checkout',
           '/checkout/*',
           '/cart',
+          /* 10 Oct 2026 — grahak ke bill ka share link (/bill/<random token>).
+             Yeh ek niji kaagaz hai, page nahi. Teen taale lage hain: yeh
+             Disallow, page ka apna noindex, aur sitemap me iska na hona.
+             Isse site ka crawl budget bhi inpe barbaad nahi hota. */
+          '/bill',
+          '/bill/*',
           '/api/*',
           '/*?*sort=',      // avoid crawling filter permutations
           '/*?*page=',
