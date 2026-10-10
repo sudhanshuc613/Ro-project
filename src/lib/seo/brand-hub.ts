@@ -85,10 +85,37 @@ export function brandMonogram(name: string): string {
 
 /**
  * Us brand ka sabse saste wale fault ka lower bound — "₹850 – ₹2,400" me se 850.
- * Card par "repair ₹450 se" dikhane ke liye. Jo number dikhega wo us brand ke
+ * Schema ke lowPrice ke liye. (Card par ab fixCostRange() ka poora range dikhta hai.) Jo number dikhega wo us brand ke
  * apne page par bhi likha hai, isliye ad → hub → brand page teeno match karte
  * hain. Mismatch Quality Score girata hai.
  */
+
+/**
+ * Us brand ke common faults ka POORA range — "₹250 – ₹2,400".
+ *
+ * 🔴 10 Oct 2026 — pehle card par sirf `cheapestFixFrom()` ka lower bound tha
+ * aur uske aage "se" likha jaata tha ("Repair ₹250 se"). Owner ka niyam hai:
+ * *"reference diya kar — itna se itna tak lag sakta hai"*, kyunki grahak chhota
+ * number yaad rakhta hai aur bade bill par jhagda hota hai. Upper bound ka data
+ * pehle se `commonIssues[].typicalCost` me tha, bas istemaal nahi ho raha tha.
+ */
+export function fixCostRange(slug: string): string | null {
+  const b = SERVICED_BRANDS.find((x) => x.slug === slug);
+  if (!b || !b.commonIssues?.length) return null;
+  const nums: number[] = [];
+  for (const i of b.commonIssues) {
+    for (const m of (i.typicalCost ?? '').matchAll(/₹\s?([\d,]+)/g)) {
+      const n = Number(m[1].replace(/,/g, ''));
+      if (Number.isFinite(n) && n > 0) nums.push(n);
+    }
+  }
+  if (!nums.length) return null;
+  const lo = Math.min(...nums);
+  const hi = Math.max(...nums);
+  if (hi <= lo) return `₹${lo.toLocaleString('en-IN')}`;
+  return `₹${lo.toLocaleString('en-IN')} – ₹${hi.toLocaleString('en-IN')}`;
+}
+
 export function cheapestFixFrom(slug: string): string | null {
   const b = SERVICED_BRANDS.find((x) => x.slug === slug);
   if (!b || !b.commonIssues?.length) return null;

@@ -212,7 +212,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     title: 'RO AMC in Patna — Plans From ₹1,499',
     h1: 'RO AMC in Patna',
     description:
-      'RO annual maintenance contract in Patna from ₹1,499. Scheduled filter changes, priority visits, discounted parts. Honest AMC advice.',
+      'RO annual maintenance contract in Patna ₹1,499 to ₹4,499. Scheduled filter changes, priority visits, discounted parts. Honest AMC advice.',
     keywords: [
       'ro amc patna', 'ro amc price patna', 'water purifier amc patna',
       'ro annual maintenance contract patna', 'ro amc plan cost',
@@ -402,7 +402,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     title: 'RO Filter Change in Patna — From ₹150',
     h1: 'RO Filter Change in Patna',
     description:
-      'RO filter replacement in Patna from ₹150 fitted. Sediment, carbon and post-carbon. Patna water exhausts filters faster — real intervals.',
+      'RO filter replacement in Patna ₹150 to ₹300 fitted. Sediment, carbon and post-carbon. Patna water exhausts filters faster — real intervals.',
     keywords: [
       'ro filter change patna', 'ro filter replacement patna',
       'ro filter price patna', 'water purifier filter change patna',
@@ -501,7 +501,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     title: 'RO Membrane Replacement Patna — ₹1,100',
     h1: 'RO Membrane Replacement in Patna',
     description:
-      'RO membrane replacement in Patna from ₹1,100 fitted. 75 vs 100 GPD explained, TDS proof before and after, and how to tell whether you actually need one.',
+      'RO membrane replacement in Patna ₹1,100 to ₹2,400 fitted. 75 vs 100 GPD explained, TDS proof before and after, and how to tell whether you actually need one.',
     keywords: [
       'ro membrane replacement patna', 'ro membrane price patna',
       'ro membrane change cost', '75 gpd membrane price patna',

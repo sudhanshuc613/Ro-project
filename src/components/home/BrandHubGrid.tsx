@@ -25,7 +25,7 @@ import {
   EXTRA_LOGO_BRANDS,
   shortBrandName,
   brandMonogram,
-  cheapestFixFrom,
+  fixCostRange,
 } from '@/lib/seo/brand-hub';
 
 /** Commercial aur catch-all alag padhte hain — inka apna row hai. */
@@ -42,7 +42,7 @@ export default function BrandHubGrid() {
         {consumer.map((b) => {
           const short = shortBrandName(b.name);
           const logo = BRAND_SLUG_LOGO[b.slug];
-          const from = cheapestFixFrom(b.slug);
+          const from = fixCostRange(b.slug);
           const topFault = b.commonIssues?.[0]?.issue;
 
           return (
@@ -102,7 +102,7 @@ export default function BrandHubGrid() {
                     </span>
                     {from ? (
                       <span className="rounded-lg bg-sand-100 px-2.5 py-1 text-[11px] font-bold text-navy-700">
-                        Repair {from} se
+                        Repair {from}
                       </span>
                     ) : null}
                   </div>

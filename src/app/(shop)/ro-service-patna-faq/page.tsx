@@ -51,7 +51,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: 'RO Service Patna — Rates, TDS & Answers',
   description:
-    `Straight answers on RO service in Patna: visit charge ₹${SERVICE.visitCharge}, membrane ₹1,100+, area-wise TDS from 200 to 1,250 ppm, real filter intervals. Call ${CONTACT.primaryPhone}.`,
+    `Straight answers on RO service in Patna: visit charge ₹${SERVICE.visitCharge}, membrane ₹1,100–₹2,400, area-wise TDS from 200 to 1,250 ppm, real filter intervals. Call ${CONTACT.primaryPhone}.`,
   keywords: [
     'ro service patna cost', 'ro membrane price patna', 'patna water tds level',
     'ro filter change interval patna', 'best ro service patna',

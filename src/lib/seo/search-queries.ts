@@ -97,7 +97,7 @@ export const SEARCH_ANSWERS: SearchAnswer[] = [
     heading: 'RO Repair Patna — Rate Pehle, Kaam Baad Me',
     answer:
       `RO repair Patna me karane se pehle rate jaan lijiye: visit charge ₹${SERVICE.visitCharge}, ` +
-      `filter/candle ₹150 se, membrane ₹1,100 se, booster pump ₹1,400 se, SMPS ₹800 se. ` +
+      `filter/candle ₹150 – ₹300, membrane ₹1,100 – ₹2,400, booster pump ₹1,000 – ₹2,800, SMPS ₹700 – ₹1,100. ` +
       `Har kaam pe ${SERVICE.warrantyDays} din ki service warranty aur laga hue part pe ${SERVICE.partsWarrantyMonths} mahine ki warranty likhit me milti hai. ` +
       `Agar machine theek nahi ho paayi to sirf visit charge lagta hai, aur kuch nahi.`,
   },

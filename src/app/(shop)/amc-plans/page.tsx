@@ -12,7 +12,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: 'RO AMC Plans in Patna — From ₹1,499/Year',
   description:
-    'Annual Maintenance Contract for your RO purifier in Patna. Scheduled filter changes, priority service, discounted parts. Plans from ₹1,499. Call 8969821440.',
+    'RO Annual Maintenance Contract in Patna. Scheduled filter changes, priority service, discounted parts. Plans ₹1,499 to ₹4,499. Call 8969821440.',
   keywords: ['RO AMC Patna', 'water purifier AMC', 'RO annual maintenance Patna', 'RO service plan Patna'],
   alternates: { canonical: '/amc-plans' },
   /* 30 Sep 2026 — pehle yahan openGraph tha hi nahi, isliye Next.js root

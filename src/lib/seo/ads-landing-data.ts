@@ -60,7 +60,7 @@ import { SERVICE, CONTACT } from '@/lib/constants';
      solenoid  ₹300–₹600     (ServiceRateCard)
      SMPS      ₹700–₹1,100   (owner confirm, 9 Oct)
      pump/motor ₹1,000–₹2,800 (owner confirm, 9 Oct)
-     UV lamp   ₹400 se       (ro-filter-change-patna prices[] me "UV lamp")
+     UV lamp   ₹400 – ₹1,200 (ro-filter-change-patna prices[] me "UV lamp")
    ══════════════════════════════════════════════════════════════════════════ */
 export interface SymptomRate {
   id: string;

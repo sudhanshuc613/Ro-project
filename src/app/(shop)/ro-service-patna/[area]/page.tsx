@@ -348,12 +348,12 @@ export default function AreaPage({ params }: { params: { area: string } }) {
                 <dl className="mt-3 space-y-2 text-sm">
                   {[
                     ['Visit + diagnosis', `₹${SERVICE.visitCharge}`, '/ro-repair-patna'],
-                    ['Filter change (set)', '₹350 se', '/ro-filter-change-patna'],
-                    ['Membrane replacement', '₹1,100 se', '/ro-membrane-replacement-patna'],
-                    ['SMPS / adaptor', '₹450 se', '/ro-repair-patna'],
-                    ['Booster pump', '₹900 se', '/ro-repair-patna'],
-                    ['New installation', '₹500 se', '/ro-installation-patna'],
-                    ['AMC (saal bhar)', '₹1,499 se', '/ro-amc-patna'],
+                    ['Filter change (set)', '₹350 – ₹900', '/ro-filter-change-patna'],
+                    ['Membrane replacement', '₹1,100 – ₹2,400', '/ro-membrane-replacement-patna'],
+                    ['SMPS / adaptor', '₹700 – ₹1,100', '/ro-repair-patna'],
+                    ['Booster pump', '₹1,000 – ₹2,800', '/ro-repair-patna'],
+                    ['New installation', '₹500 fixed', '/ro-installation-patna'],
+                    ['AMC (saal bhar)', '₹1,499 – ₹4,499', '/ro-amc-patna'],
                   ].map(([k, v, href]) => (
                     <div key={k} className="flex justify-between border-b border-navy-50 pb-1.5">
                       <dt>

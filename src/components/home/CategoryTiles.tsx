@@ -4,7 +4,7 @@ const TILES = [
   { icon: '💧', name: 'New RO Purifiers', desc: 'Domestic RO, UV & UF systems', href: '/category/new-ro-purifiers' },
   { icon: '⚙️', name: 'Spare Parts', desc: 'Membranes, pumps, filters, housings', href: '/category/spare-parts' },
   { icon: '🏭', name: 'Commercial Plants', desc: '25 LPH to 2000 LPH systems', href: '/category/commercial-plants' },
-  { icon: '🧰', name: 'AMC & Services', desc: 'Annual plans from ₹1,499', href: '/amc-plans' },
+  { icon: '🧰', name: 'AMC & Services', desc: 'Annual plans ₹1,499 – ₹4,499', href: '/amc-plans' },
 ];
 
 export default function CategoryTiles() {

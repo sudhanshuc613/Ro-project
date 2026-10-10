@@ -53,11 +53,93 @@ export async function billingSetupStatus(): Promise<SetupStatus> {
 }
 
 /**
+ * SQL ko alag-alag statement me kaato, `$$ ... $$` block ka dhyan rakhte hue.
+ *
+ * 🔴 YE KYUN CHAHIYE (10 Oct 2026, live test me pakda gaya):
+ * Pehle poora DDL ek saath `prisma.$executeRawUnsafe(BILLING_DDL)` me jaa raha
+ * tha. Build PASS, typecheck PASS — par asli Postgres ne mana kar diya:
+ *
+ *     ERROR 42601: cannot insert multiple commands into a prepared statement
+ *
+ * Prisma har raw query ko PREPARED STATEMENT banata hai, aur Postgres ke
+ * extended protocol me ek prepared statement me sirf EK command chal sakti hai.
+ * Matlab admin ka "Database taiyaar karo" button production pe fail hota aur
+ * ek bhi table na banti. Ye bug sirf tab dikha jab tables girake asli button
+ * ka path chalaya gaya.
+ *
+ * Seedha `.split(';')` kaam nahi karega — DDL me `DO $$ BEGIN ... ; ... END $$;`
+ * blocks hain jinke ANDAR semicolon hai. Isliye `$$` ke andar wala semicolon
+ * chhodna padta hai.
+ */
+export function splitSqlStatements(sql: string): string[] {
+  const out: string[] = [];
+  let cur = '';
+  let inDollar = false;
+  let inLineComment = false;
+
+  for (let i = 0; i < sql.length; i++) {
+    const ch = sql[i];
+
+    if (inLineComment) {
+      cur += ch;
+      if (ch === '\n') inLineComment = false;
+      continue;
+    }
+    if (!inDollar && ch === '-' && sql[i + 1] === '-') {
+      inLineComment = true;
+      cur += ch;
+      continue;
+    }
+    if (ch === '$' && sql[i + 1] === '$') {
+      inDollar = !inDollar;
+      cur += '$$';
+      i++;
+      continue;
+    }
+    if (ch === ';' && !inDollar) {
+      out.push(cur);
+      cur = '';
+      continue;
+    }
+    cur += ch;
+  }
+  out.push(cur);
+
+  // Sirf comment/khaali wale tukde hata do
+  return out
+    .map((s) => s.trim())
+    .filter((s) => {
+      const code = s
+        .split('\n')
+        .filter((l) => !l.trim().startsWith('--'))
+        .join('\n')
+        .trim();
+      return code.length > 0;
+    });
+}
+
+/**
  * Tables bana deta hai. Sirf CREATE ... IF NOT EXISTS — kuch drop nahi hota.
  * Dobara chalane se bhi kuch nahi bigadta.
+ *
+ * Ek transaction me chalta hai: Postgres me DDL transactional hai, isliye beech
+ * me kuch fail hua to AADHI tables nahi banengi — ya sab, ya kuch nahi.
  */
 export async function runBillingSetup(): Promise<SetupStatus> {
-  await prisma.$executeRawUnsafe(BILLING_DDL);
+  const statements = splitSqlStatements(BILLING_DDL);
+  if (statements.length === 0) throw new Error('DDL khaali hai');
+
+  // Interactive form (callback) isliye, array form nahi: array form me `timeout`
+  // option hota hi nahi, aur Neon jaisa remote DB 43 DDL statement me 5 s ke
+  // default se zyada le sakta hai.
+  await prisma.$transaction(
+    async (tx) => {
+      for (const stmt of statements) {
+        await tx.$executeRawUnsafe(stmt);
+      }
+    },
+    { timeout: 120_000, maxWait: 20_000 },
+  );
   return billingSetupStatus();
 }
 

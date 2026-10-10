@@ -78,7 +78,7 @@ function verdictFor(inTds: number, outTds: number | null, areaHigh: number): Ver
         headline: `${inTds} ppm — limit se upar`,
         detail: `Ye ${BIS_ACCEPTABLE} mg/L ke acceptable limit se ${inTds - BIS_ACCEPTABLE} mg/L zyada hai, par 2000 ke permissible bound se kaafi neeche. RO chahiye, aur 500 se upar hone ki wajah se 100 GPD membrane lamba chalega.`,
         action: '100 GPD membrane recommend',
-        cost: '₹1,400 se',
+        cost: '₹1,400 – ₹2,400',
       };
     }
     return {
@@ -86,7 +86,7 @@ function verdictFor(inTds: number, outTds: number | null, areaHigh: number): Ver
       headline: `${inTds} ppm — bahut hard`,
       detail: `Ye acceptable limit ka ${(inTds / BIS_ACCEPTABLE).toFixed(1)}× hai. Domestic RO ki upper range hai — 100 GPD zaroori hai, aur pre-treatment se membrane ki umar kaafi badh jaati hai.`,
       action: '100 GPD + pre-treatment check',
-      cost: '₹1,400 se',
+      cost: '₹1,400 – ₹2,400',
     };
   }
 
@@ -118,7 +118,7 @@ function verdictFor(inTds: number, outTds: number | null, areaHigh: number): Ver
       headline: `${Math.round(rejection)}% rejection — girna shuru ho gaya`,
       detail: `Input ${inTds} ppm, output ${outTds} ppm. 80% se neeche aa gaya hai. Pehle pre-filter aur carbon check karwao — thaka hua carbon membrane ko chup-chaap khatam karta hai. Agar wo theek hain to membrane apni umar pe pahunch raha hai.`,
       action: 'Pehle carbon + sediment check',
-      cost: '₹350 se',
+      cost: '₹350 – ₹900',
     };
   }
 
@@ -127,7 +127,7 @@ function verdictFor(inTds: number, outTds: number | null, areaHigh: number): Ver
     headline: `${Math.round(rejection)}% rejection — membrane khatam`,
     detail: `Input ${inTds} ppm, output ${outTds} ppm. 65% se neeche matlab membrane apna kaam nahi kar raha. Naya membrane lagane ke baad output turant girna chahiye — hum lagane se pehle aur baad me dono reading dikhate hain.`,
     action: areaHigh > 500 ? '100 GPD membrane' : '75 GPD membrane',
-    cost: areaHigh > 500 ? '₹1,400 se' : '₹1,100 se',
+    cost: areaHigh > 500 ? '₹1,400 – ₹2,400' : '₹1,100 – ₹2,400',
   };
 }
 

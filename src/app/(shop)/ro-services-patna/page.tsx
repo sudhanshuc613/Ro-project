@@ -308,8 +308,8 @@ export default function ServiceHubPage() {
                 <tbody>
                   {[
                     { p: 'Paani bilkul nahi aa raha, ya leak ho raha hai', s: 'ro-repair-patna', label: 'RO Repair', c: `₹${SERVICE.visitCharge} visit` },
-                    { p: 'Paani theek hai, 3-4 mahine ho gaye', s: 'ro-filter-change-patna', label: 'Filter Change', c: '₹350 se' },
-                    { p: 'Swad bhaari lag raha hai, TDS badh gaya', s: 'ro-membrane-replacement-patna', label: 'Membrane', c: '₹1,100 se' },
+                    { p: 'Paani theek hai, 3-4 mahine ho gaye', s: 'ro-filter-change-patna', label: 'Filter Change', c: '₹350 – ₹900' },
+                    { p: 'Swad bhaari lag raha hai, TDS badh gaya', s: 'ro-membrane-replacement-patna', label: 'Membrane', c: '₹1,100 – ₹2,400' },
                     { p: 'Naya machine hai, ya ghar shift kiya', s: 'ro-installation-patna', label: 'Installation', c: '₹500' },
                     { p: 'Saal me 2 se zyada baar bulate ho', s: 'ro-amc-patna', label: 'AMC', c: '₹1,499/saal' },
                     { p: 'School, hotel, shop ya water plant', s: 'commercial-ro-service-patna', label: 'Commercial', c: '₹1,500 se' },

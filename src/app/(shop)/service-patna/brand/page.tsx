@@ -247,7 +247,7 @@ export default function BrandHubPage() {
               <p className="mt-1.5 text-sm leading-relaxed text-navy-600 text-pretty">
                 Ek standard sediment + carbon set ₹300–₹500 ka padta hai. Wahi set Kent ka
                 genuine lein to ₹450–₹700, aur AO Smith ya LG ka cartridge isse bhi upar jaata
-                hai. 80 GPD membrane ₹1,100 se shuru hoti hai, brand ki genuine ₹1,400–₹2,200
+                hai. 80 GPD membrane ₹1,100–₹2,400 ki padti hai, brand ki genuine ₹1,400–₹2,200
                 tak. Hum dono option dikhate hain aur farak batate hain — faisla aapka.
               </p>
             </div>

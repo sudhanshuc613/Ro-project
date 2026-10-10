@@ -99,13 +99,46 @@ if echo "$SESS" | grep -q 'ADMIN'; then echo "  PASS  admin logged in"; pass=$((
 else echo "  FAIL  login: $(echo $SESS | head -c 120)"; fail=$((fail+1)); kill -9 $SRV; exit 1; fi
 
 echo
-echo "════ 3) Database setup check ════"
-SETUP=$(curl -sS -m 20 -b $CJ $B/api/admin/billing/setup)
-has "setup ready" "$SETUP" '"ready":true'
+echo "════ 3) Database setup button — ASLI path (tables girake) ════"
+# 🔴 10 Oct 2026 — pehle ye test sirf tab chalta tha jab tables PEHLE SE bani thin,
+# isliye button ka asli DDL path kabhi chala hi nahi aur ek bug chhup gaya:
+#   prisma.$executeRawUnsafe(poora DDL) → ERROR 42601
+#   "cannot insert multiple commands into a prepared statement"
+# Ab test pehle tables GIRATA hai, phir button dabata hai. Asli Neon jaisa.
+python3 - <<'PYDROP'
+import psycopg
+c = psycopg.connect('postgresql://postgres@localhost:5432/aqn', autocommit=True, client_encoding='UTF8')
+for t in ['amc_visits','amc_records','installed_units','bill_payments','bill_items','bills','billing_clients']:
+    c.execute(f'DROP TABLE IF EXISTS "{t}" CASCADE')
+for e in ['BillType','BillStatus','UnitStatus','AmcRecordStatus']:
+    c.execute(f'DROP TYPE IF EXISTS "{e}" CASCADE')
+print('  (billing tables giraayi — fresh DB jaisa)')
+PYDROP
+
+BEFORE=$(curl -sS -m 20 -b $CJ $B/api/admin/billing/setup)
+has "setup se pehle ready=false" "$BEFORE" '"ready":false'
+SETUP=$(curl -sS -m 90 -b $CJ -X POST $B/api/admin/billing/setup)
+has "button dabane pe ready=true" "$SETUP" '"ready":true'
 for t in billing_clients bills bill_items bill_payments installed_units amc_records amc_visits; do
-  has "table $t" "$SETUP" "$t"
+  has "table $t bana" "$SETUP" "$t"
 done
-chk "setup dobara chalane pe bhi 200" "$(curl -sS -m 25 -b $CJ -X POST -o /dev/null -w '%{http_code}' $B/api/admin/billing/setup)" "200"
+python3 - <<'PYCHK'
+import sys, psycopg
+c = psycopg.connect('postgresql://postgres@localhost:5432/aqn', client_encoding='UTF8')
+t = c.execute("select count(*) from information_schema.tables where table_schema='public' and table_name in ('billing_clients','bills','bill_items','bill_payments','installed_units','amc_records','amc_visits')").fetchone()[0]
+i = c.execute("select count(*) from pg_indexes where schemaname='public' and (tablename like '%bill%' or tablename like '%amc%' or tablename='installed_units')").fetchone()[0]
+f = c.execute("select count(*) from information_schema.table_constraints where constraint_schema='public' and constraint_type='FOREIGN KEY' and (table_name like '%bill%' or table_name like '%amc%' or table_name='installed_units')").fetchone()[0]
+e = c.execute("select count(*) from pg_type where typname in ('BillType','BillStatus','UnitStatus','AmcRecordStatus')").fetchone()[0]
+print(f'  CHECK DB: tables {t}  indexes {i}  FK {f}  enums {e}')
+sys.exit(0 if (t == 7 and i >= 30 and f >= 8 and e == 4) else 1)
+PYCHK
+if [ $? -eq 0 ]; then echo "  PASS  DB me 7 table + 30+ index + 8+ FK + 4 enum sach me bane"; pass=$((pass+1));
+else echo "  FAIL  DB me adhoora bana"; fail=$((fail+1)); fi
+
+AGAIN=$(curl -sS -m 90 -b $CJ -X POST $B/api/admin/billing/setup)
+has "dobara dabane pe bhi theek" "$AGAIN" '"ready":true'
+has "dobara = alreadyReady"      "$AGAIN" '"alreadyReady":true'
+chk "setup dobara chalane pe 200" "$(curl -sS -m 90 -b $CJ -X POST -o /dev/null -w '%{http_code}' $B/api/admin/billing/setup)" "200"
 
 echo
 echo "════ 4) Har naya admin page 200 ════"
