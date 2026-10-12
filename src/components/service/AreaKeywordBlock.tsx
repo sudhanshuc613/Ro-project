@@ -235,6 +235,15 @@ export default function AreaKeywordBlock({
           <h3 className="text-xl font-black md:text-2xl">
             RO Service Near Me in {A} &mdash; {A} Patna RO Repair
           </h3>
+          {/* 11 Oct 2026 — owner ne Google par "RO service Center near me"
+              search kiya aur site dikhi hi nahi. Scan me nikla: ye phrase
+              144 me se 0 page par tha. Dono spelling (center + centre)
+              isliye ki India me log "center" type karte hain, par hamari
+              site par 34 baar "centre" aur sirf 4 baar "center" tha. */}
+          <p className="mt-2 text-sm font-semibold text-aqua-200">
+            RO service center near me &middot; RO service centre near me &middot; water
+            purifier service near me &mdash; {A}, {SERVICE.city} {pin}
+          </p>
           <p className="mt-3 max-w-3xl text-base leading-relaxed text-navy-100">
             Phone par {A} ka naam aur gali ka landmark bata dijiye &mdash; {lm1} ya {lm2} &mdash;
             technician seedha pahunch jayega, {area.responseMin} minute ka target hai. Brand aur

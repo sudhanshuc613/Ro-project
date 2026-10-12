@@ -55,6 +55,7 @@
  */
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import NearMeBlock from '@/components/service/NearMeBlock';
 import {
   CARE_BRANDS, CARE_FAQS, CHANNEL_COMPARE, SAMSUNG_ANSWER, VERIFIED_CARE_COUNT,
 } from '@/lib/seo/customer-care-data';
@@ -579,6 +580,8 @@ export default function RoCustomerCarePatnaPage() {
             </div>
           </div>
         </section>
+        <NearMeBlock />
+
       </main>
     </>
   );

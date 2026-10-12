@@ -72,6 +72,7 @@ import { ogImage } from '@/lib/seo/og-image';
       ek pixel nahi badla. Owner: "purana content mai kuch gadbadi nhi karna"
    ══════════════════════════════════════════════════════════════════════════ */
 import AdsHeroBanner from '@/components/service/AdsHeroBanner';
+import NearMeBlock from '@/components/service/NearMeBlock';
 import ServicePriceGrid from '@/components/service/ServicePriceGrid';
 import PatnaRateCheck, { type RateCheckArea } from '@/components/service/PatnaRateCheck';
 import WhyChooseGrid from '@/components/service/WhyChooseGrid';
@@ -493,6 +494,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
             helpline par nahi jaana chahiye. */}
         {isAdsLanding && <BrandCallCards brands={SERVICED_BRANDS} />}
         {isAdsLanding && <ReviewShowcase />}
+        {isAdsLanding && <NearMeBlock />}
 
         {/* ── FAQ (mirrors FAQPage schema) ── */}
         <FaqAccordion faqs={intent.faqs} title={`${intent.h1} — common questions`} />

@@ -51,6 +51,7 @@ import { getSiteImages } from '@/lib/settings';
    exact phrase kahin nahi tha (rate card / visit charge / pump repair wala
    cluster). Naya block, purana kuch nahi badla. */
 import ServiceRateCard from '@/components/service/ServiceRateCard';
+import NearMeBlock from '@/components/service/NearMeBlock';
 
 export const revalidate = 86400;
 
@@ -408,6 +409,8 @@ export default async function ServiceHubPage() {
         </section>
 
         <ServiceRateCard />
+
+        <NearMeBlock />
 
         <FaqAccordion faqs={HUB_FAQS} title="RO services Patna — common questions" />
 

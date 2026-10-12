@@ -36,6 +36,7 @@ import Testimonials, { REVIEWS } from '@/components/home/Testimonials';
 import ShopStrip from '@/components/home/ShopStrip';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import SearchAnswers from '@/components/home/SearchAnswers';
+import NearMeBlock from '@/components/service/NearMeBlock';
 import BrandLogoGrid from '@/components/home/BrandLogoGrid';
 import { searchAnswerFaq } from '@/lib/seo/search-queries';
 
@@ -134,6 +135,15 @@ const FAQS = [
   { q: 'Do you sell water purifiers and spare parts too?',
     a: 'Yes. We stock new RO purifiers, commercial plants and genuine spare parts, delivered across India. In Patna we also install what you buy from us.' },
 ];
+
+/** Near-me block ke chips — sabse zyada search hone wale mohalle. */
+const TOP_AREAS_FOR_NEARME = [
+  'kankarbagh','boring-road','patliputra-colony','rajendra-nagar','danapur',
+  'ashiana-nagar','kidwaipuri','digha','bailey-road','kadamkuan','gola-road','anisabad',
+].map((slug) => ({
+  name: slug.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' '),
+  href: `/ro-service-patna/${slug}`,
+}));
 
 export default async function HomePage() {
   /* siteImages: admin ke /admin/site-images se aata hai. DB khaali ho to
@@ -337,6 +347,11 @@ export default async function HomePage() {
             hum "RO Repair in Patna" likhte hain, log "ro repair patna" type
             karte hain. Ye block wo gap poore vaakya me bharta hai.
             Text: src/lib/seo/search-queries.ts */}
+        {/* 11 Oct 2026 — "RO service center near me" cluster. Owner ne khud
+            pakda ki ye query par site dikhti hi nahi thi; scan me nikla ki
+            poori site par ye phrase 0 baar tha. Sirf JODA gaya hai. */}
+        <NearMeBlock areas={TOP_AREAS_FOR_NEARME} />
+
         <SearchAnswers />
 
         {/* 12 — FAQ */}
