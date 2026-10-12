@@ -52,6 +52,10 @@ import { getSiteImages } from '@/lib/settings';
    cluster). Naya block, purana kuch nahi badla. */
 import ServiceRateCard from '@/components/service/ServiceRateCard';
 import NearMeBlock from '@/components/service/NearMeBlock';
+/* 12 Oct 2026 — live naap: 94 keyword me se 31 sirf body me the, heading me
+   nahi. Google heading ko zyada weight deta hai. Naya block, purana kuch
+   nahi badla. */
+import IntentKeywordBlock from '@/components/service/IntentKeywordBlock';
 
 export const revalidate = 86400;
 
@@ -411,6 +415,8 @@ export default async function ServiceHubPage() {
         <ServiceRateCard />
 
         <NearMeBlock />
+
+        <IntentKeywordBlock variant="service" />
 
         <FaqAccordion faqs={HUB_FAQS} title="RO services Patna — common questions" />
 

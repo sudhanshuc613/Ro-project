@@ -22,6 +22,13 @@ import { ogImage } from '@/lib/seo/og-image';
    Naya block, purana kuch nahi badla. */
 import BrandJobMatrix from '@/components/service/BrandJobMatrix';
 
+/* 12 Oct 2026 — owner ne pakda: "sare models ke aise keywords banaye hai jaise
+   kent ka aquaguard or more?". Live naap par 21 brand × 10 pattern me se 96
+   kahin nahi the; 4 pattern to 21/21 brand par gayab the (service centre,
+   RO filter change, RO membrane change, customer care). Naya block, purana
+   kuch nahi badla. */
+import BrandKeywordBlock from '@/components/service/BrandKeywordBlock';
+
 export const revalidate = 86400;
 
 export function generateStaticParams() {
@@ -280,6 +287,8 @@ export default function BrandServicePage({ params }: { params: { brand: string }
         </section>
 
         <BrandJobMatrix brand={brand} />
+
+        <BrandKeywordBlock brand={brand} />
 
         <FaqAccordion faqs={faqs} title={`${short} RO Service — Questions`} />
 

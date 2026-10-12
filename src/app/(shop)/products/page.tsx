@@ -14,6 +14,8 @@ import { ogImage } from '@/lib/seo/og-image';
    phrase kahin nahi tha. /products ek DB listing hai, product naam me
    "Patna" kabhi nahi aata — isliye neeche ek asli content block. */
 import PatnaShopBlock from '@/components/product/PatnaShopBlock';
+/* 12 Oct 2026 — 6 SHOP keyword heading me nahi the. Naya block. */
+import IntentKeywordBlock from '@/components/service/IntentKeywordBlock';
 
 export const revalidate = 300;
 
@@ -189,6 +191,8 @@ export default async function AllProductsPage({
       </div>
 
       <PatnaShopBlock />
+
+      <IntentKeywordBlock variant="shop" />
     </main>
   );
 }
