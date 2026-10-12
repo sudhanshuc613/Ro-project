@@ -1817,7 +1817,7 @@ export const SERVICED_BRANDS: BrandServiceContent[] = [
     commonIssues: [
       { issue: 'Slow purified water', cause: 'Sediment and carbon filters choked', typicalCost: '₹500 – ₹1,100' },
       { issue: 'Copper / alkaline function inactive', cause: 'Cartridge depleted', typicalCost: '₹800 – ₹1,700' },
-      { issue: 'Machine not starting', cause: 'SMPS or wiring fault', typicalCost: '₹650 – ₹1,400' },
+      { issue: 'Machine not starting', cause: 'SMPS or wiring fault', typicalCost: '₹700 – ₹1,400' },
       { issue: 'Water overflowing from tank', cause: 'Float or solenoid stuck', typicalCost: '₹400 – ₹950' },
     ],
     note:

@@ -90,7 +90,7 @@ const HUB_FAQS = [
   },
   {
     q: 'What is the cheapest RO service in Patna?',
-    a: `Our visit charge is ₹${SERVICE.visitCharge} against a market rate of ₹300 to ₹400, and it includes the full diagnosis and a TDS test rather than being a charge just for showing up. But the cheapest visit charge is not the same as the cheapest job — a ₹150 visit followed by an unnecessary ₹2,400 membrane costs far more than a ₹200 visit followed by a ₹450 adaptor. Ask what the diagnosis includes, not just what the visit costs.`,
+    a: `Our visit charge is ₹${SERVICE.visitCharge} against a market rate of ₹300 to ₹400, and it includes the full diagnosis and a TDS test rather than being a charge just for showing up. But the cheapest visit charge is not the same as the cheapest job — a ₹150 visit followed by an unnecessary ₹2,400 membrane costs far more than a ₹200 visit followed by a ₹700 – ₹1,100 adaptor. Ask what the diagnosis includes, not just what the visit costs.`,
   },
   {
     q: 'Do you charge the visit fee if I only need a filter change?',

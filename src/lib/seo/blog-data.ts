@@ -272,7 +272,7 @@ export const BLOG_POSTS: BlogPost[] = [
         heading: 'Visit charge — yahin se dhokha shuru hota hai',
         body: [
           `Patna me aam visit charge ₹300 se ₹400 hai. Hamara ₹${SERVICE.visitCharge} hai.`,
-          'Par asli baat visit charge nahi hai. Asli baat ye hai ki visit ke baad kya hota hai. Sabse common trick: technician aata hai, 10 minute me bolta hai "membrane gaya", ₹2,500 maangta hai — jabki asli problem ₹450 ka SMPS tha.',
+          'Par asli baat visit charge nahi hai. Asli baat ye hai ki visit ke baad kya hota hai. Sabse common trick: technician aata hai, 10 minute me bolta hai "membrane gaya", ₹2,500 maangta hai — jabki asli problem ₹700 se ₹1,100 ka SMPS tha.',
           'Isliye hum har visit par TDS reading dikhate hain — pehle aur baad me. Number dikh jaye to bahas khatam.',
         ],
       },

@@ -1,0 +1,70 @@
+===========================================================
+  AQUA PERL  —  CODE UPDATE  (12 Oct 2026)
+===========================================================
+
+PICHLI BAAR KYA HUA THA
+-----------------------
+Pichli zip me code SAHI tha. Problem copy karne me hui.
+PowerShell ka Copy-Item bracket wale folder ko — jaise
+  src\app\(shop)\[intent]
+  src\app\(shop)\ro-service-patna\[area]
+  src\app\admin\(dashboard)\billing\[id]
+— WILDCARD samajhta hai aur CHUP-CHAAP CHHOD DETA HAI.
+Koi error nahi aata. Isliye naye page copy hi nahi hue,
+aur git ko lagta hai kuch badla hi nahi.
+
+Is baar wo problem nahi hogi. APPLY.ps1 robocopy use karta
+hai, jo bracket wale folder sahi se copy karta hai.
+
+
+IS ZIP ME KYA HAI
+-----------------
+  src\          310 files   (saara code)
+  prisma\         5 files
+  scripts\       27 files
+  root config    11 files   (package.json, next.config.mjs, etc.)
+  APPLY.ps1                 (ye sab kuch khud kar dega)
+
+public\ aur mockup\ ISME NAHI HAI — kyunki unme kuch nahi
+badla. Isi liye zip 18 MB se ghat ke chhoti ho gayi.
+Aapki saari images jaisi hai waisi hi rahegi.
+
+
+KYA KARNA HAI — 3 STEP
+----------------------
+
+STEP 1
+  Is zip pe RIGHT-CLICK -> "Extract All..."
+  (Expand-Archive MAT chalana — wo bracket folder tod deta hai)
+
+STEP 2
+  Extract hue folder ke ANDAR jao.
+  Wahan APPLY.ps1 aur src folder dikhna chahiye.
+  Us folder ke address bar me "powershell" likh ke Enter dabao.
+
+STEP 3
+  Ye ek line paste karo:
+
+      powershell -ExecutionPolicy Bypass -File .\APPLY.ps1
+
+  Bas. Script khud:
+    - backup branch banayegi
+    - files copy karegi (robocopy se)
+    - har file ka size check karegi
+    - Navbar surakshit hai ye confirm karegi
+    - git add + commit + push karegi
+    - Vercel apne aap deploy kar lega
+
+
+AGAR SCRIPT LAAL (RED) ME KUCH BOLE
+-----------------------------------
+To push NAHI hoga — script khud ruk jayegi.
+Us screen ka photo kheench ke bhej dena.
+
+
+KUCH BIGAD JAYE TO ROLLBACK (30 second)
+---------------------------------------
+  vercel.com -> ro-project -> Deployments
+  -> purana hara (Ready) wala -> ... -> Promote to Production
+
+Git me bhi backup branch bani hogi: backup-12Oct-HHmm

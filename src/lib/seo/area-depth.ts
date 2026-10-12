@@ -124,7 +124,7 @@ export function tdsVerdict(area: ServiceAreaContent): TdsVerdict {
     ][v];
 
     const verdict = [
-      `${area.name} is one of the easier localities in Patna to keep a purifier running in. Across roughly ${area.monthlyJobs} jobs a month here, most failures are age or fitting faults rather than water chemistry, which keeps repairs cheap — a ₹450 adaptor rather than a ₹1,400 membrane. If a membrane has been quoted for a ${area.name} address, ask for the before-and-after TDS numbers first.`,
+      `${area.name} is one of the easier localities in Patna to keep a purifier running in. Across roughly ${area.monthlyJobs} jobs a month here, most failures are age or fitting faults rather than water chemistry, which keeps repairs cheap — a ₹700 – ₹1,100 adaptor rather than a ₹1,100 – ₹2,400 membrane. If a membrane has been quoted for a ${area.name} address, ask for the before-and-after TDS numbers first.`,
       `With feed water at ${area.tdsRange}, machines in ${area.name} outlast the same models in the hard-water belts by a wide margin. Our ${area.monthlyJobs}-odd monthly jobs in this locality skew heavily towards electrics and seals, not scaling. That also means a membrane quote here deserves a second look.`,
       `Water this clean changes what goes wrong. In ${area.name} we log around ${area.monthlyJobs} jobs a month and the pattern is consistent: the ${area.commonRepair.toLowerCase()} shows up far more often than any scaling problem. Cheap to fix, and quick.`,
     ][v];

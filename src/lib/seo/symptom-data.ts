@@ -124,7 +124,7 @@ export const SYMPTOMS: Symptom[] = [
     description:
       'RO me pani nahi aa raha? 7 cheezein khud check karo — inlet valve, SMPS, float, membrane. 4 free me theek ho jati hain. Baaki ke liye Patna me ₹200 visit.',
     shortAnswer:
-      'RO me pani nahi aane ki sabse aam wajah teen hain: inlet valve band, SMPS/adaptor kharab, ya sediment filter poori tarah choke. Inme se pehla khud theek ho jata hai, doosra ₹550 ka part hai, teesra ₹450 ka. Membrane kharab hona sabse kam aam wajah hai — aur sabse mehnga, isliye wo sabse aakhir me check karo.',
+      'RO me pani nahi aane ki sabse aam wajah teen hain: inlet valve band, SMPS/adaptor kharab, ya sediment filter poori tarah choke. Inme se pehla khud theek ho jata hai, doosra ₹700 se ₹1,100 ka part hai, teesra ₹450 se ₹600 ka. Membrane kharab hona sabse kam aam wajah hai — aur sabse mehnga, isliye wo sabse aakhir me check karo.',
     icon: '🚱',
     label: 'Bilkul pani nahi aa raha',
     steps: [
