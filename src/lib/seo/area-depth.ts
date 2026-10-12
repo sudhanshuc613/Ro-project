@@ -297,7 +297,12 @@ export function faultProfile(area: ServiceAreaContent): FaultRow[] {
       {
         fault: 'SMPS / adaptor failure',
         why: `With feed water at ${area.tdsRange} the membrane rarely fails first in ${area.name}. It is the electrics that go — the 24V adaptor is the commonest dead-machine cause we find around ${lm}.`,
-        cost: '₹450 – ₹900',
+        /* 🔴 11 Oct 2026 — tha '₹450 – ₹900'. Woh SMPS ka PURANA rate hai; owner
+           ne 10 Oct ko ₹700–₹1,100 confirm kiya tha. Ye line 27 soft-water area
+           page par chhap rahi thi aur sabse zyada der tak chhooti rahi, kyunki
+           range format hone ki wajah se ek-tarfa-price wale saare scan isse
+           miss kar gaye. */
+        cost: '₹700 – ₹1,100',
       },
       {
         fault: 'Perished O-ring leak',

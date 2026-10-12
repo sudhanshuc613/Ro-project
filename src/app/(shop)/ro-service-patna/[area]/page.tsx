@@ -33,6 +33,7 @@ import AreaWorkProof, { areaShots, imageObjectSchema } from '@/components/home/A
 /* 9 Oct 2026 — 996-check area keyword audit: "RO mechanic {area}" 82/83 MISS,
    "Best RO service near {area}" 58/83 MISS. Naya block, purana kuch nahi badla. */
 import AreaMechanicBlock from '@/components/service/AreaMechanicBlock';
+import AreaKeywordBlock from '@/components/service/AreaKeywordBlock';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { tdsVerdict, costForecast, faultProfile, responseDetail } from '@/lib/seo/area-depth';
@@ -559,6 +560,11 @@ export default function AreaPage({ params }: { params: { area: string } }) {
         />
 
         <AreaMechanicBlock area={area} nearby={linkOut} />
+
+        {/* 11 Oct 2026 — 10 keyword pattern jo page par poore vaakya me kahin
+            nahi the (sirf <meta keywords> me pade the, jise Google 2009 se
+            padhta hi nahi). Ab heading me hain, apne content ke saath. */}
+        <AreaKeywordBlock area={area} nearby={linkOut} />
 
         <section className="border-t border-navy-50 bg-sand-100 py-10">
           <div className="container mx-auto px-4">

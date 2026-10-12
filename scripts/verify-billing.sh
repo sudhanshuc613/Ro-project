@@ -35,7 +35,18 @@ echo "════ 0a) Pricing wording — owner ka \"itna se itna tak\" niyam �
 # Owner: "pricing sab pe mat likh, reference de — itna se itna tak lag sakta hai".
 # "₹X onwards" / "₹X se" usi niyam ka ulta hai: grahak kam number yaad rakhta hai
 # aur zyada charge pe jhagda hota hai.
-ONW=$(grep -rno "onwards" src/ --include=*.ts --include=*.tsx | wc -l)
+# Comment lines chhod do — bug ka itihaas likhne me ye shabd aa jaata hai.
+ONW=$(python3 -c "
+import re, glob
+n = 0
+for f in glob.glob('src/**/*.ts', recursive=True) + glob.glob('src/**/*.tsx', recursive=True):
+    for line in open(f, encoding='utf8'):
+        st = line.strip()
+        if st.startswith(('*', '//', '/*')):
+            continue
+        n += len(re.findall(r'onwards', line))
+print(n)
+")
 if [ "$ONW" -le 17 ]; then echo "  PASS  'onwards' sirf $ONW bachi (commercial plant/AMC, jinka upper rate owner se poochna hai)"; pass=$((pass+1));
 else echo "  FAIL  'onwards' $ONW hain — spare parts pe range honi chahiye"; fail=$((fail+1)); fi
 # "₹X se" ka wahi haal — ye "₹X onwards" ka hinglish roop hai.
