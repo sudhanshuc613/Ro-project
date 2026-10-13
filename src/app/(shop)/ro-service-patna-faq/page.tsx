@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: '/ro-service-patna-faq' },
   openGraph: {
-    title: `RO Service in Patna — Rates, TDS & Straight Answers | ${BRAND.name}`,
+    title: `RO Service Patna FAQ — Rates, TDS & Straight Answers | ${BRAND.name}`,
     description: 'Every common question about RO service in Patna, answered with real numbers.',
     url: `${BRAND.url}/ro-service-patna-faq`,
     type: 'website',
@@ -115,7 +115,7 @@ export default function AnswerHubPage() {
         <section className="bg-navy-gradient py-12 text-white md:py-14">
           <div className="container mx-auto max-w-4xl px-4">
             <h1 className="font-display text-3xl font-extrabold leading-tight md:text-4xl">
-              RO Service in Patna — Seedha Jawab
+              RO Service Patna — Har Sawaal ka Seedha Jawab
             </h1>
             <p className="mt-3 text-lg text-aqua-200">
               Har sawaal ka jawab ek line me, asli number ke saath. Ghumaya nahi.

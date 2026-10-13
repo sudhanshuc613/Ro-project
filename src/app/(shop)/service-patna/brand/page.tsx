@@ -50,7 +50,16 @@ import BrandHubGrid from '@/components/home/BrandHubGrid';
 
 export const revalidate = 86400;
 
-const title = `RO Service in Patna — All Brands | ₹${SERVICE.visitCharge} Visit`;
+/* 🔴 13 Oct 2026 — CANNIBALIZATION FIX.
+   Pehla title tha: "RO Service in Patna — All Brands | ₹200 Visit"
+   Aur /ro-service-in-patna ka title hai: "RO Service in Patna — ₹200 Visit, All Brands"
+   Lagbhag wahi shabd, wahi kram. Google ko samajh nahi aata kaun sa dikhaye,
+   aur /ro-service-in-patna hamara GOOGLE ADS LANDING PAGE hai — jahan paisa
+   lagta hai. Use haarna nahi chahiye.
+   Ab ye page apne asli intent par chala gaya hai: BRAND ki list.
+   "Service in Patna" abhi bhi hai, par exact head phrase nahi — aur upar se
+   teen sabse bade brand ke naam title me aa gaye (brand query ka faayda). */
+const title = `All RO Brands Service in Patna — ₹${SERVICE.visitCharge} Visit`;
 /* 🔴 154 chars. Google 160 se zyada ko kaat deta hai — is line ko lamba mat
    karna. Badalna ho to pehle gin lo: scripts/verify-serp-hygiene.sh isi ko
    check karta hai. */

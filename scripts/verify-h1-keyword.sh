@@ -128,7 +128,7 @@ done <<'ROWS'
 /service-patna/brand/blue-star|Blue Star RO Service
 /service-patna/brand/havells|Havells RO Service
 /ro-problem-checker|RO Problem Checker
-/ro-service-patna-faq|RO Service in Patna
+/ro-service-patna-faq|RO Service Patna
 /commercial-ro-service-patna|Commercial RO Plant Service in Patna
 /ro-filter-change-patna|RO Filter Change in Patna
 /ro-membrane-replacement-patna|RO Membrane Replacement in Patna

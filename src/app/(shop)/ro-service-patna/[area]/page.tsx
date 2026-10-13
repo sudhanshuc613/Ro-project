@@ -36,6 +36,10 @@ import AreaMechanicBlock from '@/components/service/AreaMechanicBlock';
 import AreaKeywordBlock from '@/components/service/AreaKeywordBlock';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
+/* 13 Oct 2026 — "RO Service AIIMS Patna Patna" / "Patna City Patna" theek karne
+   ke liye. 81 area par output wahi rehta hai; sirf 2 page sudhrte hain.
+   Wajah file ke andar likhi hai (cannibalization bhi isi se hota tha). */
+import { areaCityLabel, areaCityTitle } from '@/lib/seo/area-city-label';
 import { tdsVerdict, costForecast, faultProfile, responseDetail } from '@/lib/seo/area-depth';
 import { ogImage } from '@/lib/seo/og-image';
 
@@ -71,8 +75,8 @@ export function generateMetadata({ params }: { params: { area: string } }): Meta
 
      Dropping the brand from the title costs nothing here: this is a local
      service query, not a brand query. Nobody searches "Aqua Perl". */
-  const title = `RO Service ${area.name} Patna ₹${SERVICE.visitCharge} · ${CONTACT.primaryPhone}`;
-  const description = `RO repair & installation in ${area.name}, Patna. ₹${SERVICE.visitCharge} visit charge, technician in ${area.responseMin} min. All brands, ${SERVICE.warrantyDays}-day warranty. Call ${CONTACT.primaryPhone}.`;
+  const title = `RO Service ${areaCityTitle(area.name)} ₹${SERVICE.visitCharge} · ${CONTACT.primaryPhone}`;
+  const description = `RO repair & installation in ${areaCityLabel(area.name)}. ₹${SERVICE.visitCharge} visit charge, technician in ${area.responseMin} min. All brands, ${SERVICE.warrantyDays}-day warranty. Call ${CONTACT.primaryPhone}.`;
 
   return {
     /* absolute = do not append the layout's ' | Aqua Perl'. That is what
@@ -153,11 +157,11 @@ export default function AreaPage({ params }: { params: { area: string } }) {
           '@type': 'Service',
           '@id': `${BRAND.url}${areaPath(area.slug)}/#service`,
           serviceType: `RO Water Purifier Repair in ${area.name}`,
-          name: `RO Service in ${area.name}, Patna`,
+          name: `RO Service in ${areaCityLabel(area.name)}`,
           provider: { '@type': 'LocalBusiness', name: BRAND.name, telephone: `+91${CONTACT.primaryPhone}` },
           areaServed: {
             '@type': 'City',
-            name: `${area.name}, Patna`,
+            name: areaCityLabel(area.name),
             containedInPlace: { '@type': 'State', name: 'Bihar' },
           },
           /* Real rating, real count. The competitor ranking above us ships
@@ -239,7 +243,7 @@ export default function AreaPage({ params }: { params: { area: string } }) {
                 scripts/verify-h1-keyword.sh ab ye pakadta hai.
               */}
               <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight md:text-4xl">
-                RO Service in {area.name}, Patna{' '}
+                RO Service in {areaCityLabel(area.name)}{' '}
                 <span className="mt-1 block text-xl text-aqua-300 md:text-2xl">
                   Visit Charge Only ₹{SERVICE.visitCharge}
                 </span>
