@@ -73,6 +73,15 @@ import { ogImage } from '@/lib/seo/og-image';
    ══════════════════════════════════════════════════════════════════════════ */
 import AdsHeroBanner from '@/components/service/AdsHeroBanner';
 import NearMeBlock from '@/components/service/NearMeBlock';
+/* 13 Oct 2026 — /ro-installation-patna par 6 installation phrase heading me
+   nahi the (water purifier installation near me/Patna, RO fitting Patna,
+   new RO installation, installation cost/service Patna). Naya block. */
+import IntentKeywordBlock from '@/components/service/IntentKeywordBlock';
+/* 13 Oct 2026 — 72-keyword gap scan me 50 KAHIN NAHI mile. Sabse bada gap
+   Hinglish ("ro mistri", "ro wala"), time ("24 hour", "sunday"), aur shop
+   ("ro shop near me"). Naye page nahi banaye — doorway/scaled-content policy.
+   Naya block, purana kuch nahi badla. */
+import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
 import ServicePriceGrid from '@/components/service/ServicePriceGrid';
 import PatnaRateCheck, { type RateCheckArea } from '@/components/service/PatnaRateCheck';
 import WhyChooseGrid from '@/components/service/WhyChooseGrid';
@@ -495,6 +504,17 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
         {isAdsLanding && <BrandCallCards brands={SERVICED_BRANDS} />}
         {isAdsLanding && <ReviewShowcase />}
         {isAdsLanding && <NearMeBlock />}
+
+        {params.intent === 'ro-installation-patna' && (
+          <IntentKeywordBlock variant="install" />
+        )}
+
+
+        {params.intent === 'commercial-ro-service-patna' && (
+
+          <ExtraKeywordBlock variant="commercial" />
+
+        )}
 
         {/* ── FAQ (mirrors FAQPage schema) ── */}
         <FaqAccordion faqs={intent.faqs} title={`${intent.h1} — common questions`} />

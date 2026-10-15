@@ -6,6 +6,11 @@ import FaqAccordion from '@/components/home/FaqAccordion';
 import AmcPurchaseForm from '@/components/home/AmcPurchaseForm';
 import { ogImage } from '@/lib/seo/og-image';
 import { BRAND } from '@/lib/constants';
+/* 13 Oct 2026 — 72-keyword gap scan me 50 KAHIN NAHI mile. Sabse bada gap
+   Hinglish ("ro mistri", "ro wala"), time ("24 hour", "sunday"), aur shop
+   ("ro shop near me"). Naye page nahi banaye — doorway/scaled-content policy.
+   Naya block, purana kuch nahi badla. */
+import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
 
 export const revalidate = 86400;
 
@@ -216,6 +221,8 @@ export default function AmcPlansPage() {
         </section>
 
         <FaqAccordion faqs={FAQS} title="AMC Plans — Questions" />
+        <ExtraKeywordBlock variant="amc" />
+
       </main>
     </>
   );

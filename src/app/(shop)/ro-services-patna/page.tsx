@@ -56,6 +56,11 @@ import NearMeBlock from '@/components/service/NearMeBlock';
    nahi. Google heading ko zyada weight deta hai. Naya block, purana kuch
    nahi badla. */
 import IntentKeywordBlock from '@/components/service/IntentKeywordBlock';
+/* 13 Oct 2026 — 72-keyword gap scan me 50 KAHIN NAHI mile. Sabse bada gap
+   Hinglish ("ro mistri", "ro wala"), time ("24 hour", "sunday"), aur shop
+   ("ro shop near me"). Naye page nahi banaye — doorway/scaled-content policy.
+   Naya block, purana kuch nahi badla. */
+import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
 
 export const revalidate = 86400;
 
@@ -417,6 +422,10 @@ export default async function ServiceHubPage() {
         <NearMeBlock />
 
         <IntentKeywordBlock variant="service" />
+
+        <ExtraKeywordBlock variant="hinglish" />
+
+        <ExtraKeywordBlock variant="urgent" />
 
         <FaqAccordion faqs={HUB_FAQS} title="RO services Patna — common questions" />
 

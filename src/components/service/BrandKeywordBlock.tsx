@@ -244,6 +244,22 @@ export default function BrandKeywordBlock({ brand }: { brand: BrandServiceConten
           <p className="mt-3 text-xs text-slate-500">
             Purana filter dikha kar hi badalte hain.
           </p>
+          {models.length > 0 && (
+            <div className="mt-3 border-t border-slate-200 pt-3">
+              <p className="text-xs font-semibold text-slate-500">
+                Model ke hisaab se bhi:
+              </p>
+              <ul className="mt-1 space-y-0.5">
+                {models.map((m) => (
+                  <li key={m}>
+                    <h4 className="text-xs font-semibold text-navy-800">
+                      {m} service Patna
+                    </h4>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </article>
 
         {/* ─── 3. {B} RO membrane change Patna ─── */}
@@ -290,6 +306,9 @@ export default function BrandKeywordBlock({ brand }: { brand: BrandServiceConten
           <h3 className="text-lg font-bold text-navy-900">
             {B} customer care Patna
           </h3>
+          <h4 className="mt-1 text-sm font-semibold text-aqua-700">
+            {B} customer care number Patna — {CONTACT.primaryPhone}
+          </h4>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
             {B} customer care Patna ka number dhoondh rahe ho to seedha hamein call kar
             sakte ho — koi IVR nahi, koi ticket number nahi.{' '}
@@ -342,6 +361,9 @@ export default function BrandKeywordBlock({ brand }: { brand: BrandServiceConten
         <h3 className="text-lg font-bold">
           {B} RO service near me — Patna me kaun aayega
         </h3>
+        <h4 className="mt-1 text-sm font-semibold text-aqua-200">
+          {B} service centre near me · {B} RO repair near me
+        </h4>
         <p className="mt-2 text-sm leading-relaxed text-aqua-50">
           {topIssue ? (
             <>

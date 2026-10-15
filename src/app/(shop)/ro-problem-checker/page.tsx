@@ -25,6 +25,11 @@ import {
 import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { ogImage } from '@/lib/seo/og-image';
+/* 13 Oct 2026 — 72-keyword gap scan me 50 KAHIN NAHI mile. Sabse bada gap
+   Hinglish ("ro mistri", "ro wala"), time ("24 hour", "sunday"), aur shop
+   ("ro shop near me"). Naye page nahi banaye — doorway/scaled-content policy.
+   Naya block, purana kuch nahi badla. */
+import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
 
 export const revalidate = 86400;
 
@@ -257,6 +262,8 @@ export default function CheckerPage() {
         </section>
 
         <TrustBadges />
+        <ExtraKeywordBlock variant="problem" />
+
       </main>
     </>
   );

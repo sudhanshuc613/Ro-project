@@ -28,6 +28,10 @@ import BrandJobMatrix from '@/components/service/BrandJobMatrix';
    RO filter change, RO membrane change, customer care). Naya block, purana
    kuch nahi badla. */
 import BrandKeywordBlock from '@/components/service/BrandKeywordBlock';
+/* 13 Oct 2026 — brand×area ka doosra sira. Har brand page par Patna ke top 18
+   ilaake heading me, taaki "Kent RO service in Boring Road" dono taraf se mile.
+   Naya block, purana kuch nahi badla. */
+import BrandAreaListBlock from '@/components/service/BrandAreaListBlock';
 
 export const revalidate = 86400;
 
@@ -289,6 +293,8 @@ export default function BrandServicePage({ params }: { params: { brand: string }
         <BrandJobMatrix brand={brand} />
 
         <BrandKeywordBlock brand={brand} />
+
+        <BrandAreaListBlock brand={brand} areas={SERVICE_AREAS} />
 
         <FaqAccordion faqs={faqs} title={`${short} RO Service — Questions`} />
 

@@ -330,20 +330,90 @@ const SHOP_ITEMS: Item[] = [
   },
 ];
 
+
+/* 🔴 13 Oct 2026 — owner: "ro installation pe koi page hi nahi hai".
+   Page to hai (/ro-installation-patna), par naap kar dekha to ye 6 phrase
+   kisi heading me nahi the. Ab in sab ka apna H3 hai. */
+const INSTALL_ITEMS: Item[] = [
+  {
+    h: `Water purifier installation near me`,
+    p: (
+      <>
+        Patna aur 25 km ke andar ghar par fitting hoti hai. Technician{' '}
+        {SERVICE.responseTime} me pahunchta hai, aur machine chalu karke TDS naap kar
+        dikhata hai — tabhi paisa lagta hai.
+      </>
+    ),
+  },
+  {
+    h: `Water purifier installation Patna`,
+    p: (
+      <>
+        Fitting ₹350 – ₹600 me poori hoti hai: tap tapping, wall mount bracket, inlet
+        aur drain line. Alag se plumber bulane ki zaroorat nahi padti.
+      </>
+    ),
+  },
+  {
+    h: `RO installation cost Patna`,
+    p: (
+      <>
+        Standard wall-mount fitting ₹350 – ₹600. Under-sink ya lambi pipe chahiye to
+        tubing aur fitting ka ₹20 – ₹250 alag jud sakta hai. Rate kaam se pehle tay
+        hota hai.
+      </>
+    ),
+  },
+  {
+    h: `New RO installation Patna`,
+    p: (
+      <>
+        Nayi machine kahin se bhi li ho — Amazon, dukaan ya hamse — fitting hum kar
+        dete hain. Pehle paani ka TDS naapte hain, phir batate hain ki wo model is
+        paani par chalega ya nahi.
+      </>
+    ),
+  },
+  {
+    h: `RO fitting Patna — purani machine shift karni hai`,
+    p: (
+      <>
+        Ghar badal rahe ho to uninstall aur dobara fitting dono hoti hai. Puraani
+        tubing aur O-ring aksar badalni padti hai, wo ₹20 – ₹250 me aa jaati hai.
+      </>
+    ),
+  },
+  {
+    h: `RO installation service Patna — kya-kya shaamil hai`,
+    p: (
+      <>
+        Fitting, leak test, TDS before/after, aur chalana sikhana — sab ek hi visit me.
+        Labour par {SERVICE.warrantyDays} din aur laga hue part par{' '}
+        {SERVICE.partsWarrantyMonths} mahine warranty milti hai.
+      </>
+    ),
+  },
+];
+
 export default function IntentKeywordBlock({
   variant = 'service',
 }: {
-  variant?: 'service' | 'shop';
+  variant?: 'service' | 'shop' | 'install';
 }) {
-  const items = variant === 'shop' ? SHOP_ITEMS : SERVICE_ITEMS;
+  const items =
+    variant === 'shop' ? SHOP_ITEMS : variant === 'install' ? INSTALL_ITEMS : SERVICE_ITEMS;
   const heading =
     variant === 'shop'
       ? 'RO purifier aur parts Patna — daam se jude sawaal'
-      : 'RO service Patna — rate aur kaam se jude seedhe jawab';
+      : variant === 'install'
+        ? 'RO installation Patna — fitting se jude seedhe jawab'
+        : 'RO service Patna — rate aur kaam se jude seedhe jawab';
   const sub =
     variant === 'shop'
       ? 'Part ka akela daam aur lagakar dene ka daam alag hota hai. Dono neeche saaf likhe hain.'
-      : `Har rate range me diya hai. Visit ₹${V}, aur kaam shuru karne se pehle number bata diya jaata hai.`;
+      : variant === 'install'
+        ? `Nayi machine lagwani ho ya purani shift karni ho — dono hota hai. Visit ₹${V}.`
+        : `Har rate range me diya hai. Visit ₹${V}, aur kaam shuru karne se pehle number bata diya jaata hai.`;
 
   return (
     <section

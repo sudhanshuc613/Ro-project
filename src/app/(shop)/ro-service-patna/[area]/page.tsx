@@ -34,6 +34,12 @@ import AreaWorkProof, { areaShots, imageObjectSchema } from '@/components/home/A
    "Best RO service near {area}" 58/83 MISS. Naya block, purana kuch nahi badla. */
 import AreaMechanicBlock from '@/components/service/AreaMechanicBlock';
 import AreaKeywordBlock from '@/components/service/AreaKeywordBlock';
+/* 13 Oct 2026 — owner ne pakda: "Aquaguard RO service in Boring Road" jaise
+   brand×area keyword kahin nahi the. Naap: 19 brand × 83 area = 1,577 combo,
+   heading me sirf 166 (10%) — sirf Kent aur Aquaguard. Naya block sab 19 brand
+   ko heading me laata hai, BINA naya page banaye (doorway penalty se bachne
+   ke liye). Purana kuch nahi badla. */
+import BrandAreaBlock from '@/components/service/BrandAreaBlock';
 import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 /* 13 Oct 2026 — "RO Service AIIMS Patna Patna" / "Patna City Patna" theek karne
@@ -569,6 +575,8 @@ export default function AreaPage({ params }: { params: { area: string } }) {
             nahi the (sirf <meta keywords> me pade the, jise Google 2009 se
             padhta hi nahi). Ab heading me hain, apne content ke saath. */}
         <AreaKeywordBlock area={area} nearby={linkOut} />
+
+        <BrandAreaBlock area={area} brands={SERVICED_BRANDS} />
 
         <section className="border-t border-navy-50 bg-sand-100 py-10">
           <div className="container mx-auto px-4">
