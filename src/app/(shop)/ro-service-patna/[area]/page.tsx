@@ -40,7 +40,7 @@ import AreaKeywordBlock from '@/components/service/AreaKeywordBlock';
    ko heading me laata hai, BINA naya page banaye (doorway penalty se bachne
    ke liye). Purana kuch nahi badla. */
 import BrandAreaBlock from '@/components/service/BrandAreaBlock';
-import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 /* 13 Oct 2026 — "RO Service AIIMS Patna Patna" / "Patna City Patna" theek karne
    ke liye. 81 area par output wahi rehta hai; sirf 2 page sudhrte hain.
@@ -170,18 +170,43 @@ export default function AreaPage({ params }: { params: { area: string } }) {
             name: areaCityLabel(area.name),
             containedInPlace: { '@type': 'State', name: 'Bihar' },
           },
-          /* Real rating, real count. The competitor ranking above us ships
-             `reviewCount: 187134` on a Product schema for this same query.
-             Ours stays at the genuine GBP figure — Google's 24 Jul 2026 review
-             update strips structured data site-wide for inflated counts, which
-             would take out all 173 pages, not just this one. */
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: GBP_RATING_TEXT,
-            reviewCount: String(GBP.reviewCount),
-            bestRating: '5',
-            worstRating: '1',
-          },
+          /* 🔴 15 Oct 2026 — `aggregateRating` YAHAN SE HATAYA GAYA. Kyun:
+             ─────────────────────────────────────────────────────────────────
+             Owner ne Search Console me URL Inspection chalaya aur ye mila:
+
+                 Review snippets: 2 items detected: Some are invalid
+                 ✅ Aqua Perl — RO Service in Mahendru, Patna   (LocalBusiness)
+                 🔴 RO Service in Mahendru, Patna               (Service)
+                    aggregateRating → Invalid object type for field "<parent_node>"
+
+             Wajah: schema.org `Service` par aggregateRating ALLOWED hai, par
+             **Google ke Review Snippet rich result me `Service` supported
+             parent types ki list me hai hi nahi.** Supported list sirf ye hai:
+             Book · Course · CreativeWorkSeason · CreativeWorkSeries · Episode ·
+             Event · Game · HowTo · LocalBusiness · MediaObject · Movie ·
+             MusicPlaylist · MusicRecording · Organization · Product · Recipe ·
+             SoftwareApplication.
+
+             Isliye ye markup har validator me PASS hota tha par Google isko
+             invalid bolta tha — 83 me se 83 area page par.
+
+             ── Do raaste the, aur kyun ye wala chuna ──────────────────────
+             (a) @type ko ["Service","Product"] kar dena — internet par yahi
+                 "jugaad" sabse zyada suggest hota hai. ISSE MANA KIYA:
+                 RO repair ek SERVICE hai, Product nahi. Google ko ye batana
+                 ki ek visit-based repair "Product" hai, galat jaankari hai —
+                 aur Product ke apne required field (offers/sku/brand) bhi
+                 lag jaate, jisse naye error aate.
+             (b) Service node se aggregateRating HATA DO. ✅ Yahi kiya.
+
+             Nuksaan kuch nahi: isi page par `localBusinessSchema()` wala node
+             pehle se wahi rating carry karta hai aur Search Console me wo
+             **✅ valid** dikhta hai (screenshot me pehla item). Star-eligibility
+             usi node se aati hai. Ab ek valid item bachega, invalid zero.
+
+             🔴 NIYAM: aggregateRating / review kabhi bhi Service, HowTo-jaise
+             unsupported parent par mat lagana. Sirf LocalBusiness, Organization
+             ya Product par. */
           /* OfferCatalog gives each job its own priced entry rather than a
              single visit-charge Offer. The competitor uses this shape and it
              is what lets an engine answer "how much is X in {area}". */

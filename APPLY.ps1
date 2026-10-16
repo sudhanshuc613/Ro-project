@@ -70,7 +70,13 @@ $checkList = @(
   "src\components\service\AreaKeywordBlock.tsx",
   "src\app\(shop)\page.tsx",
   "src\app\(shop)\ro-service-patna\[area]\page.tsx",
-  "src\components\layout\Navbar.tsx"
+  "src\components\layout\Navbar.tsx",
+  "src\lib\seo\schema.ts",
+  "src\lib\seo\blog-data.ts",
+  "src\lib\seo\content-dates.ts",
+  "scripts\jsonld-parents.py",
+  "scripts\verify-jsonld-parents.sh",
+  "scripts\verify-all.sh"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -144,8 +150,14 @@ $expected = @{
   "src\components\service\NearMeBlock.tsx"            = 11359
   "src\components\service\AreaKeywordBlock.tsx"       = 14201
   "src\app\(shop)\page.tsx"                           = 18129
-  "src\app\(shop)\ro-service-patna\[area]\page.tsx"   = 30289
+  "src\app\(shop)\ro-service-patna\[area]\page.tsx"   = 32965
   "src\components\layout\Navbar.tsx"                  = 19454
+  "src\lib\seo\schema.ts"                             = 23779
+  "src\lib\seo\blog-data.ts"                          = 35669
+  "src\lib\seo\content-dates.ts"                      = 6504
+  "scripts\jsonld-parents.py"                         = 18076
+  "scripts\verify-jsonld-parents.sh"                  = 2676
+  "scripts\verify-all.sh"                             = 1567
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -209,7 +221,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "Near-me keyword blocks + area keyword blocks + banner upload fix" 2>&1 | Out-Null
+git commit -m "Schema: aggregateRating off Service (83 pages) + homepage @id entity merge + blog lastmod + permanent JSON-LD parent test" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

@@ -380,17 +380,30 @@ export function reviewSchema(
        Ab wahi @id use hota hai, isliye dono node EK entity me merge ho jaate
        hain aur reviews main business par lagti hain. */
     '@id': `${BRAND.url}/#localbusiness`,
-    name: BRAND.name,
-    image: `${BRAND.url}${BRAND.logoPng}`,
-    telephone: `+91${CONTACT.primaryPhone}`,
-    address: {
-      '@type': 'PostalAddress',
-      ...(CONTACT.showStreetAddress ? { streetAddress: CONTACT.address.street } : {}),
-      addressLocality: CONTACT.address.locality,
-      addressRegion: CONTACT.address.state,
-      postalCode: CONTACT.address.pincode,
-      addressCountry: 'IN',
-    },
+
+    /* 🔴 16 Oct 2026 — @id SHARE KARNE KA DOOSRA HISSA (naya detector ne pakda).
+       ──────────────────────────────────────────────────────────────────────
+       28 Sep ko @id to ek kar diya gaya tha (upar wali wajah bilkul sahi hai),
+       par is node me `name`, `image`, `telephone`, `address` BHI bheje ja rahe
+       the — aur wo main `localBusinessSchema()` node se MEL NAHI khate the:
+
+         main node  : name "Aqua Perl RO Service Patna" · image /banners/service-tech.png
+         ye node    : name "Aqua Perl"                  · image /brand/logo.png
+
+       JSON-LD me ek hi @id ke do node MERGE hote hain. Jab ek hi property ke
+       do alag value aate hain to wo multi-value ban jaati hai — yaani Google ke
+       paas business ka naam DO ho jaata hai aur image bhi DO. Local SEO me naam
+       (NAP) ka ek hona seedha ranking factor hai; do naam = kamzor entity signal.
+
+       Ab ye node sirf WAHI properties bhejta hai jo main node me nahi hain —
+       `aggregateRating` aur `review`. Ye JSON-LD ka standard tarika hai
+       ("ek hi node par aur properties jodna"). Koi data kam nahi hua:
+       naam/pata/phone main node se aate hain, rating + reviews yahan se.
+
+       Naapa gaya (local build): homepage par duplicate-@id conflict 1 → 0,
+       reviewCount:"50" abhi bhi 2 baar (test wahi expect karta hai),
+       Review/Rating/Person nodes 3-3-3 — sab waise ke waise. */
+
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: GBP_RATING_TEXT,

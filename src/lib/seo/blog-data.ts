@@ -259,7 +259,19 @@ export const BLOG_POSTS: BlogPost[] = [
     description:
       'Patna me RO service ka sahi rate kya hai? Visit charge, filter, membrane, pump, AMC — sabka market rate aur hamara rate. Koi chhupa hua charge nahi.',
     published: '2026-09-03',
-    updated: '2026-09-03',
+    /* 🔴 16 Oct 2026 — DATE JHOOTH BOL RAHI THI.
+       12 Oct ko is post ka ASLI content badla tha (pricing fix):
+         • "₹450 ka SMPS"           → "₹700 se ₹1,100"
+         • "SMPS / adaptor ... hamara ₹700 – ₹1,100"   (rate list row)
+         • "Booster pump / motor ... hamara ₹1,000 – ₹2,800"
+       Live par ye naya text maujood hai (verify 16 Oct: "₹450" = 0 hits),
+       par `updated` 2026-09-03 hi pada tha. Iska matlab:
+         • sitemap lastmod   = 2026-09-03  → Google ko lagta hai kuch nahi badla
+         • Article dateModified = 2026-09-03 → structured data me GALAT TAREEKH
+       Wahi bug jo 15 Oct ko 83 area page par pakda tha, yahan bacha reh gaya.
+       Baaki 4 post ka content 3 Sep ke baad nahi badla — unki date CHHUI NAHI
+       (jhoothi nayi date dena bhi utna hi bada bug hai). */
+    updated: '2026-10-12',
     readMinutes: 5,
     category: 'Pricing',
     keywords: [
