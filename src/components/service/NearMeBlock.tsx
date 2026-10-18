@@ -39,9 +39,12 @@
  * maangta hai. Yahi tareeka `/ro-customer-care-patna` par chala tha.
  */
 import Link from 'next/link';
-import { BRAND, CONTACT, SERVICE, GBP } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 
-export default function NearMeBlock({
+/* 18 Oct 2026 — ab Google rating admin se badalti hai. Ye SERVER component hai,
+   isliye khud `getGbpSettings()` padh leta hai — kisi bhi caller ko badalna nahi pada. */
+export default async function NearMeBlock({
   /** Jahan area list dikhani ho wahan paas kar dein. */
   areas,
   className = '',
@@ -49,6 +52,7 @@ export default function NearMeBlock({
   areas?: { name: string; href: string }[];
   className?: string;
 }) {
+  const gbp = await getGbpSettings();
   const since = new Date().getFullYear() - 2019;
 
   return (
@@ -81,7 +85,7 @@ export default function NearMeBlock({
           </p>
           <p className="mt-3 text-sm leading-relaxed text-navy-700">
             Dukaan {CONTACT.address.locality} me hai, {since}+ saal se. Google Maps par naam
-            daal ke dekh lijiye &mdash; {GBP.ratingValue} star, {GBP.reviewCount} review. Call
+            daal ke dekh lijiye &mdash; {gbp.ratingText} star, {gbp.reviewCount} review. Call
             centre nahi hai; jo phone uthata hai wahi technician bhejta hai.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

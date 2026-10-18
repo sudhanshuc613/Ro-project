@@ -78,7 +78,14 @@ $checkList = @(
   "scripts\verify-jsonld-parents.sh",
   "scripts\verify-all.sh",
   "scripts\admin-deep.py",
-  "scripts\verify-admin-deep.sh"
+  "scripts\verify-admin-deep.sh",
+  "src\lib\constants.ts",
+  "src\lib\seo\gbp-overrides.ts",
+  "src\lib\settings.ts",
+  "src\components\admin\SettingsForm.tsx",
+  "src\app\(shop)\ro-problem\[symptom]\page.tsx",
+  "scripts\gbp-consistency.py",
+  "scripts\verify-gbp-consistency.sh"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -152,16 +159,23 @@ $expected = @{
   "src\components\service\NearMeBlock.tsx"            = 11359
   "src\components\service\AreaKeywordBlock.tsx"       = 14201
   "src\app\(shop)\page.tsx"                           = 18129
-  "src\app\(shop)\ro-service-patna\[area]\page.tsx"   = 32965
+  "src\app\(shop)\ro-service-patna\[area]\page.tsx"   = 33151
   "src\components\layout\Navbar.tsx"                  = 19454
-  "src\lib\seo\schema.ts"                             = 23779
-  "src\lib\seo\blog-data.ts"                          = 35669
+  "src\lib\seo\schema.ts"                             = 24239
+  "src\lib\seo\blog-data.ts"                          = 36539
   "src\lib\seo\content-dates.ts"                      = 6504
   "scripts\jsonld-parents.py"                         = 18076
   "scripts\verify-jsonld-parents.sh"                  = 2676
-  "scripts\verify-all.sh"                             = 1585
+  "scripts\verify-all.sh"                             = 1608
   "scripts\admin-deep.py"                            = 7838
   "scripts\verify-admin-deep.sh"                     = 2529
+  "src\lib\constants.ts"                             = 16393
+  "src\lib\seo\gbp-overrides.ts"                     = 5372
+  "src\lib\settings.ts"                              = 9938
+  "src\components\admin\SettingsForm.tsx"            = 28178
+  "src\app\(shop)\ro-problem\[symptom]\page.tsx"     = 17472
+  "scripts\gbp-consistency.py"                       = 8883
+  "scripts\verify-gbp-consistency.sh"                = 2527
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -225,7 +239,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "Admin panel deep test (login-ke-baad) + verify-all 24 scripts" 2>&1 | Out-Null
+git commit -m "Google rating 50->58 + admin se badalne ka option + symptom page 404 fix (Bug Class D)" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

@@ -6,7 +6,8 @@
  *
  * Rendered via <script type="application/ld+json"> in each page's Server Component.
  */
-import { BRAND, CONTACT, SERVICE, GBP, SOCIAL, GBP_RATING_TEXT } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE, SOCIAL } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 
 type Json = Record<string, unknown>;
 
@@ -54,11 +55,17 @@ export function organizationSchema(): Json {
 }
 
 /* ── LOCAL BUSINESS (homepage + every Patna service page) ─────────────────── */
-export function localBusinessSchema(area?: {
-  name: string; pincodes: string[]; lat?: number; lng?: number;
-  /** Canonical path of the page carrying this markup, e.g. areaPath(slug). */
-  path?: string;
-}): Json {
+export function localBusinessSchema(
+  area?: {
+    name: string; pincodes: string[]; lat?: number; lng?: number;
+    /** Canonical path of the page carrying this markup, e.g. areaPath(slug). */
+    path?: string;
+  },
+  /* 18 Oct 2026 — rating ab admin se badalti hai (site_settings → `gbp`).
+     Page `await getGbpSettings()` karke yahan bhejta hai. Na bheje to
+     constants.ts ka number chalta hai, yani purana vyavhaar bilkul waisa hi. */
+  gbp: GbpValues = GBP_FALLBACK,
+): Json {
   const label = area ? `${BRAND.name} — RO Service in ${area.name}, Patna` : `${BRAND.name} RO Service Patna`;
   return {
     '@context': 'https://schema.org',
@@ -121,13 +128,15 @@ export function localBusinessSchema(area?: {
         { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Annual Maintenance Contract (AMC)' }, priceCurrency: 'INR' },
       ],
     },
-    // ⚠️ Ye Google Business Profile ke ASLI numbers hain (src/lib/constants.ts → GBP).
+    // ⚠️ Ye Google Business Profile ke ASLI numbers hain.
     // Inflate kiya to "spammy structured markup" ka manual action lag sakta hai
-    // aur saare rich results band ho jaate hain. GBP pe count badle to wahin badlo.
+    // aur saare rich results band ho jaate hain.
+    // 18 Oct 2026 — ab GBP pe count badle to /admin/settings → "Google Rating &
+    // Reviews" se badlo. Deploy ki zaroorat nahi. constants.ts sirf fallback hai.
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: GBP_RATING_TEXT,
-      reviewCount: String(GBP.reviewCount),
+      ratingValue: gbp.ratingText,
+      reviewCount: String(gbp.reviewCount),
       bestRating: '5',
     },
   };
@@ -365,6 +374,7 @@ export const jsonLd = (data: Json | Json[]) => ({
    ────────────────────────────────────────────────────────────────────── */
 export function reviewSchema(
   reviews: readonly { body: string; name: string; place: string; stars: number }[],
+  gbp: GbpValues = GBP_FALLBACK,
 ): Json {
   return {
     '@context': 'https://schema.org',
@@ -406,8 +416,8 @@ export function reviewSchema(
 
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: GBP_RATING_TEXT,
-      reviewCount: String(GBP.reviewCount),
+      ratingValue: gbp.ratingText,
+      reviewCount: String(gbp.reviewCount),
       bestRating: '5',
     },
     review: reviews.map((r) => ({

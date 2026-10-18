@@ -46,7 +46,7 @@ import TrustBadges from '@/components/ui/TrustBadges';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { ogImage } from '@/lib/seo/og-image';
-import { getSiteImages } from '@/lib/settings';
+import { getSiteImages, getGbpSettings } from '@/lib/settings';
 /* 9 Oct 2026 — 94-keyword audit: SERVICE-INTENT category me 13 keywords ka
    exact phrase kahin nahi tha (rate card / visit charge / pump repair wala
    cluster). Naya block, purana kuch nahi badla. */
@@ -124,6 +124,8 @@ const HUB_FAQS = [
 ];
 
 export default async function ServiceHubPage() {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   /* 11 Oct 2026 — hero poster ab admin ke slot se aata hai (pehle hardcoded
      tha). `revalidate = 86400` ke saath ye ISR me chalta hai: banner badalne
      par agli revalidation par dikhta hai, ya Vercel se "Purge Cache". */
@@ -137,7 +139,7 @@ export default async function ServiceHubPage() {
           lat: CONTACT.geo.lat,
           lng: CONTACT.geo.lng,
           path: '/ro-services-patna',
-        }),
+        }, gbp),
         faqSchema(HUB_FAQS),
         breadcrumbSchema([
           { name: 'Home', url: '/' },

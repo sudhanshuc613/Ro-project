@@ -240,12 +240,23 @@ export const GBP = {
    * rahi thi. Yaani site apne aap ko ASLI se KAM bata rahi thi.
    *
    * Rule wahi hai jo hamesha se hai: number kabhi badhaya nahi jaata, sirf
-   * Google par jo dikh raha hai wahi likha jaata hai. Aaj wo 5.0 aur 50 hai.
-   * Jab count badhe to sirf yahan badalna — poore site par apne aap chala
-   * jaata hai (schema, hero, review section, admin tracker sab yahi padhte hain).
+   * Google par jo dikh raha hai wahi likha jaata hai.
+   *
+   * ── 18 Oct 2026 — 50 → 58 ──────────────────────────────────────────────
+   * Owner: "mera ab google index pe rating 58 ho chuki hai usko bhi update
+   *         kar dena". GBP par 8 naye review aa gaye. Average 5.0 hi hai.
+   *
+   * 🔴 AB YE SIRF FALLBACK HAI, AAKHRI SACH NAHI.
+   * Asli number ab `site_settings` ke `gbp` key me rehta hai aur
+   * /admin/settings → "Google Rating & Reviews" se badalta hai (bina deploy).
+   * Dekho: src/lib/seo/gbp-overrides.ts + getGbpSettings() in src/lib/settings.ts
+   *
+   * Yahan ka number tabhi chalta hai jab DB khaali ho ya DB hi na chale —
+   * taaki site kabhi bina rating ke na dikhe. Dono jagah ek jaisa rakhna
+   * behtar hai, par zaroori nahi.
    */
   ratingValue: 5.0,
-  reviewCount: 50,
+  reviewCount: 58,
 } as const;
 
 /**

@@ -41,6 +41,7 @@ import AreaKeywordBlock from '@/components/service/AreaKeywordBlock';
    ke liye). Purana kuch nahi badla. */
 import BrandAreaBlock from '@/components/service/BrandAreaBlock';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { areaPath } from '@/lib/seo/area-url';
 /* 13 Oct 2026 — "RO Service AIIMS Patna Patna" / "Patna City Patna" theek karne
    ke liye. 81 area par output wahi rehta hai; sirf 2 page sudhrte hain.
@@ -105,7 +106,9 @@ export function generateMetadata({ params }: { params: { area: string } }): Meta
   };
 }
 
-export default function AreaPage({ params }: { params: { area: string } }) {
+export default async function AreaPage({ params }: { params: { area: string } }) {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   const area = SERVICE_AREAS.find((a) => a.slug === params.area);
   if (!area) notFound();
 
@@ -148,7 +151,7 @@ export default function AreaPage({ params }: { params: { area: string } }) {
         localBusinessSchema({
           name: area.name, lat: area.lat, lng: area.lng,
           pincodes: area.pincodes, path: areaPath(area.slug),
-        }),
+        }, gbp),
         faqSchema(faqs),
         breadcrumbSchema([
           { name: 'Home', url: '/' },

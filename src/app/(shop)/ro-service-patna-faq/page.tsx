@@ -41,7 +41,8 @@ import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import {
   localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd,
 } from '@/lib/seo/schema';
-import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { areaPath } from '@/lib/seo/area-url';
 import TdsChecker from '@/components/home/TdsChecker';
 import { ogImage } from '@/lib/seo/og-image';
@@ -74,8 +75,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AnswerHubPage() {
-  const answers = geoAnswers();
+export default async function AnswerHubPage() {
+  /* 18 Oct 2026 — Google rating ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
+  const answers = geoAnswers(gbp);
 
   return (
     <>
@@ -86,7 +89,7 @@ export default function AnswerHubPage() {
           lat: CONTACT.geo.lat,
           lng: CONTACT.geo.lng,
           path: '/ro-service-patna-faq',
-        }),
+        }, gbp),
         /* FAQPage for the rich result, QAPage per answer for retrieval.
            The two are not interchangeable: FAQPage marks a list the site
            answers itself, QAPage marks a single question with an accepted
@@ -180,7 +183,7 @@ export default function AnswerHubPage() {
               <strong className="text-navy-700">Ye numbers kahan se aaye:</strong>{' '}
               TDS readings hamare technicians ne {SERVICE_AREAS.length} area me visit
               ke waqt naape hain. Rates Patna ka {new Date().getFullYear()} market rate
-              hai. Rating {GBP_RATING_TEXT}★ / {GBP.reviewCount} reviews — ye public
+              hai. Rating {gbp.ratingText}★ / {gbp.reviewCount} reviews — ye public
               Google Business Profile pe khud check kar sakte ho, hamare kehne pe
               bharosa karne ki zaroorat nahi.
             </p>

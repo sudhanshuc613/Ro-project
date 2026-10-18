@@ -9,9 +9,12 @@
  *
  * Server component. Pure markup, no JS cost.
  */
-import { CTA_TRUST_BADGES } from '@/lib/social-proof';
+import { ctaTrustBadges } from '@/lib/social-proof';
+import { getGbpSettings } from '@/lib/settings';
 
-export default function TrustBadges({
+/* 18 Oct 2026 — ab Google rating admin se badalti hai. Ye SERVER component hai,
+   isliye khud `getGbpSettings()` padh leta hai — kisi bhi caller ko badalna nahi pada. */
+export default async function TrustBadges({
   variant = 'row',
   className = '',
 }: {
@@ -19,10 +22,11 @@ export default function TrustBadges({
   variant?: 'row' | 'grid';
   className?: string;
 }) {
+  const BADGES = ctaTrustBadges(await getGbpSettings());
   if (variant === 'grid') {
     return (
       <div className={`grid grid-cols-2 gap-2 ${className}`}>
-        {CTA_TRUST_BADGES.map((b) => (
+        {BADGES.map((b) => (
           <div
             key={b.text}
             className="flex items-center gap-2 rounded-lg bg-sand-200 px-2.5 py-2 text-xs font-semibold text-navy-700"
@@ -37,7 +41,7 @@ export default function TrustBadges({
 
   return (
     <ul className={`flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-semibold text-navy-600 ${className}`}>
-      {CTA_TRUST_BADGES.map((b) => (
+      {BADGES.map((b) => (
         <li key={b.text} className="flex items-center gap-1.5">
           <span aria-hidden="true">{b.icon}</span>
           <span>{b.text}</span>

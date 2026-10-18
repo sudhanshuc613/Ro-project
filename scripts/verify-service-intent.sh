@@ -284,7 +284,11 @@ echo "════ F4) Admin review UI wired in ════"
 hasf "ReviewRequestButton component"        src/components/admin/ReviewRequestButton.tsx 'reviewRequestWaLink'
 hasf "button only on COMPLETED"             "src/app/admin/(dashboard)/service-requests/page.tsx" "r.status === 'COMPLETED'"
 hasf "ReviewTracker on dashboard"           "src/app/admin/(dashboard)/page.tsx" 'ReviewTracker'
-hasf "tracker uses real GBP count"          src/components/admin/ReviewTracker.tsx 'GBP.reviewCount'
+# 18 Oct 2026 — rating/review count ab admin se aata hai (site_settings -> gbp),
+# constants.ts sirf fallback hai. Pehle ye test `GBP.reviewCount` dhoondhta tha;
+# ab tracker `getGbpSettings()` padhta hai. Niyat wahi hai: number HARDCODE na ho.
+hasf "tracker uses real GBP count"          src/components/admin/ReviewTracker.tsx 'gbp.reviewCount'
+hasf "tracker DB se rating leta hai"        src/components/admin/ReviewTracker.tsx 'getGbpSettings'
 hasf "admin pages still need auth"          src/middleware.ts 'admin'
 chk "/admin redirects when logged out" \
     "$(curl -sS -m 15 -o /dev/null -w '%{http_code}' $B/admin)" "307"

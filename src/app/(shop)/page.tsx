@@ -21,7 +21,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import ServiceHero from '@/components/home/ServiceHero';
-import { getSiteImages } from '@/lib/settings';
+import { getSiteImages, getGbpSettings } from '@/lib/settings';
 import TrustBar from '@/components/home/TrustBar';
 import ProofStats from '@/components/home/ProofStats';
 import ReviewShowcase from '@/components/home/ReviewShowcase';
@@ -146,6 +146,8 @@ const TOP_AREAS_FOR_NEARME = [
 }));
 
 export default async function HomePage() {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   /* siteImages: admin ke /admin/site-images se aata hai. DB khaali ho to
      resolveSiteImages() code ke default laut aata hai — homepage kabhi
      khaali nahi dikhti. */
@@ -155,10 +157,10 @@ export default async function HomePage() {
       <script {...jsonLd([
         organizationSchema(),
         websiteSchema(),
-        localBusinessSchema(),
+        localBusinessSchema(undefined, gbp),
         // Individual Review objects — AI engines (ChatGPT, Perplexity, Gemini)
         // read these when deciding which local business to name.
-        reviewSchema(REVIEWS),
+        reviewSchema(REVIEWS, gbp),
         /* Do FAQPage block: ek hamare apne FAQs ka, doosra un exact sawaalon
            ka jo log Google me type karte hain (autocomplete se liye gaye).
            Dono ka text page pe visible hai — schema aur dikhne wale content
@@ -168,7 +170,7 @@ export default async function HomePage() {
 
       <main className="flex flex-col">
         {/* 1 — Service hero */}
-        <ServiceHero image={siteImages.homeHero} />
+        <ServiceHero image={siteImages.homeHero} gbp={gbp} />
 
         {/*
           2 — PROOF STATS, immediately under the hero.
@@ -187,7 +189,7 @@ export default async function HomePage() {
           place a review carousel directly below the hero. Proof belongs at the
           point of doubt, not on a testimonials page nobody scrolls to.
         */}
-        <ReviewShowcase />
+        <ReviewShowcase gbp={gbp} />
 
         {/* 4 — Trust signals */}
         <TrustBar />

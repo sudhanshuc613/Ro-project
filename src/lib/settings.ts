@@ -12,6 +12,7 @@ import { prisma } from '@/lib/db/prisma';
 import { CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
 import { resolveSiteImages, type SiteImageMap } from '@/lib/seo/site-images';
 import { resolveRates, type RateMap } from '@/lib/seo/rate-overrides';
+import { resolveGbp, type GbpOverride, type GbpValues } from '@/lib/seo/gbp-overrides';
 import { unstable_cache } from 'next/cache';
 
 export interface ContactSettings {
@@ -200,6 +201,31 @@ export const getRateCard = unstable_cache(
   { tags: ['settings'], revalidate: 300 },
 );
 
+/**
+ * ⭐ GOOGLE RATING + REVIEW COUNT — 18 Oct 2026. Key `gbp`.
+ *
+ * Owner GBP par review count badalta rehta hai (50 → 58 → …). Pehle har baar
+ * `constants.ts` edit karke deploy karna padta tha. Ab /admin/settings se.
+ *
+ * DB khaali ho ya DB hi na chale — `resolveGbp(null)` constants.ts ka number
+ * laut aata hai, isliye rating kabhi gayab nahi hoti.
+ *
+ * `revalidate: 300` — rate card aur site images jaisa. Ye number schema me
+ * jaata hai, isliye jaldi update hona chahiye.
+ */
+export const getGbpSettings = unstable_cache(
+  async () => {
+    try {
+      const row = await prisma.siteSetting.findUnique({ where: { key: 'gbp' } });
+      return resolveGbp((row?.value as unknown as GbpOverride) ?? null);
+    } catch {
+      return resolveGbp(null);
+    }
+  },
+  ['settings:gbp'],
+  { tags: ['settings'], revalidate: 300 },
+);
+
 export const getBannerSettings = unstable_cache(
   () => fetchSetting<BannerSettings>('banner', FALLBACK_BANNER),
   ['settings:banner'],
@@ -220,15 +246,18 @@ export const getPaymentSettings = unstable_cache(
 
 /** Everything at once — used by layouts that need all of them. */
 export async function getAllSettings() {
-  const [contact, service, banner, payment, otp] = await Promise.all([
+  const [contact, service, banner, payment, otp, gbp] = await Promise.all([
     getContactSettings(),
     getServiceSettings(),
     getBannerSettings(),
     getPaymentSettings(),
     getOtpSettings(),
+    getGbpSettings(),
   ]);
-  return { contact, service, banner, payment, otp, shipping: SHIPPING };
+  return { contact, service, banner, payment, otp, gbp, shipping: SHIPPING };
 }
+
+export type { GbpValues };
 
 /**
  * Payment methods the customer may actually pick right now.

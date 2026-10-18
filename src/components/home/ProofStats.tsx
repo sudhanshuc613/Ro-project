@@ -14,9 +14,12 @@
  */
 import CountUp from '@/components/ui/CountUp';
 import { getProofStats } from '@/lib/social-proof';
+import { getGbpSettings } from '@/lib/settings';
 
-export default function ProofStats() {
-  const stats = getProofStats();
+/* 18 Oct 2026 — ab Google rating admin se badalti hai. Ye SERVER component hai,
+   isliye khud `getGbpSettings()` padh leta hai — kisi bhi caller ko badalna nahi pada. */
+export default async function ProofStats() {
+  const stats = getProofStats(await getGbpSettings());
 
   return (
     <section

@@ -23,7 +23,8 @@ import {
   organizationSchema, websiteSchema,
 } from '@/lib/seo/schema';
 import TrustBadges from '@/components/ui/TrustBadges';
-import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { ogImage } from '@/lib/seo/og-image';
 /* 13 Oct 2026 — 72-keyword gap scan me 50 KAHIN NAHI mile. Sabse bada gap
    Hinglish ("ro mistri", "ro wala"), time ("24 hour", "sunday"), aur shop
@@ -71,7 +72,9 @@ const HUB_FAQS = [
   },
 ];
 
-export default function CheckerPage() {
+export default async function CheckerPage() {
+  /* 18 Oct 2026 — Google rating ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   return (
     <>
       <script {...jsonLd([
@@ -83,7 +86,7 @@ export default function CheckerPage() {
           lat: CONTACT.geo.lat,
           lng: CONTACT.geo.lng,
           path: '/ro-problem-checker',
-        }),
+        }, gbp),
         breadcrumbSchema([
           { name: 'Home', url: BRAND.url },
           { name: 'RO Problem Checker', url: URL },
@@ -119,7 +122,7 @@ export default function CheckerPage() {
               {CHECKER_INTRO.sub}
             </p>
             <p className="mt-4 text-xs text-navy-200">
-              ⭐ {GBP_RATING_TEXT} · {GBP.reviewCount} Google reviews · Patna me 2019 se
+              ⭐ {gbp.ratingText} · {gbp.reviewCount} Google reviews · Patna me 2019 se
             </p>
           </div>
         </section>

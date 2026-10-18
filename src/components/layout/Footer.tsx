@@ -3,7 +3,8 @@ import Image from 'next/image';
 import { BRAND, CONTACT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
-import { COVERAGE_SENTENCE } from '@/lib/seo/search-queries';
+import { coverageSentence } from '@/lib/seo/search-queries';
+import { getGbpSettings } from '@/lib/settings';
 
 const SHOP = [
   { label: 'New RO Purifiers', href: '/category/new-ro-purifiers' },
@@ -57,7 +58,10 @@ const SUPPORT = [
   { label: 'Contact Us', href: '/contact' },
 ];
 
-export default function Footer() {
+/* 18 Oct 2026 — ab Google rating admin se badalti hai. Ye SERVER component hai,
+   isliye khud `getGbpSettings()` padh leta hai — kisi bhi caller ko badalna nahi pada. */
+export default async function Footer() {
+  const COVERAGE_SENTENCE = coverageSentence(await getGbpSettings());
   return (
     <footer className="bg-navy-700 text-navy-100">
       <div className="container mx-auto px-4 pt-14">

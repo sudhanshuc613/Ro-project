@@ -13,6 +13,7 @@ import { localBusinessSchema, faqSchema, breadcrumbSchema, jsonLd } from '@/lib/
 import FaqAccordion from '@/components/home/FaqAccordion';
 import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { areaPath } from '@/lib/seo/area-url';
 import { BRAND_QUERY_LINES } from '@/lib/seo/search-queries';
 import { brandLabel } from '@/lib/seo/brand-labels';
@@ -92,7 +93,9 @@ export function generateMetadata({ params }: { params: { brand: string } }): Met
   };
 }
 
-export default function BrandServicePage({ params }: { params: { brand: string } }) {
+export default async function BrandServicePage({ params }: { params: { brand: string } }) {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   const brand = SERVICED_BRANDS.find((b) => b.slug === params.brand);
   if (!brand) notFound();
 
@@ -127,7 +130,7 @@ export default function BrandServicePage({ params }: { params: { brand: string }
     <>
       <script
         {...jsonLd([
-          localBusinessSchema(),
+          localBusinessSchema(undefined, gbp),
           faqSchema(faqs),
           breadcrumbSchema([
             { name: 'Home', url: '/' },

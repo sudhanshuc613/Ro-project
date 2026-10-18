@@ -48,6 +48,7 @@
  */
 
 import { SERVICE, CONTACT } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 
 /* ══════════════════════════════════════════════════════════════════════════
    1. SYMPTOM → CAUSE → RATE
@@ -291,7 +292,11 @@ export const PART_RATES: PartRate[] = [
    ══════════════════════════════════════════════════════════════════════════ */
 export interface WhyPoint { h: string; p: string; proof: string }
 
-export const WHY_POINTS: WhyPoint[] = [
+/* 18 Oct 2026 — const se function, kyunki ek point me Google rating aur
+   review count hai aur wo ab admin se badalte hain. Default parameter ki
+   wajah se purane caller bhi waise hi chalte hain. */
+export function whyPoints(gbp: GbpValues = GBP_FALLBACK): WhyPoint[] {
+  return [
   {
     h: 'TDS meter har visit par',
     p: 'Kaam se pehle aur baad ka TDS card par likha jaata hai. Isi se pata chalta hai membrane sach me gaya tha ya nahi.',
@@ -320,9 +325,10 @@ export const WHY_POINTS: WhyPoint[] = [
   {
     h: '2019 se Patna me, 2,400+ machine',
     p: 'Chhe saal, yahi sheher. 83 mohalle, aur har mohalle ka apna paani aur fault pattern pata hai.',
-    proof: 'Google par 5.0 rating, 50 review',
-  },
-];
+    proof: `Google par ${gbp.ratingText} rating, ${gbp.reviewCount} review`,
+    },
+  ];
+}
 
 /* ══════════════════════════════════════════════════════════════════════════
    4. AMC — sirf summary. Poori detail /amc-plans par hai.

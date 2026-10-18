@@ -23,9 +23,13 @@ import { useEffect, useRef, useState } from 'react';
 import { REVIEWS } from '@/components/home/Testimonials';
 import { getRatingSummary } from '@/lib/social-proof';
 import { GBP } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 
-export default function ReviewShowcase() {
-  const summary = getRatingSummary();
+/* 18 Oct 2026 — ye CLIENT component hai, DB khud nahi padh sakta.
+   Isliye rating parent (server page) se prop me aati hai. Default rakha hai,
+   to prop na aaye tab bhi purana number chalta hai — kuch toota nahi. */
+export default function ReviewShowcase({ gbp = GBP_FALLBACK }: { gbp?: GbpValues } = {}) {
+  const summary = getRatingSummary(gbp);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);

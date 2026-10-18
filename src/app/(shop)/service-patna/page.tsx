@@ -15,6 +15,7 @@ import ServiceBookingForm from '@/components/home/ServiceBookingForm';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import HowItWorks from '@/components/home/HowItWorks';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 
@@ -100,12 +101,14 @@ const FAQS = [
     a: 'Our AMC starts at ₹1,499 and covers scheduled visits with filter changes, priority response and discounted parts. Comprehensive plans also cover the membrane and electrical parts. Above 500 ppm an AMC works out cheaper than paying per visit, because you will need three to four filter changes a year regardless.' },
 ];
 
-export default function ServicePatnaPillar() {
+export default async function ServicePatnaPillar() {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   return (
     <>
       <script
         {...jsonLd([
-          localBusinessSchema(),
+          localBusinessSchema(undefined, gbp),
           faqSchema(FAQS),
           breadcrumbSchema([
             { name: 'Home', url: '/' },

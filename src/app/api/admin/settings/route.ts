@@ -80,6 +80,25 @@ const SCHEMAS = {
     announcementText: z.string().max(200),
     announcementActive: z.boolean(),
   }),
+
+  /* ── Google rating + review count (18 Oct 2026) ─────────────────────────
+     Owner GBP par review count badalta rehta hai; pehle har baar deploy
+     lagta tha. Ab yahan se.
+
+     🔴 Ye number `aggregateRating` schema me jaata hai AUR page par dikhta
+     hai. Inflate karna "spammy structured markup" hai — poore domain ke
+     rich result band ho sakte hain. Isliye seema yahan BHI lagi hai, sirf
+     UI par bharosa nahi kiya (UI bypass ho sakta hai, API nahi).
+
+     reviewCount min 1: 0 review par rating "invalid item" ban jaati hai —
+     yahi galti Google ne 15 Oct ko Service node par pakdi thi. */
+  gbp: z.object({
+    ratingValue: z.number().min(1, 'Google 1 se 5 ke beech hi rating deta hai')
+                           .max(5, 'Google 1 se 5 ke beech hi rating deta hai'),
+    reviewCount: z.number().int('Poora number likho, dashamlav nahi')
+                           .min(1, '0 review par rating invalid item ban jaati hai')
+                           .max(100000),
+  }),
 } as const;
 
 type SettingsKey = keyof typeof SCHEMAS;

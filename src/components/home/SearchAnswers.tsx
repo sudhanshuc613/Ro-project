@@ -18,9 +18,13 @@
  * Data src/lib/seo/search-queries.ts se aata hai. Text sirf wahan badlo.
  */
 
-import { SEARCH_ANSWERS } from '@/lib/seo/search-queries';
+import { searchAnswers } from '@/lib/seo/search-queries';
+import { getGbpSettings } from '@/lib/settings';
 
-export default function SearchAnswers() {
+/* 18 Oct 2026 — ab Google rating admin se badalti hai. Ye SERVER component hai,
+   isliye khud `getGbpSettings()` padh leta hai — kisi bhi caller ko badalna nahi pada. */
+export default async function SearchAnswers() {
+  const SEARCH_ANSWERS = searchAnswers(await getGbpSettings());
   return (
     <section className="bg-white py-14 md:py-16" aria-labelledby="search-answers-heading">
       <div className="container mx-auto px-4">

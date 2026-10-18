@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { ContactSettings, ServiceSettings, BannerSettings, PaymentSettings, OtpSettings } from '@/lib/settings';
+import type { ContactSettings, ServiceSettings, BannerSettings, PaymentSettings, OtpSettings, GbpValues } from '@/lib/settings';
+import { validateGbp } from '@/lib/seo/gbp-overrides';
 
 interface Props {
   contact: ContactSettings;
@@ -10,17 +11,19 @@ interface Props {
   banner: BannerSettings;
   payment: PaymentSettings;
   otp: OtpSettings;
+  gbp: GbpValues;
   razorpayConfigured: boolean;
   smsConfigured: boolean;
   whatsappConfigured: boolean;
 }
 
 export default function SettingsForm({
-  contact, service, banner, payment, otp,
+  contact, service, banner, payment, otp, gbp,
   razorpayConfigured, smsConfigured, whatsappConfigured,
 }: Props) {
   return (
     <div className="space-y-6">
+      <GbpCard initial={gbp} />
       <OtpCard initial={otp} smsConfigured={smsConfigured} whatsappConfigured={whatsappConfigured} />
       <PaymentCard initial={payment} razorpayConfigured={razorpayConfigured} />
       <ContactCard initial={contact} />
@@ -452,6 +455,90 @@ function ContactCard({ initial }: { initial: ContactSettings }) {
           <input value={f.hours} onChange={set('hours')} className={inp} />
         </Field>
       </div>
+      <SaveBtn onClick={submit} saving={saving} />
+    </Card>
+  );
+}
+
+/* ── Google rating + review count ─────────────────────────────────────────
+   18 Oct 2026. Owner: "mera ab google index pe rating 58 ho chuki hai usko
+   bhi update kar dena or admin se option de dena ki mai badal saku rating ko"
+
+   🔴 Ye do number site par TEEN jagah jaate hain, teeno ek saath badalte hain:
+        1. schema ka aggregateRating (Google ko dikhta hai)
+        2. har page ka visible text (hero, footer, review section, badges)
+        3. admin ka review tracker
+   Isliye yahan jhootha number dena = schema aur page ka mel bigadna =
+   "spammy structured markup" ka manual action. Seema API par BHI lagi hai,
+   sirf is form par bharosa nahi kiya gaya.                                 */
+function GbpCard({ initial }: { initial: GbpValues }) {
+  const [f, setF] = useState({ ratingValue: initial.ratingValue, reviewCount: initial.reviewCount });
+  const [saving, setSaving] = useState(false);
+  const errs = validateGbp(f);
+
+  async function submit() {
+    if (errs.length) { toast.error(errs[0]); return; }
+    setSaving(true);
+    try {
+      await saveSettings('gbp', f);
+      toast.success(`Google rating updated — ${f.ratingValue.toFixed(1)}★ / ${f.reviewCount} reviews`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Failed');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <Card
+      title="⭐ Google Rating & Reviews"
+      sub="GBP par review count badle to yahin badlo — koi deploy nahi, turant live"
+    >
+      <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+        <p className="font-bold">Number apne man se mat badalna.</p>
+        <p className="mt-1">
+          Google Business Profile kholo, wahan jo rating aur review count likha hai,
+          <b> hu-ba-hu wahi </b> yahan daalo. Ye number website par bhi dikhta hai aur
+          Google ko schema me bhi jaata hai — koi bhi 10 second me check kar sakta hai.
+          Badha-chadha kar likhne par Google poori site ke rich results band kar deta hai.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Google Rating (1.0 – 5.0)" hint="GBP par jo dikhta hai — jaise 5.0 ya 4.8">
+          <input
+            type="number" step="0.1" min={1} max={5}
+            value={f.ratingValue}
+            onChange={(e) => setF({ ...f, ratingValue: Number(e.target.value) })}
+            className={inp}
+          />
+        </Field>
+        <Field label="Total Google Reviews" hint="GBP par jitne review likhe hain — poora number">
+          <input
+            type="number" step="1" min={1}
+            value={f.reviewCount}
+            onChange={(e) => setF({ ...f, reviewCount: Number(e.target.value) })}
+            className={inp}
+          />
+        </Field>
+      </div>
+
+      <div className="mt-4 rounded-xl border border-navy-100 bg-navy-50/60 p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Site par aisa dikhega</p>
+        <p className="mt-1 text-sm text-navy-800">
+          ⭐ {Number.isFinite(f.ratingValue) ? f.ratingValue.toFixed(1) : '—'} · {f.reviewCount} Google reviews
+        </p>
+        <p className="mt-1 text-xs text-muted">
+          Schema: <code>&quot;ratingValue&quot;:&quot;{Number.isFinite(f.ratingValue) ? f.ratingValue.toFixed(1) : '—'}&quot;, &quot;reviewCount&quot;:&quot;{f.reviewCount}&quot;</code>
+        </p>
+      </div>
+
+      {errs.length > 0 && (
+        <ul className="mt-3 space-y-1 text-sm text-red-700">
+          {errs.map((m) => <li key={m}>• {m}</li>)}
+        </ul>
+      )}
+
       <SaveBtn onClick={submit} saving={saving} />
     </Card>
   );

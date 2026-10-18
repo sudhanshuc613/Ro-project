@@ -17,10 +17,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { AUTHOR, getPosts } from '@/lib/seo/blog-data';
+import { AUTHOR, getPosts, authorCredentials } from '@/lib/seo/blog-data';
 import { personSchema, breadcrumbSchema, jsonLd } from '@/lib/seo/schema';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
-import { CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { REPAIRS_COMPLETED, FOUNDED_YEAR } from '@/lib/social-proof';
 import { ogImage } from '@/lib/seo/og-image';
 import { BRAND } from '@/lib/constants';
@@ -50,7 +51,9 @@ export function generateMetadata({ params }: { params: { person: string } }): Me
   };
 }
 
-export default function AuthorPage({ params }: { params: { person: string } }) {
+export default async function AuthorPage({ params }: { params: { person: string } }) {
+  /* 18 Oct 2026 — Google rating ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   if (params.person !== AUTHOR.slug) notFound();
   const posts = getPosts();
 
@@ -104,7 +107,7 @@ export default function AuthorPage({ params }: { params: { person: string } }) {
               { v: `${AUTHOR.yearsExperience}+`, l: 'Saal ka experience' },
               { v: `${REPAIRS_COMPLETED.toLocaleString('en-IN')}+`, l: 'Units theek kiye' },
               { v: String(SERVICE_AREAS.length), l: 'Patna areas' },
-              { v: `${GBP_RATING_TEXT}★`, l: `${GBP.reviewCount} reviews` },
+              { v: `${gbp.ratingText}★`, l: `${gbp.reviewCount} reviews` },
             ].map((s) => (
               <div key={s.l} className="rounded-xl bg-sand-200 p-4 text-center">
                 <p className="font-display text-2xl font-extrabold text-navy-700">{s.v}</p>
@@ -116,7 +119,7 @@ export default function AuthorPage({ params }: { params: { person: string } }) {
           <section className="mt-8">
             <h2 className="font-display text-xl font-bold text-navy-700">Experience</h2>
             <ul className="mt-3 space-y-2">
-              {AUTHOR.credentials.map((c) => (
+              {authorCredentials(gbp).map((c) => (
                 <li key={c} className="flex gap-2.5 rounded-lg bg-sand-100 p-3 text-sm text-navy-700">
                   <span className="shrink-0 text-emerald-600" aria-hidden="true">✓</span>
                   <span>{c}</span>

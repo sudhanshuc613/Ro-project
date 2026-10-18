@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { breadcrumbSchema, faqSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import AmcPurchaseForm from '@/components/home/AmcPurchaseForm';
@@ -108,14 +109,16 @@ const FAQS = [
   },
 ];
 
-export default function AmcPlansPage() {
+export default async function AmcPlansPage() {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   return (
     <>
       {/* 11 Oct 2026 — BreadcrumbList schema joda. Page par breadcrumb DIKH raha
           tha par schema me nahi tha, isliye Google ke SERP me URL ki jagah
           breadcrumb trail nahi aati thi. Baaki 141 page par ye pehle se hai. */}
       <script {...jsonLd([
-        localBusinessSchema(),
+        localBusinessSchema(undefined, gbp),
         breadcrumbSchema([
           { name: 'Home', url: BRAND.url },
           { name: 'AMC Plans', url: `${BRAND.url}/amc-plans` },

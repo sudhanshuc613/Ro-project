@@ -18,6 +18,7 @@
  * Pure data. No DB, no imports beyond constants. Safe anywhere.
  */
 import { SERVICE, CONTACT } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 
 export interface Author {
   slug: string;
@@ -41,7 +42,10 @@ export const AUTHOR: Author = {
     'Kent, Aquaguard, Pureit, Livpure, AO Smith sabhi brands par kaam',
     'Domestic RO se lekar 1000 LPH commercial plant tak',
     '55 Patna localities me service network',
-    'Google par 5.0★ rating, 50 verified reviews',
+    /* 18 Oct 2026 — number ab admin se aata hai (site_settings → gbp).
+       Yahan constants ka fallback chalta hai; page `authorCredentials(gbp)`
+       bulata hai jisse admin ka number lagta hai. */
+    `Google par ${GBP_FALLBACK.ratingText}★ rating, ${GBP_FALLBACK.reviewCount} verified reviews`,
   ],
   yearsExperience: new Date().getFullYear() - 2019,
 };
@@ -550,4 +554,18 @@ export function getPosts(): BlogPost[] {
 
 export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.slug === slug);
+}
+
+/**
+ * AUTHOR.credentials, par Google rating/review count admin wale number ke saath.
+ * 18 Oct 2026 — `AUTHOR` ek module-level object hai, isliye wo import ke waqt
+ * hi jam jaata hai. Ye helper page ko wahi list deta hai, par rating/review
+ * wali line DB ke number se badal kar.
+ */
+export function authorCredentials(gbp: GbpValues = GBP_FALLBACK): string[] {
+  return AUTHOR.credentials.map((c) =>
+    /Google par .*rating/.test(c)
+      ? `Google par ${gbp.ratingText}★ rating, ${gbp.reviewCount} verified reviews`
+      : c,
+  );
 }

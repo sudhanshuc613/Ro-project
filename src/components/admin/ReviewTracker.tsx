@@ -19,22 +19,24 @@
  * abstraction — because "68 completed jobs asked properly" is actionable and
  * "you need 106 more reviews" is just discouraging.
  *
- * Honesty rule: `current` comes from GBP.reviewCount in constants.ts, which is
- * the REAL figure from the profile. It is not inferred, not estimated, and it
+ * Honesty rule: `current` ab /admin/settings → "Google Rating & Reviews" se
+ * aata hai (site_settings → gbp), aur wahan likha hai ki number GBP se hu-ba-hu
+ * copy karna hai. constants.ts sirf fallback hai. Ye REAL figure hai — It is not inferred, not estimated, and it
  * is never rounded up. An earlier version of this site shipped reviewCount 312
  * in schema against 44 real reviews; that is exactly the kind of thing Google's
  * July 2026 review-spam update issues site-wide manual actions for.
  */
-import { GBP, GBP_RATING_TEXT } from '@/lib/constants';
 import { reviewProgress, REVIEW_TARGET } from '@/lib/reviews/review-request';
+import { getGbpSettings } from '@/lib/settings';
 
-export default function ReviewTracker({
+export default async function ReviewTracker({
   completedThisMonth,
 }: {
   /** Completed jobs in the last 30 days — the pool of people who can be asked. */
   completedThisMonth: number;
 }) {
-  const p = reviewProgress(GBP.reviewCount);
+  const gbp = await getGbpSettings();
+  const p = reviewProgress(gbp.reviewCount);
 
   /* At ~27% conversion on ask + one follow-up, how long the gap takes to close
      at the current job rate. Shown only when there is a real job flow to
@@ -56,7 +58,7 @@ export default function ReviewTracker({
             <span className="ml-1 text-lg font-bold text-muted">/ {REVIEW_TARGET}</span>
           </p>
           <p className="mt-1 text-xs text-muted">
-            {GBP_RATING_TEXT}★ rating · {p.remaining} aur chahiye
+            {gbp.ratingText}★ rating · {p.remaining} aur chahiye
           </p>
         </div>
         <span className="text-3xl" aria-hidden="true">⭐</span>

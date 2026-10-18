@@ -63,7 +63,8 @@ import {
   organizationSchema, websiteSchema, localBusinessSchema, faqSchema,
   breadcrumbSchema, serviceListSchema, jsonLd,
 } from '@/lib/seo/schema';
-import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import TrustBadges from '@/components/ui/TrustBadges';
@@ -100,7 +101,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RoCustomerCarePatnaPage() {
+export default async function RoCustomerCarePatnaPage() {
+  /* 18 Oct 2026 — Google rating ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   const verified = CARE_BRANDS.filter((b) => b.phone);
   const unverified = CARE_BRANDS.filter((b) => !b.phone);
   const faqs = [...CARE_FAQS, SAMSUNG_ANSWER];
@@ -110,7 +113,7 @@ export default function RoCustomerCarePatnaPage() {
       <script {...jsonLd([
         organizationSchema(),
         websiteSchema(),
-        localBusinessSchema(),
+        localBusinessSchema(undefined, gbp),
         faqSchema(faqs),
         breadcrumbSchema([
           { name: 'Home', url: '/' },
@@ -459,7 +462,7 @@ export default function RoCustomerCarePatnaPage() {
 
             <p className="mt-6 max-w-3xl text-sm text-aqua-100">
               Aqua Perl {SERVICE.city} me {new Date().getFullYear() - 2019}+ saal se chal raha hai,
-              Google par {GBP_RATING_TEXT} aur {GBP.reviewCount} reviews ke saath. Pata{' '}
+              Google par {gbp.ratingText} aur {gbp.reviewCount} reviews ke saath. Pata{' '}
               {CONTACT.address.locality} me hai &mdash; aap aa kar mil sakte hain. Yahi fark hai ek
               number aur ek dukaan me.
             </p>

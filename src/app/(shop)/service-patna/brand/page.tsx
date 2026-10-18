@@ -38,6 +38,7 @@ import {
   websiteSchema,
 } from '@/lib/seo/schema';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { ogImage } from '@/lib/seo/og-image';
 import { BRAND_DISCLAIMER } from '@/lib/seo/brand-logos';
 import {
@@ -116,7 +117,9 @@ const FAQS = [
   },
 ];
 
-export default function BrandHubPage() {
+export default async function BrandHubPage() {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   // Service schema ke liye — har brand ka apna page, apna starting price.
   const serviceItems = SERVICED_BRANDS.map((b) => {
     const from = cheapestFixFrom(b.slug);
@@ -134,7 +137,7 @@ export default function BrandHubPage() {
         {...jsonLd([
           organizationSchema(),
           websiteSchema(),
-          localBusinessSchema(),
+          localBusinessSchema(undefined, gbp),
           serviceListSchema(serviceItems, 'RO Brands Serviced in Patna'),
           faqSchema(FAQS),
           breadcrumbSchema([

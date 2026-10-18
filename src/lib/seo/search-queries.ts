@@ -54,7 +54,8 @@
  * hai. Agar koi line insaan ke liye bekaar hai to wo yahan nahi honi chahiye.
  */
 
-import { CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { CONTACT, SERVICE } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 
 export interface SearchAnswer {
   /** Wo exact phrase jo log type karte hain (lowercase, jaisa autocomplete me). */
@@ -72,7 +73,9 @@ export interface SearchAnswer {
  * andar hai. Number sab constants se aate hain, isliye rate badle to yahan
  * apne aap badal jayega — do jagah alag figure nahi ho sakta.
  */
-export const SEARCH_ANSWERS: SearchAnswer[] = [
+/* 18 Oct 2026 — const se function. Wajah upar `ctaTrustBadges` jaisi hi. */
+export function searchAnswers(gbp: GbpValues = GBP_FALLBACK): SearchAnswer[] {
+  return [
   {
     query: 'ro service patna near me',
     heading: 'RO Service Patna Near Me — Kitni Der Me Pahunchte Hain',
@@ -158,7 +161,7 @@ export const SEARCH_ANSWERS: SearchAnswer[] = [
       `kijiye: TDS meter saath laaya ya nahi, rate kaam se pehle bataya ya baad me, purana nikala ` +
       `hua part wapas diya ya nahi, aur bill par warranty likhi hai ya sirf zubani. ` +
       `Hum chaaron karte hain — labour par ${SERVICE.warrantyDays} din aur part par ${SERVICE.partsWarrantyMonths} mahine ki likhit warranty, aur ₹${SERVICE.visitCharge} ` +
-      `ka fixed visit charge. Google par ${GBP_RATING_TEXT} rating aur ${GBP.reviewCount} reviews hain, ` +
+      `ka fixed visit charge. Google par ${gbp.ratingText} rating aur ${gbp.reviewCount} reviews hain, ` +
       `jo aap khud padh sakte hain.`,
   },
   {
@@ -182,8 +185,9 @@ export const SEARCH_ANSWERS: SearchAnswer[] = [
       `hum sasta aur tez padte hain: ₹${SERVICE.visitCharge} visit, ${SERVICE.responseTime} ka target, ` +
       `aur Aquaguard ke saath Kent, Pureit, Livpure aur AO Smith bhi ek hi visit me dekh lete hain. ` +
       `Yahi baat Kent RO service near me dhoondhne walon par bhi laagu hoti hai.`,
-  },
-];
+    },
+  ];
+}
 
 /**
  * Brand-specific queries. Autocomplete ne "kent ro service patna",
@@ -218,8 +222,8 @@ export const BRAND_QUERY_LINES: Record<string, string> = {
 };
 
 /** FAQ/QAPage schema ke liye — page pe dikh raha wahi text, entity ke saath. */
-export function searchAnswerFaq() {
-  return SEARCH_ANSWERS.map((a) => ({
+export function searchAnswerFaq(gbp: GbpValues = GBP_FALLBACK) {
+  return searchAnswers(gbp).map((a) => ({
     question: a.heading,
     answer: a.answer,
   }));
@@ -230,8 +234,11 @@ export function searchAnswerFaq() {
  * hi jagah, ek hi sachche vaakya me aa jaate hain. Har page pe render hoti hai,
  * isliye ye chhoti aur imaandaar honi chahiye — list nahi, vaakya.
  */
-export const COVERAGE_SENTENCE =
-  `Aqua Perl Patna me RO service, RO repair aur water purifier service karta hai — ` +
-  `Kent, Aquaguard, Livpure, Pureit aur baaki sabhi brand par. ` +
-  `Visit charge ₹${SERVICE.visitCharge}, ${SERVICE.warrantyDays} din warranty, ` +
-  `${GBP_RATING_TEXT}★ (${GBP.reviewCount} reviews). Call ${CONTACT.primaryPhone}.`;
+export function coverageSentence(gbp: GbpValues = GBP_FALLBACK): string {
+  return (
+    `Aqua Perl Patna me RO service, RO repair aur water purifier service karta hai — ` +
+    `Kent, Aquaguard, Livpure, Pureit aur baaki sabhi brand par. ` +
+    `Visit charge ₹${SERVICE.visitCharge}, ${SERVICE.warrantyDays} din warranty, ` +
+    `${gbp.ratingText}★ (${gbp.reviewCount} reviews). Call ${CONTACT.primaryPhone}.`
+  );
+}

@@ -23,7 +23,8 @@
  * invented. If a figure ever stops being true, change it here and it changes
  * everywhere.
  */
-import { GBP, SERVICE, GBP_RATING_TEXT } from '@/lib/constants';
+import { SERVICE } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 
 /**
@@ -57,15 +58,15 @@ export interface ProofStat {
  * rating goes first (it is our strongest number at 4.8) and the raw review
  * count never appears alone as a headline figure.
  */
-export function getProofStats(): ProofStat[] {
+export function getProofStats(gbp: GbpValues = GBP_FALLBACK): ProofStat[] {
   const years = new Date().getFullYear() - FOUNDED_YEAR;
   return [
     {
-      value: `${GBP_RATING_TEXT}★`,
+      value: `${gbp.ratingText}★`,
       label: 'Google rating',
-      detail: `${GBP_RATING_TEXT} out of 5, from ${GBP.reviewCount} verified Google reviews`,
+      detail: `${gbp.ratingText} out of 5, from ${gbp.reviewCount} verified Google reviews`,
       icon: '⭐',
-      countTo: GBP.ratingValue,
+      countTo: gbp.ratingValue,
       suffix: '★',
     },
     {
@@ -115,10 +116,10 @@ export function getProofStats(): ProofStat[] {
  * "5.0 out of 5" is a strong claim; "50 reviews" is a neutral fact that
  * supports it. Reversing that order is what makes 50 feel small.
  */
-export function getRatingSummary() {
+export function getRatingSummary(gbp: GbpValues = GBP_FALLBACK) {
   return {
-    rating: GBP_RATING_TEXT,
-    count: GBP.reviewCount,
+    rating: gbp.ratingText,
+    count: gbp.reviewCount,
     /*
      * Star distribution consistent with the live 5.0 average over 50 reviews
      * (measured on Google, 12 Sep 2026). A 5.0 rounded average means Google is
@@ -133,8 +134,8 @@ export function getRatingSummary() {
     ],
     /** Honest, checkable framing lines. */
     lines: [
-      `${GBP_RATING_TEXT} out of 5`,
-      `${GBP.reviewCount} verified Google reviews`,
+      `${gbp.ratingText} out of 5`,
+      `${gbp.reviewCount} verified Google reviews`,
       'Every review is from a real customer — we never buy or incentivise reviews',
     ],
   };
@@ -146,12 +147,17 @@ export function getRatingSummary() {
  * accounts) is consistent: proof placed AT the CTA outperforms proof placed
  * on a separate testimonials page.
  */
-export const CTA_TRUST_BADGES = [
-  { icon: '🛡️', text: `${SERVICE.warrantyDays}-day warranty` },
-  { icon: '⚡', text: `${SERVICE.responseTime} response` },
-  { icon: '⭐', text: `${GBP_RATING_TEXT}★ rated` },
-  { icon: '💰', text: `₹${SERVICE.visitCharge} visit only` },
-] as const;
+/* 18 Oct 2026 — const se function bana diya, kyunki rating ab admin se
+   badalti hai aur module-level const import ke waqt hi jam jaata hai.
+   Default parameter hone ki wajah se purane caller bhi waise hi chalte hain. */
+export function ctaTrustBadges(gbp: GbpValues = GBP_FALLBACK) {
+  return [
+    { icon: '🛡️', text: `${SERVICE.warrantyDays}-day warranty` },
+    { icon: '⚡', text: `${SERVICE.responseTime} response` },
+    { icon: '⭐', text: `${gbp.ratingText}★ rated` },
+    { icon: '💰', text: `₹${SERVICE.visitCharge} visit only` },
+  ] as const;
+}
 
 /**
  * Live slot availability.

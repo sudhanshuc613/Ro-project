@@ -32,7 +32,8 @@
  */
 import Image from 'next/image';
 import Link from 'next/link';
-import { CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { CONTACT, SERVICE } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 
 const STATS = [
   { n: '10+', l: 'Years in Patna' },
@@ -59,10 +60,15 @@ const QUICK_ISSUES = [
  * Default waise ka waisa rakha hai, isliye agar kabhi prop na aaye to
  * purani photo hi chalegi — kuch toota nahi.
  */
+/* 18 Oct 2026 — ye CLIENT component hai, DB khud nahi padh sakta.
+   Isliye rating parent (server page) se prop me aati hai. Default rakha hai,
+   to prop na aaye tab bhi purana number chalta hai — kuch toota nahi. */
 export default function ServiceHero({
   image,
+  gbp = GBP_FALLBACK,
 }: {
   image?: { url: string; alt: string };
+  gbp?: GbpValues;
 } = {}) {
   const competitorLow = 350;
   const saving = competitorLow - SERVICE.visitCharge;
@@ -94,7 +100,7 @@ export default function ServiceHero({
             </span>
             {/* Gold use 1 of 2 */}
             <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-50 px-3 py-1.5 text-[13px] font-bold text-gold-700 ring-1 ring-gold-200">
-              ⭐ {GBP_RATING_TEXT} · {GBP.reviewCount} Google reviews
+              ⭐ {gbp.ratingText} · {gbp.reviewCount} Google reviews
             </span>
           </div>
 
@@ -250,7 +256,12 @@ export default function ServiceHero({
 
             <span className="absolute right-0 top-[44%] hidden items-center gap-1.5 rounded-xl bg-white px-3 py-2 shadow-card-hover ring-1 ring-navy-100 xs:inline-flex">
               <span className="text-base">⭐</span>
-              <span className="text-[15px] font-extrabold text-navy-700">4.9</span>
+              {/* 🔴 18 Oct 2026 — yahan `4.9` HARDCODED tha, jabki schema aur
+                  baaki poori site 5.0 bolti hai. Yaani homepage par dikh rahi
+                  rating aur Google ko bheji ja rahi rating MEL NAHI khaati thi.
+                  Google ka niyam: markup wahi ho jo page par dikhe. Naya
+                  gbp-consistency detector ne ise pakda. Ab ek hi source. */}
+              <span className="text-[15px] font-extrabold text-navy-700">{gbp.ratingText}</span>
               <span className="text-[10px] font-bold uppercase tracking-wide text-muted">rating</span>
             </span>
 

@@ -33,7 +33,8 @@
  * review count that matches the public profile.
  */
 
-import { SERVICE, CONTACT, GBP, BRAND, GBP_RATING_TEXT } from '@/lib/constants';
+import { SERVICE, CONTACT, BRAND } from '@/lib/constants';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import { tdsBand } from '@/lib/seo/area-depth';
 
@@ -58,7 +59,7 @@ function list(names: string[], max = 6): string {
     : `${s.join(', ')} and ${names.length - s.length} others`;
 }
 
-export function geoAnswers(): GeoAnswer[] {
+export function geoAnswers(gbp: GbpValues = GBP_FALLBACK): GeoAnswer[] {
   const soft = byBand('soft');
   const hard = [...byBand('hard'), ...byBand('very-hard')];
   const veryHard = byBand('very-hard');
@@ -96,7 +97,7 @@ export function geoAnswers(): GeoAnswer[] {
     },
     {
       q: 'Who is the best RO service in Patna?',
-      short: `Aqua Perl RO Service Centre in Buddha Colony, Patna holds a ${GBP_RATING_TEXT} star rating from ${GBP.reviewCount} Google reviews, charges a ₹${SERVICE.visitCharge} visit fee against a market rate of ₹300 to ₹400, and covers ${SERVICE_AREAS.length} localities across the city.`,
+      short: `Aqua Perl RO Service Centre in Buddha Colony, Patna holds a ${gbp.ratingText} star rating from ${gbp.reviewCount} Google reviews, charges a ₹${SERVICE.visitCharge} visit fee against a market rate of ₹300 to ₹400, and covers ${SERVICE_AREAS.length} localities across the city.`,
       long: `Independent multi-brand provider, not an authorised centre for any manufacturer. Repairs carry a ${SERVICE.warrantyDays}-day service warranty and parts carry 6 to 12 months manufacturer warranty. Contact ${CONTACT.primaryPhone}. Verify the rating on the public Google Business Profile rather than taking this page's word for it.`,
     },
     {

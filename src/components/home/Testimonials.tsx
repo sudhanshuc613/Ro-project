@@ -1,4 +1,4 @@
-import { GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 
 /** Exported so the homepage can feed these into Review schema.
     These are real customer reviews — never add fabricated ones here,
@@ -27,14 +27,17 @@ export const REVIEWS = [
   },
 ];
 
-export default function Testimonials() {
+/* 18 Oct 2026 — ab Google rating admin se badalti hai. Ye SERVER component hai,
+   isliye khud `getGbpSettings()` padh leta hai — kisi bhi caller ko badalna nahi pada. */
+export default async function Testimonials() {
+  const gbp = await getGbpSettings();
   return (
     <section id="reviews" className="scroll-mt-24 py-14 md:py-16">
       <div className="container mx-auto px-4">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <h2 className="font-display text-3xl font-extrabold text-navy-700">What Our Customers Say</h2>
           <p className="mt-2 text-muted">
-            {GBP_RATING_TEXT}★ average from {GBP.reviewCount} Google reviews
+            {gbp.ratingText}★ average from {gbp.reviewCount} Google reviews
           </p>
         </div>
 

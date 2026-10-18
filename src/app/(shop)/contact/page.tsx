@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BRAND, CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { breadcrumbSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import { ogImage } from '@/lib/seo/og-image';
 
@@ -59,13 +60,15 @@ const POLICIES = [
   },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   return (
     <>
       {/* 11 Oct 2026 — BreadcrumbList joda. Page par breadcrumb dikh raha tha
           par schema me nahi tha; Google SERP me trail isi se banti hai. */}
       <script {...jsonLd([
-        localBusinessSchema(),
+        localBusinessSchema(undefined, gbp),
         breadcrumbSchema([
           { name: 'Home', url: BRAND.url },
           { name: 'Contact', url: `${BRAND.url}/contact` },

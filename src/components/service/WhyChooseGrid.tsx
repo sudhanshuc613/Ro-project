@@ -21,15 +21,18 @@
  * Data `WHY_POINTS` se aata hai (ads-landing-data.ts).
  */
 import Image from 'next/image';
-import { WHY_POINTS } from '@/lib/seo/ads-landing-data';
+import { whyPoints } from '@/lib/seo/ads-landing-data';
+import { getGbpSettings } from '@/lib/settings';
 import { CONTACT, SERVICE } from '@/lib/constants';
 
-export default function WhyChooseGrid({
+export default async function WhyChooseGrid({
   images,
 }: {
   /* 10 Oct 2026 — teeno proof photo admin se badalti hain. */
   images?: Record<string, { url: string; alt: string }>;
 }) {
+  /* 18 Oct 2026 — rating/review ab admin se. Server component hai, khud padh leta hai. */
+  const WHY_POINTS = whyPoints(await getGbpSettings());
   return (
     <section className="bg-slate-50 px-4 py-12 md:py-16">
       <div className="mx-auto max-w-6xl">

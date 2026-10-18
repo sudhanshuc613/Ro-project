@@ -45,9 +45,12 @@
 import Image from 'next/image';
 import BannerPhoneBadge from '@/components/common/BannerPhoneBadge';
 import Link from 'next/link';
-import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 
-export default function AdsHeroBanner({
+/* 18 Oct 2026 — ab Google rating admin se badalti hai. Ye SERVER component hai,
+   isliye khud `getGbpSettings()` padh leta hai — kisi bhi caller ko badalna nahi pada. */
+export default async function AdsHeroBanner({
   h1,
   areaCount,
   brandCount,
@@ -60,6 +63,7 @@ export default function AdsHeroBanner({
      Prop na mile to code ka default chalta hai. */
   image?: { url: string; alt: string };
 }) {
+  const gbp = await getGbpSettings();
   const since = new Date().getFullYear() - 2019;
 
   return (
@@ -95,9 +99,9 @@ export default function AdsHeroBanner({
         <div className="max-w-2xl">
           {/* Rating strip — asli number, badhaya hua nahi */}
           <div className="mb-4 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-aqua-100 ring-1 ring-white/20">
-            <span className="text-amber-300">★ {GBP_RATING_TEXT}</span>
+            <span className="text-amber-300">★ {gbp.ratingText}</span>
             <span className="text-white/40">|</span>
-            <span>{GBP.reviewCount} Google reviews</span>
+            <span>{gbp.reviewCount} Google reviews</span>
             <span className="text-white/40">|</span>
             <span>{SERVICE.city} me {since}+ saal</span>
           </div>

@@ -31,9 +31,8 @@
  * (shop)/[intent]/page.tsx materially worse. A nested segment cannot shadow
  * anything above it.
  *
- * Same three guards as [intent]: generateStaticParams lists the slugs,
- * dynamicParams = false is the hard stop, getSymptom() + notFound() is the
- * runtime belt-and-braces.
+ * Same guards as [intent]: generateStaticParams lists the slugs, aur
+ * getSymptom() + notFound() runtime par belt-and-braces hai.
  */
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -46,11 +45,40 @@ import {
 import FaqAccordion from '@/components/home/FaqAccordion';
 import QuickBookForm from '@/components/home/QuickBookForm';
 import TrustBadges from '@/components/ui/TrustBadges';
-import { BRAND, CONTACT, SERVICE, GBP, GBP_RATING_TEXT } from '@/lib/constants';
+import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
-export const dynamicParams = false;
+
+/* 🔴 18 Oct 2026 — `dynamicParams = false` tha, usse ye paanch page
+   PERMANENT 404 ho jaate the. Ye BUG CLASS D hai, dobara.
+   ─────────────────────────────────────────────────────────────────────────
+   Naap kar dekha (18 Oct):
+     fresh build ke turant baad        → paanch page 200 ✅
+     /api/admin/settings par kuch save → paanch page 404 🔴  (baaki sab 200)
+
+   Wajah: har settings save `revalidateTag('settings')` karta hai. Us tag se
+   jude SSG page invalidate hote hain. `dynamicParams = false` ke saath Next
+   un invalidated path ko dobara banane ke bajay 404 de deta hai — kyunki
+   "is route par sirf build-time wale path hi hain" ka matlab wo
+   "ab koi path nahi hai" laga leta hai.
+
+   Yahi galti `(shop)/[intent]/page.tsx` par pehle pakdi ja chuki thi aur
+   wahan `true` kiya gaya tha. Yahan reh gayi thi — kyunki pehle ye page
+   kisi `settings` wale data ko chhuta hi nahi tha, isliye tag kabhi is tak
+   pahunchta hi nahi tha. 18 Oct ko rating admin-editable hui, tab ye bug
+   bahar aaya. Yaani ye LATENT tha: owner jis din phone number ya visit
+   charge badalta, usi din ye paanch page mar jaate.
+
+   `true` karna surakshit hai: generateStaticParams paanchon slug deta hai,
+   aur koi anjaan slug aaye to `getSymptom()` null deta hai aur `notFound()`
+   theek 404 bhejta hai. Yani galat URL par vyavhaar bilkul wahi rehta hai,
+   sirf asli paanch page zinda rehte hain.
+
+   Permanent test: scripts/verify-gbp-consistency.sh (settings save ke baad
+   har page fetch karta hai) + verify-seo-indexing. */
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return SYMPTOMS.map((s) => ({ symptom: s.slug }));
@@ -71,7 +99,9 @@ export function generateMetadata({ params }: { params: { symptom: string } }): M
   };
 }
 
-export default function SymptomPage({ params }: { params: { symptom: string } }) {
+export default async function SymptomPage({ params }: { params: { symptom: string } }) {
+  /* 18 Oct 2026 — Google rating ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   const s = getSymptom(params.symptom);
   if (!s) notFound();
 
@@ -89,7 +119,7 @@ export default function SymptomPage({ params }: { params: { symptom: string } })
           lat: CONTACT.geo.lat,
           lng: CONTACT.geo.lng,
           path: `/ro-problem/${s.slug}`,
-        }),
+        }, gbp),
         breadcrumbSchema([
           { name: 'Home', url: BRAND.url },
           { name: 'RO Problems', url: `${BRAND.url}/ro-problem-checker` },
@@ -152,7 +182,7 @@ export default function SymptomPage({ params }: { params: { symptom: string } })
                 WhatsApp
               </a>
               <span className="text-xs text-navy-200">
-                ⭐ {GBP_RATING_TEXT} · {GBP.reviewCount} Google reviews · Patna me ₹{SERVICE.visitCharge} visit
+                ⭐ {gbp.ratingText} · {gbp.reviewCount} Google reviews · Patna me ₹{SERVICE.visitCharge} visit
               </span>
             </div>
 

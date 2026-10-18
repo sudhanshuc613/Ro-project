@@ -90,7 +90,7 @@ import AmcQuickCards from '@/components/service/AmcQuickCards';
 import ReviewShowcase from '@/components/home/ReviewShowcase';
 import { tdsBand } from '@/lib/seo/area-depth';
 /* 10 Oct 2026 — banner aur card ki images ab admin se badalti hain. */
-import { getSiteImages, getRateCard } from '@/lib/settings';
+import { getSiteImages, getRateCard, getGbpSettings } from '@/lib/settings';
 
 export const revalidate = 86400;
 
@@ -175,6 +175,8 @@ export function generateMetadata({ params }: { params: { intent: string } }): Me
 }
 
 export default async function ServiceIntentPage({ params }: { params: { intent: string } }) {
+  /* 18 Oct 2026 — Google rating/review count ab admin se (site_settings → gbp). */
+  const gbp = await getGbpSettings();
   const intent = getIntent(params.intent);
 
   /* Ads landing page — sirf isi slug par extra visual blocks lagte hain. */
@@ -239,7 +241,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
           lat: CONTACT.geo.lat,
           lng: CONTACT.geo.lng,
           path: intent.path,
-        }),
+        }, gbp),
         faqSchema(intent.faqs),
         breadcrumbSchema([
           { name: 'Home', url: '/' },
@@ -502,7 +504,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
         {/* 🔴 Brand cards par SIRF hamara number. Paid click brand ke
             helpline par nahi jaana chahiye. */}
         {isAdsLanding && <BrandCallCards brands={SERVICED_BRANDS} />}
-        {isAdsLanding && <ReviewShowcase />}
+        {isAdsLanding && <ReviewShowcase gbp={gbp} />}
         {isAdsLanding && <NearMeBlock />}
 
         {params.intent === 'ro-installation-patna' && (
