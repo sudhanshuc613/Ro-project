@@ -76,7 +76,9 @@ $checkList = @(
   "src\lib\seo\content-dates.ts",
   "scripts\jsonld-parents.py",
   "scripts\verify-jsonld-parents.sh",
-  "scripts\verify-all.sh"
+  "scripts\verify-all.sh",
+  "scripts\admin-deep.py",
+  "scripts\verify-admin-deep.sh"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -157,7 +159,9 @@ $expected = @{
   "src\lib\seo\content-dates.ts"                      = 6504
   "scripts\jsonld-parents.py"                         = 18076
   "scripts\verify-jsonld-parents.sh"                  = 2676
-  "scripts\verify-all.sh"                             = 1567
+  "scripts\verify-all.sh"                             = 1585
+  "scripts\admin-deep.py"                            = 7838
+  "scripts\verify-admin-deep.sh"                     = 2529
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -221,7 +225,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "Schema: aggregateRating off Service (83 pages) + homepage @id entity merge + blog lastmod + permanent JSON-LD parent test" 2>&1 | Out-Null
+git commit -m "Admin panel deep test (login-ke-baad) + verify-all 24 scripts" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan
