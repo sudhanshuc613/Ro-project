@@ -200,8 +200,11 @@ export default async function NearMeBlock({
             ))}
           </ul>
         ) : null}
+        {/* 🔴 18 Oct 2026 — `/ro-service-patna` next.config.mjs me 308 redirect
+            hai (→ /service-patna). Ye block 4 page par render hota hai, yani
+            4 extra hop. Ab seedha manzil par — page wahi, hop kam. */}
         <Link
-          href="/ro-service-patna"
+          href="/service-patna"
           className="mt-4 inline-block text-sm font-bold text-aqua-700 underline"
         >
           Poori area list dekhiye &rarr;

@@ -85,7 +85,9 @@ $checkList = @(
   "src\components\admin\SettingsForm.tsx",
   "src\app\(shop)\ro-problem\[symptom]\page.tsx",
   "scripts\gbp-consistency.py",
-  "scripts\verify-gbp-consistency.sh"
+  "scripts\verify-gbp-consistency.sh",
+  "src\app\(shop)\contact\page.tsx",
+  "src\components\service\NearMeBlock.tsx"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -176,6 +178,8 @@ $expected = @{
   "src\app\(shop)\ro-problem\[symptom]\page.tsx"     = 17472
   "scripts\gbp-consistency.py"                       = 8883
   "scripts\verify-gbp-consistency.sh"                = 2527
+  "src\app\(shop)\contact\page.tsx"                  = 12844
+  "src\components\service\NearMeBlock.tsx"            = 11858
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -239,7 +243,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "Google rating 50->58 + admin se badalne ka option + symptom page 404 fix (Bug Class D)" 2>&1 | Out-Null
+git commit -m "5 internal link 308-redirect hop hataya (ro-service-patna -> service-patna)" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

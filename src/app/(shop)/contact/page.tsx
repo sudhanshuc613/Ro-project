@@ -221,7 +221,11 @@ export default async function ContactPage() {
           </p>
           <p className="mt-3 text-sm text-navy-600">
             Apne area ka TDS, aam dikkat aur rate dekhna ho to{' '}
-            <Link href="/ro-service-patna" className="font-semibold text-aqua-600 hover:underline">
+            {/* 🔴 18 Oct 2026 — pehle ye `/ro-service-patna` par jaata tha, jo
+                next.config.mjs me 308 redirect hai (→ /service-patna). Yani har
+                click aur har Googlebot visit ek extra hop leti thi, 5 page se.
+                Ab seedha manzil par. Page wahi khulta hai, bas hop kam. */}
+            <Link href="/service-patna" className="font-semibold text-aqua-600 hover:underline">
               area-wise RO service page
             </Link>{' '}
             kholiye — har mohalle ka apna page hai.
