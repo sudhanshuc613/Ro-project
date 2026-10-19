@@ -80,7 +80,24 @@ async function urls() {
 const list = await urls();
 console.log(`════ BROWSER CHECK — ${list.length} page · ${BASE} ════`);
 
-const browser = await chromium.launch({ args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+/* 🔴 19 Oct 2026 — pehle agar Chromium launch na ho paata to script crash ho
+   jaati thi aur verify-all.sh usme se PASS/FAIL nahi nikaal paata tha, to wo
+   "PASS 0 FAIL 0" chhaap deta tha — yaani NA CHALNE WALA TEST PASS JAISA
+   DIKHTA THA. Ye sabse khatarnaak kism ki galti hai. Ab saaf FAIL aata hai. */
+let browser;
+try {
+  browser = await chromium.launch({ args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+} catch (e) {
+  console.log('  FAIL  Chromium launch nahi hua — ye test CHALA HI NAHI.');
+  console.log('        ' + String(e).split('\n')[0]);
+  console.log('        Thik karo: npx playwright install chromium');
+  console.log('        aur apt: libnspr4 libnss3 libatk1.0-0 libatk-bridge2.0-0 libgbm1 libasound2t64');
+  console.log();
+  console.log('════════════════════════════════════');
+  console.log('  PASS: 0    FAIL: 1');
+  console.log('════════════════════════════════════');
+  process.exit(1);
+}
 let pass = 0;
 const fails = [];
 

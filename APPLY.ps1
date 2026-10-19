@@ -21,7 +21,7 @@ $HERE = Split-Path -Parent $MyInvocation.MyCommand.Definition
 Write-Host "[1] Naya code yahan hai :" -ForegroundColor Yellow
 Write-Host "    $HERE"
 
-if (-not (Test-Path "$HERE\src")) {
+if (-not (Test-Path -LiteralPath "$HERE\src")) {
     Write-Host ""
     Write-Host "  RUKO. Is folder me 'src' nahi mila." -ForegroundColor Red
     Write-Host "  Matlab aap script ko galat jagah se chala rahe ho." -ForegroundColor Red
@@ -34,7 +34,7 @@ if (-not (Test-Path "$HERE\src")) {
 # ---------- 2. Project folder dhoondo ----------
 $PROJ = "C:\Users\SUDHA\Downloads\ro-Project\Ro-project"
 
-if (-not (Test-Path "$PROJ\package.json")) {
+if (-not (Test-Path -LiteralPath "$PROJ\package.json")) {
     Write-Host ""
     Write-Host "  Default project folder nahi mila:" -ForegroundColor Red
     Write-Host "  $PROJ" -ForegroundColor Red
@@ -42,7 +42,7 @@ if (-not (Test-Path "$PROJ\package.json")) {
     $PROJ = Read-Host "  Apne project ka poora path likho (jahan package.json hai)"
 }
 
-if (-not (Test-Path "$PROJ\package.json")) {
+if (-not (Test-Path -LiteralPath "$PROJ\package.json")) {
     Write-Host "  Phir bhi package.json nahi mila. Band kar raha hu." -ForegroundColor Red
     Read-Host "Enter dabao"
     exit 1
@@ -87,12 +87,12 @@ $checkList = @(
   "scripts\gbp-consistency.py",
   "scripts\verify-gbp-consistency.sh",
   "src\app\(shop)\contact\page.tsx",
-  "src\components\service\NearMeBlock.tsx",
   "src\components\ui\TrustBadges.tsx",
   "src\components\home\QuickBookForm.tsx",
   "scripts\browser-check.mjs",
   "scripts\verify-browser.sh",
-  "scripts\check-async-in-client.mjs"
+  "scripts\check-async-in-client.mjs",
+  "scripts\verify-titles-and-schema.sh"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -114,7 +114,7 @@ Write-Host "[5] File copy kar raha hu (robocopy)..." -ForegroundColor Yellow
 
 $folders = @("src", "prisma", "scripts", "public", "mockup", "db", "docs")
 foreach ($d in $folders) {
-    if (Test-Path "$HERE\$d") {
+    if (Test-Path -LiteralPath "$HERE\$d") {
         robocopy "$HERE\$d" "$PROJ\$d" /E /NFL /NDL /NJH /NJS /NC /NS /R:2 /W:1 | Out-Null
         if ($LASTEXITCODE -ge 8) {
             Write-Host "    $d  -> ERROR (robocopy code $LASTEXITCODE)" -ForegroundColor Red
@@ -128,7 +128,7 @@ $rootFiles = @("package.json","package-lock.json","next.config.mjs","tsconfig.js
                "tailwind.config.ts","postcss.config.mjs","vercel.json",
                "next-env.d.ts",".nvmrc",".npmrc",".gitignore")
 foreach ($f in $rootFiles) {
-    if (Test-Path "$HERE\$f") {
+    if (Test-Path -LiteralPath "$HERE\$f") {
         Copy-Item -LiteralPath "$HERE\$f" -Destination (Join-Path $PROJ $f) -Force
     }
 }
@@ -163,17 +163,17 @@ foreach ($k in $imgExpect.Keys) {
 Write-Host ""
 Write-Host "[6] Copy ke BAAD ka naap:" -ForegroundColor Yellow
 $expected = @{
-  "src\components\service\NearMeBlock.tsx"            = 11359
-  "src\components\service\AreaKeywordBlock.tsx"       = 14201
-  "src\app\(shop)\page.tsx"                           = 18129
-  "src\app\(shop)\ro-service-patna\[area]\page.tsx"   = 33151
-  "src\components\layout\Navbar.tsx"                  = 19454
-  "src\lib\seo\schema.ts"                             = 24239
-  "src\lib\seo\blog-data.ts"                          = 36539
-  "src\lib\seo\content-dates.ts"                      = 6504
-  "scripts\jsonld-parents.py"                         = 18076
-  "scripts\verify-jsonld-parents.sh"                  = 2676
-  "scripts\verify-all.sh"                             = 1623
+  "src\components\service\NearMeBlock.tsx"           = 11858
+  "src\components\service\AreaKeywordBlock.tsx"      = 14201
+  "src\app\(shop)\page.tsx"                          = 18336
+  "src\app\(shop)\ro-service-patna\[area]\page.tsx"  = 33171
+  "src\components\layout\Navbar.tsx"                 = 19454
+  "src\lib\seo\schema.ts"                            = 26209
+  "src\lib\seo\blog-data.ts"                         = 36539
+  "src\lib\seo\content-dates.ts"                     = 6504
+  "scripts\jsonld-parents.py"                        = 19781
+  "scripts\verify-jsonld-parents.sh"                 = 2676
+  "scripts\verify-all.sh"                            = 1623
   "scripts\admin-deep.py"                            = 7838
   "scripts\verify-admin-deep.sh"                     = 2529
   "src\lib\constants.ts"                             = 16393
@@ -184,12 +184,12 @@ $expected = @{
   "scripts\gbp-consistency.py"                       = 8883
   "scripts\verify-gbp-consistency.sh"                = 2527
   "src\app\(shop)\contact\page.tsx"                  = 12844
-  "src\components\service\NearMeBlock.tsx"            = 11858
   "src\components\ui\TrustBadges.tsx"                = 3027
   "src\components\home\QuickBookForm.tsx"            = 12575
-  "scripts\browser-check.mjs"                        = 5903
+  "scripts\browser-check.mjs"                        = 6885
   "scripts\verify-browser.sh"                        = 3154
   "scripts\check-async-in-client.mjs"                = 2703
+  "scripts\verify-titles-and-schema.sh"              = 8454
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -253,7 +253,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "URGENT FIX: Application error — TrustBadges async hataya (React #329). + browser test" 2>&1 | Out-Null
+git commit -m "SCHEMA FIX: duplicate aggregateRating on same @id + itemReviewed in nested review (GSC critical)" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

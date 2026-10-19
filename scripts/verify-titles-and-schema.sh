@@ -78,7 +78,14 @@ chkge "Rating objects"        "$(grep -o '\"@type\":\"Rating\"' /tmp/h.html | wc
 chkge "Person (reviewers)"    "$(grep -o '\"@type\":\"Person\"' /tmp/h.html | wc -l)" "3"
 chkge "AggregateRating"       "$(grep -o 'AggregateRating' /tmp/h.html | wc -l)" "1"
 RC=$(grep -oP 'reviewCount: \K[0-9]+' src/lib/constants.ts | head -1)
-chk   "review count = real $RC" "$(grep -o "\"reviewCount\":\"$RC\"" /tmp/h.html | wc -l)" "2"
+# 🔴 19 Oct 2026 — ye test "2" maangta tha, aur WAHI BUG THA.
+# Do node (localBusinessSchema + reviewSchema) ek hi @id #localbusiness par
+# the aur DONO me aggregateRating tha. Google merge karne par ek entity par
+# DO rating ho jaati thi → GSC: "Review has multiple aggregate ratings".
+# Test khud bug ko sahi maan raha tha. Ab aggregateRating sirf EK node me hai.
+chk   "review count = real $RC (sirf 1 baar)" "$(grep -o "\"reviewCount\":\"$RC\"" /tmp/h.html | wc -l)" "1"
+chk   "AggregateRating sirf 1 node par"       "$(grep -o '\"@type\":\"AggregateRating\"' /tmp/h.html | wc -l)" "1"
+chk   "nested review me itemReviewed nahi"    "$(grep -o 'itemReviewed' /tmp/h.html | wc -l)" "0"
 chk   "fake 312 gone"          "$(grep -o '312' /tmp/h.html | wc -l)" "0"
 
 echo

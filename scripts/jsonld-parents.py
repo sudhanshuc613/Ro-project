@@ -145,6 +145,7 @@ def check_page(path, html):
     # warna wo node jo jaanbujh kar sirf aggregateRating+review jodta hai
     # (aur naam/pata main node se leta hai) jhoothi FAIL deta hai.
     merged_keys = {}
+    ar_per_id = {}          # @id -> kitne node par aggregateRating hai
     for _i, _raw, _data, _err in blocks:
         if _err:
             continue
@@ -152,6 +153,21 @@ def check_page(path, html):
             _nid = _n.get('@id')
             if _nid:
                 merged_keys.setdefault(_nid, set()).update(_n.keys())
+                if 'aggregateRating' in _n:
+                    ar_per_id[_nid] = ar_per_id.get(_nid, 0) + 1
+
+    # ── 14. 🔴 EK @id par EK SE ZYADA aggregateRating  (19 Oct 2026) ─────────
+    # Google ek hi @id ke node merge karta hai. Merge ke baad agar us entity
+    # par do aggregateRating aa gaye to Search Console deta hai:
+    #     "Review has multiple aggregate ratings"   (critical)
+    # Ye asli bug tha: localBusinessSchema() aur reviewSchema() dono
+    # #localbusiness par the aur dono me rating thi.
+    for _nid, _n_ar in ar_per_id.items():
+        if _n_ar > 1:
+            bad(f'{path}: @id {_nid} par {_n_ar} aggregateRating — merge ke baad '
+                f'"Review has multiple aggregate ratings". Rating sirf EK node me rakho.')
+        else:
+            ok(f'{path} {_nid} par 1 aggregateRating')
     for i, raw, data, err in blocks:
         if err:
             bad(f'{path} block#{i}: JSON parse fail — {err}')
@@ -220,6 +236,18 @@ def check_page(path, html):
                     bad(f'{path} {jp}: Review me reviewRating nahi')
                 else:
                     ok(f'{path} Review fields ok')
+
+                # 🔴 19 Oct 2026 — nested review me `itemReviewed` nahi hona chahiye.
+                # Google ka doc: "if the review is nested into another schema.org
+                # type using the review property, omit the itemReviewed property
+                # (we assume the parent item is the reviewed item)."
+                # GSC isi par bolta hai: "A nested '<parent_node>' object can't
+                # contain the 'itemReviewed' field."
+                if '.review' in jp and 'itemReviewed' in node:
+                    bad(f'{path} {jp}: nested Review me `itemReviewed` hai — '
+                        f'Google kehta hai hata do (directional conflict)')
+                elif '.review' in jp:
+                    ok(f'{path} nested Review me itemReviewed nahi')
 
             # --- 9. BreadcrumbList ------------------------------------------
             if 'BreadcrumbList' in tl:

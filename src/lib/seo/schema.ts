@@ -405,27 +405,53 @@ export function reviewSchema(
        paas business ka naam DO ho jaata hai aur image bhi DO. Local SEO me naam
        (NAP) ka ek hona seedha ranking factor hai; do naam = kamzor entity signal.
 
-       Ab ye node sirf WAHI properties bhejta hai jo main node me nahi hain —
-       `aggregateRating` aur `review`. Ye JSON-LD ka standard tarika hai
-       ("ek hi node par aur properties jodna"). Koi data kam nahi hua:
-       naam/pata/phone main node se aate hain, rating + reviews yahan se.
+       Ab ye node sirf WAHI properties bhejta hai jo main node me nahi hain. */
 
-       Naapa gaya (local build): homepage par duplicate-@id conflict 1 → 0,
-       reviewCount:"50" abhi bhi 2 baar (test wahi expect karta hai),
-       Review/Rating/Person nodes 3-3-3 — sab waise ke waise. */
+    /* 🔴🔴 19 Oct 2026 — DO ASLI GALTI, DONO MERI. Owner ko GSC me dikhi.
+       ══════════════════════════════════════════════════════════════════════
 
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: gbp.ratingText,
-      reviewCount: String(gbp.reviewCount),
-      bestRating: '5',
-    },
+       GALTI 1 — "Review has multiple aggregate ratings"  (critical)
+       ─────────────────────────────────────────────────────────────
+       16 Oct ko maine is node se name/image/telephone/address hata diye the,
+       par `aggregateRating` DONO node me CHHOD DIYA:
+
+           node A  localBusinessSchema()  @id #localbusiness  → aggregateRating
+           node B  reviewSchema()         @id #localbusiness  → aggregateRating
+
+       Google ek hi @id ke node MERGE karta hai. Merge ke baad us ek entity par
+       DO aggregateRating ho jaate hain → Google saaf mana karta hai, aur
+       Search Console ne 5 items par yahi critical error diya.
+
+       Aur maine isi ko "verify" bhi kar liya tha — kyunki test
+       `verify-titles-and-schema.sh` likhta tha ki reviewCount EXACTLY 2 baar
+       aana chahiye. Wo test khud hi bug ko sahi maan raha tha. Ab 1 hai.
+
+       FIX: `aggregateRating` sirf `localBusinessSchema()` me rahega
+       (wahan geo/address/offers ke saath poori entity banti hai).
+       Yahan sirf `review` array jaata hai. Rating gayab nahi hui —
+       merge ke baad bhi wahi ek rating us entity par lagti hai.
+
+       GALTI 2 — nested review me `itemReviewed`  (non-critical)
+       ─────────────────────────────────────────────────────────
+       Google ka apna doc:
+         "if the review is nested into another schema.org type using the
+          review property, OMIT the itemReviewed property (we assume the
+          parent item is the reviewed item)."
+       Hamare teeno review me `itemReviewed` pada tha, isliye GSC bola:
+         "A nested '<parent_node>' object can't contain the 'itemReviewed'
+          field. Remove 'itemReviewed' to avoid directional conflict."
+       FIX: hata diya. Review already `review:` property se is LocalBusiness
+       ke andar nested hai, to kiska review hai ye apne aap saaf hai.
+
+       🔴 NIYAM: ek @id par `aggregateRating` SIRF EK NODE me. Aur `review`
+       jab kisi parent ke andar nested ho to usme `itemReviewed` kabhi nahi.
+       Permanent test: scripts/jsonld-parents.py (dono ab pakde jaate hain). */
+
     review: reviews.map((r) => ({
       '@type': 'Review',
       reviewRating: { '@type': 'Rating', ratingValue: String(r.stars), bestRating: '5' },
       author: { '@type': 'Person', name: r.name },
       reviewBody: r.body,
-      itemReviewed: { '@type': 'LocalBusiness', name: BRAND.name },
     })),
   };
 }
