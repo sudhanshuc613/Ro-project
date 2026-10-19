@@ -243,6 +243,7 @@ export default async function HomePage() {
                 slotsLeft={slots.slotsLeft}
                 urgent={slots.urgent}
                 slotMessage={slots.message}
+                gbp={gbp}
               />
               <details className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
                 <summary className="cursor-pointer text-sm font-bold text-white">

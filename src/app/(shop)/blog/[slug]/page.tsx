@@ -19,6 +19,7 @@ import {
 import FaqAccordion from '@/components/home/FaqAccordion';
 import TrustBadges from '@/components/ui/TrustBadges';
 import { CONTACT, SERVICE } from '@/lib/constants';
+import { getGbpSettings } from '@/lib/settings';
 import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
@@ -49,7 +50,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  /* 18 Oct 2026 — Google rating admin se; TrustBadges ko prop me jaata hai. */
+  const gbp = await getGbpSettings();
   const post = getPost(params.slug);
   if (!post) notFound();
 
@@ -187,7 +190,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                 💬 WhatsApp
               </a>
             </div>
-            <TrustBadges className="mt-4 text-navy-100" />
+            <TrustBadges className="mt-4 text-navy-100" gbp={gbp} />
           </aside>
 
           <div className="mt-10">

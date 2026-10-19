@@ -347,7 +347,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
             </div>
 
             <div className="rounded-2xl bg-white p-1 shadow-2xl">
-              <QuickBookForm />
+              <QuickBookForm gbp={gbp} />
             </div>
           </div>
         </section>
@@ -360,7 +360,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
                 {p}
               </p>
             ))}
-            <TrustBadges variant="row" className="mt-6" />
+            <TrustBadges variant="row" className="mt-6" gbp={gbp} />
             {isAdsLanding && (
               <p className="mt-6 rounded-2xl bg-aqua-50 p-4 text-sm leading-relaxed text-navy-700 ring-1 ring-aqua-100">
                 <strong>Jaldi me hain?</strong> Neeche &ldquo;Call karne se pehle apna rate dekh

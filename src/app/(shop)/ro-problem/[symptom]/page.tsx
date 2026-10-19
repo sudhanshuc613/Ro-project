@@ -304,7 +304,7 @@ export default async function SymptomPage({ params }: { params: { symptom: strin
             <h2 className="mb-4 text-center font-display text-2xl font-bold text-white">
               Technician bulana hai?
             </h2>
-            <QuickBookForm />
+            <QuickBookForm gbp={gbp} />
           </div>
         </section>
 
@@ -347,7 +347,7 @@ export default async function SymptomPage({ params }: { params: { symptom: strin
           </div>
         </section>
 
-        <TrustBadges />
+        <TrustBadges gbp={gbp} />
       </main>
     </>
   );

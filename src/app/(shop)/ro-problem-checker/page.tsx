@@ -264,7 +264,7 @@ export default async function CheckerPage() {
           </div>
         </section>
 
-        <TrustBadges />
+        <TrustBadges gbp={gbp} />
         <ExtraKeywordBlock variant="problem" />
 
       </main>

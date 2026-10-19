@@ -266,7 +266,7 @@ export default async function ServiceHubPage() {
               </ul>
             </div>
             <div className="rounded-2xl bg-white p-1 shadow-2xl">
-              <QuickBookForm />
+              <QuickBookForm gbp={gbp} />
             </div>
           </div>
         </section>
@@ -305,7 +305,7 @@ export default async function ServiceHubPage() {
               ))}
             </div>
 
-            <TrustBadges variant="row" className="mt-9 justify-center" />
+            <TrustBadges variant="row" className="mt-9 justify-center" gbp={gbp} />
           </div>
         </section>
 

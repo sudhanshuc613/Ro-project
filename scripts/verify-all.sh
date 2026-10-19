@@ -10,7 +10,7 @@ for s in verify-h1-keyword verify-keyword-coverage verify-images-titles verify-r
          verify-seo-indexing verify-product-admin verify-titles-and-schema \
          verify-brand-rename verify-admin-full verify-password-features \
          verify-sitemap-lastmod verify-search-queries verify-serp-hygiene verify-og-image \
-         verify-billing verify-banner-upload verify-jsonld-parents verify-admin-deep verify-gbp-consistency; do
+         verify-billing verify-banner-upload verify-jsonld-parents verify-admin-deep verify-gbp-consistency verify-browser; do
   OUT=$(bash "scripts/$s.sh" 2>&1)
   LINE=$(echo "$OUT" | grep -E "^  PASS: " | tail -1)
   P=$(echo "$LINE" | sed -n 's/.*PASS: \([0-9]*\).*/\1/p')

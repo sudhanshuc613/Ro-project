@@ -265,7 +265,7 @@ export default async function RoCustomerCarePatnaPage() {
             </div>
 
             <div className="mt-6">
-              <TrustBadges />
+              <TrustBadges gbp={gbp} />
             </div>
           </div>
         </section>

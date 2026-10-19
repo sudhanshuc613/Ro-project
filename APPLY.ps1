@@ -87,7 +87,12 @@ $checkList = @(
   "scripts\gbp-consistency.py",
   "scripts\verify-gbp-consistency.sh",
   "src\app\(shop)\contact\page.tsx",
-  "src\components\service\NearMeBlock.tsx"
+  "src\components\service\NearMeBlock.tsx",
+  "src\components\ui\TrustBadges.tsx",
+  "src\components\home\QuickBookForm.tsx",
+  "scripts\browser-check.mjs",
+  "scripts\verify-browser.sh",
+  "scripts\check-async-in-client.mjs"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -168,18 +173,23 @@ $expected = @{
   "src\lib\seo\content-dates.ts"                      = 6504
   "scripts\jsonld-parents.py"                         = 18076
   "scripts\verify-jsonld-parents.sh"                  = 2676
-  "scripts\verify-all.sh"                             = 1608
+  "scripts\verify-all.sh"                             = 1623
   "scripts\admin-deep.py"                            = 7838
   "scripts\verify-admin-deep.sh"                     = 2529
   "src\lib\constants.ts"                             = 16393
   "src\lib\seo\gbp-overrides.ts"                     = 5372
   "src\lib\settings.ts"                              = 9938
   "src\components\admin\SettingsForm.tsx"            = 28178
-  "src\app\(shop)\ro-problem\[symptom]\page.tsx"     = 17472
+  "src\app\(shop)\ro-problem\[symptom]\page.tsx"     = 17492
   "scripts\gbp-consistency.py"                       = 8883
   "scripts\verify-gbp-consistency.sh"                = 2527
   "src\app\(shop)\contact\page.tsx"                  = 12844
   "src\components\service\NearMeBlock.tsx"            = 11858
+  "src\components\ui\TrustBadges.tsx"                = 3027
+  "src\components\home\QuickBookForm.tsx"            = 12575
+  "scripts\browser-check.mjs"                        = 5903
+  "scripts\verify-browser.sh"                        = 3154
+  "scripts\check-async-in-client.mjs"                = 2703
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -243,7 +253,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "5 internal link 308-redirect hop hataya (ro-service-patna -> service-patna)" 2>&1 | Out-Null
+git commit -m "URGENT FIX: Application error — TrustBadges async hataya (React #329). + browser test" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

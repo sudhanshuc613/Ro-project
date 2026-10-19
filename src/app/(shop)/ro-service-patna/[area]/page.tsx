@@ -312,7 +312,7 @@ export default async function AreaPage({ params }: { params: { area: string } })
               </dl>
             </div>
 
-            <QuickBookForm />
+            <QuickBookForm gbp={gbp} />
           </div>
         </section>
 
@@ -375,7 +375,7 @@ export default async function AreaPage({ params }: { params: { area: string } })
                 </>
               )}
 
-              <TrustBadges className="mt-6" />
+              <TrustBadges className="mt-6" gbp={gbp} />
             </div>
 
             <aside className="space-y-4">

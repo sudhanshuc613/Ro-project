@@ -25,19 +25,25 @@ import { useMemo, useState } from 'react';
 import { ANALYTICS, CONTACT, ISSUE_CATEGORIES, SERVICE } from '@/lib/constants';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import TrustBadges from '@/components/ui/TrustBadges';
+import { GBP_FALLBACK, type GbpValues } from '@/lib/seo/gbp-overrides';
 import AreaPicker from '@/components/home/AreaPicker';
 import { REFERRAL } from '@/lib/referral';
 
 type Step = 'form' | 'done';
 
+/* 18 Oct 2026 — `gbp` prop isliye aaya ki ye CLIENT component hai aur
+   DB khud nahi padh sakta. Niche TrustBadges ko ye value aage bhejta hai.
+   Default hai, to prop na aaye tab bhi kuch toota nahi. */
 export default function QuickBookForm({
   slotsLeft,
   urgent,
   slotMessage,
+  gbp = GBP_FALLBACK,
 }: {
   slotsLeft?: number;
   urgent?: boolean;
   slotMessage?: string;
+  gbp?: GbpValues;
 }) {
   const [phone, setPhone] = useState('');
   const [areaSlug, setAreaSlug] = useState('');
@@ -284,7 +290,7 @@ export default function QuickBookForm({
         ✓ 30 minute me call · ✓ Koi advance nahi · ✓ Kaam pasand na aaye to paisa nahi
       </p>
 
-      <TrustBadges className="mt-3 justify-center" />
+      <TrustBadges className="mt-3 justify-center" gbp={gbp} />
 
       <div className="mt-4 border-t border-navy-50 pt-3 text-center">
         <p className="text-xs text-muted">Form nahi bharna? Seedha baat karo —</p>
