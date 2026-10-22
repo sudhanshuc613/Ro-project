@@ -92,7 +92,12 @@ $checkList = @(
   "scripts\browser-check.mjs",
   "scripts\verify-browser.sh",
   "scripts\check-async-in-client.mjs",
-  "scripts\verify-titles-and-schema.sh"
+  "scripts\verify-titles-and-schema.sh",
+  "src\lib\geo\nearest-area.ts",
+  "src\components\service\NearMeResolver.tsx",
+  "scripts\near-me-grid.py",
+  "scripts\near-me-selftest.mts",
+  "scripts\verify-near-me.sh"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -166,14 +171,14 @@ $expected = @{
   "src\components\service\NearMeBlock.tsx"           = 11858
   "src\components\service\AreaKeywordBlock.tsx"      = 14201
   "src\app\(shop)\page.tsx"                          = 18336
-  "src\app\(shop)\ro-service-patna\[area]\page.tsx"  = 33171
+  "src\app\(shop)\ro-service-patna\[area]\page.tsx"  = 34054
   "src\components\layout\Navbar.tsx"                 = 19454
   "src\lib\seo\schema.ts"                            = 26209
   "src\lib\seo\blog-data.ts"                         = 36539
   "src\lib\seo\content-dates.ts"                     = 6504
   "scripts\jsonld-parents.py"                        = 19781
   "scripts\verify-jsonld-parents.sh"                 = 2676
-  "scripts\verify-all.sh"                            = 1623
+  "scripts\verify-all.sh"                            = 1638
   "scripts\admin-deep.py"                            = 7838
   "scripts\verify-admin-deep.sh"                     = 2529
   "src\lib\constants.ts"                             = 16393
@@ -190,6 +195,11 @@ $expected = @{
   "scripts\verify-browser.sh"                        = 3154
   "scripts\check-async-in-client.mjs"                = 2703
   "scripts\verify-titles-and-schema.sh"              = 8454
+  "src\lib\geo\nearest-area.ts"                      = 6053
+  "src\components\service\NearMeResolver.tsx"        = 10756
+  "scripts\near-me-grid.py"                          = 9750
+  "scripts\near-me-selftest.mts"                     = 5466
+  "scripts\verify-near-me.sh"                        = 7126
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -253,7 +263,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "SCHEMA FIX: duplicate aggregateRating on same @id + itemReviewed in nested review (GSC critical)" 2>&1 | Out-Null
+git commit -m "NEAR-ME: geo resolver + near-me H2 on 83 area pages (local organic lever)" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

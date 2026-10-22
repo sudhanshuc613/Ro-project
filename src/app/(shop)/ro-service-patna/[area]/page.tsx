@@ -34,6 +34,7 @@ import AreaWorkProof, { areaShots, imageObjectSchema } from '@/components/home/A
    "Best RO service near {area}" 58/83 MISS. Naya block, purana kuch nahi badla. */
 import AreaMechanicBlock from '@/components/service/AreaMechanicBlock';
 import AreaKeywordBlock from '@/components/service/AreaKeywordBlock';
+import NearMeResolver from '@/components/service/NearMeResolver';
 /* 13 Oct 2026 — owner ne pakda: "Aquaguard RO service in Boring Road" jaise
    brand×area keyword kahin nahi the. Naap: 19 brand × 83 area = 1,577 combo,
    heading me sirf 166 (10%) — sirf Kent aur Aquaguard. Naya block sab 19 brand
@@ -598,6 +599,21 @@ export default async function AreaPage({ params }: { params: { area: string } })
         />
 
         <AreaMechanicBlock area={area} nearby={linkOut} />
+
+        {/* 🔴 22 Oct 2026 — "RO service near me" ka asli gap.
+            Naapa gaya (LIVE, 83 area page):
+              title me "near me"  0/83
+              meta desc me        0/83
+              H1 me               0/83
+              H2 me               0/83
+              H3 me              83/83   ← sirf sabse kamzor heading level par
+            Sterling Sky ke 8,186-business test ka nateeja: "near me" ko
+            title/header/URL me rakhne se LOCAL ORGANIC uthta hai (Map Pack
+            bilkul nahi hilta). Ye block us keyword ko H2 par le aata hai AUR
+            saath me ek kaam ki cheez deta hai — visitor ki asli jagah se
+            sabse paas wala area turant nikaal kar dikhana.
+            Poori wajah: src/lib/geo/nearest-area.ts */}
+        <NearMeResolver area={area} as="h2" />
 
         {/* 11 Oct 2026 — 10 keyword pattern jo page par poore vaakya me kahin
             nahi the (sirf <meta keywords> me pade the, jise Google 2009 se
