@@ -196,7 +196,7 @@ $expected = @{
   "scripts\check-async-in-client.mjs"                = 2703
   "scripts\verify-titles-and-schema.sh"              = 8454
   "src\lib\geo\nearest-area.ts"                      = 6053
-  "src\components\service\NearMeResolver.tsx"        = 10756
+  "src\components\service\NearMeResolver.tsx"        = 11142
   "scripts\near-me-grid.py"                          = 9750
   "scripts\near-me-selftest.mts"                     = 5466
   "scripts\verify-near-me.sh"                        = 7126
@@ -263,7 +263,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "NEAR-ME: geo resolver + near-me H2 on 83 area pages (local organic lever)" 2>&1 | Out-Null
+git commit -m "NEAR-ME: geo resolver + near-me H2 on 83 area pages; fix dead ternary in fallback" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

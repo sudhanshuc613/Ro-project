@@ -34,7 +34,9 @@
  */
 import { useCallback, useState } from 'react';
 import Link from 'next/link';
-import { nearestAreas, areasByPincode, type AreaHit } from '@/lib/geo/nearest-area';
+import {
+  nearestAreas, areasByPincode, GEO_AREA_COUNT, type AreaHit,
+} from '@/lib/geo/nearest-area';
 import { areaPath } from '@/lib/seo/area-url';
 import { CONTACT, SERVICE } from '@/lib/constants';
 import type { ServiceAreaContent } from '@/lib/seo/patna-service-data';
@@ -135,8 +137,13 @@ export default function NearMeResolver({ area, as = 'h2' }: NearMeResolverProps)
             </>
           ) : (
             <p className="mt-2 text-sm leading-relaxed text-muted">
-              Apni jagah batao. Patna ke {SERVICE.city === 'Patna' ? '83' : '83'}{' '}
-              area me se sabse paas wala turant mil jayega.
+              {/* 🔴 22 Oct — pehle yahan `SERVICE.city === 'Patna' ? '83' : '83'`
+                  likha tha. Wo ternary DONO taraf wahi '83' deta tha — yaani
+                  bilkul bekaar. Aur 83 hardcode tha, jabki GEO_AREA_COUNT
+                  theek isi kaam ke liye export kiya gaya hai. Ab area add/remove
+                  hone par ye number apne aap sahi rahega. */}
+              Apni jagah batao. {SERVICE.city} ke {GEO_AREA_COUNT} area me se
+              sabse paas wala turant mil jayega.
             </p>
           )}
 
