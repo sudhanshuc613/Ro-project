@@ -97,7 +97,11 @@ $checkList = @(
   "src\components\service\NearMeResolver.tsx",
   "scripts\near-me-grid.py",
   "scripts\near-me-selftest.mts",
-  "scripts\verify-near-me.sh"
+  "scripts\verify-near-me.sh",
+  "src\app\api\products\route.ts",
+  "src\app\api\products\[id]\route.ts",
+  "scripts\product-duplicate-test.py",
+  "scripts\verify-product-duplicate.sh"
 )
 foreach ($f in $checkList) {
     $p = Join-Path $PROJ $f
@@ -178,7 +182,7 @@ $expected = @{
   "src\lib\seo\content-dates.ts"                     = 6504
   "scripts\jsonld-parents.py"                        = 19781
   "scripts\verify-jsonld-parents.sh"                 = 2676
-  "scripts\verify-all.sh"                            = 1638
+  "scripts\verify-all.sh"                            = 1663
   "scripts\admin-deep.py"                            = 7838
   "scripts\verify-admin-deep.sh"                     = 2529
   "src\lib\constants.ts"                             = 16393
@@ -200,6 +204,10 @@ $expected = @{
   "scripts\near-me-grid.py"                          = 9750
   "scripts\near-me-selftest.mts"                     = 5466
   "scripts\verify-near-me.sh"                        = 7126
+  "src\app\api\products\route.ts"                    = 12486
+  "src\app\api\products\[id]\route.ts"               = 11653
+  "scripts\product-duplicate-test.py"                = 10699
+  "scripts\verify-product-duplicate.sh"              = 2567
 }
 $fail = 0
 foreach ($f in $checkList) {
@@ -263,7 +271,7 @@ if ($changed.Count -gt 25) { Write-Host "      ... aur $($changed.Count - 25) au
 
 Write-Host ""
 Write-Host "[9] Commit + push kar raha hu..." -ForegroundColor Yellow
-git commit -m "NEAR-ME: geo resolver + near-me H2 on 83 area pages; fix dead ternary in fallback" 2>&1 | Out-Null
+git commit -m "FIX: product duplicate SKU/slug ab saaf batata hai kaun sa field aur kaun sa product (soft-delete trap included)" 2>&1 | Out-Null
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
 Write-Host "    branch: $branch" -ForegroundColor Cyan

@@ -151,6 +151,53 @@ export async function POST(req: NextRequest) {
   const d = parsed.data;
   const slug = d.slug || slugify(d.name);
 
+  /* 🔴 25 Oct 2026 — "A product with this SKU or slug already exists." ka
+     ASLI PROBLEM.
+     ════════════════════════════════════════════════════════════════════════
+     Owner product add nahi kar paa raha tha. Error aata tha par ye nahi
+     batata tha ki SKU galat hai ya slug, aur na hi ye ki takra kis product se
+     raha hai. Wajah do ho sakti hai:
+
+       1. Product pehle se DRAFT me bana hua hai (list me dikhta hai, par
+          website par 404 deta hai, isliye lagta hai ki bana hi nahi).
+
+       2. 🔴 ASLI JAAL — product DELETE kiya ja chuka hai.
+          DELETE soft hai: `deletedAt` set hota hai, row DATABASE ME RAHTI HAI.
+          Admin ki list `where: { deletedAt: null }` karti hai, isliye wo row
+          KAHIN DIKHTI NAHI. Par `sku` aur `slug` par DB ka unique constraint
+          soft-deleted row par bhi lagta hai. Natija: wo SKU/slug hamesha ke
+          liye block, aur owner ko kahin koi wajah nahi dikhti.
+
+     Pehle sirf Prisma ka P2002 pakda jata tha aur ek hi generic line lautayi
+     jati thi. Ab banane se PEHLE dekh lete hain ki takrav hai ya nahi, aur
+     saaf-saaf batate hain: kaun sa field, kis product se, aur ab kya karna hai.
+
+     🔴 Unique constraint ko partial (sirf deletedAt IS NULL) karna DB migration
+        maangta hai — live data par wo risk nahi liya. Ye fix sirf jaanch aur
+        message sudharta hai, schema ko haath nahi lagata. */
+  const clash = await prisma.product.findFirst({
+    where: { OR: [{ sku: d.sku }, { slug }] },
+    select: { id: true, name: true, sku: true, slug: true, status: true, deletedAt: true },
+  });
+  if (clash) {
+    const skuHit = clash.sku === d.sku;
+    const field = skuHit ? 'SKU' : 'URL Slug';
+    const value = skuHit ? d.sku : slug;
+    const message = clash.deletedAt
+      ? `Ye ${field} ("${value}") ek DELETE kiye gaye product "${clash.name}" ka hai. `
+        + `Delete hone ke baad bhi ${field} reserve rehta hai. `
+        + `Thoda alag ${field} daalo (jaise aakhir me -2 laga do).`
+      : `Ye ${field} ("${value}") pehle se product "${clash.name}" `
+        + `(status: ${clash.status}) use kar raha hai. `
+        + `Naya banane ke bajaye USI ko Edit karo, ya alag ${field} daalo.`;
+    return NextResponse.json(
+      { message, conflict: { field: skuHit ? 'sku' : 'slug', value, productId: clash.id,
+                             productName: clash.name, status: clash.status,
+                             deleted: Boolean(clash.deletedAt) } },
+      { status: 409 },
+    );
+  }
+
   try {
     const product = await prisma.$transaction(async (tx) => {
       const created = await tx.product.create({

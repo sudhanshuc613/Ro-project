@@ -86,6 +86,34 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const before = await prisma.product.findUnique({ where: { id: params.id } });
   if (!before) return NextResponse.json({ message: 'Product not found' }, { status: 404 });
 
+  /* 🔴 25 Oct 2026 — wahi fix jo POST (/api/products) me hai.
+     Edit karte waqt SKU/slug badalna bhi takra sakta hai, aur purana message
+     ("Another product already uses this SKU or slug.") ye nahi batata tha ki
+     kaun sa field aur kaun sa product. Aur agar takrav DELETE kiye gaye
+     (soft-deleted) product se ho to wo admin ki list me dikhta bhi nahi —
+     owner ko wajah milti hi nahi thi.
+     `id: { not: params.id }` isliye taaki khud se takrav na gine. */
+  const clash = await prisma.product.findFirst({
+    where: { id: { not: params.id }, OR: [{ sku: d.sku }, { slug: d.slug }] },
+    select: { id: true, name: true, sku: true, status: true, deletedAt: true },
+  });
+  if (clash) {
+    const skuHit = clash.sku === d.sku;
+    const field = skuHit ? 'SKU' : 'URL Slug';
+    const value = skuHit ? d.sku : d.slug;
+    const message = clash.deletedAt
+      ? `Ye ${field} ("${value}") ek DELETE kiye gaye product "${clash.name}" ka hai. `
+        + `Delete hone ke baad bhi ${field} reserve rehta hai. Thoda alag ${field} daalo.`
+      : `Ye ${field} ("${value}") pehle se product "${clash.name}" `
+        + `(status: ${clash.status}) use kar raha hai. Alag ${field} daalo.`;
+    return NextResponse.json(
+      { message, conflict: { field: skuHit ? 'sku' : 'slug', value, productId: clash.id,
+                             productName: clash.name, status: clash.status,
+                             deleted: Boolean(clash.deletedAt) } },
+      { status: 409 },
+    );
+  }
+
   // Guarantee exactly one primary image
   const images = d.images.map((img, i) => ({
     ...img,
