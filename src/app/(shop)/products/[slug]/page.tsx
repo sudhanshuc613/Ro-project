@@ -71,7 +71,14 @@ export default async function ProductPage({ params }: Props) {
     if (hit) permanentRedirect(hit);
     notFound();
   }
-  if (product.status === 'ARCHIVED') notFound();
+  /* 🔴 25 Oct 2026 — DRAFT PRODUCT PUBLIC DIKH RAHA THA.
+     `getProductBySlug()` sirf `deletedAt: null` filter karta hai, status nahi.
+     Yahan sirf ARCHIVED roka ja raha tha — matlab DRAFT product ka page
+     publicly 200 deta tha aur Google use crawl kar sakta tha. Adhoora product
+     (bina final price, bina photo) live dikhna seedha nuksan hai.
+     Ab sirf ACTIVE khulta hai. DRAFT/ARCHIVED dono 404.
+     Test: scripts/product-visibility-test.py */
+  if (product.status !== 'ACTIVE') notFound();
 
   // Fire-and-forget analytics — never blocks render
   void incrementProductView(product.id);

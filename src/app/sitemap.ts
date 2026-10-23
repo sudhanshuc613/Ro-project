@@ -15,7 +15,21 @@ import {
   AUTHOR_PAGE_DATE,
 } from '@/lib/seo/content-dates';
 
-export const revalidate = 3600;
+/* 🔴 25 Oct 2026 — 3600 se 60.
+   Owner ne product add kiya aur wo sitemap me ghanto nahi aaya.
+   Wajah: `revalidatePath('/sitemap.xml')` Next.js ke METADATA ROUTE
+   (app/sitemap.ts) par kaam KARTA HI NAHI. Maine dono tarike naape —
+   `revalidatePath('/sitemap.xml')` aur `revalidatePath('/sitemap.xml','page')`
+   — 25 second tak sitemap 143 URL par hi atka raha, naya product nahi aaya.
+   Matlab product API se sitemap ko turant refresh karna sambhav nahi hai;
+   sirf ISR hi ise naya banata hai, aur wo 1 GHANTA tha.
+
+   Isliye window 60 second kar di. Naya product 1 minute me sitemap me aa
+   jayega. Kharcha bhi bandha hua hai — ek minute me chahe 1000 request aayein,
+   DB query sirf EK BAAR chalti hai (2 chhoti query: product slug/updatedAt
+   aur category). force-dynamic nahi kiya, kyunki tab HAR request par DB
+   query hoti aur bot traffic seedha DB par padta. */
+export const revalidate = 60;
 
 /**
  * ── 19 Sep 2026: lastmod ab SACH bolta hai ────────────────────────────────

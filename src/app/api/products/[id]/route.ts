@@ -277,6 +277,29 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   });
 
   await invalidateProductCache(product.slug);
+
+  /* 🔴 25 Oct 2026 — DELETE KE BAAD PRODUCT LISTING SE HATTA HI NAHI THA.
+     ════════════════════════════════════════════════════════════════════════
+     Yahan sirf `invalidateProductCache()` chalta tha. Wo hamare APNE cache
+     helper (`cached()`) ko saaf karta hai — par Next.js ka apna data cache
+     bilkul alag cheez hai. `/products` aur `/category/[slug]` ki listing
+     `unstable_cache(..., { tags: ['products'] })` se aati hai, aur use sirf
+     `revalidateTag('products')` hi tod sakta hai.
+
+     Natija: delete kiya hua product `/products` aur category page par 5 minute
+     tak (ya ISR window tak) dikhta rehta tha. Naapa gaya —
+     scripts/product-visibility-test.py me "DELETE ke baad hat gaya" FAIL tha.
+
+     POST aur PATCH dono me ye teen line pehle se thi; DELETE me rah gayi thi.
+     Ab teeno ek jaise hain. */
+  try {
+    revalidateTag('products');
+    revalidatePath('/products');
+    revalidatePath(`/products/${product.slug}`);
+    // sitemap metadata route hai — revalidatePath usse nahi todta.
+    // Wo apne 60-second ISR se khud refresh hota hai (src/app/sitemap.ts).
+  } catch { /* ISR will catch up */ }
+
   await logAudit({
     actorId: session!.user.id,
     action: 'product.delete',
