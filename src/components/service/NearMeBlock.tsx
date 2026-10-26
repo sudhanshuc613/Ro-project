@@ -34,6 +34,21 @@
  * photos, aur "open now".
  *
  * ── CONTENT ASLI HAI, KEYWORD BHARTI NAHI ───────────────────────────────
+
+ * 🔴 25 Oct 2026 — TEEN heading H3 se H2 par promote ki gayi:
+ *     "Water Purifier Service Near Me"
+ *     "RO Repair Near Me Aur Water Purifier Repair Near Me"
+ *     "RO Mechanic Near Me, RO Technician Near Me"
+ *   Wajah: tools/keyword-page-map.py ne naapa ki `water purifier service
+ *   near me`, `water purifier repair near me`, `ro mechanic near me` aur
+ *   `ro technician near me` poori site par SIRF body/H3 me the — kisi page
+ *   ke H2 ya title me nahi. Content pehle se yahin tha aur achha tha; bas
+ *   heading level kamzor tha.
+ *   Sterling Sky (8,186 business, 200 city): "near me" ko header me rakhne se
+ *   LOCAL ORGANIC uthta hai. Map Pack par asar NAHI hota (wo proximity + GBP
+ *   hai) — ye baat owner ko saaf batayi gayi hai.
+ *   🔴 Ek bhi shabd nahi badla, kuch naya nahi thoosa. Sirf <h3> -> <h2>.
+ *
  * Har heading ke neeche kaam ki baat hai: Patna me "near me" result kyun
  * dhokha dete hain, hamara asli pata, aur kaun sa shabd practically kya
  * maangta hai. Yahi tareeka `/ro-customer-care-patna` par chala tha.
@@ -109,9 +124,9 @@ export default async function NearMeBlock({
         </div>
 
         {/* ── Har "near me" shabd ka practical matlab ── */}
-        <h3 className="mt-10 text-xl font-black text-navy-900 md:text-2xl">
+        <h2 className="mt-10 text-xl font-black text-navy-900 md:text-2xl">
           Water Purifier Service Near Me &mdash; Kya Maangna Chahiye
-        </h3>
+        </h2>
         <p className="mt-3 max-w-3xl text-base leading-relaxed text-navy-700">
           &ldquo;Water purifier service near me&rdquo; se aam taur par log{' '}
           <em>poori checking</em> maangte hain &mdash; filter dekhna, TDS napna, leakage
@@ -120,9 +135,9 @@ export default async function NearMeBlock({
           pehle.
         </p>
 
-        <h3 className="mt-8 text-xl font-black text-navy-900 md:text-2xl">
+        <h2 className="mt-8 text-xl font-black text-navy-900 md:text-2xl">
           RO Repair Near Me Aur Water Purifier Repair Near Me
-        </h3>
+        </h2>
         <p className="mt-3 max-w-3xl text-base leading-relaxed text-navy-700">
           &ldquo;Repair&rdquo; tab likha jaata hai jab machine band ho ya paani na aaye. Isme
           diagnosis pehle hota hai &mdash; {SERVICE.city} me 10 me se 6 baar wajah SMPS,
@@ -132,9 +147,9 @@ export default async function NearMeBlock({
           pehle hona chahiye.
         </p>
 
-        <h3 className="mt-8 text-xl font-black text-navy-900 md:text-2xl">
+        <h2 className="mt-8 text-xl font-black text-navy-900 md:text-2xl">
           RO Mechanic Near Me, RO Technician Near Me
-        </h3>
+        </h2>
         <p className="mt-3 max-w-3xl text-base leading-relaxed text-navy-700">
           {SERVICE.city} me log &ldquo;mistri&rdquo; aur &ldquo;mechanic&rdquo; zyada bolte
           hain. Hamare technician {BRAND.name} ke apne hain &mdash; freelancer nahi &mdash;

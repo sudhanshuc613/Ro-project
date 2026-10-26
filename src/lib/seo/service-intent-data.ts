@@ -83,6 +83,35 @@ export interface ServiceIntent {
   /** Cheapest real price on the page, for Offer.lowPrice. */
   priceFrom: number;
   priceTo: number;
+  /* 🔴 25 Oct 2026 — "{service} near me" ka apna block.
+     ════════════════════════════════════════════════════════════════════
+     Naap (tools/keyword-page-map.py): `ro repair near me`,
+     `ro amc near me`, `ro filter change near me` wagairah hamare paas SIRF
+     BODY/H3 me the — kisi page ke title ya H2 me nahi. Matlab in par hamara
+     koi maalik page hi nahi tha.
+
+     Research saaf hai aur usme DO alag baat hai, dono sach:
+       • MAP PACK (map wale 3 result) — "near me" likhna kuch nahi karta.
+         Google us phrase ko searcher ke GPS se badal deta hai. Wahan sirf
+         proximity + GBP chalta hai.
+       • LOCAL ORGANIC (map ke neeche neele link) — Sterling Sky ke
+         8,186-business test me title/header/URL me "near me" rakhne se
+         organic UTHTA hai.
+     Aur jo site owner ne dikhayi (rocareindia, Gurgaon se) uska TITLE hi hai:
+     "RO Service Patna @9311587744 |Water Purifier Service Near Me".
+     Wo Map Pack me aa hi nahi sakti — wo ORGANIC me aati hai, isi wajah se.
+
+     🔴 Isliye har service ka APNA EK block — ek page, ek keyword. Stuffing
+        nahi. Har block me us service ki asli baat likhi hai, sirf keyword
+        nahi (research: khali phrase thoosna spam dikhta hai aur ulta padta). */
+  nearMe: {
+    /** H2 — "{Service} Near Me" se shuru, phir Patna ka context. */
+    heading: string;
+    /** Do-teen line, us service ke liye khaas. */
+    body: string;
+    /** 3 point — asli jaankari, bharti nahi. */
+    points: string[];
+  };
   /** Signals it is time to call for THIS job specifically. */
   signals: { sign: string; meaning: string }[];
   /** What people get wrong / overcharged on, for this job only. */
@@ -176,6 +205,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     priceFrom: 399,
     priceTo: 2500,
+    nearMe: {
+      heading: "RO Installation Near Me — Patna Me Kiske Paas Jaana Chahiye",
+      body:
+        "\"RO installation near me\" dhoondne ka asli matlab hota hai — aisa banda jo aaj aa jaye aur dobara na bulana pade. Patna me installation ka kaam deewar, paani ka point aur drain ki jagah par tay hota hai, isliye paas ka hona sach me farak daalta hai.",
+      points: [
+        "Paas wala technician matlab usi din installation, agle hafte nahi",
+        "Deewar drill, inlet tap aur drain line — teeno ek hi visit me",
+        "Installation ke baad TDS reading aapke saamne li jaati hai",
+      ],
+    },
     signals: [
       { sign: 'The technician did not gauge inlet pressure', meaning: 'The single most common cause of a purifier that underperforms from day one. Without the reading nobody knows whether a booster pump was needed.' },
       { sign: 'No TDS reading was written down', meaning: 'You have no baseline. In two years there is no way to prove the membrane has degraded, so you are at the mercy of whoever inspects it next.' },
@@ -263,6 +302,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     priceFrom: 1499,
     priceTo: 6500,
+    nearMe: {
+      heading: "RO AMC Near Me — Patna Me AMC Lene Se Pehle Kya Dekhein",
+      body:
+        "\"RO AMC near me\" search karne wale ko asal me ek bharosa chahiye — ki saal bhar koi uthayega aur aayega. AMC door wali company se lene ka matlab hai har service par intezaar. Patna me hamari team isi shahar me rehti hai.",
+      points: [
+        "AMC me filter badalne ka din pehle se tay hota hai, yaad dilana nahi padta",
+        "AMC wale ghar par visit charge nahi lagta",
+        "Saal me kitni service milegi wo likhit hota hai, zubaani nahi",
+      ],
+    },
     signals: [
       { sign: 'You are calling for service more than twice a year', meaning: 'The visit charges alone are approaching the Basic plan cost. An AMC now saves money outright.' },
       { sign: 'Your area TDS is above 500 ppm', meaning: 'Kankarbagh, Anisabad, Beur, Danapur, Khajpura, Chitkohra. Filters exhaust faster here and the plan pays for itself on consumables.' },
@@ -364,6 +413,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     priceFrom: V,
     priceTo: 2400,
+    nearMe: {
+      heading: "RO Repair Near Me — Patna Me Sach Me Kaun Paas Hai",
+      body:
+        "\"RO repair near me\" tab search hota hai jab paani band ho chuka hota hai. Us waqt sabse badi cheez hai pahunchne ka time. Patna me hamara response 90 minute ka hai, aur technician isi shahar se nikalta hai — kisi doosre shahar ke call-centre se nahi.",
+      points: [
+        "Paas hone ka matlab 90 minute, agle din nahi",
+        "Spare part gaadi me hota hai — \"part mangwana padega\" nahi sunna padta",
+        "Theek na hua to visit charge nahi — saaf shart",
+      ],
+    },
     signals: [
       { sign: 'No water at all', meaning: 'Usually a dead adaptor or a fully choked sediment filter, not the membrane. Typically ₹350 to ₹1,300.' },
       { sign: 'Water has slowed to a trickle', meaning: 'Pre-filter loaded with silt, or a membrane scaling up. The TDS reading separates the two in one minute.' },
@@ -465,6 +524,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     priceFrom: 120,
     priceTo: 700,
+    nearMe: {
+      heading: "RO Filter Change Near Me — Patna Me Filter Kab Aur Kahan",
+      body:
+        "\"RO filter change near me\" wala aadmi aam taur par swaad ya speed ki dikkat se pareshan hota hai. Filter chhota kaam hai par galat filter lag jaye to membrane kharab ho jaata hai. Isliye paas wala, jaana-pehchana banda behtar hai.",
+      points: [
+        "Patna ke TDS par kaun sa filter chahiye, wo reading dekh kar tay hota hai",
+        "Purana filter aapko dikha kar nikala jaata hai",
+        "Filter par 12 mahine warranty, bill par likhi hui",
+      ],
+    },
     signals: [
       { sign: 'Flow has dropped noticeably over a few weeks', meaning: 'Sediment filter loading up. The earliest and cheapest signal there is.' },
       { sign: 'A faint chlorine or municipal-water smell has returned', meaning: 'Pre-carbon is exhausted. Act on this one quickly — this is the stage that protects the membrane from chlorine.' },
@@ -562,6 +631,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     priceFrom: 1100,
     priceTo: 2400,
+    nearMe: {
+      heading: "RO Membrane Replacement Near Me — Patna Me Asli Membrane Kaise Pehchane",
+      body:
+        "\"RO membrane replacement near me\" me sabse bada dar duplicate membrane ka hota hai. Membrane sabse mehnga part hai aur bahar se laga hua nakli membrane 3 mahine me baith jaata hai. Paas ka wahi banda theek hai jo bill par part ka naam likh kar de.",
+      points: [
+        "Membrane ka brand aur GPD bill par likha jaata hai",
+        "Purana membrane aapke saamne nikala jaata hai",
+        "Lagane ke baad TDS before/after dono aapko dikhaya jaata hai",
+      ],
+    },
     signals: [
       { sign: 'Output TDS has climbed steadily over months', meaning: 'The definitive sign, and the only one that is conclusive. Compare against the reading on your service card.' },
       { sign: 'Rejection has dropped below about 80 percent', meaning: 'Measured, not guessed: (input − output) ÷ input. Below 0.80 with healthy pre-filters means the element is done.' },
@@ -666,6 +745,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     priceFrom: 500,
     priceTo: 6500,
+    nearMe: {
+      heading: "Commercial RO Service Near Me — Patna Me Plant Band Ho To",
+      body:
+        "\"Commercial RO service near me\" school, hotel, hospital aur water plant wale tab search karte hain jab plant baith jaata hai aur rozana ka kaam ruk jaata hai. Yahan ghante ginne padte hain, din nahi. Commercial plant ka banda paas hona hi sabse badi baat hai.",
+      points: [
+        "Plant band ho to usi din visit — 250 LPH se 2000 LPH tak",
+        "Bada pump, bada membrane aur dosing — sab Patna me stock me",
+        "AMC lene par breakdown par pehli priority milti hai",
+      ],
+    },
     signals: [
       { sign: 'Output has dropped but pressure has risen', meaning: 'Classic membrane fouling. Catch it here and a chemical clean restores it; leave it and you are buying elements.' },
       { sign: 'Reject-to-permeate ratio has drifted', meaning: 'Recovery is off specification. Usually a valve setting or a fouled element, and it wastes water continuously until corrected.' },
@@ -772,6 +861,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     priceFrom: V,
     priceTo: 2499,
+    nearMe: {
+      heading: "RO Service Centre Near Me — Patna Me Service Centre Ka Matlab",
+      body:
+        "Log \"RO service centre near me\" ya \"RO service center near me\" dono tarah likhte hain. Patna me asli baat ye hai ki centre ka pata door ho ya paas, aapke ghar technician kitni der me pahunchta hai — wahi mayne rakhta hai.",
+      points: [
+        "Centre Buddha Colony me hai, par technician 83 area me faile hue hain",
+        "Dukaan par purifier le jaane ki zaroorat nahi — ghar par hi theek hota hai",
+        "Visit charge sirf ₹200, aur wo kaam karwane par adjust ho jaata hai",
+      ],
+    },
     signals: [
       { sign: 'Water tastes salty, metallic or flat', meaning: 'Membrane is passing dissolved solids. A TDS reading settles it in thirty seconds — do not let anyone sell a membrane without showing you the number.' },
       { sign: 'Flow has dropped to a trickle', meaning: 'Usually a choked sediment filter, sometimes low inlet pressure, occasionally a failing pump. The cheapest cause is checked first.' },

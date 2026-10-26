@@ -522,7 +522,36 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
         <FaqAccordion faqs={intent.faqs} title={`${intent.h1} — common questions`} />
 
         {/* ── Internal graph: areas ── */}
-        <section className="py-12 md:py-14">
+                {/* 🔴 25 Oct 2026 — "{service} near me" ka apna H2.
+            Naap: ro repair near me / ro amc near me / ro filter change near me
+            wagairah SIRF body-H3 me the, kisi page ke H2 ya title me nahi.
+            Sterling Sky (8,186 business): "near me" title/header me rakhne se
+            LOCAL ORGANIC uthta hai (Map Pack nahi — wo proximity + GBP hai).
+            Jo site owner ne dikhayi (rocareindia, Gurgaon) uska title hi
+            "...|Water Purifier Service Near Me" hai — wo Map Pack me aa hi
+            nahi sakti, wo ORGANIC me aati hai.
+            Har page par EK hi near-me keyword — cannibalization se bachne ke
+            liye. Wajah poori: src/lib/seo/service-intent-data.ts */}
+        <section className="border-t border-navy-50 bg-white py-12">
+          <div className="container mx-auto max-w-3xl px-4">
+            <h2 className="font-display text-2xl font-extrabold text-navy-700">
+              {intent.nearMe.heading}
+            </h2>
+            <p className="mt-3 text-base leading-relaxed text-muted">
+              {intent.nearMe.body}
+            </p>
+            <ul className="mt-4 space-y-2">
+              {intent.nearMe.points.map((pt) => (
+                <li key={pt} className="flex gap-2 text-sm leading-relaxed text-navy-700">
+                  <span className="mt-[2px] text-aqua-600">&bull;</span>
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+<section className="py-12 md:py-14">
           <div className="container mx-auto px-4">
             <h2 className="mb-2 text-center font-display text-2xl font-extrabold text-navy-700">
               We cover all of Patna
