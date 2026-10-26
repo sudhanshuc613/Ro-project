@@ -90,6 +90,7 @@ base={}
 for s_ in INTENTS:
     base[s_]=table(s_)
     chk(f'/{s_} ki table mili', len(base[s_])>0, f'{len(base[s_])} row')
+amc_base_rows=list(base['ro-amc-patna'])
 total=sum(len(v) for v in base.values())
 chk('kul price row', total>=45, str(total))
 
@@ -143,6 +144,108 @@ for s in INTENTS:
             if p1!=p2: diff.append((s,i1,p1,p2))
 chk('🔴 har page ka daam BILKUL pehle jaisa', same==len(INTENTS), f'{same}/{len(INTENTS)}')
 for d in diff[:5]: print(f'       {d[0]} · {d[1]} · {d[2]} -> {d[3]}')
+
+# ══════════════════════════════════════════════════════════════════════════
+#  F. HAR KEYED ROW — daam BILKUL wahi jo code ke default se banta hai
+#  🔴 26 Oct 2026 (doosra round): 53 row me se 25 hi admin se jude the.
+#     Ab 49 jude hain (4 ke paas number hi nahi: Free / Quoted).
+#     Ye section har keyed row ka EXPECTED string khud banata hai aur
+#     rendered HTML se byte-to-byte milata hai.
+# ══════════════════════════════════════════════════════════════════════════
+print()
+print('── F. HAR KEYED ROW KA DAAM EXACT ──')
+
+# 🔴 TS ko node se import karna build-order par nirbhar hai aur flaky nikla.
+#    Isliye expected string SOURCE se banti hai — wahi jagah jahan number likhe hain.
+src = open('src/lib/seo/service-intent-data.ts', encoding='utf-8').read()
+rates_src = open('src/lib/seo/ads-landing-data.ts', encoding='utf-8').read()
+extra_src = open('src/lib/seo/service-rates.ts', encoding='utf-8').read()
+
+RATES = {}
+FORMAT = {}
+for m in re.finditer(r"\{\s*part:\s*'([^']+)',\s*from:\s*(\d+),\s*to:\s*(\d+)", rates_src):
+    RATES[m.group(1)] = (int(m.group(2)), int(m.group(3))); FORMAT[m.group(1)] = 'range'
+for m in re.finditer(r"\{\s*part:\s*'([^']+)',\s*from:\s*(\d+),\s*to:\s*(\d+),\s*format:\s*'(\w+)'", extra_src):
+    RATES[m.group(1)] = (int(m.group(2)), int(m.group(3))); FORMAT[m.group(1)] = m.group(4)
+chk('rate source padha', len(RATES) >= 33, f'{len(RATES)} rate key')
+
+def inr(x): return '₹' + format(x, ',d')
+def fmt(frm, to, f):
+    if f == 'flat':        return inr(frm)
+    if f == 'from':        return f'{inr(frm)} onwards'
+    if f == 'perYear':     return f'{inr(frm)} / year'
+    if f == 'fromPerYear': return f'From {inr(frm)} / year'
+    if f == 'perMetre':    return f'{inr(frm)} per metre'
+    if f == 'extra':       return f'{inr(frm)} extra'
+    return inr(frm) if frm == to else f'{inr(frm)} – {inr(to)}'
+
+KEYED = re.findall(r"\{\s*rateKey:\s*'([^']+)',\s*item:\s*'([^']*)',\s*price:\s*'([^']*)'", src)
+chk('source me keyed row', len(KEYED) >= 49, f'{len(KEYED)} row')
+
+bad = []
+for key, item, price in KEYED:
+    if key not in RATES:
+        bad.append((item, key, 'KEY NAHI MILI')); continue
+    want = fmt(RATES[key][0], RATES[key][1], FORMAT[key])
+    if want != price:
+        bad.append((item, f'{price!r} hardcoded', f'{want!r} banega'))
+chk('🔴 har keyed row ka hardcoded daam == banne wala daam', not bad, f'{len(bad)} galat')
+for b in bad[:8]:
+    print(f'       {b[0]} · {b[1]} · {b[2]}')
+
+# rendered HTML me bhi wahi
+allrows = []
+for s_ in INTENTS:
+    allrows += [(s_, i, pr) for i, pr in base[s_]]
+missing = []
+for key, item, price in KEYED:
+    found = [r for r in allrows if r[1][:len(item)] == item]
+    if not found:
+        found = [r for r in allrows if r[1].startswith(item[:45])]
+    if not found:
+        missing.append(item); continue
+    if not any(price in r[2] or r[2] == price for r in found):
+        missing.append(f'{item} → page par {found[0][2]!r}, chahiye {price!r}')
+chk('🔴 har keyed row live HTML me bhi wahi daam', not missing, f'{len(missing)} miss')
+for m_ in missing[:8]:
+    print(f'       {m_}')
+
+# ══════════════════════════════════════════════════════════════════════════
+#  G. NON-RANGE FORMAT — "₹1,499 / year" range me badal to nahi gaya
+# ══════════════════════════════════════════════════════════════════════════
+print()
+print('── G. NON-RANGE FORMAT (AMC / onwards / per metre) ──')
+AMC_KEY = 'Basic AMC — saal bhar'
+st, b = req('/api/admin/rates', {'part': AMC_KEY, 'from': 1777, 'to': 1777}, method='PUT')
+chk(f'"{AMC_KEY}" ko ₹1,777 kiya', st in (200, 201), f'HTTP {st} {b[:80]}')
+time.sleep(3)
+amc = table('ro-amc-patna')
+basic = [pr for it, pr in amc if it.startswith('Basic AMC')]
+chk('AMC row mila', bool(basic), str(basic[:1]))
+chk('🔴 AMC "₹1,777 / year" bana (range nahi)', bool(basic) and basic[0] == '₹1,777 / year', str(basic[:1]))
+chk('🔴 AMC me "–" nahi aaya', bool(basic) and '–' not in basic[0], str(basic[:1]))
+st, _ = req('/api/admin/rates?part=' + urllib.parse.quote(AMC_KEY), method='DELETE')
+chk('AMC override hataya', st in (200, 201), f'HTTP {st}')
+time.sleep(3)
+amc2 = table('ro-amc-patna')
+chk('🔴 AMC wapas bilkul pehle jaisa', amc2 == amc_base_rows, '')
+
+# ══════════════════════════════════════════════════════════════════════════
+#  H. ADS-LANDING GRID — wahi 12 ghar ke part, 33 nahi
+#  🔴 Naye 21 rate PART_RATES me daalte to is page par 12 ki jagah 33 card
+#     aa jaate — yaani maujooda UI bina poochhe badal jaati.
+# ══════════════════════════════════════════════════════════════════════════
+print()
+print('── H. ADS-LANDING GRID ME SIRF 12 PART ──')
+_, adsh = req('/ro-service-in-patna')
+adsh = re.sub(r'<!--.*?-->', '', adsh, flags=re.S)
+DOM12 = [m.group(1) for m in re.finditer(r"\{\s*part:\s*'([^']+)',\s*from:", rates_src)][:12]
+chk('PART_RATES me 12 part', len(DOM12) == 12, str(len(DOM12)))
+present = [p_ for p_ in DOM12 if p_ in adsh]
+chk('🔴 saare 12 ghar ke part page par', len(present) == 12, f'{len(present)}/12')
+EXTRA_NAMES = re.findall(r"\{\s*part:\s*'(Commercial — [^']+)'", extra_src)
+leaked = [e for e in EXTRA_NAMES if e in adsh]
+chk('🔴 commercial rate grid me LEAK nahi hue', not leaked, str(leaked[:3]))
 
 print(); print('='*72); print(f'  PASS: {P}    FAIL: {F}'); print('='*72)
 for x in FAILS: print(f'   🔴 {x}')

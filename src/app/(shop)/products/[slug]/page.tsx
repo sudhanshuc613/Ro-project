@@ -130,7 +130,7 @@ export default async function ProductPage({ params }: Props) {
         </nav>
 
         <div className="container mx-auto px-4 pt-6">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr)] lg:gap-12">
+          <div className="grid gap-8 [&>*]:min-w-0 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr)] lg:gap-12">
 
             {/* ═══ LEFT: zoomable gallery (sticky on desktop) ═══ */}
             <div className="lg:sticky lg:top-[150px] lg:self-start">

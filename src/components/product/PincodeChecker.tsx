@@ -86,7 +86,7 @@ export default function PincodeChecker({ productId, isPanIndia, requiresInstalla
           onChange={(e) => { setPincode(e.target.value.replace(/\D/g, '')); setError(''); }}
           placeholder="Enter 6-digit pincode"
           aria-label="Delivery pincode"
-          className="flex-1 rounded-xl border border-navy-100 px-4 py-3 text-[15px] focus:border-aqua-500 focus:outline-none focus:ring-2 focus:ring-aqua-200"
+          className="min-w-0 flex-1 rounded-xl border border-navy-100 px-4 py-3 text-[15px] focus:border-aqua-500 focus:outline-none focus:ring-2 focus:ring-aqua-200"
         />
         <button
           type="submit" disabled={loading || pincode.length !== 6}

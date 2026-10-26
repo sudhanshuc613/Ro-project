@@ -57,6 +57,8 @@ import AreaWorkProof, { serviceShots, imageObjectSchema } from '@/components/hom
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { applyRatesToRows } from '@/lib/seo/rate-overrides';
+import { getHinglishBlock } from '@/lib/seo/hinglish-longtail';
+import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 import { ogImage } from '@/lib/seo/og-image';
 /* ══════════════════════════════════════════════════════════════════════════
    9 Oct 2026 — ADS LANDING UPGRADE, sirf /ro-service-in-patna ke liye.
@@ -212,6 +214,11 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
      Wajah poori: src/lib/seo/rate-overrides.ts */
   const prices = applyRatesToRows(intent.prices, rateCard);
 
+  /* 26 Oct 2026 — Hinglish long-tail block (null ho sakta hai, tab kuch
+     render nahi hota). `notFound()` ke BAAD hi, warna intent null ho sakta
+     hai — wahi galti pehle rate card me ho chuki hai. */
+  const hinglish = getHinglishBlock(intent.slug);
+
   const related = intent.related
     .map((slug) => SERVICE_INTENTS.find((s) => s.slug === slug))
     .filter((s): s is NonNullable<typeof s> => Boolean(s));
@@ -321,7 +328,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
 
         {/* ── Hero ── */}
         <section className="bg-navy-gradient py-12 text-white md:py-16">
-          <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="container mx-auto grid gap-10 px-4 [&>*]:min-w-0 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
               <h1 className="font-display text-3xl font-extrabold leading-tight md:text-5xl">
                 {intent.h1}
@@ -561,6 +568,12 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
             </ul>
           </div>
         </section>
+
+        {/* 26 Oct 2026 — Hinglish long-tail block. Sirf un 2 intent par aata
+            hai jinko gap-scan me phrase mila: ro-service-in-patna aur
+            ro-repair-patna. Baaki intent par kuch render nahi hota.
+            Wajah + poori list: src/lib/seo/hinglish-longtail.ts */}
+        {hinglish && <HinglishQueryBlock block={hinglish} />}
 
 <section className="py-12 md:py-14">
           <div className="container mx-auto px-4">

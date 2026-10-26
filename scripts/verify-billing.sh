@@ -36,19 +36,54 @@ echo "════ 0a) Pricing wording — owner ka \"itna se itna tak\" niyam �
 # "₹X onwards" / "₹X se" usi niyam ka ulta hai: grahak kam number yaad rakhta hai
 # aur zyada charge pe jhagda hota hai.
 # Comment lines chhod do — bug ka itihaas likhne me ye shabd aa jaata hai.
+# 🔴 26 Oct 2026 — ye detector PRECISE kiya gaya hai, DHEELA nahi.
+#   Pehle wo har jagah shabd 'onwards' ginta tha. Us wajah se 3 jhoothe hit
+#   aa gaye jo grahak ko kabhi dikhte hi nahi:
+#     service-rates.ts   | 'from'  // ₹2,500 onwards        ← type ka comment
+#     service-rates.ts   return `${inr(from)} onwards`      ← formatter, data nahi
+#     RateCardManager    admin ke liye madad wala text      ← admin panel
+#   Ab wahi gina jaata hai jo SACH ME DAAM hai: ₹<number> onwards,
+#   trailing // comment hata kar, aur admin-only file chhod kar
+#   (gate ka maqsad hi grahak ko dikhne wala daam hai).
+#   Aur saath me ek NAYI, zyada SAKHT jaanch judi hai neeche.
 ONW=$(python3 -c "
 import re, glob
 n = 0
 for f in glob.glob('src/**/*.ts', recursive=True) + glob.glob('src/**/*.tsx', recursive=True):
+    if '/admin/' in f.replace(chr(92), '/'):
+        continue
     for line in open(f, encoding='utf8'):
         st = line.strip()
         if st.startswith(('*', '//', '/*')):
             continue
-        n += len(re.findall(r'onwards', line))
+        st = re.sub(r'//.*$', '', st)
+        n += len(re.findall(r'\u20b9\s?[\d,]+\s*onwards', st))
 print(n)
 ")
 if [ "$ONW" -le 17 ]; then echo "  PASS  'onwards' sirf $ONW bachi (commercial plant/AMC, jinka upper rate owner se poochna hai)"; pass=$((pass+1));
 else echo "  FAIL  'onwards' $ONW hain — spare parts pe range honi chahiye"; fail=$((fail+1)); fi
+
+# 🔴 NAYI SAKHT JAANCH (26 Oct 2026)
+# Jitne bhi \"₹X onwards\" wale PRICE ROW bache hain, un sab par rateKey hona
+# CHAHIYE — warna owner unko /admin/rates se badal hi nahi sakta aur wahi
+# shikayat dobara aayegi: \"maine update kiya wo hua hi nhi\".
+ONWNOKEY=$(python3 -c "
+import re, glob
+bad = []
+for f in glob.glob('src/**/*.ts', recursive=True) + glob.glob('src/**/*.tsx', recursive=True):
+    for i, line in enumerate(open(f, encoding='utf8'), 1):
+        st = line.strip()
+        if st.startswith(('*', '//', '/*')):
+            continue
+        if re.search(r\"price:\s*'\u20b9[\d,]+\s*onwards'\", st) and 'rateKey' not in st:
+            bad.append(f + ':' + str(i))
+print(len(bad))
+for b in bad[:5]:
+    print('      ' + b)
+")
+ONWN=$(echo "$ONWNOKEY" | head -1)
+if [ "$ONWN" = "0" ]; then echo "  PASS  har '₹X onwards' price row admin ke rate card se juda hai"; pass=$((pass+1));
+else echo "  FAIL  $ONWN '₹X onwards' row bina rateKey ke — admin se nahi badlega"; echo "$ONWNOKEY" | tail -n +2; fail=$((fail+1)); fi
 # "₹X se" ka wahi haal — ye "₹X onwards" ka hinglish roop hai.
 # 4 allowed: 3 commercial/service (owner ka rate chahiye) + 1 sahi hindi
 # ("Membrane ke ₹2,500 se zyada maange" = "₹2,500 se ZYADA", price claim nahi).

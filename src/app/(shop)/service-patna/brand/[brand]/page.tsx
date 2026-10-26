@@ -33,6 +33,8 @@ import BrandKeywordBlock from '@/components/service/BrandKeywordBlock';
    ilaake heading me, taaki "Kent RO service in Boring Road" dono taraf se mile.
    Naya block, purana kuch nahi badla. */
 import BrandAreaListBlock from '@/components/service/BrandAreaListBlock';
+import { getHinglishBlock } from '@/lib/seo/hinglish-longtail';
+import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 
 export const revalidate = 86400;
 
@@ -298,6 +300,14 @@ export default async function BrandServicePage({ params }: { params: { brand: st
         <BrandKeywordBlock brand={brand} />
 
         <BrandAreaListBlock brand={brand} areas={SERVICE_AREAS} />
+
+        {/* 26 Oct 2026 — Hinglish long-tail. Sirf 2 brand slug par aata hai
+            (other-brands → "ro banane wala patna", aquaguard → "aquaguard
+            aura service patna"). Baaki 19 brand page par null → kuch nahi.
+            Wajah: src/lib/seo/hinglish-longtail.ts */}
+        {getHinglishBlock(`brand:${brand.slug}`) && (
+          <HinglishQueryBlock block={getHinglishBlock(`brand:${brand.slug}`)!} />
+        )}
 
         <FaqAccordion faqs={faqs} title={`${short} RO Service — Questions`} />
 

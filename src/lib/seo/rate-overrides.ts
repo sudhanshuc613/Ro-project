@@ -32,6 +32,11 @@
  */
 
 import { PART_RATES, type PartRate } from '@/lib/seo/ads-landing-data';
+/* 🔴 26 Oct 2026 (doosra round) — admin ab 12 nahi, 33 rate chalata hai.
+   PART_RATES ko chheda NAHI gaya (ads-landing grid wahi 12 dikhata hai).
+   Naye 21 alag file me hain. Wajah poori: src/lib/seo/service-rates.ts */
+import { ALL_RATES, RATE_FORMAT, formatRate,
+         type RateFormat, type RateGroup } from '@/lib/seo/service-rates';
 
 /** DB me jo save hota hai: part ka naam → { from, to } */
 export type RateMap = Record<string, { from: number; to: number }>;
@@ -41,8 +46,8 @@ export type RateMap = Record<string, { from: number; to: number }>;
  * Jo part DB me nahi hai, uska code waala rate chalta rehta hai.
  */
 export function resolveRates(overrides: RateMap | null | undefined): PartRate[] {
-  if (!overrides) return PART_RATES;
-  return PART_RATES.map((r) => {
+  if (!overrides) return ALL_RATES;
+  return ALL_RATES.map((r) => {
     const o = overrides[r.part];
     if (!o) return r;
     const from = Number(o.from);
@@ -60,20 +65,33 @@ export interface RateRow extends PartRate {
   defaultFrom: number;
   defaultTo: number;
   isOverridden: boolean;
+  /** site par kis shakal me chhapega — admin ko wahi dikhana hai */
+  format: RateFormat;
+  /** admin page par heading */
+  group: RateGroup;
+  /** banni hui string, jaise site par dikhegi */
+  preview: string;
 }
 
 export function buildRateRows(overrides: RateMap | null | undefined): RateRow[] {
   const resolved = resolveRates(overrides);
-  return PART_RATES.map((d, i) => ({
-    ...resolved[i],
-    defaultFrom: d.from,
-    defaultTo: d.to,
-    isOverridden: resolved[i].from !== d.from || resolved[i].to !== d.to,
-  }));
+  return ALL_RATES.map((d, i) => {
+    const r = resolved[i];
+    const fmt = d.format;
+    return {
+      ...r,
+      defaultFrom: d.from,
+      defaultTo: d.to,
+      isOverridden: r.from !== d.from || r.to !== d.to,
+      format: fmt,
+      group: d.group,
+      preview: formatRate(r.from, r.to, fmt),
+    };
+  });
 }
 
 /** Jo part naam allowed hain — DB me koi aur key na ghuse */
-export const RATE_KEYS = PART_RATES.map((r) => r.part);
+export const RATE_KEYS = ALL_RATES.map((r) => r.part);
 
 /* ══════════════════════════════════════════════════════════════════════════
    INTENT PRICE TABLE — admin ke rate se jodna
@@ -124,6 +142,9 @@ export function applyRatesToRows<T extends PricedRow>(
     if (!row.rateKey) return row;
     const r = byPart.get(row.rateKey);
     if (!r) return row;
-    return { ...row, price: formatRange(r.from, r.to) };
+    /* 🔴 format rate ke saath baithta hai, row ke saath nahi — warna
+       "₹1,499 / year" chup-chaap "₹1,499" ban jaata aur customer samajhta
+       ki AMC ek baar ka paisa hai. Default 'range' = purana vyavhaar. */
+    return { ...row, price: formatRate(r.from, r.to, RATE_FORMAT[row.rateKey] ?? 'range') };
   });
 }

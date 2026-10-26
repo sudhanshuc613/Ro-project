@@ -6,6 +6,7 @@ import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { coverageSentence } from '@/lib/seo/search-queries';
 import { getGbpSettings } from '@/lib/settings';
+import EmailOff from '@/components/common/EmailOff';
 
 const SHOP = [
   { label: 'New RO Purifiers', href: '/category/new-ro-purifiers' },
@@ -127,7 +128,7 @@ export default async function Footer() {
             {CONTACT.showStreetAddress && <>{CONTACT.address.street}, </>}
             {CONTACT.address.locality}, {CONTACT.address.city},{' '}
             {CONTACT.address.state} {CONTACT.address.pincode}
-            {CONTACT.emailWorks && <> · {CONTACT.email}</>}
+            {CONTACT.emailWorks && <> · <EmailOff email={CONTACT.email} /></>}
           </address>
         </div>
 

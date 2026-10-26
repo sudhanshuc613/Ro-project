@@ -68,6 +68,8 @@ import { getGbpSettings } from '@/lib/settings';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import TrustBadges from '@/components/ui/TrustBadges';
+import { getHinglishBlock } from '@/lib/seo/hinglish-longtail';
+import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 import { ogImage } from '@/lib/seo/og-image';
 
 export const revalidate = 86400;
@@ -107,6 +109,8 @@ export default async function RoCustomerCarePatnaPage() {
   const verified = CARE_BRANDS.filter((b) => b.phone);
   const unverified = CARE_BRANDS.filter((b) => !b.phone);
   const faqs = [...CARE_FAQS, SAMSUNG_ANSWER];
+  /* 26 Oct 2026 — "ro service centre number patna" ka apna H2 block. */
+  const careBlock = getHinglishBlock('customer-care');
 
   return (
     <>
@@ -549,6 +553,11 @@ export default async function RoCustomerCarePatnaPage() {
             </Link>
           </div>
         </section>
+
+        {/* 26 Oct 2026 — "ro service centre number patna" sirf body me tha,
+            kisi heading me nahi. Ab iska apna H2 yahan hai (aur kahin nahi).
+            Wajah: src/lib/seo/hinglish-longtail.ts */}
+        {careBlock && <HinglishQueryBlock block={careBlock} />}
 
         <FaqAccordion
           faqs={faqs}

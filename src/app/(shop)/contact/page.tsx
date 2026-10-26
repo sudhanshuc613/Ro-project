@@ -4,6 +4,7 @@ import { BRAND, CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
 import { getGbpSettings } from '@/lib/settings';
 import { breadcrumbSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import { ogImage } from '@/lib/seo/og-image';
+import EmailOff from '@/components/common/EmailOff';
 
 export const revalidate = 86400;
 
@@ -119,7 +120,7 @@ export default async function ContactPage() {
               {CONTACT.address.locality}<br />
               {CONTACT.address.city}, {CONTACT.address.state} — {CONTACT.address.pincode}<br />
               {CONTACT.emailWorks && (
-                <a href={`mailto:${CONTACT.email}`} className="text-aqua-600 hover:underline">{CONTACT.email}</a>
+                <EmailOff email={CONTACT.email} link linkClassName="text-aqua-600 hover:underline" />
               )}
             </address>
             <p className="mt-3 text-sm font-semibold text-navy-700">🕒 {CONTACT.hours} · All 7 days</p>

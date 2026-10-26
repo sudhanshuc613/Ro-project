@@ -170,7 +170,7 @@ export default async function ServiceHubPage() {
 
         {/* ── Hero — poster + proof cards ── */}
         <section className="bg-navy-gradient py-12 text-white md:py-16">
-          <div className="container mx-auto grid items-center gap-10 px-4 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="container mx-auto grid items-center gap-10 px-4 [&>*]:min-w-0 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <p className="text-sm font-bold uppercase tracking-wider text-aqua-300">
                 Best RO Service in Patna
@@ -245,7 +245,7 @@ export default async function ServiceHubPage() {
 
         {/* ── Booking form — hero se nikaal ke apna section ── */}
         <section className="bg-sand-100 py-12 md:py-14">
-          <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div className="container mx-auto grid gap-8 px-4 [&>*]:min-w-0 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
               <h2 className="font-display text-2xl font-extrabold text-navy-700 md:text-3xl">
                 Abhi book kar lijiye

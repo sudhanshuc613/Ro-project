@@ -21,6 +21,7 @@ import { formatINR, formatDateIN, splitGST } from '@/lib/utils/format';
 import { BRAND, CONTACT } from '@/lib/constants';
 import { getContactSettings } from '@/lib/settings';
 import PrintButton from '@/components/account/PrintButton';
+import EmailOff from '@/components/common/EmailOff';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
@@ -165,7 +166,7 @@ export default async function InvoicePage({
             <p className="mt-1 text-muted">
               📞 {contact.primaryPhone} · {contact.secondaryPhone}
               <br />
-              {CONTACT.emailWorks && <>✉️ {contact.email} · </>}{BRAND.domain}
+              {CONTACT.emailWorks && <>✉️ <EmailOff email={contact.email} /> · </>}{BRAND.domain}
             </p>
           </div>
           <div className="text-right">

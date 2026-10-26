@@ -69,7 +69,14 @@ export default function ServicePriceGrid({
   /* 10 Oct 2026 — admin /admin/rates se badal sakta hai. Na mile to code ka. */
   rates?: PartRate[];
 }) {
-  const partRates = rates?.length ? rates : PART_RATES;
+  /* 🔴 26 Oct 2026 — admin ab 33 rate bhejta hai (12 ghar ke part + 21 naye:
+     AMC, commercial plant, installation). Ye grid SIRF ghar ke 12 part ka
+     hai aur wahi 12 usi order me dikhne chahiye — warna is page par bina
+     poochhe 12 ki jagah 33 card aa jaate.
+     Admin ka override lag jaata hai, lekin list PART_RATES hi tay karti hai.
+     Wajah: src/lib/seo/service-rates.ts */
+  const byPart = new Map((rates ?? []).map((r) => [r.part, r]));
+  const partRates: PartRate[] = PART_RATES.map((d) => byPart.get(d.part) ?? d);
   return (
     <section className="bg-white px-4 py-12 md:py-16">
       <div className="mx-auto max-w-6xl">

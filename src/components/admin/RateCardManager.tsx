@@ -8,11 +8,11 @@
  * agle request me hi naya rate dikhta hai.
  */
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { toast } from 'sonner';
 import type { RateRow } from '@/lib/seo/rate-overrides';
+import { formatRate } from '@/lib/seo/service-rates';
 
-const inr = (n: number) => `₹${n.toLocaleString('en-IN')}`;
 
 export default function RateCardManager({ initial }: { initial: RateRow[] }) {
   const [rows, setRows] = useState<RateRow[]>(initial);
@@ -84,7 +84,23 @@ export default function RateCardManager({ initial }: { initial: RateRow[] }) {
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={r.part} className={i % 2 ? 'bg-slate-50' : 'bg-white'}>
+            <Fragment key={r.part}>
+            {/* 🔴 26 Oct 2026 — ab 33 rate hain (12 ghar ke part + 21 AMC /
+                commercial / installation). Bina heading ke ye ek lambi list
+                ban jaati jisme kuch dhoondhna mushkil hota. Group ka naam
+                src/lib/seo/service-rates.ts se aata hai. */}
+            {(i === 0 || rows[i - 1].group !== r.group) && (
+              <tr>
+                <th
+                  scope="colgroup"
+                  colSpan={4}
+                  className="bg-navy-50 px-4 py-2 text-left text-xs font-black uppercase tracking-wide text-navy-700"
+                >
+                  {r.group}
+                </th>
+              </tr>
+            )}
+            <tr className={i % 2 ? 'bg-slate-50' : 'bg-white'}>
               <th scope="row" className="px-4 py-3 align-top font-bold text-navy-900">
                 {r.part}
                 {r.isOverridden && (
@@ -114,10 +130,19 @@ export default function RateCardManager({ initial }: { initial: RateRow[] }) {
                   </div>
                 ) : (
                   <>
-                    <span className="font-black text-amber-700">{inr(r.from)} &ndash; {inr(r.to)}</span>
+                    {/* 🔴 ab `preview` dikhta hai, khud se jodi hui range nahi.
+                        Kuch rate site par "₹1,499 / year" ya "₹2,500 onwards"
+                        ke roop me chhapte hain — admin ko BILKUL wahi dikhna
+                        chahiye jo customer ko dikhega. */}
+                    <span className="font-black text-amber-700">{r.preview}</span>
+                    {r.format !== 'range' && (
+                      <span className="block text-[11px] text-muted">
+                        site par aise hi chhapta hai
+                      </span>
+                    )}
                     {r.isOverridden && (
                       <span className="block text-[11px] text-muted">
-                        pehle: {inr(r.defaultFrom)} &ndash; {inr(r.defaultTo)}
+                        pehle: {formatRate(r.defaultFrom, r.defaultTo, r.format)}
                       </span>
                     )}
                   </>
@@ -162,6 +187,7 @@ export default function RateCardManager({ initial }: { initial: RateRow[] }) {
                 )}
               </td>
             </tr>
+            </Fragment>
           ))}
         </tbody>
       </table>

@@ -39,13 +39,13 @@ export default async function RatesPage() {
   return (
     <div className="space-y-5">
       <header>
-        <h1 className="font-display text-2xl font-black text-navy-900">Spare Part Rates</h1>
+        <h1 className="font-display text-2xl font-black text-navy-900">Rate Card &mdash; Poori Site</h1>
         <p className="mt-1 text-sm text-navy-600">
           Market ka rate badle to yahin se badlo. Save karte hi site par live &mdash; koi deploy nahi.
         </p>
         <p className="mt-2">
           <span className="rounded-full bg-navy-900 px-3 py-1 text-xs font-bold text-white">
-            {rows.length} parts
+            {rows.length} rate &mdash; poori site
           </span>{' '}
           <span className="rounded-full bg-aqua-100 px-3 py-1 text-xs font-bold text-aqua-800">
             {changed} badle hue
@@ -57,9 +57,11 @@ export default async function RatesPage() {
         <h2 className="text-sm font-black text-navy-900">Do cheez yaad rakhna</h2>
         <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-navy-700">
           <li>
-            <strong>1. Range hi daalna, ek number nahi.</strong> Site par ye &ldquo;itne se itne
-            tak&rdquo; ke roop me dikhta hai. Ek fix number likhoge to customer bill dekh kar
-            kahega &ldquo;aapne to website par ye likha tha&rdquo;.
+            <strong>1. Part ka rate RANGE me daalna, ek number nahi.</strong> Site par wo
+            &ldquo;itne se itne tak&rdquo; dikhta hai. Ek fix number likhoge to customer bill
+            dekh kar kahega &ldquo;aapne to website par ye likha tha&rdquo;. Jin row me
+            &ldquo;site par aise hi chhapta hai&rdquo; likha ho (AMC, commercial, installation)
+            unme sirf <strong>pehla</strong> number dikhta hai &mdash; doosra box wahi rakh dena.
           </li>
           <li>
             <strong>2. Visit charge yahan nahi hai.</strong> Wo{' '}

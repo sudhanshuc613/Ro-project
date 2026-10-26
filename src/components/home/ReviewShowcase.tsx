@@ -54,7 +54,7 @@ export default function ReviewShowcase({ gbp = GBP_FALLBACK }: { gbp?: GbpValues
       className="scroll-mt-24 bg-white py-12 md:py-16"
     >
       <div className="container mx-auto px-4">
-        <div className="grid gap-8 lg:grid-cols-[320px,1fr] lg:gap-12">
+        <div className="grid gap-8 [&>*]:min-w-0 lg:grid-cols-[320px,1fr] lg:gap-12">
 
           {/* ── Rating panel: the number that deserves to be big ── */}
           <div className="rounded-3xl bg-gradient-to-br from-navy-700 to-navy-800 p-6 text-white shadow-card-hover">
