@@ -56,6 +56,7 @@ import TrustBadges from '@/components/ui/TrustBadges';
 import AreaWorkProof, { serviceShots, imageObjectSchema } from '@/components/home/AreaWorkProof';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
+import { applyRatesToRows } from '@/lib/seo/rate-overrides';
 import { ogImage } from '@/lib/seo/og-image';
 /* ══════════════════════════════════════════════════════════════════════════
    9 Oct 2026 — ADS LANDING UPGRADE, sirf /ro-service-in-patna ke liye.
@@ -185,6 +186,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
   /* Admin-editable images. DB na chale to code ke default aate hain. */
   const [siteImages, rateCard] = await Promise.all([getSiteImages(), getRateCard()]);
 
+
   /* Rate-check tool ka data. Har area ka APNA TDS, apna response time —
      yahi wo cheez hai jo koi competitor copy nahi kar sakta, kyunki unke
      area pages me koi area-specific number hai hi nahi (99.3% identical). */
@@ -200,6 +202,15 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
       }))
     : [];
   if (!intent) notFound();
+
+  /* 🔴 26 Oct 2026 — price table ab ADMIN ke rate card se banti hai.
+     Pehle `intent.prices` seedha render hoti thi aur wo HARDCODED thi —
+     isliye /admin/rates me rate badalne par ye table nahi badalti thi.
+     Jis row ka `rateKey` hai wo ab admin se aata hai; baaki waise ke waise.
+     🔴 Ye line `if (!intent) notFound()` ke BAAD honi chahiye — pehle maine
+        upar daal di thi aur tsc ne pakda: "'intent' is possibly 'null'".
+     Wajah poori: src/lib/seo/rate-overrides.ts */
+  const prices = applyRatesToRows(intent.prices, rateCard);
 
   const related = intent.related
     .map((slug) => SERVICE_INTENTS.find((s) => s.slug === slug))
@@ -278,7 +289,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
             priceCurrency: 'INR',
             lowPrice: String(intent.priceFrom),
             highPrice: String(intent.priceTo),
-            offerCount: String(intent.prices.length),
+            offerCount: String(prices.length),
             availability: 'https://schema.org/InStock',
           },
         },
@@ -430,7 +441,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
                   </tr>
                 </thead>
                 <tbody>
-                  {intent.prices.map((row, i) => (
+                  {prices.map((row, i) => (
                     <tr key={row.item} className={i % 2 ? 'bg-sand-100' : 'bg-white'}>
                       <td className="px-4 py-3 font-semibold text-navy-700">
                         {row.item}

@@ -124,7 +124,14 @@ export default function Navbar() {
 
       {/* ── Tier 2: main bar ── */}
       <div className="border-b border-navy-50">
-        <div className="container mx-auto flex h-[70px] items-center gap-4 px-4">
+        {/* 🔴 26 Oct 2026 — 360px ANDROID PAR HEADER KAT RAHA THA.
+            Naapa (Playwright, 360x740, Android UA): ye row 385px maangti thi —
+            burger 40 + gap 16 + logo 185 + gap 16 + right-cluster 96 + px-4 x2 = 385.
+            Natija: cart icon AADHA kat jaata tha aur Search button clip hota tha.
+            Screenshot: /home/user/mob-table.png (fix se pehle).
+            🔴 Kuch HATAYA nahi — sirf chhote phone par gap aur padding kam ki.
+               sm (640px) se upar sab bilkul pehle jaisa hai. */}
+        <div className="container mx-auto flex h-[70px] items-center gap-2 px-3 sm:gap-4 sm:px-4">
           {/* Mobile menu toggle */}
           <button onClick={() => setMobileOpen(true)} aria-label="Open menu"
             className="rounded-lg p-2 text-navy-700 hover:bg-navy-50 lg:hidden">
@@ -144,7 +151,9 @@ export default function Navbar() {
               src={BRAND.logo}
               alt={`${BRAND.name} — RO service and water purifiers in Patna`}
               width={260} height={62} priority
-              className="h-11 w-auto object-contain sm:h-14"
+              /* 🔴 mobile par h-10 (40px) — pehle h-11 (44px) tha aur 185px
+                 chaudai leta tha. 640px se upar sab waise ka waisa (sm:h-14). */
+              className="h-10 w-auto object-contain sm:h-14"
             />
           </Link>
 

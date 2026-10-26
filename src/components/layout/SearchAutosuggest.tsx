@@ -99,7 +99,7 @@ export default function SearchAutosuggest() {
         />
         <button
           onClick={() => submit()}
-          className="bg-aqua-500 px-6 text-sm font-bold text-white transition hover:bg-aqua-600"
+          className="bg-aqua-500 px-4 text-sm font-bold text-white sm:px-6 transition hover:bg-aqua-600"
           aria-label="Search"
         >
           Search

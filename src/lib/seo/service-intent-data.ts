@@ -55,7 +55,28 @@ export interface IntentStep {
   minutes?: number;
 }
 
+/* 🔴 26 Oct 2026 — DAAM AB ADMIN SE BADALTA HAI.
+   ════════════════════════════════════════════════════════════════════════
+   Owner: "admin panel se rate change karta hu to wo in sab jagh se change
+   nhi hota hai."
+
+   Wo bilkul sahi the. `/admin/rates` sirf PART_RATES badalta tha, aur wo
+   PART_RATES sirf ads-landing wale ServicePriceGrid me dikhte the. Ye neeche
+   wali price table — jo /ro-filter-change-patna, /ro-repair-patna wagairah
+   par dikhti hai — poori HARDCODED thi.
+
+   Ab har wo row jiska `rateKey` hai, admin ke rate card se aata hai.
+   `rateKey` ka naam PART_RATES ke `part` se BILKUL match karta hai.
+
+   🔴 Jis row ka rateKey NAHI hai (jaise "Free", "Quoted per machine",
+      AMC plan ka daam) wo waise ka waisa rehta hai — wo part ka rate nahi
+      hai, isliye part rate card me uski jagah nahi.
+
+   🔴 Admin me kuch na badla ho to output BILKUL WAHI rehta hai jo abhi hai.
+      Ye test se jaancha gaya hai (scripts/verify-rate-sync.sh). */
 export interface IntentPriceRow {
+  /** PART_RATES ka `part` naam — bilkul wahi spelling. Hoga to admin se aayega. */
+  rateKey?: string;
   item: string;
   price: string;
   note: string;
@@ -198,7 +219,7 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
       { item: 'Installation — purifier bought from us', price: 'Free', note: 'Includes mounting, tapping, drain line, first flush and TDS reading' },
       { item: 'Installation — purifier bought elsewhere', price: '₹500', note: 'Same job, same checks. Online purchase or local shop, no difference' },
       { item: 'Commercial plant installation (25–100 LPH)', price: '₹2,500 onwards', note: 'Depends on plumbing run and pre-treatment needed' },
-      { item: 'Booster pump added at installation', price: '₹1,000 – ₹2,800', note: 'Needed where inlet pressure measures below 40 psi' },
+      { rateKey: 'Booster pump / motor', item: 'Booster pump added at installation', price: '₹1,000 – ₹2,800', note: 'Needed where inlet pressure measures below 40 psi' },
       { item: 'Extra tapping / long pipe run beyond 3 m', price: '₹150 per metre', note: 'Material plus labour, quoted before we start' },
       { item: 'Uninstall and refit at a new address', price: '₹399 onwards', note: 'Shifting house — dismount, transport safety, refit and retest' },
       { item: 'Wall drilling into RCC / granite', price: '₹200 extra', note: 'Only when the fixing point is concrete or stone' },
@@ -398,17 +419,17 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     prices: [
       { item: `Visit + full diagnosis + TDS test`, price: `₹${V}`, note: 'Market rate in Patna is ₹300–400. Waived if you proceed with an AMC' },
-      { item: 'Sediment filter replacement', price: '₹150 – ₹300', note: 'The cheapest part in the machine and the one protecting everything after it' },
-      { item: 'Pre-carbon / post-carbon filter', price: '₹180 – ₹400', note: 'Exhausted carbon kills membranes silently, months before anyone notices' },
-      { item: 'Full filter set (3 filters)', price: '₹350 – ₹900', note: 'Cheaper as a set than replacing them one at a time across three visits' },
-      { item: 'RO membrane 75 GPD', price: '₹1,100 – ₹2,400', note: 'Fine below 500 ppm input TDS' },
+      { rateKey: 'Sediment filter (spun)', item: 'Sediment filter replacement', price: '₹150 – ₹300', note: 'The cheapest part in the machine and the one protecting everything after it' },
+      { rateKey: 'Pre-carbon / post-carbon', item: 'Pre-carbon / post-carbon filter', price: '₹180 – ₹400', note: 'Exhausted carbon kills membranes silently, months before anyone notices' },
+      { rateKey: 'Teeno filter ka set', item: 'Full filter set (3 filters)', price: '₹350 – ₹900', note: 'Cheaper as a set than replacing them one at a time across three visits' },
+      { rateKey: 'RO membrane', item: 'RO membrane 75 GPD', price: '₹1,100 – ₹2,400', note: 'Fine below 500 ppm input TDS' },
       { item: 'RO membrane 80 / 100 GPD', price: '₹1,400 – ₹2,400', note: 'Worth it above 500 ppm — lasts noticeably longer on hard water' },
-      { item: 'SMPS / adaptor', price: '₹700 – ₹1,100', note: 'One of the two most common causes of a completely dead machine' },
-      { item: 'Booster pump', price: '₹1,000 – ₹2,800', note: 'Seized pump, or fitted new where inlet pressure is too low' },
-      { item: 'UV lamp', price: '₹400 – ₹1,200', note: 'Roughly annual replacement — the lamp dims long before it fails outright' },
-      { item: 'Solenoid valve', price: '₹280 – ₹600', note: 'Usual cause of a machine that will not stop running' },
-      { item: 'Float switch', price: '₹180 – ₹350', note: 'Tank overflows, or never fills at all' },
-      { item: 'Storage tank 8–12 L', price: '₹650 – ₹1,800', note: 'Ruptured bladder, or a tank that has gone foul internally' },
+      { rateKey: 'SMPS adaptor', item: 'SMPS / adaptor', price: '₹700 – ₹1,100', note: 'One of the two most common causes of a completely dead machine' },
+      { rateKey: 'Booster pump / motor', item: 'Booster pump', price: '₹1,000 – ₹2,800', note: 'Seized pump, or fitted new where inlet pressure is too low' },
+      { rateKey: 'UV lamp + ballast', item: 'UV lamp', price: '₹400 – ₹1,200', note: 'Roughly annual replacement — the lamp dims long before it fails outright' },
+      { rateKey: 'Solenoid valve', item: 'Solenoid valve', price: '₹280 – ₹600', note: 'Usual cause of a machine that will not stop running' },
+      { rateKey: 'Float valve', item: 'Float switch', price: '₹180 – ₹350', note: 'Tank overflows, or never fills at all' },
+      { rateKey: 'Storage tank', item: 'Storage tank 8–12 L', price: '₹650 – ₹1,800', note: 'Ruptured bladder, or a tank that has gone foul internally' },
       { item: 'Full general service (no parts)', price: '₹350 onwards', note: 'Strip, clean, sanitise tank, reassemble, retest' },
     ],
     priceFrom: V,
@@ -513,13 +534,13 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
       },
     ],
     prices: [
-      { item: 'Sediment filter (spun / PP)', price: '₹150 – ₹300', note: 'Patna life 3–4 months against 6 on the box' },
-      { item: 'Pre-carbon block', price: '₹180 – ₹400', note: 'Patna life 5–8 months against 8–12. This is the one protecting your membrane' },
-      { item: 'Post-carbon / polishing filter', price: '₹200 – ₹400', note: 'Taste and odour stage, roughly annual' },
-      { item: 'Full set of 3 filters', price: '₹350 – ₹900', note: 'The sensible option — cheaper than three separate visits' },
+      { rateKey: 'Sediment filter (spun)', item: 'Sediment filter (spun / PP)', price: '₹150 – ₹300', note: 'Patna life 3–4 months against 6 on the box' },
+      { rateKey: 'Pre-carbon / post-carbon', item: 'Pre-carbon block', price: '₹180 – ₹400', note: 'Patna life 5–8 months against 8–12. This is the one protecting your membrane' },
+      { rateKey: 'Pre-carbon / post-carbon', item: 'Post-carbon / polishing filter', price: '₹200 – ₹400', note: 'Taste and odour stage, roughly annual' },
+      { rateKey: 'Teeno filter ka set', item: 'Full set of 3 filters', price: '₹350 – ₹900', note: 'The sensible option — cheaper than three separate visits' },
       { item: 'Inline / candle filter', price: '₹120 – ₹300', note: 'Used on some compact and UV-only models' },
-      { item: 'UV lamp', price: '₹400 – ₹1,200', note: 'Output falls off long before the lamp visibly dies' },
-      { item: 'Filter housing replacement', price: '₹250 – ₹700', note: 'Usually needed because a previous service over-tightened it' },
+      { rateKey: 'UV lamp + ballast', item: 'UV lamp', price: '₹400 – ₹1,200', note: 'Output falls off long before the lamp visibly dies' },
+      { rateKey: 'Filter housing / bowl', item: 'Filter housing replacement', price: '₹250 – ₹700', note: 'Usually needed because a previous service over-tightened it' },
       { item: 'Visit charge', price: `₹${V}`, note: 'Waived when a full set is fitted' },
     ],
     priceFrom: 120,
@@ -622,9 +643,9 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
       },
     ],
     prices: [
-      { item: 'RO membrane 75 GPD, fitted', price: '₹1,100 – ₹2,400', note: 'Correct below 500 ppm input TDS. Market rate is ₹1,200–2,500' },
+      { rateKey: 'RO membrane', item: 'RO membrane 75 GPD, fitted', price: '₹1,100 – ₹2,400', note: 'Correct below 500 ppm input TDS. Market rate is ₹1,200–2,500' },
       { item: 'RO membrane 80 / 100 GPD, fitted', price: '₹1,400 – ₹2,400', note: 'For hard-water areas above 500 ppm. Market rate ₹1,500–3,000' },
-      { item: 'Membrane housing replacement', price: '₹350 – ₹700', note: 'Only when the housing itself is cracked, usually from over-tightening' },
+      { rateKey: 'Filter housing / bowl', item: 'Membrane housing replacement', price: '₹350 – ₹700', note: 'Only when the housing itself is cracked, usually from over-tightening' },
       { item: 'Membrane + full filter set together', price: '₹1,400 – ₹2,400', note: 'The sensible combination — a new membrane behind old carbon does not last' },
       { item: 'Commercial membrane (2521 / 4021)', price: 'Quoted on plant', note: 'Depends on plant rating and feed water' },
       { item: 'TDS test only', price: `Free with any visit`, note: `Included in the ₹${V} visit — including when the answer is that you do not need a membrane` },
@@ -851,12 +872,12 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     prices: [
       { item: 'Visit + full diagnosis + TDS report', price: `₹${V}`, note: 'Fixed. Told to you on the phone before we come.' },
       { item: 'General service (clean, flush, re-seal, TDS set)', price: '₹499 onwards', note: 'Includes the visit. Housings opened, cleaned, re-sealed; tank sanitised; TDS controller set correctly.' },
-      { item: 'Sediment + carbon filter change', price: '₹450 – ₹900', note: 'Both pre-filters. The job most Patna homes need twice a year on borewell supply.' },
-      { item: 'RO membrane replacement (75 GPD)', price: '₹1,600 – ₹2,400', note: 'Genuine membrane with warranty. Only after TDS proves it is needed.' },
-      { item: 'Booster pump replacement', price: '₹1,000 – ₹2,800', note: 'Common on upper floors and in low-pressure pockets like Kidwaipuri and R Block.' },
-      { item: 'SMPS / adaptor', price: '₹700 – ₹1,100', note: 'Machine completely dead with no light is usually this, not the pump.' },
-      { item: 'Solenoid valve', price: '₹450 – ₹600', note: 'Machine keeps running or will not stop filling.' },
-      { item: 'Float valve', price: '₹150 – ₹350', note: 'Overflowing tank.' },
+      { rateKey: 'Teeno filter ka set', item: 'Sediment + carbon filter change', price: '₹450 – ₹900', note: 'Both pre-filters. The job most Patna homes need twice a year on borewell supply.' },
+      { rateKey: 'RO membrane', item: 'RO membrane replacement (75 GPD)', price: '₹1,600 – ₹2,400', note: 'Genuine membrane with warranty. Only after TDS proves it is needed.' },
+      { rateKey: 'Booster pump / motor', item: 'Booster pump replacement', price: '₹1,000 – ₹2,800', note: 'Common on upper floors and in low-pressure pockets like Kidwaipuri and R Block.' },
+      { rateKey: 'SMPS adaptor', item: 'SMPS / adaptor', price: '₹700 – ₹1,100', note: 'Machine completely dead with no light is usually this, not the pump.' },
+      { rateKey: 'Solenoid valve', item: 'Solenoid valve', price: '₹450 – ₹600', note: 'Machine keeps running or will not stop filling.' },
+      { rateKey: 'Float valve', item: 'Float valve', price: '₹150 – ₹350', note: 'Overflowing tank.' },
       { item: 'Annual AMC (all filters + 3 visits)', price: '₹2,499 onwards', note: 'Cheaper than two separate filter changes plus visits.' },
     ],
     priceFrom: V,

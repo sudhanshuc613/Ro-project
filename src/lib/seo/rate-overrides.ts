@@ -74,3 +74,56 @@ export function buildRateRows(overrides: RateMap | null | undefined): RateRow[] 
 
 /** Jo part naam allowed hain — DB me koi aur key na ghuse */
 export const RATE_KEYS = PART_RATES.map((r) => r.part);
+
+/* ══════════════════════════════════════════════════════════════════════════
+   INTENT PRICE TABLE — admin ke rate se jodna
+   ──────────────────────────────────────────────────────────────────────────
+   🔴 26 Oct 2026 — owner: "admin panel se rate change karta hu to wo in sab
+   jagh se change nhi hota hai."
+
+   Wo sahi the. `/admin/rates` sirf PART_RATES badalta tha, aur PART_RATES
+   sirf ads-landing ke ServicePriceGrid me dikhte the. Service page ki price
+   table (/ro-filter-change-patna, /ro-repair-patna, /ro-amc-patna wagairah)
+   poori HARDCODED thi — 53 row, 7 page.
+
+   Ab un row par `rateKey` hai jo PART_RATES ke `part` se match karta hai.
+   Admin me rate badla → in saari table par turant badal jaata hai.
+
+   🔴 DO SURAKSHA:
+     1. Jis row ka rateKey nahi (Free / Quoted / AMC plan) — wo CHHUA NAHI
+        jaata. Wo part ka rate hai hi nahi.
+     2. Admin me kuch na badla ho to string BILKUL WAHI banti hai jo abhi
+        hardcoded hai. `scripts/verify-rate-sync.sh` har row par ye jaanchta
+        hai — ek bhi daam badla to FAIL.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/** `₹150 – ₹300` — bilkul wahi format jo abhi hardcoded strings me hai. */
+export function formatRange(from: number, to: number): string {
+  const n = (x: number) => `₹${x.toLocaleString('en-IN')}`;
+  return from === to ? n(from) : `${n(from)} – ${n(to)}`;
+}
+
+export interface PricedRow {
+  rateKey?: string;
+  item: string;
+  price: string;
+  note?: string;
+}
+
+/**
+ * Price table ke har row par admin ka rate lagao.
+ * `rateKey` na ho, ya us key ka rate na mile, to row jaisa hai waisa lautta hai.
+ */
+export function applyRatesToRows<T extends PricedRow>(
+  rows: readonly T[],
+  rates: PartRate[] | null | undefined,
+): T[] {
+  if (!rates?.length) return rows as T[];
+  const byPart = new Map(rates.map((r) => [r.part, r]));
+  return rows.map((row) => {
+    if (!row.rateKey) return row;
+    const r = byPart.get(row.rateKey);
+    if (!r) return row;
+    return { ...row, price: formatRange(r.from, r.to) };
+  });
+}
