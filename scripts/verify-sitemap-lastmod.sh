@@ -69,11 +69,29 @@ def bad(m):
 print(f"  ....  {len(locs)} URLs, {len(lms)} lastmod values")
 
 # 1) sthirta
-if lms == lms2:
-    ok("lastmod do fetch ke beech sthir hai (build-time stamp nahi)")
+# 🔴 25 Oct 2026 — ye check SIRF code-driven URL par lagta hai.
+#    Pehle poore sitemap par lagta tha aur suite me ruk-ruk kar FAIL deta tha.
+#    Wajah mili: /products/* aur /category/* ka lastmod DB ke `updatedAt` se
+#    aata hai. Suite me `verify-product-admin` (12va) is test (17va) se PEHLE
+#    chalta hai aur ek product update kar deta hai — to uska lastmod sach me
+#    badal jaata hai. Wo SAHI vyavhaar hai, bug nahi.
+#    Jis bug se ye test bachata hai wo alag hai: `lastModified: new Date()`
+#    jisse HAR URL ka lastmod har build par badal jaata tha. Wo code-driven
+#    URL par hi dikhta hai, aur wahan ab bhi ZERO tolerance hai.
+DB_DRIVEN = ('/products/', '/category/')
+pairs = list(zip(locs, lms, lms2))
+code_pairs = [(u, x, y) for u, x, y in pairs if not any(d in u for d in DB_DRIVEN)]
+code_diff = [(u, x, y) for u, x, y in code_pairs if x != y]
+db_diff = [(u, x, y) for u, x, y in pairs if any(d in u for d in DB_DRIVEN) and x != y]
+if not code_diff:
+    ok(f"code-driven lastmod sthir hai ({len(code_pairs)} URL, 0 badla)")
 else:
-    diff = sum(1 for x, y in zip(lms, lms2) if x != y)
-    bad(f"lastmod har fetch pe badal raha hai ({diff} values badle) — wahi purana bug")
+    bad(f"code-driven lastmod badal raha hai ({len(code_diff)} URL) — wahi purana bug")
+    for u, x, y in code_diff[:3]:
+        print(f"        {u}  {x} -> {y}")
+if db_diff:
+    print(f"  ....  {len(db_diff)} DB-driven URL ka lastmod badla (normal — koi"
+          f" test ne product update kiya): {[u.rsplit('/', 1)[-1] for u, _, _ in db_diff][:3]}")
 
 # 2) W3C format
 w3c = re.compile(r'^\d{4}-\d{2}-\d{2}([T ]\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})?)?$')

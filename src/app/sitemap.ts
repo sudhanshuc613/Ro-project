@@ -31,6 +31,9 @@ import {
    query hoti aur bot traffic seedha DB par padta. */
 export const revalidate = 60;
 
+/** Policy page banne ki date — content badle to ye bhi badlo. */
+const POLICY_DATE = new Date('2026-10-25T00:00:00.000Z');
+
 /**
  * ── 19 Sep 2026: lastmod ab SACH bolta hai ────────────────────────────────
  * Pehle har URL pe `lastModified: new Date()` tha. `revalidate = 3600` ke
@@ -62,6 +65,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BRAND.url}/products`, lastModified: contentDate('/products'), changeFrequency: 'daily', priority: 0.9 },
     { url: `${BRAND.url}/amc-plans`, lastModified: contentDate('/amc-plans'), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BRAND.url}/contact`, lastModified: contentDate('/contact'), changeFrequency: 'yearly', priority: 0.5 },
+    /* 🔴 25 Oct 2026 — 4 asli policy page. Pehle footer ke ye chaaron link
+       /contact par jaate the (145 page x 4 = 580 andaruni link ek galat
+       anchor ke saath). Ab inke apne URL hain, isliye sitemap me bhi. */
+    { url: `${BRAND.url}/shipping-policy`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BRAND.url}/returns-refunds`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BRAND.url}/warranty-terms`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BRAND.url}/privacy-policy`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
     /* Customer-care / helpline hub — added 9 Oct 2026. Keyword audit: poori
        TRUST category me exact-phrase coverage 0/8 thi. Autocomplete harvest
        (8 Oct) me "customer care number" cluster = 117 queries, aur Patna ka

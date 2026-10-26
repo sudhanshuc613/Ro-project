@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { POLICY_LINKS } from '@/lib/seo/policy-data';
 import { BRAND, CONTACT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
@@ -49,12 +50,25 @@ const BRANDS = [
   { label: 'AO Smith Service', href: '/service-patna/brand/ao-smith' },
 ];
 
+/* 🔴 25 Oct 2026 — YAHAN SABSE BADI LIK THI.
+   Pehle in PAANCH me se CHAAR link /contact par jaate the:
+       Shipping Policy / Returns & Refunds / Warranty Terms / Privacy Policy
+   145 page x 5 = 725 andaruni link ek hi page par, aur uska sabse bada
+   anchor "shipping policy" ban gaya tha.
+
+   Naap (tools/why-they-rank.py):
+     AQUA PERL : top page = /contact  5.8%  anchor "shipping policy" x145
+     Google #1 : top page = /         36.0% anchor "ro service centre patna..." x134
+
+   Do nuksan the — (1) Google ko lagta tha /contact shipping policy ka page
+   hai, hamari sabse badi link-power galat signal par ja rahi thi;
+   (2) "Privacy Policy" dabane wale customer ko policy milti hi nahi thi.
+
+   Ab har policy ka apna page hai. Label waise ke waise — kuch hataya nahi,
+   sirf link sahi jagah point karta hai. 'Contact Us' abhi bhi /contact par. */
 const SUPPORT = [
   { label: 'Track Your Order', href: '/track-order' },
-  { label: 'Shipping Policy', href: '/contact' },
-  { label: 'Returns & Refunds', href: '/contact' },
-  { label: 'Warranty Terms', href: '/contact' },
-  { label: 'Privacy Policy', href: '/contact' },
+  ...POLICY_LINKS,
   { label: 'Contact Us', href: '/contact' },
 ];
 
