@@ -46,6 +46,10 @@ export type HinglishBlock = {
   body: string;
   /** 3–4 point — har point me kaam ki baat, bharti nahi. */
   points: string[];
+  /** Dusra phrase jisko apna H3 chahiye (jaise centre / center spelling). */
+  altPhrase?: string;
+  /** Us dusre phrase ka H3. */
+  altHeading?: string;
 };
 
 /**
@@ -111,6 +115,50 @@ export const HINGLISH_LONGTAIL: Readonly<Record<string, HinglishBlock>> = {
     ],
   },
 
+  /* ── /service-patna  (27 Oct gap — title/H1 me kahin nahi tha) ────────── */
+  'service-patna': {
+    phrase: 'water purifier service patna',
+    heading: 'Water Purifier Service Patna — Saal Me Kitni Baar, Aur Kya-Kya Hota Hai',
+    body:
+      'Patna me "water purifier service" ka matlab sirf filter badalna nahi hai. Poori servicing me machine khol kar housing saaf hota hai, membrane flush hoti hai, tubing aur fitting check hote hain, aur aakhir me output TDS set kiya jaata hai. Borewell wale ghar me ye saal me do baar chahiye; supply water par ek baar kaafi hai.',
+    points: [
+      'Input aur output dono ka TDS likh kar dete hain — pehle aur baad ka, dono.',
+      'Bina part ki poori servicing ka rate call par hi bata dete hain — kaam shuru hone ke baad badalta nahi.',
+      'Machine 3 saal se purani ho to pump aur SMPS bhi check karte hain, bina extra charge.',
+      'Visit charge ₹200 — service karwayein ya na karwayein, isse zyada kuch nahi lagta.',
+    ],
+  },
+
+  /* ── /contact  (27 Oct gap — centre/center dono kahin nahi the) ───────── */
+  'contact': {
+    phrase: 'ro service centre patna',
+    heading: 'RO Service Centre Patna — Hamara Centre Kahan Hai Aur Kab Khulta Hai',
+    altPhrase: 'ro service center patna',
+    altHeading: 'RO Service Center Patna — Dono Spelling, Ek Hi Jagah',
+    body:
+      'Buddha Colony me Sai Gali, B-62 ke saamne — yahi hamara workshop aur counter hai. Service ke liye yahan aana zaroori nahi, hum ghar aate hain; lekin naya purifier, membrane ya spare part khud dekh kar lena ho to aa sakte hain. Brand ka official centre alag hota hai — machine warranty me ho to hum wahin bhejte hain, apna kaam nahi thopte.',
+    points: [
+      'Pata: Sai Gali, Opposite B-62, Buddha Colony, Patna 800001 — 08:00 se 21:00, saaton din.',
+      'Counter par membrane, SMPS, pump aur filter stock me rehta hai — turant mil jaata hai.',
+      'Aane se pehle call kar lijiye 8969821440, taaki aapka part nikaal kar rakh dein.',
+      'Warranty wali machine ke liye hum khud brand centre ka rasta batate hain — charge nahi lete.',
+    ],
+  },
+
+  /* ── /ro-services-patna  (27 Oct gap) ─────────────────────────────────── */
+  'ro-services-patna': {
+    phrase: 'ro technician patna',
+    heading: 'RO Technician Patna — Kaun Aayega, Aur Kaise Pehchanein',
+    body:
+      'Patna me RO technician bhejne wale zyadatar log aggregator hain — aapki call kisi ko bech di jaati hai aur jo aata hai uska naam bhi aapko pehle nahi pata hota. Hamare technician hamare apne hain, Buddha Colony ke workshop se, aur booking ke saath hi aapko unka naam aur number mil jaata hai.',
+    points: [
+      'Technician ka naam aur number call par hi mil jaata hai — surprise nahi.',
+      'Har technician TDS meter le kar aata hai. Naap dikhaye bina part badalne ko na kahe.',
+      'Nikala hua purana part aapke saamne rakha jaata hai, wapas le ja sakte hain.',
+      'Bill hamare naam ka — kaam par 30 din, laga hue part par 12 mahine ki warranty.',
+    ],
+  },
+
   /* ── /service-patna/brand/aquaguard ───────────────────────────────────── */
   'brand:aquaguard': {
     phrase: 'aquaguard aura service patna',
@@ -132,6 +180,6 @@ export function getHinglishBlock(key: string): HinglishBlock | null {
 }
 
 /** Saare phrases — test aur audit ke liye. */
-export const HINGLISH_PHRASES: readonly string[] = Object.values(HINGLISH_LONGTAIL).map(
-  (b) => b.phrase,
+export const HINGLISH_PHRASES: readonly string[] = Object.values(HINGLISH_LONGTAIL).flatMap(
+  (b) => (b.altPhrase ? [b.phrase, b.altPhrase] : [b.phrase]),
 );

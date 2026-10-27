@@ -18,6 +18,8 @@ import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { getGbpSettings } from '@/lib/settings';
 import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
+import { getHinglishBlock } from '@/lib/seo/hinglish-longtail';
+import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 
 export const revalidate = 86400;
 
@@ -464,6 +466,13 @@ export default async function ServicePatnaPillar() {
             </div>
           </div>
         </section>
+
+        {/* 27 Oct 2026 — ye keyword live par kisi page ke title/H1/H2 me
+            nahi tha (sirf H3 me). Ab iska apna H2 yahan hai, aur kahin
+            nahi. Wajah: src/lib/seo/hinglish-longtail.ts */}
+        {getHinglishBlock('service-patna') && (
+          <HinglishQueryBlock block={getHinglishBlock('service-patna')!} />
+        )}
 
         <FaqAccordion faqs={FAQS} title="RO Service in Patna — Frequently Asked Questions" />
 

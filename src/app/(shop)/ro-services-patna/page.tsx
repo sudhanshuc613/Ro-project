@@ -61,6 +61,8 @@ import IntentKeywordBlock from '@/components/service/IntentKeywordBlock';
    ("ro shop near me"). Naye page nahi banaye — doorway/scaled-content policy.
    Naya block, purana kuch nahi badla. */
 import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
+import { getHinglishBlock } from '@/lib/seo/hinglish-longtail';
+import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 
 export const revalidate = 86400;
 
@@ -428,6 +430,13 @@ export default async function ServiceHubPage() {
         <ExtraKeywordBlock variant="hinglish" />
 
         <ExtraKeywordBlock variant="urgent" />
+
+        {/* 27 Oct 2026 — ye keyword live par kisi page ke title/H1/H2 me
+            nahi tha (sirf H3 me). Ab iska apna H2 yahan hai, aur kahin
+            nahi. Wajah: src/lib/seo/hinglish-longtail.ts */}
+        {getHinglishBlock('ro-services-patna') && (
+          <HinglishQueryBlock block={getHinglishBlock('ro-services-patna')!} />
+        )}
 
         <FaqAccordion faqs={HUB_FAQS} title="RO services Patna — common questions" />
 

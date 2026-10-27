@@ -191,7 +191,10 @@ print('── B. HINGLISH LONG-TAIL (ek keyword, ek page) ──')
 
 src = rd('src/lib/seo/hinglish-longtail.ts')
 blocks = dict(re.findall(r"phrase:\s*'([^']+)',\s*\n\s*heading:\s*'([^']+)'", src))
-chk('hinglish-longtail.ts me 5 phrase', len(blocks) == 5, str(len(blocks)))
+alts = dict(re.findall(r"altPhrase:\s*'([^']+)',\s*\n\s*altHeading:\s*'([^']+)'", src))
+blocks.update(alts)
+chk('hinglish-longtail.ts me 9 phrase (8 block + 1 alt spelling)',
+    len(blocks) == 9, str(len(blocks)))
 
 for phrase, heading in blocks.items():
     chk(f'"{phrase}" heading ke andar hai',
@@ -203,8 +206,14 @@ MOUNT = {
     'ro service centre number patna': '/ro-customer-care-patna',
     'ro banane wala patna': '/service-patna/brand/other-brands',
     'aquaguard aura service patna': '/service-patna/brand/aquaguard',
+    # 🔴 27 Oct — ye 3 live naap me nikle: kisi page ke title/H1/H2 me nahi the,
+    #    sirf H3 me. Teeno money keyword hain.
+    'water purifier service patna': '/service-patna',
+    'ro service centre patna': '/contact',
+    'ro service center patna': '/contact',   # alt spelling, usi block ka H3
+    'ro technician patna': '/ro-services-patna',
 }
-chk('mount map me bhi 5', len(MOUNT) == 5)
+chk('mount map me 9', len(MOUNT) == 9)
 
 for phrase, path in MOUNT.items():
     st, h = get(path)
@@ -215,37 +224,79 @@ for phrase, path in MOUNT.items():
     heads = ' || '.join(
         re.sub(r'<[^>]+>', '', x) for x in re.findall(r'<h2[^>]*>(.*?)</h2>', h2, re.S)
     ).lower()
-    chk(f'{path} → H2 me "{phrase}"', phrase in heads, '')
-    chk(f'{path} par block render hua',
-        f'data-hinglish-longtail="{phrase}"' in h2, '')
+    if phrase != 'ro service center patna':
+        chk(f'{path} → H2 me "{phrase}"', phrase in heads, '')
+    # alt spelling ka apna data-attr nahi hota — wo usi block ka H3 hai
+    if phrase != 'ro service center patna':
+        chk(f'{path} par block render hua',
+            f'data-hinglish-longtail="{phrase}"' in h2, '')
+    else:
+        h3 = ' || '.join(re.sub(r'<[^>]+>', '', x)
+                         for x in re.findall(r'<h3[^>]*>(.*?)</h3>', h2, re.S)).lower()
+        chk(f'{path} → H3 me "{phrase}"', phrase in h3, '')
 
-# 🔴 sitemap ke har page par dekho — phrase kahin aur to nahi
+# ══════════════════════════════════════════════════════════════════════════
+# 🔴 CANNIBALIZATION — "ek keyword, ek page"
+#
+#    KYA GINNA HAI, YE 27 Oct ko LIVE+LOCAL dono par naap kar tay hua:
+#
+#    Pehla version H1–H3 + title, sab barabar ginta tha. Usme ye nikla:
+#        water purifier service patna → 25 page
+#    Lekin un 25 me se 24 BRAND PAGE ke H3 the, aur wahan wo
+#    BRAND ke saath likha hai: "Kent water purifier service Patna",
+#    "Pureit water purifier service Patna"... Wo alag query hai, aur wo
+#    block (BrandKeywordBlock) jaan-boojh kar banaya gaya tha.
+#    Unko hatane ka matlab maujooda content todna — wo nahi karenge.
+#
+#    Asli cannibalization title / H1 / H2 par hoti hai. Isliye gate ab:
+#
+#      PRIMARY phrase  → THEEK EK page ke title+H1+H2 me hona chahiye
+#                        (ye PEHLE SE SAKHT hai: ab H2 me hona ZAROORI hai,
+#                         sirf H3 me padda rehna ab PASS nahi hai)
+#      ALT spelling    → owner page par H1–H3 me ho, aur kisi DOOSRE page
+#                        ke title/H1/H2 me bilkul na ho
+#      H3 mentions     → ginti report hoti hai, fail nahi karti
+# ══════════════════════════════════════════════════════════════════════════
 st, sm = get('/sitemap.xml')
 locs = re.findall(r'<loc>(.*?)</loc>', sm)
 # 🔴 bug class 19 — <loc> hamesha LIVE absolute URL hota hai
 paths = [re.sub(r'^https?://[^/]+', '', u) or '/' for u in locs]
 chk('sitemap se path mile', len(paths) > 100, str(len(paths)))
 
-owners = {p: [] for p in MOUNT}
+ALT = {'ro service center patna'}
+LEV = {}
 for path in paths:
     st, h = get(path)
     if st != 200 or not h:
         continue
     h2 = re.sub(r'<!--.*?-->', '', h, flags=re.S)
-    heads = ' || '.join(
-        re.sub(r'<[^>]+>', '', x)
-        for x in re.findall(r'<h[1-3][^>]*>(.*?)</h[1-3]>', h2, re.S)
+    h2 = re.sub(r'<script.*?</script>', ' ', h2, flags=re.S)
+    tag = lambda t: ' || '.join(
+        re.sub(r'<[^>]+>', '', x) for x in re.findall(rf'<{t}[^>]*>(.*?)</{t}>', h2, re.S)
     ).lower()
     ttl = re.search(r'<title[^>]*>(.*?)</title>', h2, re.S)
-    allh = heads + ' ' + (ttl.group(1).lower() if ttl else '')
-    for phrase in MOUNT:
-        if phrase in allh:
-            owners[phrase].append(path)
+    LEV[path] = {
+        'strong': ((ttl.group(1).lower() if ttl else '') + ' || ' + tag('h1')
+                   + ' || ' + tag('h2')),
+        'h3': tag('h3'),
+    }
+chk('cannibalization ke liye page padhe', len(LEV) > 100, str(len(LEV)))
 
 for phrase, want in MOUNT.items():
-    got = owners[phrase]
-    chk(f'🔴 "{phrase}" sirf 1 page par', len(got) == 1, f'{len(got)} page: {got[:3]}')
-    chk(f'   …aur wo page {want} hai', got == [want], str(got[:3]))
+    strong = [p for p, d in LEV.items() if phrase in d['strong']]
+    h3only = [p for p, d in LEV.items() if phrase not in d['strong'] and phrase in d['h3']]
+    if phrase in ALT:
+        owner_has = (want in LEV and (phrase in LEV[want]['strong']
+                                      or phrase in LEV[want]['h3']))
+        chk(f'ALT "{phrase}" owner page {want} par hai', owner_has, '')
+        chk(f'🔴 ALT "{phrase}" kisi aur ke title/H1/H2 me NAHI',
+            not [p for p in strong if p != want], str(strong[:3]))
+    else:
+        chk(f'🔴 "{phrase}" THEEK 1 page ke title/H1/H2 me',
+            len(strong) == 1, f'{len(strong)} page: {strong[:3]}')
+        chk(f'   …aur wo page {want} hai', strong == [want], str(strong[:3]))
+    if h3only:
+        print(f'        (H3 support: {len(h3only)} page — ye fail nahi hai)')
 
 print()
 print('=' * 72)

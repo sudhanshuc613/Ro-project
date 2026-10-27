@@ -27,6 +27,15 @@ export default function HinglishQueryBlock({ block }: { block: HinglishBlock }) 
             {block.heading}
           </h2>
 
+          {/* 27 Oct 2026 — kuch query ki do spelling chalti hain
+              (centre / center). Dono ko apna heading chahiye, warna doosri
+              spelling sirf body me reh jaati hai. */}
+          {block.altHeading && (
+            <h3 className="mt-2 font-display text-lg font-bold text-navy-600">
+              {block.altHeading}
+            </h3>
+          )}
+
           <p className="mt-4 text-[17px] leading-relaxed text-navy-700">{block.body}</p>
 
           <ul className="mt-5 space-y-2.5">

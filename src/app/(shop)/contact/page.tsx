@@ -5,6 +5,8 @@ import { getGbpSettings } from '@/lib/settings';
 import { breadcrumbSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import { ogImage } from '@/lib/seo/og-image';
 import EmailOff from '@/components/common/EmailOff';
+import { getHinglishBlock } from '@/lib/seo/hinglish-longtail';
+import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 
 export const revalidate = 86400;
 
@@ -231,6 +233,13 @@ export default async function ContactPage() {
             </Link>{' '}
             kholiye — har mohalle ka apna page hai.
           </p>
+
+          {/* 27 Oct 2026 — "ro service centre/center patna" live par kisi
+              page ke title/H1/H2 me nahi tha. Address wala page hi iska sahi
+              ghar hai. Wajah: src/lib/seo/hinglish-longtail.ts */}
+          {getHinglishBlock('contact') && (
+            <HinglishQueryBlock block={getHinglishBlock('contact')!} />
+          )}
 
           <h2 className="mt-12 font-display text-2xl font-bold text-navy-700">Policies</h2>
           <div className="mt-5 grid gap-5 md:grid-cols-2">
