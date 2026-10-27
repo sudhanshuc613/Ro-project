@@ -156,7 +156,7 @@ export default async function AreaPage({ params }: { params: { area: string } })
         faqSchema(faqs),
         breadcrumbSchema([
           { name: 'Home', url: '/' },
-          { name: 'RO Service in Patna', url: '/service-patna' },
+          { name: 'Water Purifier Repair Patna', url: '/service-patna' },
           { name: area.name, url: areaPath(area.slug) },
         ]),
         /* Neither competitor ships ImageObject — verified live. It is what
@@ -246,7 +246,7 @@ export default async function AreaPage({ params }: { params: { area: string } })
           <ol className="container mx-auto flex flex-wrap gap-2 px-4 py-3 text-sm">
             <li><Link href="/" className="text-navy-600 hover:text-aqua-600">Home</Link></li>
             <li className="text-slate-300">/</li>
-            <li><Link href="/service-patna" className="text-navy-600 hover:text-aqua-600">RO Service Patna</Link></li>
+            <li><Link href="/service-patna" className="text-navy-600 hover:text-aqua-600">Water Purifier Repair Patna</Link></li>
             <li className="text-slate-300">/</li>
             <li className="font-medium text-muted">{area.name}</li>
           </ol>

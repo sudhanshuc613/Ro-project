@@ -114,7 +114,7 @@ export default async function ServicePatnaPillar() {
           faqSchema(FAQS),
           breadcrumbSchema([
             { name: 'Home', url: '/' },
-            { name: 'RO Service in Patna', url: '/service-patna' },
+            { name: 'Water Purifier Repair Patna', url: '/service-patna' },
           ]),
         ])}
       />

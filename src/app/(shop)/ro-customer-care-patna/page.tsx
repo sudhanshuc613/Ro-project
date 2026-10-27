@@ -121,7 +121,7 @@ export default async function RoCustomerCarePatnaPage() {
         faqSchema(faqs),
         breadcrumbSchema([
           { name: 'Home', url: '/' },
-          { name: 'RO Service in Patna', url: '/service-patna' },
+          { name: 'Water Purifier Repair Patna', url: '/service-patna' },
           { name: 'RO Customer Care Number Patna', url: '/ro-customer-care-patna' },
         ]),
         serviceListSchema(
@@ -167,7 +167,7 @@ export default async function RoCustomerCarePatnaPage() {
             <nav aria-label="Breadcrumb" className="mb-4 text-xs text-aqua-200">
               <Link href="/" className="hover:underline">Home</Link>
               <span className="mx-1.5">/</span>
-              <Link href="/service-patna" className="hover:underline">RO Service Patna</Link>
+              <Link href="/service-patna" className="hover:underline">Water Purifier Repair Patna</Link>
               <span className="mx-1.5">/</span>
               <span className="text-white">Customer Care Number</span>
             </nav>

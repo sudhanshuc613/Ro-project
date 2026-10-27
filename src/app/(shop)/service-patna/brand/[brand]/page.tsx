@@ -136,7 +136,7 @@ export default async function BrandServicePage({ params }: { params: { brand: st
           faqSchema(faqs),
           breadcrumbSchema([
             { name: 'Home', url: '/' },
-            { name: 'RO Service in Patna', url: '/service-patna' },
+            { name: 'Water Purifier Repair Patna', url: '/service-patna' },
             { name: `${short} Service`, url: `/service-patna/brand/${brand.slug}` },
           ]),
         ])}
@@ -147,7 +147,7 @@ export default async function BrandServicePage({ params }: { params: { brand: st
           <ol className="container mx-auto flex gap-2 overflow-x-auto whitespace-nowrap px-4 py-3 text-sm">
             <li><Link href="/" className="text-navy-600 hover:text-aqua-600">Home</Link></li>
             <li className="text-slate-300">/</li>
-            <li><Link href="/service-patna" className="text-navy-600 hover:text-aqua-600">RO Service in Patna</Link></li>
+            <li><Link href="/service-patna" className="text-navy-600 hover:text-aqua-600">Water Purifier Repair Patna</Link></li>
             <li className="text-slate-300">/</li>
             <li className="font-medium text-muted">{short}</li>
           </ol>

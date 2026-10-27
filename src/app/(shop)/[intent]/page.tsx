@@ -263,7 +263,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
         faqSchema(intent.faqs),
         breadcrumbSchema([
           { name: 'Home', url: '/' },
-          { name: 'RO Service in Patna', url: '/service-patna' },
+          { name: 'Water Purifier Repair Patna', url: '/service-patna' },
           { name: intent.h1, url: intent.path },
         ]),
         ...imageObjectSchema(shots, BRAND.url, intent.path),
@@ -320,7 +320,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
           <ol className="container mx-auto flex flex-wrap gap-2 px-4 py-3 text-sm">
             <li><Link href="/" className="text-navy-600 hover:text-aqua-600">Home</Link></li>
             <li className="text-slate-300">/</li>
-            <li><Link href="/service-patna" className="text-navy-600 hover:text-aqua-600">RO Service Patna</Link></li>
+            <li><Link href="/service-patna" className="text-navy-600 hover:text-aqua-600">Water Purifier Repair Patna</Link></li>
             <li className="text-slate-300">/</li>
             <li className="font-medium text-muted">{intent.h1}</li>
           </ol>

@@ -209,7 +209,16 @@ export default function Navbar() {
             <HomeIcon /> Home
           </Link>
           <span className="h-4 w-px bg-navy-200" aria-hidden="true" />
-          <Link href="/service-patna" className="px-4 py-3 text-sm font-bold text-cta-green hover:text-cta-greenDark">
+          {/* 🔴 27 Oct 2026 — ye link pehle /service-patna par jaata tha.
+              Naap kar mila: anchor "RO Service Patna" 393 baar DO alag page par
+              ja raha tha (243 → /service-patna, 150 → /ro-service-in-patna).
+              Google ko samajh nahi aata kaun sa page us keyword ka maalik hai,
+              isliye dono ki rank girti hai.
+              /service-patna ka apna title "Water Purifier Repair in Patna" hai
+              aur wo AREA hub hai. "RO Service Patna" ka asli maalik
+              /ro-service-in-patna hai (title + URL dono exact match).
+              TEXT ek akshar nahi badla — sirf manzil sahi page par kar di. */}
+          <Link href="/ro-service-in-patna" className="px-4 py-3 text-sm font-bold text-cta-green hover:text-cta-greenDark">
             🔧 RO Service Patna
           </Link>
           {/* Service-intent hub. The service business is what pays the bills,
@@ -312,7 +321,8 @@ export default function Navbar() {
                 {t.label} <ChevronRight />
               </Link>
             ))}
-            <Link href="/service-patna" onClick={() => setMobileOpen(false)}
+            {/* 🔴 wahi wajah — mobile drawer ka link bhi sahi page par (text same) */}
+            <Link href="/ro-service-in-patna" onClick={() => setMobileOpen(false)}
               className="flex items-center justify-between border-b border-navy-50 py-3.5 font-semibold text-navy-700">
               RO Service in Patna <ChevronRight />
             </Link>

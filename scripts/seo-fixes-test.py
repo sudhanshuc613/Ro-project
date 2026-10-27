@@ -132,58 +132,88 @@ chk('detector text-child ko pakadta hai',
 
 st, home = get('/')
 chk('homepage 200', st == 200, f'HTTP {st}')
-if home:
-    chk('🔴 homepage me <!--email_off--> hai', '<!--email_off-->' in home)
-    chk('🔴 homepage me <!--/email_off--> hai', '<!--/email_off-->' in home)
-    chk('🔴 asli email HTML me dikh raha', 'support@rokadoctor.in' in home)
-    chk('__cf_email__ local par nahi', '__cf_email__' not in home)
-    chk('/cdn-cgi/l/email-protection local par nahi',
-        '/cdn-cgi/l/email-protection' not in home)
-    chk('email_off ke andar hi email hai',
-        re.search(r'<!--email_off-->.{0,200}?support@rokadoctor\.in.{0,200}?<!--/email_off-->',
-                  home, re.S) is not None)
 
-# 🔴 RUNTIME GATE — rendered HTML me har email fence ke ANDAR hona chahiye.
-#    Ye source grep se zyada sakht hai: agar kal koi naya component email
-#    chhap de, source regex use miss kar sakta hai, ye nahi.
-def email_outside_fence(html):
-    """Fence ke bahar, aur <script> ke bahar — wahi ginti jo maayne rakhti hai.
+# ══════════════════════════════════════════════════════════════════════════
+# 🔴 CLOUDFLARE HAI YA NAHI — jaanch ALAG hoti hai, aur LIVE par ZYADA SAKHT
+#
+#    27 Oct 2026 ko live par naapa gaya (owner ke deploy ke baad):
+#
+#      /cdn-cgi/l/email-protection wale page  :   0   (pehle 149)
+#      __cf_email__ wale page                 :   0   (pehle 149)
+#      <!--email_off--> fence bacha hua       :   0
+#      ASLI email dikhne wale HTML me         : 149 / 149
+#      "[email protected]" dikh raha           :   0
+#
+#    Yaani Cloudflare marker ko PADH kar HATA deta hai — wo uska documented
+#    vyavhaar hai. Isliye LIVE HTML me fence dhoondhna GALAT jaanch thi
+#    (pehla version yahi karta tha aur 6 jhoothe FAIL de raha tha).
+#
+#    Ab:
+#      LOCAL (Cloudflare nahi) → fence HONA chahiye. Ye sabit karta hai ki
+#                                code sach me marker chhaap raha hai.
+#      LIVE  (Cloudflare hai)  → NATEEJA jaancho, aur HAR page par:
+#                                0 toota link · 0 obfuscation · asli email
+#                                maujood. Ye fence waali jaanch se KAHIN
+#                                ZYADA SAKHT hai — 149 page, teen shart.
+# ══════════════════════════════════════════════════════════════════════════
+IS_LIVE = 'rokadoctor.in' in BASE
 
-    🔴 PEHLE YE GATE GALAT THA aur maine use SAACH se theek kiya, apne code
-       se nahi. Pehla version har <script> ke andar wala email bhi ginta tha
-       aur FAIL deta tha (Next.js ka RSC flight payload me email aata hai).
 
-       LIVE PAR NAAPA (26 Oct 2026, https://rokadoctor.in/ ka asli HTML,
-       jab Email Obfuscation ON tha):
+def visible_html(h):
+    """<script> ke bahar ka HTML — Cloudflare sirf isi ko badalta hai."""
+    return re.sub(r'<script\b[^>]*>.*?</script>', '', h, flags=re.S)
 
-           raw "support@rokadoctor.in"  →  1 baar
-              aur wo 1 baar <script> ke ANDAR tha (flight payload)
-           __cf_email__                 →  1 baar
-              aur wo <address> ke andar, yaani dikhne wale HTML me
 
-       Yaani Cloudflare ne <script> ke andar wale email ko haath hi nahi
-       lagaya, sirf dikhne wale HTML ko badla. Isliye script ke andar ka
-       email na 404 banata hai, na Google ko "[email protected]" dikhata hai.
-
-       Jo cheez maayne rakhti hai wo ye: DIKHNE WALE HTML me har email
-       <!--email_off--> fence ke andar ho.
-    """
-    stripped = re.sub(r'<!--email_off-->.*?<!--/email_off-->', '', html, flags=re.S)
-    stripped = re.sub(r'<script\b[^>]*>.*?</script>', '', stripped, flags=re.S)
-    return stripped.count('support@rokadoctor.in')
-
-if home:
-    chk('🔴 homepage: fence ke BAHAR koi email nahi',
-        email_outside_fence(home) == 0, str(email_outside_fence(home)))
-
-st, ct = get('/contact')
-chk('/contact 200', st == 200, f'HTTP {st}')
-if ct:
-    chk('/contact par email_off (2 jagah: footer + body)',
-        ct.count('<!--email_off-->') >= 2, f"{ct.count('<!--email_off-->')}")
-    chk('/contact par mailto: anchor salamat', 'href="mailto:support@rokadoctor.in"' in ct)
-    chk('🔴 /contact: fence ke BAHAR koi email nahi',
-        email_outside_fence(ct) == 0, str(email_outside_fence(ct)))
+if not IS_LIVE:
+    # ── LOCAL: code marker chhaap raha hai? ──
+    if home:
+        chk('🔴 local: homepage me <!--email_off--> hai', '<!--email_off-->' in home)
+        chk('🔴 local: homepage me <!--/email_off--> hai', '<!--/email_off-->' in home)
+        chk('🔴 local: asli email HTML me dikh raha', 'support@rokadoctor.in' in home)
+        chk('local: __cf_email__ nahi', '__cf_email__' not in home)
+        chk('local: /cdn-cgi/l/email-protection nahi',
+            '/cdn-cgi/l/email-protection' not in home)
+        chk('local: email fence ke andar hi hai',
+            re.search(r'<!--email_off-->.{0,200}?support@rokadoctor\.in'
+                      r'.{0,200}?<!--/email_off-->', home, re.S) is not None)
+        stripped = re.sub(r'<!--email_off-->.*?<!--/email_off-->', '', home, flags=re.S)
+        chk('🔴 local: fence ke BAHAR koi email nahi',
+            visible_html(stripped).count('support@rokadoctor.in') == 0)
+    st2, ct = get('/contact')
+    chk('/contact 200', st2 == 200, f'HTTP {st2}')
+    if ct:
+        chk('local: /contact par 2 fence (footer + body)',
+            ct.count('<!--email_off-->') >= 2, str(ct.count('<!--email_off-->')))
+        chk('local: /contact par mailto: anchor salamat',
+            'href="mailto:support@rokadoctor.in"' in ct)
+else:
+    # ── LIVE: HAR page par nateeja jaancho (sabse sakht) ──
+    st3, smx = get('/sitemap.xml')
+    all_paths = [re.sub(r'^https?://[^/]+', '', u) or '/'
+                 for u in re.findall(r'<loc>(.*?)</loc>', smx)]
+    chk('live: sitemap mila', len(all_paths) > 100, str(len(all_paths)))
+    broken = cf_obf = no_email = fake = 0
+    read = 0
+    for pth in all_paths:
+        stx, hh = get(pth)
+        if stx != 200 or not hh:
+            continue
+        read += 1
+        vis = visible_html(hh)
+        if '/cdn-cgi/l/email-protection' in hh:
+            broken += 1
+        if '__cf_email__' in hh:
+            cf_obf += 1
+        if 'support@rokadoctor.in' not in vis:
+            no_email += 1
+        if '[email&#160;protected]' in vis or '[email protected]' in vis:
+            fake += 1
+    chk('🔴 live: saare page padhe', read == len(all_paths), f'{read}/{len(all_paths)}')
+    chk('🔴 live: /cdn-cgi/l/email-protection 0 page par', broken == 0, f'{broken} page')
+    chk('🔴 live: __cf_email__ 0 page par', cf_obf == 0, f'{cf_obf} page')
+    chk('🔴 live: HAR page par asli email dikh raha',
+        no_email == 0, f'{read - no_email}/{read}')
+    chk('🔴 live: "[email protected]" kahin nahi', fake == 0, f'{fake} page')
 
 # ══════════════════════════════════════════════════════════════════════════
 print()

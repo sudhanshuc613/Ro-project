@@ -155,7 +155,7 @@ export default async function BrandHubPage() {
           <nav className="text-xs text-navy-300" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-white">Home</Link>
             <span className="mx-1.5">/</span>
-            <Link href="/service-patna" className="hover:text-white">RO Service Patna</Link>
+            <Link href="/service-patna" className="hover:text-white">Water Purifier Repair Patna</Link>
             <span className="mx-1.5">/</span>
             <span className="text-navy-100">All Brands</span>
           </nav>
