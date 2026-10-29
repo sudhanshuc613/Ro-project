@@ -16,7 +16,7 @@ import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: 'RO AMC Plans in Patna — From ₹1,499/Year',
+  title: 'RO AMC Plans Patna @8969821440 — From ₹1,499/Yr',
   description:
     'RO Annual Maintenance Contract in Patna. Scheduled filter changes, priority service, discounted parts. Plans ₹1,499 to ₹4,499. Call 8969821440.',
   keywords: ['RO AMC Patna', 'water purifier AMC', 'RO annual maintenance Patna', 'RO service plan Patna'],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
      layout wala use karta tha jisme url = homepage aur koi image nahi thi.
      WhatsApp pe link bhejne par galat URL aur khaali card dikhta tha. */
   openGraph: {
-    title: 'RO AMC Plans in Patna — From ₹1,499/Year',
+    title: 'RO AMC Plans Patna @8969821440 — From ₹1,499/Yr',
     description: 'Annual Maintenance Contract for your RO purifier in Patna. Scheduled filter changes, priority service, discounted parts.',
     url: `${BRAND.url}/amc-plans`,
     type: 'website',

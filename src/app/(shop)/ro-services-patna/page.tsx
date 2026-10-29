@@ -67,7 +67,7 @@ import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: `RO Services in Patna — All Jobs, Rates From ₹${SERVICE.visitCharge}`,
+  title: `RO Services in Patna ₹${SERVICE.visitCharge} @${CONTACT.primaryPhone}`,
   description:
     `Every RO job in Patna with its real 2026 rate — repair, installation, filter change, membrane, AMC, commercial plants. ₹${SERVICE.visitCharge} visit. Call ${CONTACT.primaryPhone}.`,
   keywords: [

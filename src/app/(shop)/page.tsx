@@ -95,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
         none of them, so the homepage now owns it and the dedicated page keeps
         "RO Service in Patna" to itself.
       */
-      title: 'RO Service Near Me in Patna — ₹200 Visit, 90 Min',
+      title: 'RO Service Near Me in Patna @8969821440 — ₹200 Visit',
       description:
         'Expert RO repair & installation across Patna at ₹200 visit charge — others charge ₹350+. All brands, 90-min response, 30-day warranty. Call 8969821440.',
       keywords: [

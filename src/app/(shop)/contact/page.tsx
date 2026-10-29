@@ -11,12 +11,12 @@ import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: 'Contact Us — Aqua Perl Patna',
+  title: 'Contact Aqua Perl Patna @8969821440 — RO Service',
   description: `Call ${CONTACT.primaryPhone} or ${CONTACT.secondaryPhone} for RO service in Patna or orders across India. Open ${CONTACT.hours}.`,
   alternates: { canonical: '/contact' },
   /* 30 Sep 2026 — dekho amc-plans wali wajah. */
   openGraph: {
-    title: 'Contact Us — Aqua Perl Patna',
+    title: 'Contact Aqua Perl Patna @8969821440 — RO Service',
     description: `Call ${CONTACT.primaryPhone} for RO service in Patna or orders across India.`,
     url: `${BRAND.url}/contact`,
     type: 'website',

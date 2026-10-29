@@ -71,6 +71,46 @@ chkge "pillar: 'Water Purifier' in title"   "$(grep -oiE '<title>[^<]*Water Puri
 chkge "area: phone number in title"          "$(grep -oE '<title>[^<]*8969821440[^<]*' /tmp/ka.html | wc -l)" "1"
 chkge "area: price hook in title"            "$(grep -oE '<title>[^<]*200[^<]*' /tmp/ka.html | wc -l)" "1"
 
+# ── 29 Oct 2026: PHONE NUMBER har MONEY page ke title me ──────────────────
+# Owner ne 5 competitor diye jo "ro service near me / ro service patna" par
+# upar hain. Unke title naape gaye:
+#   mannubhai    "RO Service in Patna @7065012902 | Water Purifier Service Near Me"
+#   rocareindia  "RO Service Patna @9311587744 |Water Purifier Service Near Me"
+#   rosaleand    desc me "Call Now @7763003691"
+# 4 me se 3 ne title me PHONE daala hai. Hamare area page par pehle se tha,
+# par 6 sabse badi MONEY page par NAHI tha (live naapa: 52/149 page bina phone).
+# Number SERP me dikhne se click badhta hai, aur click khud ek signal hai.
+#
+# 🔴 Title 30-65 char ke andar rehna chahiye (final-verify ka gate) — isliye
+#    har title ki lambai bhi yahin jaanchi jaati hai.
+echo
+echo "──── money page ke title me phone + lambai ────"
+# 🔴 HOMEPAGE ALAG HAI — uska title DB (seo_metadata table) se aata hai,
+#    code se nahi. `buildMetadata()` DB row ko code fallback par preference
+#    deta hai. Isliye homepage par RENDERED title check karna galat hoga —
+#    wo admin panel (/admin/seo) ke control me hai, code ke nahi.
+#    Yahan SOURCE jaancha jaata hai, taaki code ka fallback sahi rahe.
+HOMESRC=$(grep -c "RO Service Near Me in Patna @8969821440" "src/app/(shop)/page.tsx" || true)
+chkge "homepage: code fallback me phone" "$HOMESRC" "1"
+
+for pair in "/service-patna|sp" "/ro-services-patna|rsp" "/ro-service-patna-faq|faq" "/amc-plans|amc" "/contact|con"; do
+  pth="${pair%%|*}"; key="${pair##*|}"
+  curl -sS -m 20 "$B$pth" -o "/tmp/t_$key.html" 2>/dev/null
+  T=$(grep -oiE '<title>[^<]*' "/tmp/t_$key.html" | head -1 | sed 's/<title>//')
+  # 🔴 ${#T} BYTE ginta hai, CHARACTER nahi. "₹" aur "—" UTF-8 me 3-3 byte ke
+  #    hain, to ek title 4 character lamba dikhta tha aur jhootha FAIL aata tha.
+  #    Python se character ginte hain. Limit 62 — wahi jo verify-serp-hygiene
+  #    use karta hai, taaki dono gate ek hi baat kahein.
+  L=$(printf '%s' "$T" | python3 -c 'import sys;print(len(sys.stdin.read()))')
+  HASP=$(printf '%s' "$T" | grep -c '8969821440' || true)
+  chkge "title phone: $pth"   "$HASP" "1"
+  if [ "$L" -ge 30 ] && [ "$L" -le 62 ]; then
+    echo "  PASS  title lambai $pth = $L"; pass=$((pass+1))
+  else
+    echo "  FAIL  title lambai $pth = $L (30-62 chahiye) — $T"; fail=$((fail+1))
+  fi
+done
+
 echo
 echo "════ 3) REVIEW SCHEMA (naya — AI search ke liye) ════"
 chkge "Review objects"        "$(grep -o '\"@type\":\"Review\"' /tmp/h.html | wc -l)" "3"

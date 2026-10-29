@@ -50,7 +50,7 @@ import { ogImage } from '@/lib/seo/og-image';
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: 'RO Service Patna — Rates, TDS & Answers',
+  title: 'RO Service Patna @8969821440 — Rates & TDS',
   description:
     `Straight answers on RO service in Patna: visit charge ₹${SERVICE.visitCharge}, membrane ₹1,100–₹2,400, area-wise TDS from 200 to 1,250 ppm, real filter intervals. Call ${CONTACT.primaryPhone}.`,
   keywords: [
