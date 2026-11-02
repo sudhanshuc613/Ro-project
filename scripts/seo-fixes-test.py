@@ -186,6 +186,49 @@ if not IS_LIVE:
             ct.count('<!--email_off-->') >= 2, str(ct.count('<!--email_off-->')))
         chk('local: /contact par mailto: anchor salamat',
             'href="mailto:support@rokadoctor.in"' in ct)
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 🔴 2 Nov 2026 — GATE YAHAN SE SAKHT KIYA GAYA
+    #
+    # Purana gate sirf HOMEPAGE aur /contact dekhta tha. 2 Nov ko do naye
+    # page (/terms, /about-us) gaye jinke BODY me email ek plain string tha.
+    # Homepage saaf tha, isliye gate PASS ho gaya — aur live par Cloudflare
+    # ne un do page par 3 toote hue /cdn-cgi/l/email-protection link bana
+    # diye. Gate ne bug nahi pakda kyunki wo wahan dekh hi nahi raha tha.
+    #
+    # Ab HAR sitemap page par jaancha jaata hai ki fence ke BAHAR koi email
+    # to nahi reh gaya. Naya page banega aur usme email plain chhapega to
+    # ye gate turant FAIL karega — live jaane se PEHLE.
+    # ══════════════════════════════════════════════════════════════════════
+    st_sm, smx_l = get('/sitemap.xml')
+    paths_l = [re.sub(r'^https?://[^/]+', '', u) or '/'
+               for u in re.findall(r'<loc>(.*?)</loc>', smx_l or '')]
+    chk('🔴 local: sitemap mila (har page scan ke liye)',
+        len(paths_l) > 100, str(len(paths_l)))
+    leak = []
+    unread = []
+    for pth in paths_l:
+        stp, hp = get(pth)
+        if stp != 200 or not hp:
+            unread.append(pth)
+            continue
+        naked = re.sub(r'<!--email_off-->.*?<!--/email_off-->', '', hp, flags=re.S)
+        if 'support@rokadoctor.in' in visible_html(naked):
+            leak.append(pth)
+    # Jo page padha hi nahi gaya use PASS mat ginno (bug class N).
+    chk('🔴 local: saare sitemap page padhe gaye',
+        not unread, f'{len(paths_l) - len(unread)}/{len(paths_l)} · chhoote: {unread[:5]}')
+    chk('🔴 local: HAR page par email fence ke ANDAR hi hai',
+        not leak, f'{len(paths_l) - len(leak)}/{len(paths_l)} · leak: {leak[:5]}')
+    # Detector khud sahi hai? Ek jhoothi string par sabit karo.
+    _fake_ok = '<!--email_off-->support@rokadoctor.in<!--/email_off-->'
+    _fake_bad = '<p>support@rokadoctor.in</p>'
+    chk('detector: fence ke andar wale ko CHHODTA hai',
+        'support@rokadoctor.in' not in visible_html(
+            re.sub(r'<!--email_off-->.*?<!--/email_off-->', '', _fake_ok, flags=re.S)))
+    chk('detector: nange email ko PAKADTA hai',
+        'support@rokadoctor.in' in visible_html(
+            re.sub(r'<!--email_off-->.*?<!--/email_off-->', '', _fake_bad, flags=re.S)))
 else:
     # ── LIVE: HAR page par nateeja jaancho (sabse sakht) ──
     st3, smx = get('/sitemap.xml')

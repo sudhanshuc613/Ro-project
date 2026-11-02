@@ -11,6 +11,12 @@ import Link from 'next/link';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { POLICY_PAGES, type PolicyPage } from '@/lib/seo/policy-data';
 import { breadcrumbSchema, faqSchema, jsonLd } from '@/lib/seo/schema';
+/* 🔴 2 Nov 2026: /terms ke body me email ek PLAIN STRING tha, isliye
+   Cloudflare ne use /cdn-cgi/l/email-protection (HTTP 404) bana diya —
+   live par 2 toote hue link. EmailSafeText usko <!--email_off--> me lapet
+   deta hai. Jis string me email NAHI hai, uska output bilkul pehle jaisa
+   hi rehta hai, isliye baaki 4 policy page ka HTML nahi badla. */
+import EmailSafeText from '@/components/common/EmailSafeText';
 
 export default function PolicyArticle({ policy }: { policy: PolicyPage }) {
   const others = POLICY_PAGES.filter((x) => x.slug !== policy.slug);
@@ -37,19 +43,19 @@ export default function PolicyArticle({ policy }: { policy: PolicyPage }) {
 
         <div className="container mx-auto max-w-3xl px-4 py-12">
           <h1 className="font-display text-3xl font-extrabold text-navy-700">{policy.h1}</h1>
-          <p className="mt-3 text-base leading-relaxed text-muted">{policy.intro}</p>
+          <p className="mt-3 text-base leading-relaxed text-muted"><EmailSafeText text={policy.intro} /></p>
 
           <div className="mt-8 space-y-9">
             {policy.sections.map((s) => (
               <section key={s.heading}>
                 <h2 className="font-display text-xl font-bold text-navy-700">{s.heading}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted"><EmailSafeText text={s.body} /></p>
                 {s.points?.length ? (
                   <ul className="mt-3 space-y-2">
                     {s.points.map((pt) => (
                       <li key={pt} className="flex gap-2 text-sm leading-relaxed text-navy-700">
                         <span className="mt-[2px] text-aqua-600">&bull;</span>
-                        <span>{pt}</span>
+                        <span><EmailSafeText text={pt} /></span>
                       </li>
                     ))}
                   </ul>
@@ -67,7 +73,7 @@ export default function PolicyArticle({ policy }: { policy: PolicyPage }) {
               {policy.faqs.map((f) => (
                 <div key={f.q}>
                   <h3 className="text-base font-bold text-navy-700">{f.q}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">{f.a}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-muted"><EmailSafeText text={f.a} /></p>
                 </div>
               ))}
             </div>

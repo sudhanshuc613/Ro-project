@@ -25,6 +25,11 @@ import { ogImage } from '@/lib/seo/og-image';
 import { breadcrumbSchema, localBusinessSchema, jsonLd } from '@/lib/seo/schema';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import { BRAND_DISCLAIMER } from '@/lib/seo/brand-logos';
+/* 🔴 2 Nov 2026: FACTS ke 'Email' row me email plain string tha, isliye
+   Cloudflare ne use /cdn-cgi/l/email-protection (HTTP 404) bana diya.
+   EmailSafeText sirf us row ko badalta hai jisme '@' hai — baaki 10 row
+   ka HTML bilkul wahi rehta hai. */
+import EmailSafeText from '@/components/common/EmailSafeText';
 
 export const revalidate = 86400;
 
@@ -121,7 +126,7 @@ export default async function Page() {
                   {FACTS.map((f, i) => (
                     <tr key={f.k} className={i % 2 ? 'bg-navy-50/40' : 'bg-white'}>
                       <th scope="row" className="w-2/5 px-4 py-3 align-top font-bold text-navy-700">{f.k}</th>
-                      <td className="px-4 py-3 align-top text-navy-600">{f.v}</td>
+                      <td className="px-4 py-3 align-top text-navy-600"><EmailSafeText text={f.v} /></td>
                     </tr>
                   ))}
                 </tbody>
