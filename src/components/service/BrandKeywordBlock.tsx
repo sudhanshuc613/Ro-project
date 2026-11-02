@@ -190,10 +190,11 @@ export default function BrandKeywordBlock({ brand }: { brand: BrandServiceConten
             )}
             {v === 1 && (
               <>
-                {B} ke liye alag se koi authorised {B} service centre Patna me dhoondhne ki
-                zaroorat nahi padti — {modelLine} ka kaam hum ghar par hi kar dete hain.
-                Visit ₹{SERVICE.visitCharge}, aur rate kaam shuru karne se pehle bataya
-                jaata hai.
+                {B} ki machine ka kaam hum ghar par hi kar dete hain — {modelLine}
+                sab par. Hum swatantra hain, {B} ke authorised centre nahi; machine
+                warranty me ho to hum aapko brand ke official centre bhejne me madad
+                karte hain. Visit ₹{SERVICE.visitCharge}, aur rate kaam shuru karne se
+                pehle bataya jaata hai.
               </>
             )}
             {v === 2 && (

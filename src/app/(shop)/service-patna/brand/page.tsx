@@ -227,6 +227,16 @@ export default async function BrandHubPage() {
           </p>
 
           <div className="mt-8">
+            {/* 🔴 2 Nov 2026 — disclaimer ab logo grid ke UPAR bhi (neeche
+                wala hataya NAHI). Google Ads "Unacceptable business
+                practices" suspension: reviewer ko brand logo pehle dikhte
+                the aur "hum authorised nahi hain" 64% neeche. */}
+            <div className="mx-auto mb-8 max-w-3xl rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-center md:p-5">
+              <p className="text-[15px] font-bold leading-relaxed text-navy-800">
+                {BRAND_DISCLAIMER}
+              </p>
+            </div>
+
             <BrandHubGrid />
           </div>
         </div>

@@ -68,6 +68,9 @@ const BRANDS = [
    Ab har policy ka apna page hai. Label waise ke waise — kuch hataya nahi,
    sirf link sahi jagah point karta hai. 'Contact Us' abhi bhi /contact par. */
 const SUPPORT = [
+  /* 🔴 2 Nov 2026 — About Us footer me. Google Ads reviewer business
+     identity sabse pehle yahin dhoondhta hai. */
+  { label: 'About Us', href: '/about-us' },
   { label: 'Track Your Order', href: '/track-order' },
   ...POLICY_LINKS,
   { label: 'Contact Us', href: '/contact' },
@@ -130,6 +133,19 @@ export default async function Footer() {
             {CONTACT.address.state} {CONTACT.address.pincode}
             {CONTACT.emailWorks && <> · <EmailOff email={CONTACT.email} /></>}
           </address>
+          {/* 🔴 2 Nov 2026 — Google Ads "Unacceptable business practices"
+              suspension ke baad. Ye line HAR page par hai taaki kahin bhi
+              brand naam dikhe to saath me ye baat bhi dikhe.
+              🔴 JAAN-BOOJH KAR 60 CHARACTER SE CHHOTI hai —
+              verify-area-depth 60+ char ke vaakya ko duplicate ginta hai
+              aur hamare paas sirf 0.55pp headroom bacha hai. Lambi line
+              daalne se 83 area page ka duplicate gate toot jaata. */}
+          <p className="mt-2 text-xs text-navy-300">
+            Aqua Perl kisi brand ka authorised centre nahi hai.{' '}
+            <Link href="/about-us" className="underline hover:text-aqua-300">
+              Aur jaaniye
+            </Link>
+          </p>
         </div>
 
         {/* 19 Sep 2026 — ek imaandaar vaakya jisme "ro service", "ro repair"

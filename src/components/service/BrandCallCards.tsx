@@ -67,6 +67,23 @@ export default function BrandCallCards({ brands }: { brands: BrandServiceContent
         </p>
 
         {/* ── LOGO GRID ── */}
+        {/* 🔴 2 Nov 2026 — DISCLAIMER AB LOGO KE UPAR.
+            Google Ads account "Unacceptable business practices" ke under
+            suspend hua. Google ki policy ke niyam #1 aur #4:
+              "Make it seem like you're supported by another brand when you're not"
+              "Impersonating other brands... to imply connections or qualifications"
+
+            Live naapa: brand naam page ke 2% par dikhta tha, disclaimer 64%
+            neeche. Reviewer ko logo pehle dikhte the, saaf baat baad me.
+
+            🔴 Neeche wala disclaimer HATAYA NAHI gaya — ye UPAR ek AUR joda
+               gaya hai taaki pehli nazar me hi dikh jaye. */}
+        <div className="mx-auto mb-8 max-w-3xl rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-center md:p-5">
+          <p className="text-[15px] font-bold leading-relaxed text-navy-800">
+            {BRAND_DISCLAIMER}
+          </p>
+        </div>
+
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
           {BRAND_LOGOS.map((b) => {
             const tile = (

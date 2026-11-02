@@ -33,6 +33,8 @@ export const revalidate = 60;
 
 /** Policy page banne ki date — content badle to ye bhi badlo. */
 const POLICY_DATE = new Date('2026-10-25T00:00:00.000Z');
+/** Terms + About Us banne ki date (2 Nov 2026). */
+const TRUST_PAGE_DATE = new Date('2026-11-02T00:00:00.000Z');
 
 /**
  * ── 19 Sep 2026: lastmod ab SACH bolta hai ────────────────────────────────
@@ -72,6 +74,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BRAND.url}/returns-refunds`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BRAND.url}/warranty-terms`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BRAND.url}/privacy-policy`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
+    /* 🔴 2 Nov 2026 — Google Ads "Unacceptable business practices" suspension
+       ke baad do aur page. Google ka reviewer sabse pehle yahi dhoondhta hai:
+       hum kaun hain (about-us) aur shartein kya hain (terms). */
+    { url: `${BRAND.url}/terms`, lastModified: TRUST_PAGE_DATE, changeFrequency: 'yearly', priority: 0.4 },
+    { url: `${BRAND.url}/about-us`, lastModified: TRUST_PAGE_DATE, changeFrequency: 'yearly', priority: 0.5 },
     /* Customer-care / helpline hub — added 9 Oct 2026. Keyword audit: poori
        TRUST category me exact-phrase coverage 0/8 thi. Autocomplete harvest
        (8 Oct) me "customer care number" cluster = 117 queries, aur Patna ka

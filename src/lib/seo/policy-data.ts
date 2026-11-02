@@ -343,6 +343,148 @@ export const POLICY_PAGES: PolicyPage[] = [
       },
     ],
   },
+  /* ── TERMS & CONDITIONS ───────────────────────────────────────────────
+     🔴 2 Nov 2026 — Google Ads account "Unacceptable business practices"
+     ke under suspend hua. Google ki apni policy kehti hai wo "ad, website,
+     accounts" teeno dekhta hai, aur jaanchta hai ki business ka model saaf
+     hai ya chhupa hua.
+
+     Hamare paas Shipping, Refund, Warranty aur Privacy — chaar alag page
+     the, par ek AAM Terms & Conditions page nahi tha. Ye wahi page hai jo
+     reviewer sabse pehle dhoondhta hai: hum kaun hain, kya bechte hain,
+     paisa kaise lete hain, aur jhagda ho to kya hota hai.
+
+     Isme koi naya daava nahi hai — sirf wo sach ek jagah likha hai jo
+     pehle se site par bikhra hua tha. */
+  {
+    slug: 'terms',
+    label: 'Terms & Conditions',
+    title: 'Terms & Conditions — Aqua Perl RO Service Patna',
+    description:
+      'Aqua Perl RO Service Centre ki shartein — hum kaun hain, service aur '
+      + 'product ki shartein, payment, warranty, cancellation aur shikayat ka tarika.',
+    h1: 'Terms & Conditions',
+    intro:
+      'Ye page batata hai ki Aqua Perl se service ya product lete waqt kya '
+      + 'shartein lagti hain. Saadi bhasha me, bina chhupaye. Hamari website '
+      + 'use karne ya order/booking karne ka matlab hai ki aap ye shartein '
+      + 'maante hain.',
+    summary: [
+      'Aqua Perl RO Service Centre — proprietor Sudhanshu Choudhary, Patna (2019 se)',
+      'Hum ek SWATANTRA multi-brand RO repair service hain, kisi brand ke authorised centre NAHI',
+      'Visit charge ₹200 — kaam shuru hone se pehle rate likh kar bataya jaata hai',
+      'Service par 30 din, laga hue part par 12 mahine warranty',
+    ],
+    sections: [
+      {
+        heading: 'Hum kaun hain',
+        body:
+          'Ye website Aqua Perl RO Service Centre chalata hai — ek proprietorship '
+          + 'firm jiska kaam Patna me RO aur water purifier ki repair, installation, '
+          + 'filter/membrane badalna aur AMC hai. 2019 se kaam kar rahe hain.',
+        points: [
+          'Business ka naam: Aqua Perl RO Service Centre',
+          'Pata: Sai Gali, Opposite B-62, Buddha Colony, Patna, Bihar 800001',
+          'Phone: 8969821440 · Email: support@rokadoctor.in',
+          'Website: https://rokadoctor.in',
+          'Kaam ka samay: Mon–Sun, 08:00 – 21:00',
+        ],
+      },
+      {
+        heading: '🔴 Brand ke saath hamara rishta — saaf baat',
+        body:
+          'Aqua Perl kisi bhi RO brand ka AUTHORISED SERVICE CENTRE, DEALER, '
+          + 'FRANCHISE ya PARTNER NAHI hai. Hum ek swatantra (independent) '
+          + 'multi-brand repair service hain. Website par jo brand naam aur logo '
+          + 'dikhte hain, wo sirf ye batane ke liye hain ki hum un machinon par '
+          + 'kaam karte hain — wo sab apne-apne maalikon ki property hain aur '
+          + 'unke saath hamara koi karar nahi hai.',
+        points: [
+          'Machine warranty me ho to hum brand ka official centre bhejne me madad karte hain — repair ka paisa nahi lete',
+          'Har bade brand ka official customer care number hamari site par diya hua hai',
+          'Hum "genuine" ya "OEM-grade compatible" part lagate hain aur bill par saaf likhte hain kaunsa',
+        ],
+      },
+      {
+        heading: 'Service ki shartein',
+        body:
+          'Technician ghar aata hai, machine dekhta hai, TDS naapta hai aur phir '
+          + 'rate batata hai. Rate aapke approve karne ke BAAD hi kaam shuru hota hai.',
+        points: [
+          'Visit charge ₹200 — isme aane-jaane ka kharcha, poori jaanch aur TDS test shaamil hai',
+          'Part ka daam alag hai aur pehle bataya jaata hai; aap mana kar sakte hain',
+          'Nikala hua purana part aapke saamne rakha jaata hai',
+          'Response time 90 minute ka target hai, guarantee nahi — traffic aur doori se farak padta hai',
+          'Kaam (labour) par 30 din aur laga hue part par 12 mahine warranty, bill ke saath',
+        ],
+      },
+      {
+        heading: 'Product (online order) ki shartein',
+        body:
+          'Hum purifier aur spare part bhi bechte hain. Jo page par likha hai wahi '
+          + 'bheja jaata hai — model, capacity aur specification page par diye gaye hain.',
+        points: [
+          'Daam GST-inclusive MRP hai; checkout par poora amount dikhta hai, chhupa hua charge nahi',
+          'Stock khatam ho to order cancel karke poora paisa wapas kiya jaata hai',
+          'Delivery aur return ki shartein alag page par: /shipping-policy aur /returns-refunds',
+          'Product par brand ki apni warranty lagti hai, hamari service warranty alag hai',
+        ],
+      },
+      {
+        heading: 'Payment',
+        body:
+          'Service ka paisa kaam poora hone ke BAAD liya jaata hai. Online order par '
+          + 'payment ka tarika checkout page par dikhta hai.',
+        points: [
+          'Service: kaam ke baad cash, UPI ya online — bill ke saath',
+          'Online order: Cash on Delivery ya UPI',
+          'Har payment ka bill diya jaata hai — bina bill ke paisa mat dijiye',
+          'Koi bhi chhupa hua ya baad me lagne wala charge nahi hai',
+        ],
+      },
+      {
+        heading: 'Cancellation',
+        body:
+          'Booking cancel karni ho to technician nikalne se pehle call ya WhatsApp '
+          + 'kar dijiye — koi charge nahi lagta.',
+        points: [
+          'Technician pahunchne ke baad cancel karein to ₹200 visit charge lagta hai',
+          'Online order delivery se pehle cancel ho sakta hai — poora refund',
+          'Delivery ke baad ki shartein /returns-refunds page par hain',
+        ],
+      },
+      {
+        heading: 'Hamari zimmedari ki seema',
+        body:
+          'Hum apne kiye hue kaam aur lagaye hue part ke liye zimmedar hain — usse '
+          + 'aage nahi. Machine ki umar, aapke paani ki quality aur bijli ki '
+          + 'supply hamare control me nahi hai.',
+        points: [
+          'Warranty sirf hamare lagaye part aur hamare kiye kaam par',
+          'Pehle se toota hua ya kisi aur se chhua gaya part warranty me nahi',
+          'Paani ki quality TDS aur supply par nirbhar karti hai — hum uski guarantee nahi dete',
+        ],
+      },
+      {
+        heading: 'Shikayat',
+        body:
+          'Kuch galat lage to seedha hamein batayein. Hum khud theek karte hain, '
+          + 'tal-matol nahi karte.',
+        points: [
+          'Call 8969821440 ya WhatsApp — Mon–Sun 08:00–21:00',
+          'Email: support@rokadoctor.in',
+          'Likhit shikayat: Sai Gali, Opposite B-62, Buddha Colony, Patna 800001',
+          'Koi bhi vivaad Patna, Bihar ke kanoon aur adalat ke adhikar me aayega',
+        ],
+      },
+    ],
+    faqs: [
+      { q: 'Aap Kent / Aquaguard ke authorised centre hain?', a: 'Nahi. Hum ek swatantra multi-brand RO service hain. Kisi bhi brand ka authorised centre, dealer ya franchise nahi hain. Machine warranty me ho to hum aapko brand ke official centre bhejne me madad karte hain.' },
+      { q: 'Visit charge ke alawa koi chhupa hua charge hai?', a: 'Nahi. ₹200 visit charge me aana, poori jaanch aur TDS test shaamil hai. Part lagega to uska rate kaam shuru hone se pehle bataya jaata hai aur aap mana kar sakte hain.' },
+      { q: 'Bill milta hai?', a: 'Haan, har kaam aur har order par bill milta hai. Warranty bina bill ke claim nahi hoti, isliye bill zaroor lijiye.' },
+      { q: 'Website par brand ke logo kyun lage hain?', a: 'Sirf ye batane ke liye ki hum un brands ki machine par kaam karte hain. Sabhi brand naam aur logo unke maalikon ki property hain aur unke saath hamara koi karar nahi hai.' },
+    ],
+  },
 ];
 
 export function policyBySlug(slug: string): PolicyPage | undefined {
