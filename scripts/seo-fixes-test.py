@@ -266,8 +266,13 @@ src = rd('src/lib/seo/hinglish-longtail.ts')
 blocks = dict(re.findall(r"phrase:\s*'([^']+)',\s*\n\s*heading:\s*'([^']+)'", src))
 alts = dict(re.findall(r"altPhrase:\s*'([^']+)',\s*\n\s*altHeading:\s*'([^']+)'", src))
 blocks.update(alts)
-chk('hinglish-longtail.ts me 9 phrase (8 block + 1 alt spelling)',
-    len(blocks) == 9, str(len(blocks)))
+# 🔴 3 Nov 2026 — 9 se 11 hua.
+# +1 naya block /ro-service-centre-patna (phrase + altPhrase = 2 phrase).
+# /contact ka block hata nahi, uske phrase ka naam badla — count wahi raha.
+# Ye sirf GINTI hai; asli jaan "THEEK 1 page" wali shart hai jo neeche
+# bilkul waisi ki waisi hai.
+chk('hinglish-longtail.ts me 11 phrase (9 block + 2 alt spelling)',
+    len(blocks) == 11, str(len(blocks)))
 
 for phrase, heading in blocks.items():
     chk(f'"{phrase}" heading ke andar hai',
@@ -282,11 +287,21 @@ MOUNT = {
     # 🔴 27 Oct — ye 3 live naap me nikle: kisi page ke title/H1/H2 me nahi the,
     #    sirf H3 me. Teeno money keyword hain.
     'water purifier service patna': '/service-patna',
-    'ro service centre patna': '/contact',
-    'ro service center patna': '/contact',   # alt spelling, usi block ka H3
+    # 🔴 3 Nov 2026 — maalik page JAAN-BOOJH KAR badla gaya.
+    # Pehle /contact is phrase ka maalik tha (sirf H2 me). 3 Nov ko
+    # /ro-service-centre-patna bana — URL + title + H1 teeno me phrase,
+    # 2,677 shabd, 104 andruni link. Us query par #1 competitor
+    # roservicecentrepatna.in ka title bhi "RO Service Centre Patna" hai.
+    # Contact page commercial keyword par rank nahi karta, isliye phrase
+    # dedicated page ko diya gaya aur /contact ki heading reword hui.
+    # 🔴 "THEEK 1 page" wali shart waise ki waisi hai — wahi is gate ki
+    #    asli jaan hai. Sirf maalik ka naam badla hai.
+    'ro service centre patna': '/ro-service-centre-patna',
+    'hamara centre kahan hai': '/contact',
+    'counter par kya milta hai': '/contact',   # alt spelling, usi block ka H3
     'ro technician patna': '/ro-services-patna',
 }
-chk('mount map me 9', len(MOUNT) == 9)
+chk('mount map me 10', len(MOUNT) == 10)
 
 for phrase, path in MOUNT.items():
     st, h = get(path)
@@ -297,10 +312,10 @@ for phrase, path in MOUNT.items():
     heads = ' || '.join(
         re.sub(r'<[^>]+>', '', x) for x in re.findall(r'<h2[^>]*>(.*?)</h2>', h2, re.S)
     ).lower()
-    if phrase != 'ro service center patna':
+    if phrase != 'counter par kya milta hai':
         chk(f'{path} → H2 me "{phrase}"', phrase in heads, '')
     # alt spelling ka apna data-attr nahi hota — wo usi block ka H3 hai
-    if phrase != 'ro service center patna':
+    if phrase != 'counter par kya milta hai':
         chk(f'{path} par block render hua',
             f'data-hinglish-longtail="{phrase}"' in h2, '')
     else:
@@ -336,7 +351,7 @@ locs = re.findall(r'<loc>(.*?)</loc>', sm)
 paths = [re.sub(r'^https?://[^/]+', '', u) or '/' for u in locs]
 chk('sitemap se path mile', len(paths) > 100, str(len(paths)))
 
-ALT = {'ro service center patna'}
+ALT = {'counter par kya milta hai'}
 LEV = {}
 for path in paths:
     st, h = get(path)

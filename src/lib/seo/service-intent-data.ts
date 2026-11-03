@@ -963,7 +963,12 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     slug: 'ro-service-centre-patna',
     path: '/ro-service-centre-patna',
     footerLabel: 'RO Service Centre',
-    title: `RO Service Centre in Patna — ₹${V} Visit`,
+    /* 🔴 3 Nov 2026 — "in" hata diya. Google ke apne PASF box me query
+     * "ro service centre patna" hai (bina "in"), aur us par #1 wali
+     * roservicecentrepatna.in ka title bhi "RO Service Centre Patna" hai.
+     * Pehle hamara "Centre IN Patna" tha = exact match nahi tha.
+     * H1 me "in" rehne diya, wo padhne me behtar hai. */
+    title: `RO Service Centre Patna — ₹${V} Visit`,
     h1: 'RO Service Centre in Patna',
     description:
       `Aqua Perl RO service centre in Patna — Buddha Colony. Doorstep repair, filter and membrane change at ₹${V} visit. All brands. 30-day warranty. Call 8969821440.`,

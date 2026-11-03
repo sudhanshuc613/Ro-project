@@ -39,6 +39,10 @@ import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
    naam 100+ baar aata hai aur poora disclaimer tha hi NAHI — sirf footer ki
    chhoti Hinglish line. Ab hero ke turant neeche, English + Hinglish dono me. */
 import BrandNoticeBar from '@/components/service/BrandNoticeBar';
+/* 🔴 3 Nov 2026 — Google ke apne "People also search for" se nikli
+   long-tail near-me query. Teen par hamara koi page tha hi nahi.
+   Dekho: src/components/service/NearMeLongTail.tsx */
+import NearMeLongTail from '@/components/service/NearMeLongTail';
 
 export const revalidate = 86400;
 
@@ -198,6 +202,8 @@ export default async function BrandServicePage({ params }: { params: { brand: st
         {/* 🔴 Hero ke TURANT baad — H1 ke neeche pehli cheez. Google ka
             reviewer aur customer dono ko scroll kiye bina dikhe. */}
         <BrandNoticeBar brand={short} />
+
+        <NearMeLongTail variant="brand" brandName={short} />
 
         <section className="py-14">
           <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[1.4fr,1fr]">

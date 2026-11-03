@@ -37,6 +37,10 @@ import ShopStrip from '@/components/home/ShopStrip';
 import FaqAccordion from '@/components/home/FaqAccordion';
 import SearchAnswers from '@/components/home/SearchAnswers';
 import NearMeBlock from '@/components/service/NearMeBlock';
+/* 🔴 3 Nov 2026 — Google ke apne "People also search for" se nikli
+   long-tail near-me query. Teen par hamara koi page tha hi nahi.
+   Dekho: src/components/service/NearMeLongTail.tsx */
+import NearMeLongTail from '@/components/service/NearMeLongTail';
 import BrandLogoGrid from '@/components/home/BrandLogoGrid';
 import { searchAnswerFaq } from '@/lib/seo/search-queries';
 
@@ -354,6 +358,7 @@ export default async function HomePage() {
             pakda ki ye query par site dikhti hi nahi thi; scan me nikla ki
             poori site par ye phrase 0 baar tha. Sirf JODA gaya hai. */}
         <NearMeBlock areas={TOP_AREAS_FOR_NEARME} />
+        <NearMeLongTail variant="home" />
 
         <SearchAnswers />
 

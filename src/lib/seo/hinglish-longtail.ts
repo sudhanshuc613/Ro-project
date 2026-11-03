@@ -129,12 +129,20 @@ export const HINGLISH_LONGTAIL: Readonly<Record<string, HinglishBlock>> = {
     ],
   },
 
-  /* ── /contact  (27 Oct gap — centre/center dono kahin nahi the) ───────── */
+  /* ── /contact  (27 Oct gap — centre/center dono kahin nahi the) ─────────
+     🔴 3 Nov 2026 — HEADING KA WORDING BADLA, CONTENT KUCH NAHI HATAYA.
+     Wajah: 3 Nov ko /ro-service-centre-patna naam ka apna page bana, jiske
+     URL, title aur H1 teeno me ye phrase hai aur jisme 2,677 shabd sirf
+     "service centre" par hain. Do page ek hi phrase par the = seedhi
+     cannibalization, aur verify-seo-fixes ne turant pakad liya.
+     Ek keyword, ek page. Phrase ab dedicated page ka hai.
+     /contact ka block, uska pata, stock aur timing sab waise ka waisa hai —
+     sirf H2/H3 ke shuru se keyword hata hai. */
   'contact': {
-    phrase: 'ro service centre patna',
-    heading: 'RO Service Centre Patna — Hamara Centre Kahan Hai Aur Kab Khulta Hai',
-    altPhrase: 'ro service center patna',
-    altHeading: 'RO Service Center Patna — Dono Spelling, Ek Hi Jagah',
+    phrase: 'hamara centre kahan hai',
+    heading: 'Hamara Centre Kahan Hai Aur Kab Khulta Hai',
+    altPhrase: 'counter par kya milta hai',
+    altHeading: 'Counter Par Kya Milta Hai — Dono Jagah Ek Hi Stock',
     body:
       'Buddha Colony me Sai Gali, B-62 ke saamne — yahi hamara workshop aur counter hai. Service ke liye yahan aana zaroori nahi, hum ghar aate hain; lekin naya purifier, membrane ya spare part khud dekh kar lena ho to aa sakte hain. Brand ka official centre alag hota hai — machine warranty me ho to hum wahin bhejte hain, apna kaam nahi thopte.',
     points: [
@@ -142,6 +150,27 @@ export const HINGLISH_LONGTAIL: Readonly<Record<string, HinglishBlock>> = {
       'Counter par membrane, SMPS, pump aur filter stock me rehta hai — turant mil jaata hai.',
       'Aane se pehle call kar lijiye 8969821440, taaki aapka part nikaal kar rakh dein.',
       'Warranty wali machine ke liye hum khud brand centre ka rasta batate hain — charge nahi lete.',
+    ],
+  },
+
+  /* ── /ro-service-centre-patna  (3 Nov 2026) ───────────────────────────
+     Ye phrase pehle /contact par tha. Ab iska apna page hai — URL, title
+     aur H1 teeno me phrase, 2,677 shabd. Intent template is block ko
+     `intent.slug` se uthata hai, isliye key = slug.
+     🔴 Google ke apne "People also search for" me ye query "ro service
+        centre patna" hai — bina "in". Heading usi tarah likhi hai. */
+  'ro-service-centre-patna': {
+    phrase: 'ro service centre patna',
+    heading: 'RO Service Centre Patna — Asli Centre Aur Call-Forwarding Number Me Farak',
+    altPhrase: 'ro service center patna',
+    altHeading: 'RO Service Center Patna — Dono Spelling, Ek Hi Centre',
+    body:
+      'Patna me "RO service centre" likhe hue number bahut hain, par unme se zyadatar sirf number hain — na koi pata, na stock, na apna technician. Aqua Perl ka asli counter Sai Gali, Opposite B-62, Buddha Colony me hai; wahan membrane, SMPS, pump aur filter stock me rehte hain. Service ke liye aana zaroori nahi — kaam aapke ghar par hota hai, kyunki machine aapke apne pressure aur apne TDS par hi sahi test hoti hai.',
+    points: [
+      'Pata maang kar map par dekh lijiye — asli centre ka pata hamesha hota hai.',
+      'Bill business ke naam par milta hai, warranty usi par likhi hoti hai.',
+      'Visit charge ₹200 — isme jaanch aur TDS report shaamil hai.',
+      'Purana part wapas milta hai, taaki aap dekh sakein kya badla.',
     ],
   },
 

@@ -78,7 +78,10 @@ export const CONTENT_DATES: Record<string, Date> = {
   /* 10/13 — ExtraKeywordBlock(amc) 3 AMC kw */
   '/amc-plans': d('2026-10-13'),
   /* 10/11 — +3 H2 +7 H3, breadcrumb schema */
-  '/contact': d('2026-10-11'),
+  /* 🔴 3 Nov 2026 — is page ke hinglish block ki heading badli (keyword
+     /ro-service-centre-patna ko diya gaya). Content kuch nahi hata, par
+     H2/H3 ka text badla = asli content change = date bhi badlegi. */
+  '/contact': d('2026-11-03'),
   /* 10/11 — +2 H2 +4 H3 */
   '/blog': d('2026-10-11'),
 };

@@ -46,6 +46,10 @@ import BrandAreaBlock from '@/components/service/BrandAreaBlock';
    vaakye 60 char se chhote hain — verify-area-depth unhe duplicate nahi
    ginta. Dekho: src/components/service/BrandNoticeCompact.tsx */
 import BrandNoticeCompact from '@/components/service/BrandNoticeCompact';
+/* 🔴 3 Nov 2026 — Google ke apne "People also search for" se nikli
+   long-tail near-me query. Teen par hamara koi page tha hi nahi.
+   Dekho: src/components/service/NearMeLongTail.tsx */
+import NearMeLongTail from '@/components/service/NearMeLongTail';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { getGbpSettings } from '@/lib/settings';
 import { areaPath } from '@/lib/seo/area-url';
@@ -624,6 +628,8 @@ export default async function AreaPage({ params }: { params: { area: string } })
             nahi the (sirf <meta keywords> me pade the, jise Google 2009 se
             padhta hi nahi). Ab heading me hain, apne content ke saath. */}
         <AreaKeywordBlock area={area} nearby={linkOut} />
+
+        <NearMeLongTail variant="area" areaName={area.name} />
 
         {/* 🔴 Brand list se PEHLE — brand naam dikhne se pehle inkaar dikhe. */}
         <div className="container mx-auto px-4 pt-10">
