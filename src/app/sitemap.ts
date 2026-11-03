@@ -8,7 +8,7 @@ import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { SYMPTOMS } from '@/lib/seo/symptom-data';
 import {
   contentDate,
-  INTENT_PAGES_DATE,
+  intentDate,
   SYMPTOM_PAGES_DATE,
   AREA_PAGES_DATE,
   BRAND_PAGES_DATE,
@@ -126,9 +126,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* Service-intent pages — the JOB axis. High priority because they target
      transactional queries ("ro installation charges in patna") that convert
      harder than informational ones. */
+  /* 🔴 3 Nov 2026 — ab har intent apni date bhejta hai (intentDate).
+     Naya /ro-service-centre-patna 3 Nov ka hai; baaki 7 abhi bhi 27 Oct ke.
+     Sab ko ek hi nayi date dena lastmod me jhooth hota. */
   const intentPages: MetadataRoute.Sitemap = SERVICE_INTENTS.map((s) => ({
     url: `${BRAND.url}${s.path}`,
-    lastModified: INTENT_PAGES_DATE,
+    lastModified: intentDate(s.slug),
     changeFrequency: 'weekly',
     priority: 0.9,
   }));

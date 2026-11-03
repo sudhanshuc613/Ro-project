@@ -41,8 +41,22 @@ def req(path,data=None,method=None,form=False):
     except urllib.error.HTTPError as e: return e.code,e.read().decode('utf-8','replace')
     except Exception as e: return 0,f'ERR {e}'
 
-INTENTS=['ro-installation-patna','ro-amc-patna','ro-repair-patna','ro-filter-change-patna',
-         'ro-membrane-replacement-patna','commercial-ro-service-patna','ro-service-in-patna']
+# ══════════════════════════════════════════════════════════════════════════
+# 🔴 3 Nov 2026 — GATE YAHAN SE SAKHT KIYA GAYA
+#
+# Pehle ye list HAATH SE likhi hui thi. 3 Nov ko aathwa intent page bana
+# (/ro-service-centre-patna) aur list me nahi aaya — natija: us page ki 6
+# keyed price row kabhi jaanchi hi nahi jaati, aur gate "miss" bolta.
+# Ek test jo naye page ko dekhta hi nahi, wo us page ke liye JHOOTHA PASS
+# hai (bug class N).
+#
+# Ab list SOURCE SE BANTI HAI. Naya intent add karo — gate khud-ba-khud
+# usko bhi jaanchega, bina kisi ko yaad dilaye.
+# ══════════════════════════════════════════════════════════════════════════
+INTENTS = re.findall(r"slug:\s*'([a-z0-9-]+)'",
+                     open('src/lib/seo/service-intent-data.ts', encoding='utf-8').read())
+assert len(INTENTS) >= 7, f'intent slug source se nahi mile: {INTENTS}'
+print(f'  (intent source se liye gaye: {len(INTENTS)} — {", ".join(INTENTS)})')
 
 def table(slug):
     """Us page ki price table ke (item, price) nikaalo."""

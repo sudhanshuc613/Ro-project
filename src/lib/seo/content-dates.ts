@@ -39,21 +39,31 @@ function d(iso: string): Date {
 export const CONTENT_DATES: Record<string, Date> = {
   /* 19 Sep 2026 — keyword cannibalization fix: homepage "near me" pe gaya,
      /service-patna "water purifier repair" pe. Dono ka H1 + title badla. */
-  '/': d('2026-10-12'),
-  '/service-patna': d('2026-10-13'),
+  /* 🔴 2 Nov 2026 — BRAND_DISCLAIMER ka amber box logo grid ke UPAR aaya
+     (BrandLogoGrid.tsx). Ye body copy ka asli badlav hai, isliye date badli. */
+  '/': d('2026-11-02'),
+  /* 🔴 27 Oct 2026 — anchor cannibalization fix. Is page par aane wale
+     243 'ro service patna' anchor /ro-service-in-patna par bheje gaye,
+     aur iska apna top anchor 'water purifier repair patna' ho gaya.
+     Internal links badle = file ke apne niyam se date badalni thi. */
+  '/service-patna': d('2026-10-27'),
 
   /* 19 Sep 2026 — H1 glue bug fix (21 brand pages pe "PatnaVisit" chipak
      raha tha). Brand hub bhi usi push me chhua gaya. */
   /* 10/13 — title cannibalization fix: "RO Service in Patna" se "All RO Brands Service in Patna" */
-  '/service-patna/brand': d('2026-10-13'),
+  /* 2 Nov 2026 — disclaimer box BrandHubGrid ke upar aaya. */
+  '/service-patna/brand': d('2026-11-02'),
 
   /* 12 Sep 2026 — head-term page banaya (2,932 words, 26 schema types). */
   /* 10/12 — pricing fix (adaptor rate) — Ads landing page */
-  '/ro-service-in-patna': d('2026-10-12'),
+  /* 27 Oct — anchor fix (161 → 310 andruni link) + title me phone.
+     2 Nov — disclaimer logo grid ke upar (BrandCallCards). */
+  '/ro-service-in-patna': d('2026-11-02'),
 
   /* 18 Sep 2026 — H2 keyword density 5/10 → 10/10, 9 synonym keywords. */
   /* 10/13 — IntentKeywordBlock(service) 20 kw + ExtraKeywordBlock hinglish/urgent + pricing fix */
-  '/ro-services-patna': d('2026-10-13'),
+  /* 2 Nov 2026 — disclaimer box logo grid ke upar. */
+  '/ro-services-patna': d('2026-11-02'),
   /* Naya page, 9 Oct 2026 — RO customer care / helpline hub. */
   '/ro-customer-care-patna': d('2026-10-09'),
   '/ro-service-patna-faq': d('2026-10-13'),
@@ -101,7 +111,7 @@ export const CONTENT_DATES: Record<string, Date> = {
 
 /* intent pages: 13 Oct — IntentKeywordBlock (install variant),
    ExtraKeywordBlock (commercial), aur 12 Oct ka pricing fix. */
-export const INTENT_PAGES_DATE = d('2026-10-13');
+export const INTENT_PAGES_DATE = d('2026-10-27');
 
 /** Symptom pages (5) — 16 Sep ko banaye gaye. */
 /* symptom pages: 12 Oct — symptom-data.ts me SMPS ka rate theek kiya
@@ -112,13 +122,13 @@ export const SYMPTOM_PAGES_DATE = d('2026-10-12');
 /* area pages: 13 Oct — AreaKeywordBlock (11 Oct) + pricing fix (12 Oct)
    + area-city-label title/H1 fix aur BrandAreaBlock 19 brand (13 Oct).
    Rendered words 2,400 → 3,560. */
-export const AREA_PAGES_DATE = d('2026-10-13');
+export const AREA_PAGES_DATE = d('2026-10-27');
 
 /** 21 brand pages — 19 Sep ko H1 glue bug theek hua. */
 /* brand pages: 13 Oct — BrandKeywordBlock (12 Oct, 5 naye section) +
    model-wise H4 + customer care number + BrandAreaListBlock 18 ilaake (13 Oct).
    Rendered words 1,700 → 2,610. */
-export const BRAND_PAGES_DATE = d('2026-10-13');
+export const BRAND_PAGES_DATE = d('2026-10-27');
 
 /** Author page. */
 export const AUTHOR_PAGE_DATE = d('2026-09-15');
@@ -129,4 +139,26 @@ export const AUTHOR_PAGE_DATE = d('2026-09-15');
  */
 export function contentDate(path: string): Date | undefined {
   return CONTENT_DATES[path];
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   🔴 3 Nov 2026 — INTENT_DATE_OVERRIDES
+   ──────────────────────────────────────────────────────────────────────────
+   `INTENT_PAGES_DATE` saare intent page ko EK date deti hai. Ye tab theek
+   tha jab saat ke saat page ek hi push me badle the. Ab nahi:
+
+     • /ro-service-centre-patna  — bilkul naya page, 3 Nov 2026
+     • baaki 7                   — 27 Oct ko title me phone + anchor fix
+
+   Sab ko 3 Nov bol dena JHOOTH hota, aur is file ka poora point hi yahi hai
+   ki lastmod sach bole. Isliye override map — jiska naam yahan hai uski
+   apni date, baaki sab INTENT_PAGES_DATE par.
+   ══════════════════════════════════════════════════════════════════════════ */
+export const INTENT_DATE_OVERRIDES: Record<string, Date> = {
+  'ro-service-centre-patna': d('2026-11-03'),
+};
+
+/** Ek intent slug ki asli date. Override na ho to group date. */
+export function intentDate(slug: string): Date {
+  return INTENT_DATE_OVERRIDES[slug] ?? INTENT_PAGES_DATE;
 }

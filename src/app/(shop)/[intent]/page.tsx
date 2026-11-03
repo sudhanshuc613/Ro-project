@@ -76,6 +76,9 @@ import { ogImage } from '@/lib/seo/og-image';
    ══════════════════════════════════════════════════════════════════════════ */
 import AdsHeroBanner from '@/components/service/AdsHeroBanner';
 import NearMeBlock from '@/components/service/NearMeBlock';
+/* 🔴 3 Nov 2026 — sirf /ro-service-centre-patna par. Dekho component ka
+   comment: /ro-service-in-patna ko jaan-boojh kar nahi chhua. */
+import CentreAreaGrid from '@/components/service/CentreAreaGrid';
 /* 13 Oct 2026 — /ro-installation-patna par 6 installation phrase heading me
    nahi the (water purifier installation near me/Patna, RO fitting Patna,
    new RO installation, installation cost/service Patna). Naya block. */
@@ -184,6 +187,8 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
 
   /* Ads landing page — sirf isi slug par extra visual blocks lagte hain. */
   const isAdsLanding = params.intent === 'ro-service-in-patna';
+  /* Naya centre page — isko poora area + brand link grid milta hai. */
+  const isCentrePage = params.intent === 'ro-service-centre-patna';
 
   /* Admin-editable images. DB na chale to code ke default aate hain. */
   const [siteImages, rateCard] = await Promise.all([getSiteImages(), getRateCard()]);
@@ -524,6 +529,7 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
         {isAdsLanding && <BrandCallCards brands={SERVICED_BRANDS} />}
         {isAdsLanding && <ReviewShowcase gbp={gbp} />}
         {isAdsLanding && <NearMeBlock />}
+        {isCentrePage && <CentreAreaGrid />}
 
         {params.intent === 'ro-installation-patna' && (
           <IntentKeywordBlock variant="install" />

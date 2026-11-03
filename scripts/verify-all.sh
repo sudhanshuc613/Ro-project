@@ -12,7 +12,7 @@ for s in verify-h1-keyword verify-keyword-coverage verify-images-titles verify-r
          verify-sitemap-lastmod verify-search-queries verify-serp-hygiene verify-og-image \
          verify-billing verify-banner-upload verify-jsonld-parents verify-admin-deep verify-gbp-consistency verify-near-me verify-product-duplicate verify-product-visibility verify-rate-sync \
          verify-seo-fixes verify-mobile-overflow verify-anchor-cannibal \
-         verify-ads-policy verify-browser; do
+         verify-ads-policy verify-lastmod-honesty verify-browser; do
   OUT=$(bash "scripts/$s.sh" 2>&1)
   LINE=$(echo "$OUT" | grep -E "^  PASS: " | tail -1)
   P=$(echo "$LINE" | sed -n 's/.*PASS: \([0-9]*\).*/\1/p')

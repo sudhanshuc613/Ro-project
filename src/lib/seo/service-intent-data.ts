@@ -47,6 +47,10 @@
  */
 
 import { SERVICE } from '@/lib/constants';
+/* 🔴 3 Nov 2026 — /ro-service-centre-patna ke FAQ me area count chahiye.
+   patna-service-data.ts kisi file ko import NAHI karta (jaancha gaya),
+   isliye ye import circular nahi hai. */
+import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 
 export interface IntentStep {
   title: string;
@@ -929,6 +933,153 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'RO Water Purifier Service',
     related: ['ro-repair-patna', 'ro-amc-patna', 'ro-filter-change-patna', 'ro-membrane-replacement-patna'],
+  },
+
+  /* ═════════════════════════════════════════════════════════════════════
+     8. RO SERVICE CENTRE IN PATNA          (naya — 3 Nov 2026)
+     ─────────────────────────────────────────────────────────────────────
+     🔴 Kyun banaya (sab naapa hua, 2–3 Nov 2026):
+
+       • "ro service centre patna" par hum TOP 20 me bhi nahi the.
+       • Us query par #1 hai roservicecentrepatna.in — exact-match domain,
+         jiske 67 me se 65 URL Patna ke hain, aur jiska domain hamare se
+         NAYA hai (2026-05-26 vs hamara 2025-09-04).
+       • Hamare poore site par "centre"/"center" kisi bhi page ke TITLE me
+         nahi tha. Is keyword ka maalik /contact tha — wahan bhi sirf H2/H3.
+
+     🔴 Cannibalization se kaise bacha (ye soch ke likha gaya hai):
+       • TITLE/H1 me "RO Service Centre in Patna" — ye phrase site par aur
+         kahin title me nahi hai, isliye koi takkar nahi.
+       • nearMe heading jaan-boojh kar "Nearby RO Service Centre…" hai.
+         "RO Service Centre Near Me" wala exact phrase /ro-service-in-patna
+         ka hai aur wahi rahega — usko chhua nahi gaya.
+       • "ro service in patna" ya "ro repair patna" is page ke title/H1 me
+         NAHI hai. Ek page, ek keyword.
+
+     🔴 Daam: ek bhi "₹X onwards" nahi — sirf range aur flat. verify-billing
+        ka onwards budget (≤17) pehle se poora bhara hai.
+     ═════════════════════════════════════════════════════════════════════ */
+  {
+    slug: 'ro-service-centre-patna',
+    path: '/ro-service-centre-patna',
+    footerLabel: 'RO Service Centre',
+    title: `RO Service Centre in Patna — ₹${V} Visit`,
+    h1: 'RO Service Centre in Patna',
+    description:
+      `Aqua Perl RO service centre in Patna — Buddha Colony. Doorstep repair, filter and membrane change at ₹${V} visit. All brands. 30-day warranty. Call 8969821440.`,
+    keywords: [
+      'ro service centre patna', 'ro service center patna',
+      'water purifier service centre patna', 'ro service centre near me',
+      'nearby ro service centre', 'ro service centre number patna',
+      'ro repair centre patna', 'ro care centre patna',
+    ],
+    lede: `Buddha Colony ka asli centre · ₹${V} visit · machine uthani nahi padti`,
+    intro: [
+      'A "service centre" in this trade usually means one of two very different things, and the difference costs you money. One is a real address where a business keeps stock, tools and trained staff. The other is a phone number that forwards your job to whoever is free that day, with no premises behind it at all.',
+      'Aqua Perl is the first kind. Sai Gali, opposite B-62, Buddha Colony, Patna 800001. Stock sits there, technicians start their day from there, and your bill is raised against that address. You are welcome to walk in, though almost nobody needs to.',
+      'That last point matters more than the address. Nearly every RO fault is fixed faster at your home than at a counter, because the machine has to be tested against your own water pressure and your own raw TDS. Carrying a purifier to a shop and back usually means two days without water for one hour of work.',
+    ],
+    steps: [
+      {
+        title: 'Call the centre and describe the fault',
+        detail:
+          'One number, 8969821440, answered from the Buddha Colony office during working hours. We note the brand, the model if you have it, and what the machine is doing wrong. Most faults narrow down to two or three possibilities on the phone itself, so the technician leaves carrying the right spares instead of coming back a second day.',
+        minutes: 3,
+      },
+      {
+        title: 'Technician despatched from Buddha Colony',
+        detail:
+          'Jobs are assigned by where the technician already is, not by where the office is. Kankarbagh, Boring Road, Rajendra Nagar and Patliputra Colony normally see someone inside 90 minutes. Danapur, Khagaul and Phulwari Sharif can run longer in traffic, and we tell you that on the call rather than after you have waited.',
+        minutes: 90,
+      },
+      {
+        title: 'Raw and output TDS measured in front of you',
+        detail:
+          'Both readings, taken before anything is opened, and written on the job card. This is the one number that proves whether a membrane genuinely needs replacing, and it is the number a centre with nothing to hide will always show you.',
+        minutes: 5,
+      },
+      {
+        title: 'Written quote before any part is opened',
+        detail:
+          'You hear the price for the whole job, parts and labour together, before a single housing is unscrewed. If you say no, you pay the visit charge and nothing else. No part is fitted on the assumption that you will agree once it is already in.',
+        minutes: 10,
+      },
+      {
+        title: 'Repair done at your home, with the old part left behind',
+        detail:
+          'Whatever comes out stays with you. A centre that takes the old membrane or pump away is removing the only evidence that it was actually changed. Ask for it every time, from us or from anyone else.',
+        minutes: 45,
+      },
+      {
+        title: 'Bill from the centre, with warranty written on it',
+        detail:
+          `A proper bill in the business name, carrying ${SERVICE.warrantyDays} days on the labour and ${SERVICE.partsWarrantyMonths} months on any part we fitted. If the same fault returns inside that window, the revisit costs you nothing.`,
+        minutes: 5,
+      },
+    ],
+    prices: [
+      { item: 'Centre visit + full diagnosis + TDS report', price: `₹${V}`, note: 'Fixed, told to you on the phone. Waived if you go ahead with a paid repair the same visit.' },
+      /* 🔴 Yahan pehle "General service" wali key thi. Uska rate-card format
+       * 'from' hai, yaani uska daam "onwards" banta hai — aur verify-billing
+       * ka onwards budget (17) pehle se poora bhara hua hai. Ek aur onwards
+       * daalne se gate 18 par FAIL ho gaya tha.
+       *
+       * Gate ko dheela karne ke bajay row badli gayi: ab combo key hai, jo
+       * range format me hai. General service ka daam waise bhi
+       * /ro-service-in-patna aur /ro-repair-patna par pehle se hai —
+       * wahan se admin control hota hi hai, yahan dohrana zaroori nahi tha.
+       * (Comment ki har line '*' se shuru hai — verify-billing aisi line
+       *  chhodta hai, warna comment me likha daam bhi gin liya jaata hai.) */
+      { rateKey: 'Membrane + poora filter set (combo)', item: 'Membrane with full filter set together', price: '₹1,400 – ₹2,400', note: 'Taken together this works out cheaper than a membrane and a filter set bought on separate visits.' },
+      /* 🔴 Ye row verify-rate-sync ne add karwayi. Gate 'Sediment filter
+       * (spun)' ka rate admin se badalta hai aur phir HAR us page par
+       * jaanchta hai jiski koi row "sediment" se shuru hoti hai. Mere naye
+       * page par sirf combo row thi (alag rateKey), isliye gate FAIL hua.
+       * Gate dheela karne ke bajay row daali gayi — service centre page par
+       * machine ka sabse sasta part dikhna waise bhi theek hai. */
+      { rateKey: 'Sediment filter (spun)', item: 'Sediment filter (spun / PP)', price: '₹150 – ₹300', note: 'The cheapest part in the machine. On Patna borewell supply it lasts 3 to 4 months, not the 6 printed on the box.' },
+      { rateKey: 'Sediment + carbon set — lagwane ka', item: 'Sediment + carbon filter change', price: '₹450 – ₹900', note: 'Both pre-filters fitted. Most Patna homes on borewell supply need this twice a year.' },
+      { rateKey: 'Teeno filter ka set', item: 'All three filters together', price: '₹350 – ₹900', note: 'Sediment, pre-carbon and post-carbon as one set.' },
+      { rateKey: 'RO membrane 75 GPD — lagwane ka', item: 'RO membrane fitted (75 GPD)', price: '₹1,600 – ₹2,400', note: 'Only after the TDS reading proves it is needed. Genuine membrane, warranty on the bill.' },
+      { rateKey: 'Booster pump / motor', item: 'Booster pump or motor', price: '₹1,000 – ₹2,800', note: 'Common on upper floors and in the low-pressure pockets around Kidwaipuri and R Block.' },
+      { rateKey: 'SMPS adaptor', item: 'SMPS / adaptor', price: '₹700 – ₹1,100', note: 'A completely dead machine with no indicator light is usually this, not the pump.' },
+      { rateKey: 'UV lamp + ballast', item: 'UV lamp with ballast', price: '₹400 – ₹1,200', note: 'UV output falls long before the lamp stops glowing, so age matters more than looks.' },
+      { rateKey: 'Storage tank', item: 'Storage tank replacement', price: '₹700 – ₹1,800', note: 'Fitted when the tank is cracked or the inner bladder has collapsed.' },
+    ],
+    priceFrom: V,
+    priceTo: 2800,
+    nearMe: {
+      heading: 'Nearby RO Service Centre — Patna Me Kaun Sa Centre Chunein',
+      body:
+        'Searching for a nearby RO service centre in Patna throws up a lot of numbers and very few addresses. Three checks separate a real centre from a call-forwarding number, and all three take under a minute.',
+      points: [
+        'Ask for the street address, then look it up on the map. Ours is Sai Gali, opposite B-62, Buddha Colony, Patna 800001.',
+        'Ask whether the bill will carry a business name and a warranty period. A forwarded job usually cannot give you either.',
+        'Ask for the raw TDS reading at the end of the visit. A centre that tests properly can read it out from the job card.',
+      ],
+    },
+    signals: [
+      { sign: 'The number you called has no address anywhere on its website', meaning: 'Almost always a lead-reselling number. Your job is auctioned to whichever technician accepts it, and nobody carries the warranty afterwards.' },
+      { sign: 'You are asked to carry the purifier to a shop', meaning: 'Reasonable only for a dead circuit board. For filters, membranes, pumps and leaks the machine must be tested on your own line, so a home visit is both faster and more accurate.' },
+      { sign: 'A membrane is recommended without any TDS reading', meaning: 'The membrane is the costliest item in the machine and the easiest to sell unnecessarily. Without a before-and-after TDS number there is nothing to justify it.' },
+      { sign: 'No printed bill is offered', meaning: 'No bill means no warranty you can enforce and no proof of what was fitted. Ask for it before work starts, not after.' },
+    ],
+    watchOut: [
+      'A centre quoting a membrane change under ₹1,100 fitted is almost certainly using an unbranded membrane. It will pass water on day one and fail well inside a year.',
+      'Some numbers advertise as the "authorised service centre" for a brand. Aqua Perl is not an authorised centre for any brand and never claims to be — we are an independent centre that services all of them.',
+      'If a technician refuses to hand back the part he removed, treat that as the end of the visit. There is no honest reason to take it away.',
+      'A "free service" offer almost always recovers the money on the parts. Our visit charge is ₹200 and it is adjusted against the job if you go ahead the same day.',
+    ],
+    faqs: [
+      { q: 'Where is the Aqua Perl RO service centre in Patna?', a: 'Sai Gali, opposite B-62, Buddha Colony, Patna, Bihar 800001. That is the registered address of Aqua Perl RO Service Centre and the address your bill is raised from. You can call 8969821440 during working hours and speak to the same office.' },
+      { q: 'Do I have to bring my RO to the service centre?', a: 'No, and in almost every case you should not. The machine has to be tested against your own inlet pressure and your own raw TDS, which cannot be done at a counter. We do the work at your home and you keep using the machine the same day.' },
+      { q: 'Is Aqua Perl an authorised service centre for Kent or Aquaguard?', a: 'No. Aqua Perl is an independent RO service centre. We repair Kent, Aquaguard, Pureit, Livpure, AO Smith and every other brand sold in Patna, but we are not an authorised centre or dealer for any of them. All brand names and logos belong to their respective owners.' },
+      { q: 'What does the service centre charge for a visit?', a: `₹${V}, fixed, and you are told it before anyone leaves the office. It covers the visit, a full diagnosis and a written TDS report. If you go ahead with a paid repair on the same visit, it is adjusted against the bill.` },
+      { q: 'Which areas does the centre cover?', a: `All ${SERVICE_AREAS.length} localities listed on this page, across Patna. Kankarbagh, Boring Road, Rajendra Nagar and Patliputra Colony usually see a technician within 90 minutes. Danapur, Khagaul and Phulwari Sharif can take longer, and we tell you the honest window on the call.` },
+      { q: 'Does the centre give a bill and warranty?', a: `Yes. Every job gets a bill in the name Aqua Perl RO Service Centre, with ${SERVICE.warrantyDays} days of warranty on the labour and ${SERVICE.partsWarrantyMonths} months on any part we fitted written on it. A return visit for the same fault inside that period is free.` },
+    ],
+    serviceType: 'RO Water Purifier Service Centre',
+    related: ['ro-service-in-patna', 'ro-repair-patna', 'ro-amc-patna', 'ro-filter-change-patna'],
   },
 ];
 
