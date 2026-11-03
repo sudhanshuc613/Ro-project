@@ -31,7 +31,22 @@ import { formatINR } from '@/lib/utils/format';
 import { CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
 import { sanitizeHtml } from '@/lib/security/sanitize-html';
 
-export const revalidate = 900; // 15 min ISR
+/* 🔴 4 Nov 2026 — ISR timer badhaya (Vercel CPU 90% se bachne ke liye).
+ * Vercel Hobby: Fluid Active CPU 3h 37m / 4h = 90%. 100% par project
+ * PAUSE ho jaata hai aur Vercel ke docs ke mutabik 30 din tak paused
+ * rehta hai. Naap: 155K invocation me 82K ISR write — yaani har doosri
+ * call page dobara bana rahi thi.
+ *
+ * 🔴 Content purana NAHI hoga: admin se product/rate/banner badalne par
+ *    code revalidatePath()/revalidateTag() chalata hai, jo cache turant
+ *    todta hai. Timer sirf tab chalta hai jab kuch badla hi nahi.
+ *    Ye verify-rate-sync aur verify-banner-upload se jaancha gaya hai.
+ *
+ * 7200 sec = 2 ghante. 13 product page. Product edit par
+ * revalidatePath('/products/<slug>') turant chalta hai.
+ * Bachat: 41,600 -> 5,200 regen prati mahina.
+ */
+export const revalidate = 7200;
 
 interface Props { params: { slug: string } }
 

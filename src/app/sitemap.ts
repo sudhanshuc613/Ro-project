@@ -30,6 +30,29 @@ import {
    DB query sirf EK BAAR chalti hai (2 chhoti query: product slug/updatedAt
    aur category). force-dynamic nahi kiya, kyunki tab HAR request par DB
    query hoti aur bot traffic seedha DB par padta. */
+/* 🔴 4 Nov 2026 — YE 60 HI REHEGA. Badalne ki koshish ki thi, WAPAS KI.
+ *
+ * Baaki 5 route ka timer badhaya gaya (Vercel CPU 90%). Sitemap bhi 900
+ * karne ki koshish ki, par `verify-product-visibility` ne turant pakad liya:
+ *
+ *     FAIL  /sitemap.xml  ->  90s me bhi NAHI 🔴
+ *
+ * Wajah: sitemap Next.js ka METADATA ROUTE hai. Code pehle se
+ * `revalidatePath('/sitemap.xml')` call karta hai (products API me), par
+ * wo is route par kaam nahi karta — ye pehle naap kar likha gaya tha aur
+ * aaj dobara sabit hua. Yaani is EK route par 60-second timer hi
+ * ikloata tarika hai jisse naya product jaldi sitemap me aata hai.
+ *
+ * Bachat ka hisaab, taaki aage koi dobara ye koshish na kare:
+ *     sitemap 60 -> 900   bachata  40,320 regen/mahina
+ *     baaki 5 route        bachate 103,360 regen/mahina
+ * Yaani 103,360 (65%) bina kisi nuksan ke mil rahe hain. Baaki 40,320 ke
+ * liye naya product sitemap me 15 minute late jaata — wo sauda theek nahi.
+ *
+ * 🔴 Gate ko dheela MAT karna. Agar kabhi Next.js metadata route par
+ *    revalidatePath support kar de, tab ye 900 ho sakta hai — pehle
+ *    verify-product-visibility chala kar sabit karna.
+ */
 export const revalidate = 60;
 
 /** Policy page banne ki date — content badle to ye bhi badlo. */

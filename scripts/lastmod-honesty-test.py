@@ -268,6 +268,68 @@ if BASE:
         chk('detector: purani date PAKADTA hai', '2026-10-27' < want)
         chk('detector: nayi date CHHODTA hai', not ('2026-12-01' < want))
 
+# ══════════════════════════════════════════════════════════════════════════
+# 🔴 8. ISR TIMER BUDGET — site ko PAUSE hone se bachane wala guard
+#
+# 4 Nov 2026: Vercel Hobby par Fluid Active CPU 3h 37m / 4h = 90% tha.
+# 100% par Vercel project PAUSE kar deta hai aur unke apne docs ke mutabik
+# "in most cases you will have to wait until 30 days have passed".
+# Yaani site 30 din band = ranking, calls, sab khatam.
+#
+# Naap: 155K invocation me 82K ISR write — har doosri call page dobara
+# bana rahi thi. 5 route ke timer badhaye gaye:
+#     /                      600 -> 3600
+#     /products              300 -> 3600
+#     /products/[slug]       900 -> 7200
+#     /category/[slug]       300 -> 3600
+#     api/redirects          300 -> 3600
+# Bachat: ~103,360 regen prati mahina, aur content par ZERO asar kyunki
+# admin ka har badlav revalidatePath()/revalidateTag() se turant dikhta hai.
+#
+# 🔴 sitemap.ts JAAN-BOOJH KAR 60 par hai. Wahi ek route hai jisko
+#    revalidatePath() tod nahi sakta (metadata route). Use 900 karne ki
+#    koshish ki thi — verify-product-visibility ne pakad liya, wapas kiya.
+#
+# Ye check isliye hai ki koi (mai bhi) dobara ye timer na giraye aur site
+# PAUSE na ho jaye.
+# ══════════════════════════════════════════════════════════════════════════
+print('\n── 8. ISR timer budget (Vercel CPU pause se bachav) ──')
+import glob as _glob
+
+FLOOR = {
+    'src/app/(shop)/page.tsx': 3600,
+    'src/app/(shop)/products/page.tsx': 3600,
+    'src/app/(shop)/products/[slug]/page.tsx': 7200,
+    'src/app/(shop)/category/[slug]/page.tsx': 3600,
+    'src/app/api/redirects/route.ts': 3600,
+}
+for rel, floor in FLOOR.items():
+    fp = os.path.join(ROOT, rel)
+    if not os.path.exists(fp):
+        chk(f'{rel} maujood', False)
+        continue
+    body = open(fp, encoding='utf-8').read()
+    body_nc = re.sub(r'/\*.*?\*/', '', body, flags=re.S)
+    body_nc = re.sub(r'//[^\n]*', '', body_nc)
+    m = re.search(r'^export const revalidate\s*=\s*(\d+)', body_nc, re.M)
+    got = int(m.group(1)) if m else -1
+    chk(f'{rel.split("/")[-2] + "/" + rel.split("/")[-1]:28s} revalidate >= {floor}',
+        got >= floor, f'{got}')
+
+# sitemap jaan-boojh kar 60 par — na kam ho, na zyada
+sm = open(os.path.join(ROOT, 'src/app/sitemap.ts'), encoding='utf-8').read()
+sm_nc = re.sub(r'/\*.*?\*/', '', sm, flags=re.S)
+sm_nc = re.sub(r'//[^\n]*', '', sm_nc)
+mm = re.search(r'^export const revalidate\s*=\s*(\d+)', sm_nc, re.M)
+chk('🔴 sitemap.ts revalidate THEEK 60 (metadata route, revalidatePath kaam nahi karta)',
+    bool(mm) and int(mm.group(1)) == 60, mm.group(1) if mm else 'NAHI MILA')
+
+# Detector khud sahi hai
+chk('detector: comment ke andar ka number nahi uthata',
+    re.search(r'^export const revalidate\s*=\s*(\d+)',
+              re.sub(r'/\*.*?\*/', '', '/* export const revalidate = 1; */\nexport const revalidate = 99;',
+                     flags=re.S), re.M).group(1) == '99')
+
 print()
 print('=' * 74)
 print(f'  PASS: {passed}    FAIL: {failed}')

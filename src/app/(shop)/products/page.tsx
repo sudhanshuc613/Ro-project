@@ -26,7 +26,22 @@ import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
    Compact version — uske saare vaakye 60 char se chhote hain. */
 import BrandNoticeCompact from '@/components/service/BrandNoticeCompact';
 
-export const revalidate = 300;
+/* 🔴 4 Nov 2026 — ISR timer badhaya (Vercel CPU 90% se bachne ke liye).
+ * Vercel Hobby: Fluid Active CPU 3h 37m / 4h = 90%. 100% par project
+ * PAUSE ho jaata hai aur Vercel ke docs ke mutabik 30 din tak paused
+ * rehta hai. Naap: 155K invocation me 82K ISR write — yaani har doosri
+ * call page dobara bana rahi thi.
+ *
+ * 🔴 Content purana NAHI hoga: admin se product/rate/banner badalne par
+ *    code revalidatePath()/revalidateTag() chalata hai, jo cache turant
+ *    todta hai. Timer sirf tab chalta hai jab kuch badla hi nahi.
+ *    Ye verify-rate-sync aur verify-banner-upload se jaancha gaya hai.
+ *
+ * 3600 sec = 1 ghanta. Product add/edit par revalidatePath('/products')
+ * chalta hai, isliye naya product turant dikhta hai.
+ * Bachat: 8,640 -> 720 regen prati mahina.
+ */
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: PRODUCTS_PAGE_SEO.metaTitle,
