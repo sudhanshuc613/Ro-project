@@ -9,6 +9,7 @@ import { SYMPTOMS } from '@/lib/seo/symptom-data';
 import {
   contentDate,
   intentDate,
+  BRAND_NOTICE_DATE,
   SYMPTOM_PAGES_DATE,
   AREA_PAGES_DATE,
   BRAND_PAGES_DATE,
@@ -78,7 +79,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
        ke baad do aur page. Google ka reviewer sabse pehle yahi dhoondhta hai:
        hum kaun hain (about-us) aur shartein kya hain (terms). */
     { url: `${BRAND.url}/terms`, lastModified: TRUST_PAGE_DATE, changeFrequency: 'yearly', priority: 0.4 },
-    { url: `${BRAND.url}/about-us`, lastModified: TRUST_PAGE_DATE, changeFrequency: 'yearly', priority: 0.5 },
+    /* 🔴 /about-us BRAND_DISCLAIMER render karta hai, aur wo 3 Nov ko
+       bilingual hua. /terms usko render nahi karta, isliye wo 2 Nov par hi
+       hai. Dono ko ek hi date dena ek ke liye jhooth hota. */
+    { url: `${BRAND.url}/about-us`, lastModified: BRAND_NOTICE_DATE, changeFrequency: 'yearly', priority: 0.5 },
     /* Customer-care / helpline hub — added 9 Oct 2026. Keyword audit: poori
        TRUST category me exact-phrase coverage 0/8 thi. Autocomplete harvest
        (8 Oct) me "customer care number" cluster = 117 queries, aur Patna ka
@@ -170,7 +174,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     categoryPages = categories.map((c) => ({
       url: `${BRAND.url}/category/${c.slug}`,
-      lastModified: c.updatedAt,
+      /* 🔴 3 Nov 2026 — category page ab BrandNoticeCompact render karta hai.
+         DB ka `updatedAt` us badlav ko nahi jaanta (wo 3 Aug par atka hai),
+         par page ka content sach me badla hai. Isliye dono me se JO BAAD KA
+         ho wahi bheja jaata hai — na kam bolna, na zyada. */
+      lastModified: c.updatedAt > BRAND_NOTICE_DATE ? c.updatedAt : BRAND_NOTICE_DATE,
       changeFrequency: 'daily' as const,
       priority: 0.85,
     }));

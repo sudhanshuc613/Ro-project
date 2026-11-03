@@ -41,31 +41,31 @@ export const CONTENT_DATES: Record<string, Date> = {
      /service-patna "water purifier repair" pe. Dono ka H1 + title badla. */
   /* 🔴 2 Nov 2026 — BRAND_DISCLAIMER ka amber box logo grid ke UPAR aaya
      (BrandLogoGrid.tsx). Ye body copy ka asli badlav hai, isliye date badli. */
-  '/': d('2026-11-02'),
+  '/': d('2026-11-03'),
   /* 🔴 27 Oct 2026 — anchor cannibalization fix. Is page par aane wale
      243 'ro service patna' anchor /ro-service-in-patna par bheje gaye,
      aur iska apna top anchor 'water purifier repair patna' ho gaya.
      Internal links badle = file ke apne niyam se date badalni thi. */
-  '/service-patna': d('2026-10-27'),
+  '/service-patna': d('2026-11-03'),
 
   /* 19 Sep 2026 — H1 glue bug fix (21 brand pages pe "PatnaVisit" chipak
      raha tha). Brand hub bhi usi push me chhua gaya. */
   /* 10/13 — title cannibalization fix: "RO Service in Patna" se "All RO Brands Service in Patna" */
   /* 2 Nov 2026 — disclaimer box BrandHubGrid ke upar aaya. */
-  '/service-patna/brand': d('2026-11-02'),
+  '/service-patna/brand': d('2026-11-03'),
 
   /* 12 Sep 2026 — head-term page banaya (2,932 words, 26 schema types). */
   /* 10/12 — pricing fix (adaptor rate) — Ads landing page */
   /* 27 Oct — anchor fix (161 → 310 andruni link) + title me phone.
      2 Nov — disclaimer logo grid ke upar (BrandCallCards). */
-  '/ro-service-in-patna': d('2026-11-02'),
+  '/ro-service-in-patna': d('2026-11-03'),
 
   /* 18 Sep 2026 — H2 keyword density 5/10 → 10/10, 9 synonym keywords. */
   /* 10/13 — IntentKeywordBlock(service) 20 kw + ExtraKeywordBlock hinglish/urgent + pricing fix */
   /* 2 Nov 2026 — disclaimer box logo grid ke upar. */
-  '/ro-services-patna': d('2026-11-02'),
+  '/ro-services-patna': d('2026-11-03'),
   /* Naya page, 9 Oct 2026 — RO customer care / helpline hub. */
-  '/ro-customer-care-patna': d('2026-10-09'),
+  '/ro-customer-care-patna': d('2026-11-03'),
   '/ro-service-patna-faq': d('2026-10-13'),
 
   /* 16 Sep 2026 — symptom hub live (Hinglish queries, zero web competition). */
@@ -74,7 +74,7 @@ export const CONTENT_DATES: Record<string, Date> = {
 
   /* Catalog aur static pages — jab aakhri baar sach me chhue gaye. */
   /* 10/13 — IntentKeywordBlock(shop) + ExtraKeywordBlock(shop) 7 dukaan kw */
-  '/products': d('2026-10-13'),
+  '/products': d('2026-11-03'),
   /* 10/13 — ExtraKeywordBlock(amc) 3 AMC kw */
   '/amc-plans': d('2026-10-13'),
   /* 10/11 — +3 H2 +7 H3, breadcrumb schema */
@@ -111,7 +111,7 @@ export const CONTENT_DATES: Record<string, Date> = {
 
 /* intent pages: 13 Oct — IntentKeywordBlock (install variant),
    ExtraKeywordBlock (commercial), aur 12 Oct ka pricing fix. */
-export const INTENT_PAGES_DATE = d('2026-10-27');
+export const INTENT_PAGES_DATE = d('2026-11-03');
 
 /** Symptom pages (5) — 16 Sep ko banaye gaye. */
 /* symptom pages: 12 Oct — symptom-data.ts me SMPS ka rate theek kiya
@@ -122,13 +122,13 @@ export const SYMPTOM_PAGES_DATE = d('2026-10-12');
 /* area pages: 13 Oct — AreaKeywordBlock (11 Oct) + pricing fix (12 Oct)
    + area-city-label title/H1 fix aur BrandAreaBlock 19 brand (13 Oct).
    Rendered words 2,400 → 3,560. */
-export const AREA_PAGES_DATE = d('2026-10-27');
+export const AREA_PAGES_DATE = d('2026-11-03');
 
 /** 21 brand pages — 19 Sep ko H1 glue bug theek hua. */
 /* brand pages: 13 Oct — BrandKeywordBlock (12 Oct, 5 naye section) +
    model-wise H4 + customer care number + BrandAreaListBlock 18 ilaake (13 Oct).
    Rendered words 1,700 → 2,610. */
-export const BRAND_PAGES_DATE = d('2026-10-27');
+export const BRAND_PAGES_DATE = d('2026-11-03');
 
 /** Author page. */
 export const AUTHOR_PAGE_DATE = d('2026-09-15');
@@ -154,6 +154,35 @@ export function contentDate(path: string): Date | undefined {
    ki lastmod sach bole. Isliye override map — jiska naam yahan hai uski
    apni date, baaki sab INTENT_PAGES_DATE par.
    ══════════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════════
+   🔴 BRAND_NOTICE_DATE — 3 Nov 2026
+   ──────────────────────────────────────────────────────────────────────────
+   Jis din brand disclaimer AAKHRI BAAR badla. Teen cheezon me se koi bhi
+   badlo to YE DATE BADALNI HAI:
+
+       src/components/service/BrandNoticeBar.tsx
+       src/components/service/BrandNoticeCompact.tsx
+       src/lib/seo/brand-logos.ts  → BRAND_DISCLAIMER
+
+   🔴 Ye constant kyun bana (meri DOOSRI baar ki wahi galti):
+
+     2 Nov ko maine maana ki lastmod fix ho gaya. 3 Nov ko maine ~120 page
+     par naya brand notice daala — brand page, area page, intent page,
+     /products, /service-patna, /ro-customer-care-patna, category — aur
+     unka lastmod phir se bump NAHI kiya.
+
+     Live naap kar dekha: 125 page notice dikha rahe the, aur unme se 124
+     ka lastmod abhi bhi purana tha. Yaani Google ko bola ja raha tha
+     "kuch nahi badla" theek us waqt jab naya disclaimer dikhna sabse
+     zaroori tha — Ads appeal ke beech me.
+
+     Pehli baar ye galti hui to maine gate banaya, par wo gate sirf
+     "date >= 27 Oct" dekhta tha. Isliye wo chup raha. Ab gate LIVE page
+     padhta hai: jis page par notice dikh raha hai, uska lastmod is date
+     se purana nahi ho sakta. Us check ko dhokha dena mumkin nahi.
+   ══════════════════════════════════════════════════════════════════════════ */
+export const BRAND_NOTICE_DATE = d('2026-11-03');
+
 export const INTENT_DATE_OVERRIDES: Record<string, Date> = {
   'ro-service-centre-patna': d('2026-11-03'),
 };

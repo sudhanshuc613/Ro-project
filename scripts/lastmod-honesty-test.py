@@ -145,14 +145,128 @@ if BASE:
         chk('🔴 har lastmod W3C format me', not bad_fmt, str(bad_fmt[:3]))
         fut = [x for x in lms if x[:10] > TODAY.isoformat()]
         chk('🔴 sitemap me koi future lastmod nahi', not fut, str(fut[:3]))
-        # Build-time date leak: agar 50%+ URL ki date AAJ ki hai to `new Date()` wapas aa gaya.
-        today_n = sum(1 for x in lms if x[:10] == TODAY.isoformat())
-        chk('🔴 aadhe se zyada URL par "aaj" ki date nahi (new Date() leak)',
-            len(lms) == 0 or today_n < len(lms) * 0.5,
-            f'{today_n}/{len(lms)} par aaj ki date')
+        # ══════════════════════════════════════════════════════════════════
+        # 🔴 `new Date()` LEAK CHECK — 3 Nov 2026 ko SAHI kiya gaya
+        #
+        # Pehla version ye dekhta tha ki 50%+ URL par "aaj" ki date to nahi.
+        # Wo GALAT tha: jis din hum sach me 124 page deploy karte hain, us
+        # din unki date aaj ki HONI hi chahiye. Gate ne theek usi din jhootha
+        # FAIL diya — yaani check ki soch hi galat thi.
+        #
+        # `new Date()` leak ki asli pehchaan ye hai:
+        #   (a) har request par value BADAL jaati hai, aur
+        #   (b) usme asli ghadi ka time hota hai, aadhi raat nahi.
+        # Hamari saari date `d('YYYY-MM-DD')` se banti hain = T00:00:00.000Z.
+        # DB wali (product/category) me asli time ho sakta hai, wo theek hai.
+        #
+        # Ab wahi do cheezein naapi jaati hain. Ye purane check se KAHIN
+        # ZYADA SAKHT hai aur kisi bhi din sahi jawab deta hai.
+        # ══════════════════════════════════════════════════════════════════
+        import time as _t
+        _t.sleep(2)
+        st_b, xml_b = None, ''
+        try:
+            _r = urllib.request.urlopen(urllib.request.Request(
+                BASE + '/sitemap.xml', headers={'User-Agent': 'Mozilla/5.0'}), timeout=40)
+            xml_b = _r.read().decode('utf8', 'ignore')
+        except Exception:
+            pass
+        lms_b = re.findall(r'<lastmod>\s*([^<\s]+)\s*</lastmod>', xml_b)
+        chk('🔴 do fetch me lastmod BILKUL same (new Date() leak nahi)',
+            bool(lms_b) and lms == lms_b,
+            f'{len(lms)} vs {len(lms_b)} · same: {lms == lms_b}')
+
+        # Abhi-abhi bani date = request par generate hui = leak.
+        #
+        # 🔴 Sirf CODE-DRIVEN URL par. /products/<slug> aur /category/<slug>
+        #    apna lastmod DB ke `updatedAt` se lete hain — owner admin me
+        #    product edit kare to wo sach me abhi ka ho sakta hai, aur local
+        #    test DB me to seed abhi-abhi chalta hai. Un par "fresh" hona
+        #    bilkul sahi hai. Code wali date kabhi fresh nahi honi chahiye.
+        pair_list = re.findall(
+            r'<loc>\s*([^<\s]+)\s*</loc>\s*<lastmod>\s*([^<\s]+)\s*</lastmod>', xml)
+        if not pair_list:
+            pair_list = list(zip(re.findall(r'<loc>\s*([^<\s]+)\s*</loc>', xml), lms))
+        now = dt.datetime.now(dt.timezone.utc)
+        fresh = []
+        for u_, x in pair_list:
+            pth = re.sub(r'^https?://[^/]+', '', u_) or '/'
+            if pth.startswith('/products/') or pth.startswith('/category/'):
+                continue          # DB-driven, fresh hona jayaz hai
+            try:
+                tsv = dt.datetime.fromisoformat(x.replace('Z', '+00:00'))
+            except ValueError:
+                continue
+            if 0 <= (now - tsv).total_seconds() < 900:
+                fresh.append(f'{pth} {x}')
+        chk('🔴 code-driven lastmod me se koi pichhle 15 min ka nahi',
+            not fresh, f'{len(fresh)} mile: {fresh[:3]}')
+
+        # Code wali saari date aadhi raat par honi chahiye.
+        midnight = sum(1 for x in lms if x.endswith('T00:00:00.000Z'))
+        chk('code-driven date aadhi raat par hain',
+            midnight >= len(lms) * 0.8,
+            f'{midnight}/{len(lms)} midnight (baaki DB ke updatedAt)')
         stale = sum(1 for x in lms if x[:10] <= '2026-10-13')
         chk('🔴 2026-10-13 ya purani date wale URL 20 se kam',
             stale < 20, f'{stale}/{len(lms)} URL abhi bhi 13 Oct ya purane')
+
+# ══════════════════════════════════════════════════════════════════════════
+# 🔴 7. SABSE SAKHT CHECK — "notice dikh raha hai to date bhi nayi ho"
+#
+# Ye 3 Nov 2026 ko joda gaya kyunki maine WAHI GALTI DOOSRI BAAR KI.
+#
+#   2 Nov : 393 anchor + 149 page ka footer badla, lastmod bump nahi kiya.
+#           Gate banaya. Gate ne sirf "date >= 27 Oct" check kiya.
+#   3 Nov : ~120 page par naya brand notice daala, lastmod phir bump nahi
+#           kiya. Gate CHUP RAHA — kyunki saari date 27 Oct hi thi, aur
+#           27 Oct ">= 27 Oct" hai. Test pass, kaam galat.
+#
+#   Live naap: 125 page notice dikha rahe the, 124 ka lastmod purana tha.
+#
+# Ab gate ek CONSTANT par nahi, ASLI PAGE par bharosa karta hai:
+#   har sitemap URL khol kar dekho notice hai ya nahi — agar hai to uska
+#   lastmod BRAND_NOTICE_DATE se purana nahi ho sakta.
+#
+# Isko dhokha dene ka ek hi tarika hai: notice hata do. Aur wo
+# verify-brand-notice turant pakad lega.
+# ══════════════════════════════════════════════════════════════════════════
+if BASE:
+    print('\n── 7. Jis page par brand notice dikh raha, uski date nayi ho ──')
+    bnd = re.search(r"BRAND_NOTICE_DATE = d\('([\d-]+)'\)", src)
+    chk('BRAND_NOTICE_DATE constant maujood', bool(bnd),
+        bnd.group(1) if bnd else 'NAHI MILA')
+    if bnd and xml:
+        want = bnd.group(1)
+        pairs = re.findall(r'<loc>\s*([^<\s]+)\s*</loc>\s*<lastmod>\s*([^<\s]+)\s*</lastmod>', xml)
+        if not pairs:
+            L = re.findall(r'<loc>\s*([^<\s]+)\s*</loc>', xml)
+            M = re.findall(r'<lastmod>\s*([^<\s]+)\s*</lastmod>', xml)
+            pairs = list(zip(L, M))
+        chk('sitemap me loc+lastmod jode mile', len(pairs) > 100, f'{len(pairs)}')
+        stale, unread, withnotice = [], [], 0
+        for u, lm in pairs:
+            path = re.sub(r'^https?://[^/]+', '', u) or '/'
+            try:
+                r = urllib.request.urlopen(
+                    urllib.request.Request(BASE + path, headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                                      '(KHTML, like Gecko) Chrome/131.0 Safari/537.36'}), timeout=35)
+                hh = r.read().decode('utf8', 'ignore')
+            except Exception:
+                unread.append(path)
+                continue
+            if ('data-brand-notice' in hh) or ('We are NOT an authorised' in hh):
+                withnotice += 1
+                if lm[:10] < want:
+                    stale.append(f'{path} ({lm[:10]})')
+        chk('🔴 saare sitemap page padhe gaye', not unread,
+            f'chhoote: {unread[:4]}')
+        chk('🔴 notice wale HAR page ka lastmod >= BRAND_NOTICE_DATE', not stale,
+            f'{withnotice} page par notice · purani date wale {len(stale)}: {stale[:5]}')
+        # Detector khud sahi hai
+        chk('detector: purani date PAKADTA hai', '2026-10-27' < want)
+        chk('detector: nayi date CHHODTA hai', not ('2026-12-01' < want))
 
 print()
 print('=' * 74)
