@@ -64,6 +64,11 @@ import {
   breadcrumbSchema, serviceListSchema, jsonLd,
 } from '@/lib/seo/schema';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
+/* 🔴 3 Nov 2026 — ye page har brand ka OFFICIAL customer care number likhta
+   hai. UBP ke nazariye se site ka sabse risky page yahi hai: padhne wale ko
+   lag sakta hai ki hamara un brands se koi rishta hai. Tha koi disclaimer
+   nahi (naapa gaya: 84 brand mention, 0 disclaimer). Ab hero ke turant baad. */
+import BrandNoticeBar from '@/components/service/BrandNoticeBar';
 import { getGbpSettings } from '@/lib/settings';
 import { SERVICE_AREAS } from '@/lib/seo/patna-service-data';
 import FaqAccordion from '@/components/home/FaqAccordion';
@@ -230,6 +235,9 @@ export default async function RoCustomerCarePatnaPage() {
             </dl>
           </div>
         </section>
+
+        {/* 🔴 Hero ke turant baad — brand ke official number dikhne se PEHLE. */}
+        <BrandNoticeBar />
 
         {/* ──────────────── HAMARA NUMBER — "contact" queries ──────────────── */}
         <section className="px-4 py-12">

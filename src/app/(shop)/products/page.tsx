@@ -21,6 +21,10 @@ import IntentKeywordBlock from '@/components/service/IntentKeywordBlock';
    ("ro shop near me"). Naye page nahi banaye — doorway/scaled-content policy.
    Naya block, purana kuch nahi badla. */
 import ExtraKeywordBlock from '@/components/service/ExtraKeywordBlock';
+/* 🔴 3 Nov 2026 — is page par brand ke naam 25+ baar aate hain. Ads appeal
+   reject hone ke baad naapa gaya ki yahan koi disclaimer nahi tha.
+   Compact version — uske saare vaakye 60 char se chhote hain. */
+import BrandNoticeCompact from '@/components/service/BrandNoticeCompact';
 
 export const revalidate = 300;
 
@@ -164,6 +168,10 @@ export default async function AllProductsPage({
         </div>
 
         {/* Trust block + FAQs. Below the grid so buyers reach products first. */}
+        <div className="mt-12">
+          <BrandNoticeCompact />
+        </div>
+
         <section className="mt-14 border-t border-slate-100 pt-10">
           <h2 className="font-display text-xl font-bold text-navy-700 sm:text-2xl">
             Why buy from a service company

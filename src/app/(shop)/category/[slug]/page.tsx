@@ -7,6 +7,10 @@ import FilterSidebar from '@/components/product/FilterSidebar';
 import SortDropdown from '@/components/product/SortDropdown';
 import CategoryChips from '@/components/product/CategoryChips';
 import CategorySeoContent from '@/components/product/CategorySeoContent';
+/* 🔴 3 Nov 2026 — is page par brand ke naam 25+ baar aate hain. Ads appeal
+   reject hone ke baad naapa gaya ki yahan koi disclaimer nahi tha.
+   Compact version — uske saare vaakye 60 char se chhote hain. */
+import BrandNoticeCompact from '@/components/service/BrandNoticeCompact';
 import { EmptyState, Pagination } from '../../products/page';
 import {
   listProducts, parseListParams, getCategoryBySlug, getAllBrands, getAllCategories,
@@ -182,6 +186,9 @@ export default async function CategoryPage({
           {/* Buying guide + price table + FAQs. Below the grid so shoppers who
               already know what they want are never pushed past it. */}
           {seo && <CategorySeoContent seo={seo} />}
+        </div>
+        <div className="container mx-auto px-4 pt-10">
+          <BrandNoticeCompact />
         </div>
       </main>
     </>

@@ -43,6 +43,10 @@ const SERVICES = [
   { label: 'Customer Care Number', href: '/ro-customer-care-patna' },
 ];
 
+/* 🔴 49 character. 60 se chhota rakhna ZAROORI hai — upar FooterCol ka
+   comment dekho. Ginti: python3 -c "print(len('...'))" */
+const BRAND_COL_NOTE = 'Independent repairer. Not brand-authorised.';
+
 const BRANDS = [
   { label: 'Kent RO Service', href: '/service-patna/brand/kent' },
   { label: 'Aquaguard Service', href: '/service-patna/brand/aquaguard' },
@@ -120,7 +124,7 @@ export default async function Footer() {
           <FooterCol title="Shop" links={SHOP} />
           <FooterCol title="Services & Rates" links={SERVICES} />
           <FooterCol title="RO Service in Patna" links={AREAS} />
-          <FooterCol title="Brands We Repair" links={BRANDS} />
+          <FooterCol title="Brands We Repair" links={BRANDS} note={BRAND_COL_NOTE} />
           <FooterCol title="Support" links={SUPPORT} />
         </div>
 
@@ -167,7 +171,23 @@ export default async function Footer() {
   );
 }
 
-function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
+/* 🔴 3 Nov 2026 — `note` prop add hua.
+ * Wajah: footer ke "Brands We Repair" column me 5 brand ke naam seedhe link
+ * ki tarah pade the aur unke aas-paas koi inkaar nahi tha. Ye HAR page par
+ * dikhta hai. Ab us column ke neeche ek chhoti si line aati hai.
+ *
+ * 🔴 Line 60 CHARACTER SE CHHOTI honi CHAHIYE. `verify-area-depth` 60+ char
+ *    ke vaakya ko duplicate ginta hai aur headroom sirf 0.55pp bacha hai.
+ *    Isse lambi line 83 area page ka gate tod degi. Naapa gaya: 49 char. */
+function FooterCol({
+  title,
+  links,
+  note,
+}: {
+  title: string;
+  links: { label: string; href: string }[];
+  note?: string;
+}) {
   return (
     <div>
       <h3 className="mb-4 text-sm font-bold text-white">{title}</h3>
@@ -180,6 +200,9 @@ function FooterCol({ title, links }: { title: string; links: { label: string; hr
           </li>
         ))}
       </ul>
+      {note ? (
+        <p className="mt-3 text-xs leading-relaxed text-navy-300">{note}</p>
+      ) : null}
     </div>
   );
 }

@@ -41,6 +41,11 @@ import NearMeResolver from '@/components/service/NearMeResolver';
    ko heading me laata hai, BINA naya page banaye (doorway penalty se bachne
    ke liye). Purana kuch nahi badla. */
 import BrandAreaBlock from '@/components/service/BrandAreaBlock';
+/* 🔴 3 Nov 2026 — is page par brand ke naam 82 BAAR aate hain aur poora
+   disclaimer kahin nahi tha. Compact version isliye hai kyunki uske saare
+   vaakye 60 char se chhote hain — verify-area-depth unhe duplicate nahi
+   ginta. Dekho: src/components/service/BrandNoticeCompact.tsx */
+import BrandNoticeCompact from '@/components/service/BrandNoticeCompact';
 import { BRAND, CONTACT, SERVICE } from '@/lib/constants';
 import { getGbpSettings } from '@/lib/settings';
 import { areaPath } from '@/lib/seo/area-url';
@@ -620,6 +625,10 @@ export default async function AreaPage({ params }: { params: { area: string } })
             padhta hi nahi). Ab heading me hain, apne content ke saath. */}
         <AreaKeywordBlock area={area} nearby={linkOut} />
 
+        {/* 🔴 Brand list se PEHLE — brand naam dikhne se pehle inkaar dikhe. */}
+        <div className="container mx-auto px-4 pt-10">
+          <BrandNoticeCompact />
+        </div>
         <BrandAreaBlock area={area} brands={SERVICED_BRANDS} />
 
         <section className="border-t border-navy-50 bg-sand-100 py-10">

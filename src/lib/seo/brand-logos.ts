@@ -122,8 +122,26 @@ export const BRAND_TEXT_ONLY: { name: string; href?: string }[] = [
  * 🔴 DISCLAIMER — legal mitigation. Grid ke neeche hamesha dikhna chahiye.
  * Ise hatane se nominative fair use ka bachaav kamzor ho jaata hai.
  */
+/* 🔴 3 Nov 2026 — ab ENGLISH PEHLE, Hinglish baad me.
+ *
+ * Wajah: Google Ads appeal 6452978648 reject hua. Disclaimer site par maujood
+ * tha, par poora Hinglish me — "Aqua Perl ek swatantra RO service centre
+ * hai...". Google ka policy reviewer aam taur par India me nahi hota aur
+ * Hinglish nahi padhta. Yaani jis ek aadmi ke liye ye line likhi gayi thi,
+ * usi ko wo samajh nahi aayi.
+ *
+ * 🔴 Hinglish ke DONO phrase jaan-boojh kar bilkul waise hi rakhe gaye hain:
+ *      "maalikon ki property"
+ *      "authorised service centre ya dealer NAHI"
+ *    scripts/ads-policy-test.py inhi do string ko dhoondhta hai. Inhe badla
+ *    to wo gate chup-chaap toot jayega. Sirf English AAGE jodi gayi hai. */
 export const BRAND_DISCLAIMER =
-  'Aqua Perl ek swatantra (independent) RO service centre hai. Upar diye gaye sabhi ' +
+  'Aqua Perl is an independent water purifier repair business. We are NOT an ' +
+  'authorised service centre, dealer, distributor or partner of any brand, and we ' +
+  'are not affiliated with any brand. All brand names and logos shown here are the ' +
+  'property of their respective owners and are used only to describe the machines ' +
+  'we repair. ' +
+  'Hindi me: Aqua Perl ek swatantra (independent) RO service centre hai. Upar diye gaye sabhi ' +
   'brand naam aur logo unke apne maalikon ki property hain. Hum kisi bhi brand ke ' +
   'authorised service centre ya dealer NAHI hain — hum in sabhi brands ki machine par ' +
   'repair aur service karte hain.';

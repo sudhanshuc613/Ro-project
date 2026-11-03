@@ -20,6 +20,10 @@ import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { getHinglishBlock } from '@/lib/seo/hinglish-longtail';
 import HinglishQueryBlock from '@/components/service/HinglishQueryBlock';
+/* 🔴 3 Nov 2026 — is page par brand ke naam 25+ baar aate hain. Ads appeal
+   reject hone ke baad naapa gaya ki yahan koi disclaimer nahi tha.
+   Compact version — uske saare vaakye 60 char se chhote hain. */
+import BrandNoticeCompact from '@/components/service/BrandNoticeCompact';
 
 export const revalidate = 86400;
 
@@ -178,6 +182,10 @@ export default async function ServicePatnaPillar() {
         {/* Services — the JOB axis. Added 8 Sep 2026: this pillar linked out to
             every area and every brand but had no route to the individual jobs,
             so "ro installation charges patna" had nowhere to land. */}
+        <div className="container mx-auto px-4 pt-8">
+          <BrandNoticeCompact />
+        </div>
+
         <section className="border-b border-navy-50 py-14">
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-2xl text-center">
