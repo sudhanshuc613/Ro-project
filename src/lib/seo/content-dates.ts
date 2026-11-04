@@ -63,7 +63,7 @@ export const CONTENT_DATES: Record<string, Date> = {
   /* 18 Sep 2026 — H2 keyword density 5/10 → 10/10, 9 synonym keywords. */
   /* 10/13 — IntentKeywordBlock(service) 20 kw + ExtraKeywordBlock hinglish/urgent + pricing fix */
   /* 2 Nov 2026 — disclaimer box logo grid ke upar. */
-  '/ro-services-patna': d('2026-11-03'),
+  '/ro-services-patna': d('2026-11-04'),
   /* Naya page, 9 Oct 2026 — RO customer care / helpline hub. */
   '/ro-customer-care-patna': d('2026-11-03'),
   '/ro-service-patna-faq': d('2026-10-13'),
@@ -114,7 +114,7 @@ export const CONTENT_DATES: Record<string, Date> = {
 
 /* intent pages: 13 Oct — IntentKeywordBlock (install variant),
    ExtraKeywordBlock (commercial), aur 12 Oct ka pricing fix. */
-export const INTENT_PAGES_DATE = d('2026-11-03');
+export const INTENT_PAGES_DATE = d('2026-11-04');
 
 /** Symptom pages (5) — 16 Sep ko banaye gaye. */
 /* symptom pages: 12 Oct — symptom-data.ts me SMPS ka rate theek kiya
@@ -131,7 +131,7 @@ export const AREA_PAGES_DATE = d('2026-11-03');
 /* brand pages: 13 Oct — BrandKeywordBlock (12 Oct, 5 naye section) +
    model-wise H4 + customer care number + BrandAreaListBlock 18 ilaake (13 Oct).
    Rendered words 1,700 → 2,610. */
-export const BRAND_PAGES_DATE = d('2026-11-03');
+export const BRAND_PAGES_DATE = d('2026-11-04');
 
 /** Author page. */
 export const AUTHOR_PAGE_DATE = d('2026-09-15');
@@ -184,6 +184,9 @@ export function contentDate(path: string): Date | undefined {
      padhta hai: jis page par notice dikh raha hai, uska lastmod is date
      se purana nahi ho sakta. Us check ko dhokha dena mumkin nahi.
    ══════════════════════════════════════════════════════════════════════════ */
+/* 🔴 4 Nov 2026 — MoneyKeywordBlock se brand aur intent page ka content
+   badla, isliye BRAND_PAGES_DATE aur INTENT_PAGES_DATE aaj ki ho gayi.
+   Ye constant brand DISCLAIMER ke liye hai, wo 3 Nov ko hi badla tha. */
 export const BRAND_NOTICE_DATE = d('2026-11-03');
 
 export const INTENT_DATE_OVERRIDES: Record<string, Date> = {

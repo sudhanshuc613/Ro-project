@@ -79,6 +79,9 @@ import NearMeBlock from '@/components/service/NearMeBlock';
 /* 🔴 3 Nov 2026 — sirf /ro-service-centre-patna par. Dekho component ka
    comment: /ro-service-in-patna ko jaan-boojh kar nahi chhua. */
 import CentreAreaGrid from '@/components/service/CentreAreaGrid';
+/* 🔴 4 Nov 2026 — kwscan: INTENT ke 19 money keyword sirf body me the.
+   Ab har ek apni sahi page par H2 me. Dekho component ka comment. */
+import MoneyKeywordBlock from '@/components/service/MoneyKeywordBlock';
 /* 🔴 3 Nov 2026 — is page par brand ke naam 25+ baar aate hain. Ads appeal
    reject hone ke baad naapa gaya ki yahan koi disclaimer nahi tha.
    Compact version — uske saare vaakye 60 char se chhote hain. */
@@ -540,6 +543,8 @@ export default async function ServiceIntentPage({ params }: { params: { intent: 
             <BrandNoticeCompact />
           </div>
         )}
+        {intent.moneyBlock?.length ? <MoneyKeywordBlock items={intent.moneyBlock} /> : null}
+
         {isCentrePage && <CentreAreaGrid />}
 
         {params.intent === 'ro-installation-patna' && (

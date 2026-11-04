@@ -43,6 +43,9 @@ import BrandNoticeBar from '@/components/service/BrandNoticeBar';
    long-tail near-me query. Teen par hamara koi page tha hi nahi.
    Dekho: src/components/service/NearMeLongTail.tsx */
 import NearMeLongTail from '@/components/service/NearMeLongTail';
+/* 🔴 4 Nov 2026 — kwscan: INTENT ke 19 money keyword sirf body me the.
+   Ab har ek apni sahi page par H2 me. Dekho component ka comment. */
+import MoneyKeywordBlock from '@/components/service/MoneyKeywordBlock';
 
 export const revalidate = 86400;
 
@@ -204,6 +207,39 @@ export default async function BrandServicePage({ params }: { params: { brand: st
         <BrandNoticeBar brand={short} />
 
         <NearMeLongTail variant="brand" brandName={short} />
+
+        {/* 🔴 kwscan: BRAND ke 14 keyword sirf body me the — "Kent RO repair
+            Patna", "Kent water purifier service Patna", "Kent AMC Patna"
+            wagairah. Ab har brand page par apne brand ke saath H2 me.
+            21 brand × 4 = 84 variant ek saath cover. */}
+        <MoneyKeywordBlock
+          title={`${short} — Patna Me Kya Kya Hota Hai`}
+          items={[
+            { h2: `${short} RO Repair Patna`, lines: [
+              `${short} ki machine ghar par hi theek hoti hai.`,
+              'Visit ₹200, phir kaam shuru hone se pehle likhit quote.',
+              'Purana part aapko wapas milta hai.' ] },
+            { h2: `${short} Service Patna`, lines: [
+              `${short} ke liye filter, membrane aur pump sab stock me rehte hain.`,
+              'Patna me 90 minute ka response target hai.',
+              `Hum ${short} ke authorised centre nahi hain.` ] },
+            /* 🔴 Yahan pehle `${short} Water Purifier Service Patna` tha.
+               verify-seo-fixes ne turant pakad liya: us heading me poora
+               phrase "water purifier service patna" aa jaata hai, jo
+               /service-patna ka apna keyword hai — aur wo 21 brand page par
+               dohra kar us page ko kamzor kar deta. Gate ko dheela karne ke
+               bajay heading badli. Ab brand ke filter/membrane wali baat,
+               bina kisi guarded phrase ke. */
+            { h2: `${short} Filter Aur Membrane Patna`, lines: [
+              `${short} ke filter aur membrane stock me rehte hain.`,
+              'Servicing me housing khulti hai, tank saaf hota hai, TDS set hota hai.',
+              'Pehle aur baad dono TDS reading job card par likhi jaati hai.' ] },
+            { h2: `${short} AMC Patna`, lines: [
+              'Saal bhar ka plan — teen visit aur filter shaamil.',
+              'Do alag filter change se sasta padta hai.',
+              'Laga hua part 12 mahine warranty me rehta hai.' ] },
+          ]}
+        />
 
         <section className="py-14">
           <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[1.4fr,1fr]">

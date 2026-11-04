@@ -34,6 +34,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import BannerPhoneBadge from '@/components/common/BannerPhoneBadge';
+/* 🔴 4 Nov 2026 — kwscan: INTENT ke 19 money keyword sirf body me the.
+   Ab har ek apni sahi page par H2 me. Dekho component ka comment. */
+import MoneyKeywordBlock from '@/components/service/MoneyKeywordBlock';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { SERVICE_AREAS, SERVICED_BRANDS } from '@/lib/seo/patna-service-data';
 import BrandLogoGrid from '@/components/home/BrandLogoGrid';
@@ -466,6 +469,34 @@ export default async function ServiceHubPage() {
             </div>
           </div>
         </section>
+        {/* 🔴 kwscan: ye 5 keyword sirf is page ke BODY me the. Ab H2 me.
+            Baaki money keyword apni-apni intent page par gaye — ek
+            keyword, ek page. */}
+        <MoneyKeywordBlock
+          items={[
+            { h2: 'RO Visit Charge Patna', lines: [
+              'Visit charge ₹200 hai, fixed.',
+              'Isme ghar aana, poori jaanch aur TDS report shaamil hai.',
+              'Kaam karwana ya na karwana aapki marzi — isse zyada kuch nahi lagta.' ] },
+            { h2: 'Cheap RO Service Patna — Sasta Aur Sasti Me Farak', lines: [
+              'Sabse sasta quote aksar sabse mehnga padta hai.',
+              'Bina brand ka membrane saal bhar bhi nahi chalta.',
+              'Hum rate pehle likh kar dete hain, taaki tulna kar sakein.' ] },
+            { h2: 'Affordable RO Repair Patna', lines: [
+              'Chhoti dikkat me poora part badalne ki salah nahi dete.',
+              'Tubing, float valve, elbow jaise kaam ₹20 se ₹350 me ho jaate hain.',
+              'Membrane tabhi, jab TDS reading sabit kare.' ] },
+            { h2: 'RO TDS Adjustment Patna', lines: [
+              'TDS controller set karna alag kaam hai, membrane badalna nahi.',
+              'Patna ke kai ilaake me raw TDS 400 se upar hai.',
+              'Peene ke liye 60 se 150 TDS theek maana jaata hai.' ] },
+            { h2: 'RO UV Lamp Replacement Patna', lines: [
+              'UV lamp ballast ke saath ₹400 se ₹1,200.',
+              'Lamp jalta dikhe tab bhi uski UV power khatam ho sakti hai.',
+              'Isliye umar dekhi jaati hai, roshni nahi.' ] },
+          ]}
+        />
+
       </main>
     </>
   );

@@ -147,6 +147,13 @@ export interface ServiceIntent {
   serviceType: string;
   /** Related intents to link to, by slug — builds the internal graph. */
   related: string[];
+  /* 🔴 4 Nov 2026 — paise wale keyword, H2 me.
+     kwscan: INTENT ke 19 keyword sirf BODY me the (sabse bada gap, aur
+     sabse zyada paisa laane wala). Har keyword us page par gaya jo us kaam
+     ka pehle se maalik hai — ek keyword, ek page.
+     🔴 heading me "in" MAT daalna, warna exact phrase match toot jaata hai.
+     🔴 "₹X onwards" MAT likhna — verify-billing ka budget 17/17 bhara hai. */
+  moneyBlock?: { h2: string; lines: string[] }[];
 }
 
 const V = SERVICE.visitCharge;
@@ -264,6 +271,17 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'RO Water Purifier Installation',
     related: ['ro-amc-patna', 'ro-repair-patna', 'commercial-ro-service-patna'],
+    moneyBlock: [
+      {
+        h2: 'RO Installation Charges Patna',
+        lines: [
+          'Fitting charge ₹500 hai, flat.',
+          'Humse purifier liya ho to fitting free hai.',
+          'Isme wall mounting, tapping, drain line aur pressure check shaamil hai.',
+          'Pehla TDS likh kar diya jaata hai.',
+        ],
+      },
+    ],
   },
 
   /* ═════════════════════════════════════════════════════════════════════
@@ -360,6 +378,24 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'RO Water Purifier Annual Maintenance Contract',
     related: ['ro-installation-patna', 'ro-filter-change-patna', 'ro-repair-patna'],
+    moneyBlock: [
+      {
+        h2: 'RO AMC Price Patna',
+        lines: [
+          'Basic AMC ₹1,499 se ₹1,999 saal ka.',
+          'Gold AMC ₹2,499 se ₹3,200 saal ka, isme filter bhi aate hain.',
+          'Do alag filter change se sasta padta hai.',
+        ],
+      },
+      {
+        h2: 'RO AMC Patna — Kya Milta Hai',
+        lines: [
+          'Saal me teen visit, har visit par TDS test.',
+          'Phone par shikayat ke 24 ghante ke andar visit.',
+          'Laga hua part 12 mahine warranty me rehta hai.',
+        ],
+      },
+    ],
   },
 
   /* ═════════════════════════════════════════════════════════════════════
@@ -474,6 +510,40 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'RO Water Purifier Repair',
     related: ['ro-filter-change-patna', 'ro-membrane-replacement-patna', 'ro-amc-patna'],
+    moneyBlock: [
+      {
+        h2: 'RO Repair Price Patna',
+        lines: [
+          'Visit ₹200 — isme jaanch aur TDS report hai.',
+          'Part ka daam alag, aur kaam shuru hone se pehle likh kar milta hai.',
+          'Mana kar do to sirf ₹200 lagta hai.',
+        ],
+      },
+      {
+        h2: 'RO Repair At Home Patna',
+        lines: [
+          'Poora kaam aapke ghar par hota hai.',
+          'Machine utaarni ya kahin le jaani nahi padti.',
+          'Technician spare part saath laata hai.',
+        ],
+      },
+      {
+        h2: 'RO Pump Repair Patna',
+        lines: [
+          'Booster pump ya motor ₹1,000 se ₹2,800.',
+          'Upar ke floor aur Kidwaipuri, R Block jaise kam-pressure ilaake me aam hai.',
+          'SMPS adaptor alag se ₹700 se ₹1,100.',
+        ],
+      },
+      {
+        h2: 'RO Leakage Fix Patna',
+        lines: [
+          'Tubing, elbow aur connector ₹20 se ₹250.',
+          'Housing ya bowl crack ho to ₹250 se ₹700.',
+          'Har joint working pressure par dobara test hota hai.',
+        ],
+      },
+    ],
   },
 
   /* ═════════════════════════════════════════════════════════════════════
@@ -583,6 +653,24 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'RO Water Purifier Filter Replacement',
     related: ['ro-membrane-replacement-patna', 'ro-amc-patna', 'ro-repair-patna'],
+    moneyBlock: [
+      {
+        h2: 'RO Filter Change Cost Patna',
+        lines: [
+          'Sediment + carbon dono ₹450 se ₹900, laga hua.',
+          'Teeno filter ka set ₹350 se ₹900.',
+          'Sirf sediment ₹150 se ₹300.',
+        ],
+      },
+      {
+        h2: 'RO Filter Change Patna — Kab Badalna Chahiye',
+        lines: [
+          'Patna ki borewell supply par 3 se 4 mahine.',
+          'Dabbe par 6 mahine likha hota hai, yahan utna nahi chalta.',
+          'Purana filter aapko wapas diya jaata hai.',
+        ],
+      },
+    ],
   },
 
   /* ═════════════════════════════════════════════════════════════════════
@@ -693,6 +781,24 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'RO Membrane Replacement',
     related: ['ro-filter-change-patna', 'ro-repair-patna', 'ro-amc-patna'],
+    moneyBlock: [
+      {
+        h2: 'RO Membrane Price Patna',
+        lines: [
+          '75 GPD membrane ₹1,600 se ₹2,400, laga hua.',
+          '80/100 GPD thoda zyada padta hai.',
+          'Membrane + poora filter set combo ₹1,400 se ₹2,400.',
+        ],
+      },
+      {
+        h2: 'RO Membrane Change Patna — Kab Zaroori Hai',
+        lines: [
+          'Sirf tab jab TDS reading sabit kare.',
+          'Pehle aur baad dono reading job card par likhi jaati hai.',
+          'Bina TDS ke membrane bechna sabse aam thagi hai.',
+        ],
+      },
+    ],
   },
 
   /* ═════════════════════════════════════════════════════════════════════
@@ -806,6 +912,16 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'Commercial RO Plant Service',
     related: ['ro-amc-patna', 'ro-installation-patna', 'ro-membrane-replacement-patna'],
+    moneyBlock: [
+      {
+        h2: 'Commercial RO Plant Patna',
+        lines: [
+          '25 se 100 LPH plant installation ka rate alag hota hai.',
+          'Routine service plant ki capacity par depend karti hai.',
+          'Pehle plant dekh kar hi quote dete hain.',
+        ],
+      },
+    ],
   },
   /* ═════════════════════════════════════════════════════════════════════
      7. RO SERVICE IN PATNA — the head term itself
@@ -933,6 +1049,24 @@ export const SERVICE_INTENTS: ServiceIntent[] = [
     ],
     serviceType: 'RO Water Purifier Service',
     related: ['ro-repair-patna', 'ro-amc-patna', 'ro-filter-change-patna', 'ro-membrane-replacement-patna'],
+    moneyBlock: [
+      {
+        h2: 'RO Service Charges Patna',
+        lines: [
+          'Visit ₹200, fixed, phone par hi bata dete hain.',
+          'General servicing alag se, aur rate pehle likh kar milta hai.',
+          'Bill par 30 din labour aur 12 mahine part warranty likhi hoti hai.',
+        ],
+      },
+      {
+        h2: 'Same-Day RO Service Patna',
+        lines: [
+          'Subah call karein to usi din visit ka target rehta hai.',
+          'Patna me 90 minute ka response target hai.',
+          'Danapur, Khagaul aur Phulwari Sharif me thoda zyada lag sakta hai — phone par sach bata dete hain.',
+        ],
+      },
+    ],
   },
 
   /* ═════════════════════════════════════════════════════════════════════
