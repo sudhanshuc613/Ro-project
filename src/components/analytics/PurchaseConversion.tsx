@@ -33,20 +33,33 @@
  */
 import { useEffect } from 'react';
 import { ANALYTICS } from '@/lib/constants';
+import { ANALYTICS_FALLBACK, AW_RE } from '@/lib/seo/analytics-overrides';
 
-const ADS_ID = process.env.NEXT_PUBLIC_ADS_ID || ANALYTICS.adsId;
-const ADS_READY = /^AW-\d{9,}$/i.test(ADS_ID);
-
+/* 🔴 6 Nov 2026 — ID ab prop se bhi aa sakti hai.
+   Pehle `ADS_ID` module ke top par ek `const` tha, yaani badalne ke liye
+   deploy. Ab checkout success page /admin/settings wali ID yahan prop me
+   bhejta hai. Prop na mile to pehle jaisa hi — `constants.ts` se. */
 export default function PurchaseConversion({
   orderNumber,
   value,
+  adsId: adsIdProp,
+  purchaseLabel: purchaseLabelProp,
 }: {
   orderNumber: string;
   /** Order ka asli total, INR me */
   value: number;
+  /** /admin/settings wali Ads ID. Na ho to constants.ts chalega. */
+  adsId?: string;
+  /** /admin/settings wala purchase label. Na ho to constants.ts chalega. */
+  purchaseLabel?: string;
 }) {
+  const ADS_ID =
+    process.env.NEXT_PUBLIC_ADS_ID || adsIdProp || ANALYTICS_FALLBACK.adsId;
+  const PURCHASE_LABEL = purchaseLabelProp ?? ANALYTICS_FALLBACK.adsPurchaseLabel;
+  const ADS_READY = AW_RE.test(ADS_ID.toUpperCase());
+
   useEffect(() => {
-    if (!ADS_READY || !ANALYTICS.adsPurchaseLabel) return;
+    if (!ADS_READY || !PURCHASE_LABEL) return;
     if (!orderNumber) return;
 
     const host = window.location.hostname;
@@ -62,7 +75,7 @@ export default function PurchaseConversion({
     }
 
     window.gtag?.('event', 'conversion', {
-      send_to: `${ADS_ID}/${ANALYTICS.adsPurchaseLabel}`,
+      send_to: `${ADS_ID}/${PURCHASE_LABEL}`,
       value,
       currency: 'INR',
       transaction_id: orderNumber,
@@ -75,7 +88,7 @@ export default function PurchaseConversion({
       value,
       currency: 'INR',
     });
-  }, [orderNumber, value]);
+  }, [orderNumber, value, ADS_ID, PURCHASE_LABEL, ADS_READY]);
 
   return null;
 }

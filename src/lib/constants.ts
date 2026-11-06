@@ -136,6 +136,26 @@ export const SOCIAL: readonly string[] = [
  */
 export const ANALYTICS = {
   gaId: 'G-JP9HDZ9SE3',
+
+  /* 🏷️ GOOGLE TAG MANAGER — 6 Nov 2026. Owner ne bheja:
+       <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-WZHCV54L"></script>
+
+     🔴 YE YAHAN KYUN HAI, SIRF DB ME KYUN NAHI
+     ──────────────────────────────────────────
+     Site ke 217 page BUILD ke waqt static ban jaate hain. Root layout tag
+     ki ID build ke waqt padhta hai aur usi ko HTML me pak kar deta hai.
+     Agar ID sirf DB me hoti, to naye deploy ke baad har page bina tag ke
+     banta — jab tak owner admin me jaa kar save na dabaye. Measured:
+     6 Nov ko test me yahi hua tha, GTM kisi page par load hi nahi hua.
+
+     Isliye code me DEFAULT, aur /admin/settings me OVERRIDE. Deploy ke
+     turant baad tag chalta hai, aur badalna ho to bina deploy badal jaata
+     hai. GA4 aur Ads ki ID ke liye yahi pattern pehle se chal raha hai.
+
+     Container me kya hai (6 Nov 2026 ko gtm.js khol kar naapa gaya):
+       8 tag, sab AW-18555090295 ke liye · koi GA4 (G-) tag NAHI
+     Matlab is container se GA4 double-count ka khatra nahi hai. */
+  gtmId: 'GTM-WZHCV54L',
   /** In domains par hi GA chalega — localhost aur Vercel preview ka
    *  data asli report kharab na kare isliye. */
   allowedHosts: ['rokadoctor.in', 'www.rokadoctor.in'],

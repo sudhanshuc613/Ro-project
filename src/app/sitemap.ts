@@ -57,6 +57,13 @@ export const revalidate = 60;
 
 /** Policy page banne ki date — content badle to ye bhi badlo. */
 const POLICY_DATE = new Date('2026-10-25T00:00:00.000Z');
+/* 🔴 6 Nov 2026 — /privacy-policy me naya hissa juda: "Google ke tag —
+   analytics aur ads". Content badla hai to lastmod bhi badalna hai, warna
+   Google ko purani date dikhegi aur wo dobara crawl karne ki jaldi nahi
+   karega. Baaki teen policy page waise ke waise hain, isliye unki date
+   JAAN BOOJH KAR nahi chhedi — jhoothi date bhi utni hi buri hai.
+   Ye galti main 2 Nov aur 3 Nov ko do baar kar chuka hoon. */
+const PRIVACY_DATE = new Date('2026-11-06T00:00:00.000Z');
 /** Terms + About Us banne ki date (2 Nov 2026). */
 const TRUST_PAGE_DATE = new Date('2026-11-02T00:00:00.000Z');
 
@@ -97,7 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BRAND.url}/shipping-policy`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BRAND.url}/returns-refunds`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BRAND.url}/warranty-terms`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
-    { url: `${BRAND.url}/privacy-policy`, lastModified: POLICY_DATE, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BRAND.url}/privacy-policy`, lastModified: PRIVACY_DATE, changeFrequency: 'yearly', priority: 0.3 },
     /* 🔴 2 Nov 2026 — Google Ads "Unacceptable business practices" suspension
        ke baad do aur page. Google ka reviewer sabse pehle yahi dhoondhta hai:
        hum kaun hain (about-us) aur shartein kya hain (terms). */

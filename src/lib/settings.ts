@@ -13,6 +13,11 @@ import { CONTACT, SERVICE, SHIPPING } from '@/lib/constants';
 import { resolveSiteImages, type SiteImageMap } from '@/lib/seo/site-images';
 import { resolveRates, type RateMap } from '@/lib/seo/rate-overrides';
 import { resolveGbp, type GbpOverride, type GbpValues } from '@/lib/seo/gbp-overrides';
+import {
+  resolveAnalytics,
+  type AnalyticsOverride,
+  type AnalyticsValues,
+} from '@/lib/seo/analytics-overrides';
 import { unstable_cache } from 'next/cache';
 
 export interface ContactSettings {
@@ -226,6 +231,37 @@ export const getGbpSettings = unstable_cache(
   { tags: ['settings'], revalidate: 300 },
 );
 
+/**
+ * 🏷️ GOOGLE TAG — 6 Nov 2026. Key `analytics`.
+ *
+ * Owner: "admin panel mai ek aisa option bhi de dena taki mai future mai
+ *         khud se tag ka code badal saku"
+ *
+ * GTM container ID, GA4 ID, Google Ads ID aur teeno conversion label —
+ * sab yahan se. Pehle har ID `constants.ts` me thi aur badalne ke liye
+ * poora deploy lagta tha.
+ *
+ * DB khaali ho ya DB hi na chale — `resolveAnalytics(null)` `constants.ts`
+ * wali ID laut aata hai, isliye tracking kabhi gayab nahi hoti.
+ *
+ * `revalidate: 300` — gbp aur rate card jaisa. Tag ID har page par jaati
+ * hai, isliye jaldi update honi chahiye. Admin save par `revalidateTag`
+ * ke saath `revalidatePath('/', 'layout')` bhi chalta hai, jisse static
+ * page bhi apne ISR timer ka intezaar nahi karte.
+ */
+export const getAnalyticsSettings = unstable_cache(
+  async () => {
+    try {
+      const row = await prisma.siteSetting.findUnique({ where: { key: 'analytics' } });
+      return resolveAnalytics((row?.value as unknown as AnalyticsOverride) ?? null);
+    } catch {
+      return resolveAnalytics(null);
+    }
+  },
+  ['settings:analytics'],
+  { tags: ['settings'], revalidate: 300 },
+);
+
 export const getBannerSettings = unstable_cache(
   () => fetchSetting<BannerSettings>('banner', FALLBACK_BANNER),
   ['settings:banner'],
@@ -246,18 +282,19 @@ export const getPaymentSettings = unstable_cache(
 
 /** Everything at once — used by layouts that need all of them. */
 export async function getAllSettings() {
-  const [contact, service, banner, payment, otp, gbp] = await Promise.all([
+  const [contact, service, banner, payment, otp, gbp, analytics] = await Promise.all([
     getContactSettings(),
     getServiceSettings(),
     getBannerSettings(),
     getPaymentSettings(),
     getOtpSettings(),
     getGbpSettings(),
+    getAnalyticsSettings(),
   ]);
-  return { contact, service, banner, payment, otp, gbp, shipping: SHIPPING };
+  return { contact, service, banner, payment, otp, gbp, analytics, shipping: SHIPPING };
 }
 
-export type { GbpValues };
+export type { GbpValues, AnalyticsValues };
 
 /**
  * Payment methods the customer may actually pick right now.

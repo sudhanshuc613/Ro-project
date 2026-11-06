@@ -7,11 +7,12 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { revalidateTag } from 'next/cache';
+import { revalidateTag, revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/lib/db/prisma';
 import { authOptions } from '@/lib/auth';
 import { logAudit } from '@/server/services/audit.service';
+import { validateAnalytics } from '@/lib/seo/analytics-overrides';
 
 const phone = z.string().regex(/^[6-9]\d{9}$/, 'Must be a valid 10-digit Indian mobile');
 
@@ -99,6 +100,36 @@ const SCHEMAS = {
                            .min(1, '0 review par rating invalid item ban jaati hai')
                            .max(100000),
   }),
+
+  /* ── Google Tag — GTM / GA4 / Ads ki ID (6 Nov 2026) ───────────────────
+     Owner: "admin panel mai ek aisa option bhi de dena taki mai future mai
+             khud se tag ka code badal saku"
+
+     🔴 FORMAT JAANCH EK HI JAGAH HAI — `validateAnalytics()`.
+     UI aur API dono wahi function bulate hain. Agar yahan zod me alag
+     regex likh dete to do sach ban jaate aur ek din dono alag ho jaate —
+     yahi galti pehle do baar ho chuki hai. zod sirf "type + lambai" dekhta
+     hai; "sahi ID hai ya nahi" ka faisla sirf us ek function ka hai.
+
+     🔴 ID public hoti hai (page source me dikhti hai), isliye ise secret
+     ki tarah nahi, ek setting ki tarah treat kiya gaya hai. Par GALAT ID
+     chup-chaap tracking band kar deti hai, isliye save hone se pehle
+     jaanch zaroori hai. */
+  analytics: z.object({
+    gtmId: z.string().trim().max(20),
+    gtmEnabled: z.boolean(),
+    gaId: z.string().trim().max(20),
+    gaEnabled: z.boolean(),
+    adsId: z.string().trim().max(20),
+    adsEnabled: z.boolean(),
+    adsCallLabel: z.string().trim().max(60),
+    adsFormLabel: z.string().trim().max(60),
+    adsPurchaseLabel: z.string().trim().max(60),
+  }).superRefine((d, ctx) => {
+    for (const message of validateAnalytics(d)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message, path: ['gtmId'] });
+    }
+  }),
 } as const;
 
 type SettingsKey = keyof typeof SCHEMAS;
@@ -156,6 +187,18 @@ export async function PUT(req: NextRequest) {
 
   // Storefront picks this up on the very next request
   revalidateTag('settings');
+
+  /* 🔴 GOOGLE TAG — tag har page ke root layout me baithta hai, aur 217
+     page BUILD ke waqt static ban chuke hote hain. Sirf `revalidateTag`
+     se un static page ka HTML nahi badalta — wo apne ISR timer (24 ghante
+     tak) ka intezaar karte hain, aur owner ko lagta hai tag laga hi nahi.
+
+     `revalidatePath('/', 'layout')` poore site ka cache ek saath purana
+     maan leta hai, isliye har page agli request par naye tag ke saath
+     banta hai. Ye mehnga hai (sab page dobara banenge), isliye SIRF
+     analytics key par chalta hai — baaki settings ko iski zaroorat nahi
+     kyunki wo apne chhote cache tag se hi theek ho jaati hain. */
+  if (key === 'analytics') revalidatePath('/', 'layout');
 
   await logAudit({
     actorId: session!.user.id,

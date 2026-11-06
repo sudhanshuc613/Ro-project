@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import type { ContactSettings, ServiceSettings, BannerSettings, PaymentSettings, OtpSettings, GbpValues } from '@/lib/settings';
+import type { ContactSettings, ServiceSettings, BannerSettings, PaymentSettings, OtpSettings, GbpValues, AnalyticsValues } from '@/lib/settings';
 import { validateGbp } from '@/lib/seo/gbp-overrides';
+import AnalyticsTagCard from '@/components/admin/AnalyticsTagCard';
 
 interface Props {
   contact: ContactSettings;
@@ -12,17 +13,20 @@ interface Props {
   payment: PaymentSettings;
   otp: OtpSettings;
   gbp: GbpValues;
+  /* 6 Nov 2026 — GTM / GA4 / Ads ki ID, ab admin se badalti hai. */
+  analytics: AnalyticsValues;
   razorpayConfigured: boolean;
   smsConfigured: boolean;
   whatsappConfigured: boolean;
 }
 
 export default function SettingsForm({
-  contact, service, banner, payment, otp, gbp,
+  contact, service, banner, payment, otp, gbp, analytics,
   razorpayConfigured, smsConfigured, whatsappConfigured,
 }: Props) {
   return (
     <div className="space-y-6">
+      <AnalyticsTagCard initial={analytics} />
       <GbpCard initial={gbp} />
       <OtpCard initial={otp} smsConfigured={smsConfigured} whatsappConfigured={whatsappConfigured} />
       <PaymentCard initial={payment} razorpayConfigured={razorpayConfigured} />

@@ -291,12 +291,12 @@ export const POLICY_PAGES: PolicyPage[] = [
       + 'poora karne ke liye chahiye. Usse ek bhi cheez zyada nahi.',
     summary: [
       'We collect only name, phone and address needed to fulfil your order or service',
-      'Your number is never sold or shared with third parties',
+      'Your number is never sold, and never given to anyone for their own marketing',
       'WhatsApp updates can be stopped any time by replying STOP',
       'Payment details are handled by the gateway — we never store card data',
     ],
         faqs: [
-      { q: "Mera number kisi ko doge?", a: "Nahi. Na bechte hain, na kisi third party ko dete hain, na ads ke liye share karte hain. Number sirf aapka kaam poora karne ke liye hai." },
+      { q: "Mera number kisi ko doge?", a: "Bechte bilkul nahi, aur kisi ko unke apne marketing ke liye nahi dete. Ek hi apvaad hai aur wo saaf likh rahe hain: Google Ads ka measurement tag chalta ho to Google ko number ka SCRAMBLED (hashed) roop ja sakta hai, taaki Google gin sake ki uska ad kaam kiya ya nahi. Us hash se number wapas nahi banaya ja sakta. Nahi chahiye to ek call par band kar denge." },
       { q: "Card ki detail aapke paas rehti hai?", a: "Bilkul nahi. Payment gateway handle karta hai, hamare server par card ya UPI ki detail aati hi nahi." },
       { q: "WhatsApp message band karne hain to?", a: "STOP likh kar reply kar do, band ho jayenge. Service phir bhi chalu rehti hai — koi farak nahi padta." },
       { q: "Mera poora data hatwa sakta hoon?", a: "Haan, ek call par. Jo data kanoonan rakhna zaroori nahi, wo hata diya jaata hai. Bill aur GST record kanoon ke hisaab se rakhne padte hain." },
@@ -317,10 +317,27 @@ export const POLICY_PAGES: PolicyPage[] = [
         heading: 'Hum kya NAHI karte',
         body: 'Ye utna hi zaroori hai jitna upar wala.',
         points: [
-          'Aapka number kisi ko bechte nahi, na kisi third party ko dete hain',
+          'Aapka number kisi ko bechte nahi — kabhi nahi, kisi daam par nahi',
           'Card ya UPI ki detail hum store hi nahi karte — gateway handle karta hai',
           'Bina matlab ka marketing message nahi bhejte',
-          'Aapka data vigyapan (ads) ke liye kisi ko nahi dete',
+          'Kisi data broker, lead-selling company ya dusre dukaandaar ko aapka data nahi dete',
+          'Neeche "Google ke tag" wale hisse me ek apvaad saaf likha hai — chhupaya nahi',
+        ],
+      },
+      {
+        heading: 'Google ke tag — analytics aur ads',
+        body:
+          'Ye hissa 6 Nov 2026 ko joda gaya, kyunki website par Google ke '
+          + 'measurement tag chalte hain aur customer ko ye pata hona chahiye. '
+          + 'Hum chhupa kar kuch nahi rakhte.',
+        points: [
+          'Google Analytics 4 — kaunsa page kitna khula, kahan se aaye. Isme aapka naam ya number nahi jaata.',
+          'Google Tag Manager — tag ek jagah se chalane ka tool. Khud kuch track nahi karta.',
+          'Google Ads conversion measurement — Google ko ginti bhejta hai ki uske ad se call ya order aaya ya nahi.',
+          'Jab Ads ka conversion measurement chalu ho, to phone/email ka SCRAMBLED (hashed) roop Google ko ja sakta hai. Hash ek tarfa hota hai — usse asli number wapas nahi banta.',
+          'Ye sirf ginti ke liye hai. Google ko aapka data bechne ke liye nahi diya jaata, aur Google ise aapko call karne ke liye nahi deta.',
+          'Nahi chahiye? Browser me ad personalisation band kar do, ya hume call kar do — hum aapka record hata denge.',
+          'Browser me cookie block ya "Do Not Track" on hai to ye tag waise bhi nahi chalte.',
         ],
       },
       {

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db/prisma';
 import { formatINR, formatDateIN } from '@/lib/utils/format';
-import { getContactSettings, telLink, waLink } from '@/lib/settings';
+import { getContactSettings, getAnalyticsSettings, telLink, waLink } from '@/lib/settings';
 /* 9 Oct 2026 — Google Ads Purchase conversion (AW-610913435). Sirf yahan,
    sirf ek baar per order. Detail: components/analytics/PurchaseConversion.tsx */
 import PurchaseConversion from '@/components/analytics/PurchaseConversion';
@@ -22,12 +22,15 @@ export default async function SuccessPage({
 }) {
   if (!searchParams.order) notFound();
 
-  const [order, contact] = await Promise.all([
+  const [order, contact, analytics] = await Promise.all([
     prisma.order.findUnique({
       where: { orderNumber: searchParams.order },
       include: { items: true, user: { select: { fullName: true, phone: true } } },
     }),
     getContactSettings(),
+    /* 6 Nov 2026 — Ads ID aur purchase label ab /admin/settings se.
+       Pehle dono PurchaseConversion ke andar hard-code the. */
+    getAnalyticsSettings(),
   ]);
 
   if (!order) notFound();
@@ -63,6 +66,8 @@ export default async function SuccessPage({
         <PurchaseConversion
           orderNumber={order.orderNumber}
           value={Number(order.totalAmount)}
+          adsId={analytics.adsActive ? analytics.adsId : ''}
+          purchaseLabel={analytics.adsPurchaseLabel}
         />
         <h1 className="mt-5 font-display text-2xl font-extrabold text-emerald-900">
           Order Confirmed!

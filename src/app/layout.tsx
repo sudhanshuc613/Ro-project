@@ -4,7 +4,7 @@ import { Toaster } from 'sonner';
 import './globals.css';
 import { BRAND } from '@/lib/constants';
 import Providers from './providers';
-import Analytics from '@/components/analytics/Analytics';
+import AnalyticsTags from '@/components/analytics/AnalyticsTags';
 import { ogImage } from '@/lib/seo/og-image';
 
 const inter = Inter({
@@ -72,7 +72,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <Providers>{children}</Providers>
         <Toaster position="top-center" richColors closeButton />
-        <Analytics />
+        {/* 6 Nov 2026 — pehle yahan seedha Analytics component tha. Ab ek
+            server wrapper hai jo /admin/settings se tag ID padh kar GA4 aur
+            GTM dono ko deta hai. Kuch hataya nahi gaya — Analytics isi
+            wrapper ke andar hamesha render hota hai. */}
+        <AnalyticsTags />
       </body>
     </html>
   );
