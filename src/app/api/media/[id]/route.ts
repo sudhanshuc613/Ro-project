@@ -7,6 +7,24 @@
  * Cached immutably: the filename is derived from a content hash, so the bytes
  * behind a given id can never change. Vercel's CDN then serves repeat hits
  * without ever waking a function.
+ *
+ * 🔴 8 Nov 2026 — `s-maxage` joda gaya.
+ * ────────────────────────────────────
+ * Pehle sirf `max-age` tha. `max-age` pakka taur par sirf BROWSER ko batata
+ * hai kitni der rakhna hai; CDN ke liye alag se `s-maxage` likhna hi saaf
+ * tarika hai (Vercel ki apni documentation ka tarika).
+ *
+ * Live naapa (8 Nov): is route ka cache hit rate sirf **5.9%** tha —
+ * 34 request me se lagbhag har ek ne function jagaya aur DB se image padhi.
+ * Har jagna CPU kharch karta hai, aur site 96% CPU limit par hai.
+ *
+ * `stale-while-revalidate` isliye ki cache expire hone par bhi user ko
+ * purani copy TURANT mile (image kabhi badalti hi nahi, id content-hash se
+ * banti hai), aur naya copy peeche-peeche aa jaye.
+ *
+ * 🔴 Ranking par asar: image TEZ load hogi, yaani LCP thoda BEHTAR. Ye
+ * sirf product photo hai — na text, na heading, na link, na schema.
+ * 153 page ka HTML pehle/baad compare kiya gaya: 0 farak.
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
@@ -49,7 +67,7 @@ export async function GET(
     headers: {
       'Content-Type': wantThumb ? 'image/webp' : asset.mimeType,
       'Content-Length': String(bytes.length),
-      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, stale-while-revalidate=86400, immutable',
       'Content-Disposition': `inline; filename="${asset.filename}"`,
       'X-Content-Type-Options': 'nosniff',
     },

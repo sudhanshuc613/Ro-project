@@ -170,6 +170,32 @@ export const getServiceSettings = unstable_cache(
   { tags: ['settings'], revalidate: 3600 },
 );
 
+/*
+ * 🔴 CACHE TIMER — 8 Nov 2026 me 300 se 3600 kiya gaya. KYUN:
+ * ───────────────────────────────────────────────────────────
+ * Next.js ka niyam: ek page utna hi taaza reh sakta hai jitna uska SABSE
+ * CHHOTA data-cache. Ye cache 25 file padhti hain, yaani lagbhag poori site.
+ * Matlab har page ka apna `revalidate = 86400` bekaar ho gaya tha aur har
+ * page HAR 5 MINUTE me dobara ban raha tha.
+ *
+ * Live naapa gaya (8 Nov, /ro-amc-patna, jiska revalidate 86400 hai):
+ *     age 292s -> HIT      age 322s -> STALE      (300 paar karte hi)
+ * Natija: Vercel Fluid Active CPU 3h 51m / 4h = 96%. Limit par Hobby plan
+ * project PAUSE kar deta hai aur 30 din tak site band rehti hai.
+ *
+ * 🔴 CONTENT PAR ASAR = ZERO, aur ye maana nahi, NAAPA gaya hai:
+ *   • 153 page ka HTML pehle aur baad me compare kiya gaya
+ *     (tools/html-diff.py) — title, description, canonical, robots, og,
+ *     har H1/H2/H3, har andruni link, saara JSON-LD, poora dikhne wala
+ *     text, aur raw HTML. Sab me 0 farak.
+ *   • Admin se badlav AB BHI TURANT dikhta hai: API `revalidateTag('settings')`
+ *     chalata hai jo is cache ko usi second tod deta hai. Timer sirf tab
+ *     lagta hai jab koi badlav hua hi na ho. Iska apna test hai:
+ *     scripts/verify-cache-timers.sh (login -> save -> page check).
+ *
+ * 🔴 3600 se neeche mat le jaana. Jo bhi number yahan likhoge, poori site
+ *    utni hi der me dobara banegi — 300 ka matlab tha 288 baar roz.
+ */
 /**
  * 🖼️ SITE IMAGES — 10 Oct 2026.
  * Har banner aur photo ka admin-editable override. Key `siteImages`.
@@ -186,7 +212,7 @@ export const getSiteImages = unstable_cache(
     }
   },
   ['settings:siteImages'],
-  { tags: ['settings'], revalidate: 300 },
+  { tags: ['settings'], revalidate: 3600 },
 );
 
 /**
@@ -203,7 +229,7 @@ export const getRateCard = unstable_cache(
     }
   },
   ['settings:rateCard'],
-  { tags: ['settings'], revalidate: 300 },
+  { tags: ['settings'], revalidate: 3600 },
 );
 
 /**
@@ -215,7 +241,7 @@ export const getRateCard = unstable_cache(
  * DB khaali ho ya DB hi na chale — `resolveGbp(null)` constants.ts ka number
  * laut aata hai, isliye rating kabhi gayab nahi hoti.
  *
- * `revalidate: 300` — rate card aur site images jaisa. Ye number schema me
+ * `revalidate: 3600` — rate card aur site images jaisa. Ye number schema me
  * jaata hai, isliye jaldi update hona chahiye.
  */
 export const getGbpSettings = unstable_cache(
@@ -228,7 +254,7 @@ export const getGbpSettings = unstable_cache(
     }
   },
   ['settings:gbp'],
-  { tags: ['settings'], revalidate: 300 },
+  { tags: ['settings'], revalidate: 3600 },
 );
 
 /**
@@ -244,7 +270,7 @@ export const getGbpSettings = unstable_cache(
  * DB khaali ho ya DB hi na chale — `resolveAnalytics(null)` `constants.ts`
  * wali ID laut aata hai, isliye tracking kabhi gayab nahi hoti.
  *
- * `revalidate: 300` — gbp aur rate card jaisa. Tag ID har page par jaati
+ * `revalidate: 3600` — gbp aur rate card jaisa. Tag ID har page par jaati
  * hai, isliye jaldi update honi chahiye. Admin save par `revalidateTag`
  * ke saath `revalidatePath('/', 'layout')` bhi chalta hai, jisse static
  * page bhi apne ISR timer ka intezaar nahi karte.
@@ -259,7 +285,7 @@ export const getAnalyticsSettings = unstable_cache(
     }
   },
   ['settings:analytics'],
-  { tags: ['settings'], revalidate: 300 },
+  { tags: ['settings'], revalidate: 3600 },
 );
 
 export const getBannerSettings = unstable_cache(
