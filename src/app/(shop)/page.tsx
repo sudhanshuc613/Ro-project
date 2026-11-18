@@ -42,6 +42,7 @@ import NearMeBlock from '@/components/service/NearMeBlock';
    Dekho: src/components/service/NearMeLongTail.tsx */
 import NearMeLongTail from '@/components/service/NearMeLongTail';
 import BrandLogoGrid from '@/components/home/BrandLogoGrid';
+import LocalMapSection from '@/components/home/LocalMapSection';
 import { searchAnswerFaq } from '@/lib/seo/search-queries';
 
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -379,6 +380,14 @@ export default async function HomePage() {
 
         {/* 12 — FAQ */}
         <FaqAccordion faqs={FAQS} title="RO Service in Patna — Common Questions" />
+
+        {/* 13 — Location + naksha. 18 Nov 2026 ko JODA gaya (kuch hataya nahi).
+            Owner ne roservicecentrepatna.in par map dekha tha. Unka map poore
+            Patna shehar ka hai (pin hi nahi) — isliye bekaar. Yahan HAMARI
+            dukaan ka asli pin hai, lazy-load ke saath, sabse neeche — to
+            pehli screen ki speed par koi asar nahi.
+            Poori wajah + naap: src/components/home/LocalMapSection.tsx */}
+        <LocalMapSection />
       </main>
     </>
   );
