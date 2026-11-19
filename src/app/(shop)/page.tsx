@@ -43,6 +43,7 @@ import NearMeBlock from '@/components/service/NearMeBlock';
 import NearMeLongTail from '@/components/service/NearMeLongTail';
 import BrandLogoGrid from '@/components/home/BrandLogoGrid';
 import LocalMapSection from '@/components/home/LocalMapSection';
+import BusinessPolicyBlock from '@/components/home/BusinessPolicyBlock';
 import { searchAnswerFaq } from '@/lib/seo/search-queries';
 
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -388,6 +389,14 @@ export default async function HomePage() {
             pehli screen ki speed par koi asar nahi.
             Poori wajah + naap: src/components/home/LocalMapSection.tsx */}
         <LocalMapSection />
+
+        {/* 14 — Business identity + policies. 28 Nov 2026 ko JODA gaya (kuch hataya nahi).
+            Google Ads AW-610913435 "Unacceptable business practices" ke under reject
+            hua. Reviewer landing page par business identity dhoondhta hai — homepage
+            par email, malik ka naam, domain-se-business ka link aur policy ke link
+            nahi the (sirf footer/About me the). Ab saaf-saaf yahan hain.
+            Poori wajah + Google ka policy quote: src/components/home/BusinessPolicyBlock.tsx */}
+        <BusinessPolicyBlock />
       </main>
     </>
   );
