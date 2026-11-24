@@ -108,6 +108,34 @@ grep -q 'Proprietor' "$TXT" \
   && ok "'Proprietor' label maujood" \
   || no "'Proprietor' label maujood"
 
+# ── UDYAM (MSME) REGISTRATION — 20 Nov 2026 ─────────────────────────────────
+# Google Ads reviewer ke liye sarkari registration ka saboot. Number
+# udyamregistration.gov.in par verify ho sakta hai, isliye akshar-akshar
+# sahi hona ZAROORI hai — ek digit galat = verify fail = appeal fail.
+grep -q 'UDYAM-BR-26-0233468' "$TXT" \
+  && ok "Udyam number homepage par dikhta hai" \
+  || no "Udyam number homepage par dikhta hai"
+
+grep -qi 'Udyam' "$TXT" \
+  && ok "'Udyam' label maujood" \
+  || no "'Udyam' label maujood"
+
+# Poora format: UDYAM-<2 akshar state>-<2 ank>-<7 ank>. Agar koi galti se
+# number chhota/bada kar de to ye pakad lega.
+grep -qE 'UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}' "$TXT" \
+  && ok "Udyam number ka format sahi hai" \
+  || no "Udyam number ka format sahi hai"
+
+# 🔴 Certificate par enterprise ka naam "AQUAPERL RO BUY REPAIR" hai, jo site
+# ke legal name se alag hai. Dono saath dikhne par reviewer ko naam-mismatch
+# dikhega — Misrepresentation case me ye seedha nuksan hai. Isliye wo naam
+# kahin render NAHI hona chahiye.
+if grep -qi 'AQUAPERL RO BUY REPAIR' "$TXT"; then
+  no "Udyam ka alag enterprise naam render NAHI hota (mismatch se bachav)"
+else
+  ok "Udyam ka alag enterprise naam render NAHI hota (mismatch se bachav)"
+fi
+
 grep -q 'rokadoctor.in' "$TXT" \
   && ok "GAP-3 domain ka naam homepage par" \
   || no "GAP-3 domain ka naam homepage par"

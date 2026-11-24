@@ -48,6 +48,17 @@ const IDENTITY: { k: string; v: React.ReactNode }[] = [
   { k: 'Business name', v: BRAND.legalName },
   { k: 'Business type', v: 'Sole Proprietorship — RO / water purifier repair & service' },
   { k: 'Proprietor', v: 'Sudhanshu Choudhary' },
+  /* 🟢 20 Nov 2026 — Udyam (MSME) registration, Government of India.
+     Google Ads ka "Unacceptable business practices" reviewer sabse pehle
+     yahi dhoondhta hai: koi SARKARI registration jo bahar se verify ho sake.
+     Ye number udyamregistration.gov.in par "Verify Udyam Registration
+     Number" se kisi bhi waqt check kiya ja sakta hai.
+
+     ⚠️ SIRF NUMBER — certificate par enterprise ka naam "AQUAPERL RO BUY
+     REPAIR" hai jabki site par BRAND.legalName "Aqua Perl RO Service Centre"
+     hai. Dono naam saath dikhane se reviewer ko naam-mismatch dikhta, jo
+     Misrepresentation case me ulta nuksan karta. Isliye naam yahan nahi. */
+  { k: 'Udyam Registration (MSME)', v: 'UDYAM-BR-26-0233468' },
   { k: 'Website', v: BRAND.domain },
   { k: 'Address', v: FULL_ADDRESS },
   {
