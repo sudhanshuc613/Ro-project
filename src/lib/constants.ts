@@ -75,8 +75,51 @@ export const CONTACT = {
   showStreetAddress: true,
   /** Buddha Colony, Patna. */
   geo: { lat: 25.6093, lng: 85.1376 },
-  hours: 'Mon–Sun 08:00–21:00',
+  /**
+   * 🔴 TECHNICIAN VISIT ke ghante. Ye wahi hona chahiye jo Google Business
+   * Profile ke "Hours" field me likha hai. GBP ka Hours field service ke
+   * ghante maangta hai, phone uthne ke nahi.
+   */
+  hours: 'Mon–Sun 05:00–22:00',
+  /**
+   * 🔴 28 Nov 2026 — PHONE aur VISIT alag-alag cheez hain.
+   *
+   * Sach ye hai: raat ko call/WhatsApp aa jaye to uth jaati hai aur booking
+   * le lete hain, lekin technician ghar par agli subah hi jaata hai.
+   *
+   * Google Ads "Unacceptable business practices" policy kehti hai —
+   * "Offer products or services that you don't have or CAN'T DELIVER."
+   * Agar hum sirf "24×7" likh dein to padhne wala samjhega ki raat 2 baje
+   * technician aa jayega. Wo hum de nahi sakte = policy violation.
+   *
+   * ⚠️ ISLIYE: `callHours` ko AKELA kabhi mat likhna. Hamesha `HOURS_FULL`
+   * use karo, jisme visit ka samay sath me judta hai.
+   * Gate `verify-business-policy.sh` isko check karta hai aur akela
+   * "24×7" milne par FAIL kar deta hai.
+   */
+  callHours: '24×7',
 } as const;
+
+/**
+ * 🔴 Hours dikhane ka EKLAUTA sahi tareeka.
+ *
+ * Isme "24×7" aur visit-window dono ek hi saans me aate hain, isliye koi
+ * customer — aur koi Google reviewer — ye nahi samajh sakta ki hum raat bhar
+ * technician bhejte hain. "Call & WhatsApp" aage likha hai taaki saaf rahe
+ * ki 24×7 ka matlab sirf phone hai.
+ *
+ * Purana text `CONTACT.hours` isme jyon ka tyon mojood hai, isliye jo page
+ * pehle hours dikhate the wo ab bhi wahi dikhate hain — bas aage jaankari
+ * jud gayi hai. Koi shabd hataya nahi gaya.
+ */
+export const HOURS_FULL =
+  `Call & WhatsApp ${CONTACT.callHours} · Technician visit ${CONTACT.hours}` as const;
+
+/**
+ * Chhoti jagah ke liye (footer, widget) — matlab wahi, shabd kam.
+ */
+export const HOURS_SHORT =
+  `Call ${CONTACT.callHours} · Visit ${CONTACT.hours}` as const;
 
 /**
  * Google Business Profile ke ASLI numbers.
@@ -391,7 +434,9 @@ export const ISSUE_CATEGORIES = [
   { value: 'OTHER',      label: 'Other issue' },
 ] as const;
 
-export const TIME_SLOTS = ['09:00–12:00', '12:00–15:00', '15:00–18:00', '18:00–21:00'] as const;
+/* 28 Nov 2026 — service ab 05:00–22:00 hai, isliye slot bhi wahi tak.
+   Pehle 09:00–21:00 the, jisme subah-subah aur raat ka slot missing tha. */
+export const TIME_SLOTS = ['05:00–08:00', '08:00–11:00', '11:00–14:00', '14:00–17:00', '17:00–20:00', '20:00–22:00'] as const;
 
 export const ORDER_STATUS_FLOW = [
   'PENDING', 'CONFIRMED', 'PACKED', 'SHIPPED', 'OUT_FOR_DELIVERY', 'DELIVERED',

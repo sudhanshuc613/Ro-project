@@ -116,7 +116,7 @@ const HUB_FAQS = [
   },
   {
     q: 'How fast can someone reach me in Patna?',
-    a: `Same day for calls before 5 PM, typically ${SERVICE.responseTime}, and faster in Kankarbagh, Boring Road and Rajendra Nagar where technicians are stationed. We work all seven days, 8 AM to 9 PM. Commercial plant breakdowns are prioritised over domestic calls because the cost of downtime is different.`,
+    a: `Same day for calls before 5 PM, typically ${SERVICE.responseTime}, and faster in Kankarbagh, Boring Road and Rajendra Nagar where technicians are stationed. We work all seven days, 5 AM to 10 PM. Commercial plant breakdowns are prioritised over domestic calls because the cost of downtime is different.`,
   },
   {
     q: 'Is there a warranty on any of this?',

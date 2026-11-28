@@ -125,7 +125,14 @@ export default async function ContactPage() {
                 <EmailOff email={CONTACT.email} link linkClassName="text-aqua-600 hover:underline" />
               )}
             </address>
-            <p className="mt-3 text-sm font-semibold text-navy-700">🕒 {CONTACT.hours} · All 7 days</p>
+              {/* 28 Nov 2026 — visit aur call alag-alag likhe. Purana text
+                  "{CONTACT.hours} · All 7 days" poora bacha hua hai. */}
+              <p className="mt-3 text-sm font-semibold text-navy-700">🕒 {CONTACT.hours} · All 7 days</p>
+              <p className="mt-1 text-sm text-navy-600">
+                📞 Call &amp; WhatsApp {CONTACT.callHours} — raat ko bhi uth jaati hai.
+                Technician ghar par {CONTACT.hours} ke beech hi aata hai, isliye raat
+                ki call ki visit agli subah schedule hoti hai.
+              </p>
             <p className="mt-3 text-sm text-navy-600">
               Service ke liye aana zaroori nahi — hum aapke ghar aate hain,
               poore Patna mein. Naya purifier ya spare part dekhna ho to
@@ -190,7 +197,10 @@ export default async function ContactPage() {
               {
                 t: '📞 Phone',
                 w: 'Aaj hi technician chahiye',
-                d: `Sabse tez. ${CONTACT.hours} ke beech call uthti hai. Patna me technician aam taur par ${SERVICE.responseTime} me pahunch jaata hai, aur visit charge ₹${SERVICE.visitCharge} fixed hai — usme poori checking aur TDS test shaamil hai.`,
+                /* 28 Nov 2026 — pehle likha tha "sirf working hours me call uthti hai",
+                   jo kam bata raha tha: call to raat ko bhi uth jaati hai. Ab sach
+                   likha hai, sath me ye bhi ki VISIT sirf din me hoti hai. */
+                d: `Sabse tez. Call ${CONTACT.callHours} uthti hai, raat ko bhi. Patna me technician ${CONTACT.hours} ke beech aam taur par ${SERVICE.responseTime} me pahunch jaata hai, aur visit charge ₹${SERVICE.visitCharge} fixed hai — usme poori checking aur TDS test shaamil hai. Raat ki call ki visit agli subah lagti hai.`,
               },
               {
                 t: '💬 WhatsApp',

@@ -114,7 +114,7 @@ export function localBusinessSchema(
     openingHoursSpecification: [{
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-      opens: '08:00', closes: '21:00',
+      opens: '05:00', closes: '22:00',
     }],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',

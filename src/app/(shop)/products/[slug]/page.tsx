@@ -294,7 +294,11 @@ export default async function ProductPage({ params }: Props) {
               <div className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
                 <p className="font-bold text-emerald-900">📍 In Patna? We install & service too.</p>
                 <p className="mt-1 text-sm text-emerald-800">
-                  Doorstep installation and repair by certified technicians —
+                  {/* 28 Nov 2026 — "certified" → "trained": Google Ads "Unacceptable business practices"
+                      policy — "services you can't deliver, including NOT HAVING THE RIGHT LICENCES OR
+                      QUALIFICATIONS". Koi body hamare technicians ko certify nahi karti, isliye ye dawa
+                      verify nahi ho sakta tha. "Trained" sach hai. */}
+                  Doorstep installation and repair by trained technicians —
                   visit charge only ₹{SERVICE.visitCharge}.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">

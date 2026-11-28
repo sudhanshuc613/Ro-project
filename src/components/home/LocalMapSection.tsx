@@ -50,7 +50,7 @@
  *     Isse GBP ke saath mismatch ka khatra khatam. Ek jagah badlo, sab badlega.
  */
 
-import { CONTACT, BRAND, SERVICE } from '@/lib/constants';
+import { CONTACT, BRAND, SERVICE, HOURS_FULL } from '@/lib/constants';
 
 /** Address ko ek line me jodta hai — schema aur map query dono ke liye ek hi source. */
 function fullAddressLine(): string {
@@ -139,8 +139,11 @@ export default function LocalMapSection() {
               </div>
 
               <div>
-                <dt className="font-semibold text-navy-700">Open</dt>
-                <dd className="mt-1 text-navy-600">{CONTACT.hours}</dd>
+                  {/* 28 Nov 2026 — "Open" ab saaf batata hai ki visit kab hoti
+                      hai aur call kab uthti hai. Ye NAP block hai, isliye yahan
+                      ki baat GBP se hu-ba-hu milni chahiye. */}
+                  <dt className="font-semibold text-navy-700">Open</dt>
+                  <dd className="mt-1 text-navy-600">{HOURS_FULL}</dd>
               </div>
 
               <div>

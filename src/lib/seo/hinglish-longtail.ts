@@ -94,7 +94,7 @@ export const HINGLISH_LONGTAIL: Readonly<Record<string, HinglishBlock>> = {
     body:
       'Brand ka toll-free number aksar ek national call centre par jaata hai: complaint number milta hai, phir 24–72 ghante ka intezaar. Hamara number seedha Patna ke workshop par bajta hai. Warranty wali machine ho to hum khud brand centre tak bhejne me madad karte hain — tab aapko part ka paisa nahi dena chahiye.',
     points: [
-      'Number 8969821440 — 08:00 se 21:00, saaton din. Busy ho to WhatsApp kar dijiye.',
+      'Number 8969821440 — 05:00 se 22:00, saaton din. Busy ho to WhatsApp kar dijiye.',
       'Shikayat ke baad aam taur par 90 minute me technician, Patna ke andar.',
       'Machine warranty me hai ya nahi — model aur kharidne ki date batayiye, hum check kar denge.',
       'Agar warranty me hai to hum repair ke paise nahi lete; seedha brand centre ka rasta batate hain.',
@@ -146,7 +146,7 @@ export const HINGLISH_LONGTAIL: Readonly<Record<string, HinglishBlock>> = {
     body:
       'Buddha Colony me Sai Gali, B-62 ke saamne — yahi hamara workshop aur counter hai. Service ke liye yahan aana zaroori nahi, hum ghar aate hain; lekin naya purifier, membrane ya spare part khud dekh kar lena ho to aa sakte hain. Brand ka official centre alag hota hai — machine warranty me ho to hum wahin bhejte hain, apna kaam nahi thopte.',
     points: [
-      'Pata: Sai Gali, Opposite B-62, Buddha Colony, Patna 800001 — 08:00 se 21:00, saaton din.',
+      'Pata: Sai Gali, Opposite B-62, Buddha Colony, Patna 800001 — 05:00 se 22:00, saaton din.',
       'Counter par membrane, SMPS, pump aur filter stock me rehta hai — turant mil jaata hai.',
       'Aane se pehle call kar lijiye 8969821440, taaki aapka part nikaal kar rakh dein.',
       'Warranty wali machine ke liye hum khud brand centre ka rasta batate hain — charge nahi lete.',

@@ -404,7 +404,7 @@ export const POLICY_PAGES: PolicyPage[] = [
           'Pata: Sai Gali, Opposite B-62, Buddha Colony, Patna, Bihar 800001',
           'Phone: 8969821440 · Email: support@rokadoctor.in',
           'Website: https://rokadoctor.in',
-          'Kaam ka samay: Mon–Sun, 08:00 – 21:00',
+          'Kaam ka samay: Mon–Sun, 05:00 – 22:00',
         ],
       },
       {
@@ -488,7 +488,7 @@ export const POLICY_PAGES: PolicyPage[] = [
           'Kuch galat lage to seedha hamein batayein. Hum khud theek karte hain, '
           + 'tal-matol nahi karte.',
         points: [
-          'Call 8969821440 ya WhatsApp — Mon–Sun 08:00–21:00',
+          'Call 8969821440 ya WhatsApp — Mon–Sun 05:00–22:00',
           'Email: support@rokadoctor.in',
           'Likhit shikayat: Sai Gali, Opposite B-62, Buddha Colony, Patna 800001',
           'Koi bhi vivaad Patna, Bihar ke kanoon aur adalat ke adhikar me aayega',

@@ -156,7 +156,11 @@ export default function ServiceHero({
           </h1>
 
           <p className="mt-5 max-w-xl text-[17px] leading-[1.7] text-navy-600 text-pretty">
-            Not getting water? Leakage, bad taste, or noise? A certified technician reaches
+            {/* 28 Nov 2026 — "certified" → "trained": Google Ads "Unacceptable business practices"
+                policy — "services you can't deliver, including NOT HAVING THE RIGHT LICENCES OR
+                QUALIFICATIONS". Koi body hamare technicians ko certify nahi karti, isliye ye dawa
+                verify nahi ho sakta tha. "Trained" sach hai. */}
+            Not getting water? Leakage, bad taste, or noise? A trained technician reaches
             your door in {SERVICE.responseTime} with genuine spare parts — and you pay only
             after the job is done.
           </p>

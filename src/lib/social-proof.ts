@@ -166,19 +166,21 @@ export function ctaTrustBadges(gbp: GbpValues = GBP_FALLBACK) {
  * countdown. Fake urgency is transparent to customers and, on repeat visits,
  * actively erodes the trust the rest of the page is building.
  *
- * Capacity assumption: 8 service slots a day, 8am–9pm.
+ * Capacity assumption: 8 service slots a day, 5am–10pm.
  */
 export function getSlotAvailability(bookedToday: number) {
   const DAILY_CAPACITY = 8;
   const left = Math.max(0, DAILY_CAPACITY - bookedToday);
   const hour = new Date().getHours();
 
-  // Past 8pm there is no point promising a same-day slot.
-  if (hour >= 20 || left === 0) {
+  /* 28 Nov 2026 — service ab 22:00 tak chalti hai, isliye same-day cutoff
+     20:00 se 21:00 kiya gaya. */
+  // Past 9pm there is no point promising a same-day slot.
+  if (hour >= 21 || left === 0) {
     return {
       available: false,
       slotsLeft: 0,
-      message: 'Aaj ke slot bhar gaye — kal subah 8 baje se',
+      message: 'Aaj ke slot bhar gaye — kal subah 5 baje se',
       urgent: false,
     };
   }

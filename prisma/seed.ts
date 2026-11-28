@@ -340,7 +340,7 @@ async function main() {
       tertiaryPhone: '9534037266',
       whatsapp: '918969821440',
       email: 'support@rokadoctor.in',
-      hours: 'Mon–Sun 08:00–21:00',
+      hours: 'Mon–Sun 05:00–22:00',
     }, 'Public contact channels'],
     ['service', {
       visitCharge: 200,

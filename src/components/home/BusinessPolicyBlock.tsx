@@ -89,8 +89,23 @@ const IDENTITY: { k: string; v: React.ReactNode }[] = [
       />
     ),
   },
-  { k: 'Working hours', v: CONTACT.hours },
-  { k: 'Service area', v: `${SERVICE.city}, ${SERVICE.state} (doorstep service)` },
+    /* 🔴 28 Nov 2026 — ek "Working hours" row ko DO row me toda.
+       Google Ads ka reviewer homepage par yahi table padhta hai. Pehle yahan
+       sirf "Working hours: Mon–Sun 08:00–21:00" likha tha (ab 05:00–22:00), jabki Google
+       Business Profile par "Open 24 hours" set tha. Do jagah do alag baat —
+       aur GBP wali baat jhooth, kyunki raat ko technician nahi jaata.
+       Policy ka bullet: "services that you don't have or CAN'T DELIVER."
+
+       Ab dono jagah bilkul ek hi sach likha hai:
+         VISIT  = Mon–Sun 05:00–22:00  (GBP ke Hours field me bhi yahi)
+         CALL   = 24×7                 (GBP ki description me bhi yahi)
+       Purana text CONTACT.hours pehli row me jyon ka tyon maujood hai. */
+    { k: 'Working hours (technician visit)', v: `${CONTACT.hours} — ghar par visit sirf isi samay` },
+    {
+      k: 'Call & WhatsApp',
+      v: `${CONTACT.callHours} — raat ki call bhi uth jaati hai aur booking ho jaati hai, lekin technician agli subah ${CONTACT.hours} ke beech hi pahunchta hai`,
+    },
+    { k: 'Service area', v: `${SERVICE.city}, ${SERVICE.state} (doorstep service)` },
 ];
 
 /* Charges — ek-ek line Terms ke "Payment" section se match karti hai. */

@@ -127,9 +127,17 @@ const URGENT: Item[] = [
     h: '24 hour RO service Patna — sach kya hai',
     p: (
       <>
-        Call {CONTACT.hours} ke beech uthti hai. Raat me message chhod do, subah sabse
-        pehle aapka number lagta hai. Jo &ldquo;24 hour&rdquo; likhte hain unme se
-        zyadatar raat 11 baje nahi uthate — hum jhooth nahi bolte.
+          {/* 28 Nov 2026 — sach update kiya: call raat ko bhi uth jaati hai, par
+              technician raat ko nahi jaata. Pehle yahan likha tha ki call sirf
+              05:00-22:00 ke beech uthti hai, jo kam bata raha tha. Heading me
+              "24 hour" keyword jaan-boojh ke rakha hai — ye wahi query hai jo
+              log search karte hain, aur hum uska seedha sach jawab de rahe hain. */}
+          Call aur WhatsApp {CONTACT.callHours} uthti hai — raat ko bhi. Lekin technician
+          ghar par {CONTACT.hours} ke beech hi aata hai, isliye raat ki call ki visit
+          agli subah schedule hoti hai. Raat me message chhod do, subah sabse
+          pehle aapka number lagta hai. Jo &ldquo;24 hour service&rdquo; likhte hain unme se
+          zyadatar raat 11 baje nahi uthate — hum jhooth nahi bolte. Jo de sakte hain
+          wahi likhte hain.
       </>
     ),
   },

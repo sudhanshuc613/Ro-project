@@ -94,7 +94,7 @@ const FAQS = [
   { q: 'Patna ke liye 75 GPD ya 100 GPD membrane?',
     a: 'Under 500 ppm a 75 GPD membrane is fine. Above 500 ppm — Kankarbagh, Anisabad, Danapur, Khajpura — go for 100 GPD. It costs ₹400 to ₹600 more but lasts noticeably longer on hard water and keeps flow rate usable.' },
   { q: 'Kya aap Sunday ko bhi service karte hain?',
-    a: 'Yes, all seven days from 8 AM to 9 PM including Sundays and most holidays. Weekend slots fill up fast, so call 8969821440 in the morning if you need a same-day visit.' },
+    a: 'Yes, all seven days from 5 AM to 10 PM including Sundays and most holidays. Weekend slots fill up fast, so call 8969821440 in the morning if you need a same-day visit.' },
   { q: 'Commercial RO plant ka service karte hain?',
     a: 'Yes — 250 LPH upwards for shops, schools, hotels, offices and clinics across Patna. Site survey is free. Commercial units need a different service cycle from domestic ones because of continuous duty.' },
   { q: 'Purane RO ko repair karana theek hai ya naya lena chahiye?',
@@ -158,7 +158,11 @@ export default async function ServicePatnaPillar() {
 
               <p className="mt-5 max-w-xl text-base leading-relaxed text-navy-100 sm:text-lg">
                 Repair, installation, filter change and AMC for every RO brand.
-                Certified technicians reach you within {SERVICE.responseTime} with genuine
+                {/* 28 Nov 2026 — "certified" → "trained": Google Ads "Unacceptable business practices"
+                    policy — "services you can't deliver, including NOT HAVING THE RIGHT LICENCES OR
+                    QUALIFICATIONS". Koi body hamare technicians ko certify nahi karti, isliye ye dawa
+                    verify nahi ho sakta tha. "Trained" sach hai. */}
+                Trained technicians reach you within {SERVICE.responseTime} with genuine
                 spare parts and a {SERVICE.warrantyDays}-day service warranty.
               </p>
 

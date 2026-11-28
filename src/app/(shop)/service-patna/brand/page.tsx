@@ -113,7 +113,7 @@ const FAQS = [
   },
   {
     q: 'How soon can a technician reach me in Patna?',
-    a: `Usually within ${SERVICE.responseTime} across central Patna — Boring Road, Kankarbagh, Patliputra, Rajendra Nagar, Kadamkuan, Bailey Road. Danapur, Phulwari Sharif and Khagaul can take a little longer at peak hours. We are open 08:00–21:00, all seven days.`,
+    a: `Usually within ${SERVICE.responseTime} across central Patna — Boring Road, Kankarbagh, Patliputra, Rajendra Nagar, Kadamkuan, Bailey Road. Danapur, Phulwari Sharif and Khagaul can take a little longer at peak hours. We are open 05:00–22:00, all seven days.`,
   },
 ];
 

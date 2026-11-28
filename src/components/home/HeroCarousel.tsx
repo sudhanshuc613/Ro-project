@@ -48,7 +48,8 @@ const SLIDES: Slide[] = [
     title: 'Expert RO Service in Patna',
     highlight: `Visit Charge Only ₹${SERVICE.visitCharge}`,
     subtitle:
-      `Repair, installation, filter change & AMC by certified technicians. Same-day visit within ${SERVICE.responseTime} and a ${SERVICE.warrantyDays}-day service warranty.`,
+      /* 28 Nov 2026 — "certified" → "trained" (Google Ads qualification-claim policy). */
+      `Repair, installation, filter change & AMC by trained technicians. Same-day visit within ${SERVICE.responseTime} and a ${SERVICE.warrantyDays}-day service warranty.`,
     image: '/banners/service-tech.png',
     imageAlt: 'Aqua Perl technician repairing an RO water purifier at a home in Patna',
     theme: 'service',

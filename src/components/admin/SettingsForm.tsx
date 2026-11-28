@@ -455,7 +455,7 @@ function ContactCard({ initial }: { initial: ContactSettings }) {
         <Field label="Email">
           <input value={f.email} onChange={set('email')} type="email" className={inp} />
         </Field>
-        <Field label="Working Hours" hint="e.g. Mon–Sun 08:00–21:00">
+        <Field label="Working Hours" hint="e.g. Mon–Sun 05:00–22:00">
           <input value={f.hours} onChange={set('hours')} className={inp} />
         </Field>
       </div>

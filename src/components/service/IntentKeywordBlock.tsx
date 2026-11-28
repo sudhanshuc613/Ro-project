@@ -252,7 +252,8 @@ const SERVICE_ITEMS: Item[] = [
       <>
         Alag se kisi RO service centre Patna me machine chhodne ki zaroorat nahi padti.
         Base {CONTACT.address.locality} me hai, kaam aapke ghar par hota hai, aur{' '}
-        {CONTACT.hours} ke beech call uthti hai.
+          {/* 28 Nov 2026 — call 24×7 uthti hai; visit ke ghante alag hain. */}
+          call {CONTACT.callHours} uthti hai aur technician {CONTACT.hours} ke beech aata hai.
       </>
     ),
   },

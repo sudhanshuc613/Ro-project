@@ -89,7 +89,7 @@ h=open('.next/server/app/index.html',encoding='utf-8',errors='ignore').read()
 t=re.sub(r'<iframe.*?</iframe>','',h,flags=re.S|re.I)
 t=re.sub(r'<iframe[^>]*/?>','',t,flags=re.I)
 need=[('address',r'Sai Gali'),('locality',r'Buddha Colony'),('pincode',r'800001'),
-      ('phone1',r'8969821440'),('phone2',r'9661288308'),('hours',r'08:00')]
+      ('phone1',r'8969821440'),('phone2',r'9661288308'),('hours',r'05:00')]
 bad=[n for n,p in need if not re.search(p,t,re.I)]
 print('  PASS  🔴 NAP iframe ke BAHAR text me hai' if not bad
       else '  FAIL  🔴 NAP text me nahi: '+', '.join(bad))
@@ -101,7 +101,7 @@ if [ $? -eq 0 ]; then PASS=$((PASS+1)); else FAIL=$((FAIL+1)); fi
 LIE=$(cnt "$HTML" '24\s*Hours')
 [ "$LIE" -eq 0 ] \
   && ok "🔴 '24 Hours' ka jhooth homepage par NAHI" \
-  || no "🔴 '24 Hours' mil gaya" "$LIE baar — GBP par bhi 08:00-21:00 hona chahiye"
+  || no "🔴 '24 Hours' mil gaya" "$LIE baar — GBP par bhi 05:00-22:00 hona chahiye"
 
 # ── 7. hardcode na ho — constants se aaye ──
 HARD=$(cnt "$SRC" "'8969821440'|'9661288308'|'Buddha Colony'|'800001'")

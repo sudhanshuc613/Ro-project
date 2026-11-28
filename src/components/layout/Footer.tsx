@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { POLICY_LINKS } from '@/lib/seo/policy-data';
-import { BRAND, CONTACT } from '@/lib/constants';
+import { BRAND, CONTACT, HOURS_SHORT } from '@/lib/constants';
 import { areaPath } from '@/lib/seo/area-url';
 import { SERVICE_INTENTS } from '@/lib/seo/service-intent-data';
 import { coverageSentence } from '@/lib/seo/search-queries';
@@ -117,7 +117,12 @@ export default async function Footer() {
               <a href={CONTACT.secondaryTel} className="block font-display text-lg font-extrabold text-white hover:text-aqua-300">
                 {CONTACT.secondaryPhone}
               </a>
-              <p className="mt-1 text-xs text-navy-200">{CONTACT.hours}</p>
+                {/* 28 Nov 2026 — pehle sirf CONTACT.hours tha. Ab HOURS_SHORT hai,
+                    jisme wahi hours jyon ke tyon hain + aage ye bhi saaf hai ki
+                    24×7 ka matlab sirf CALL hai, visit nahi. Ek bhi shabd hataya
+                    nahi gaya, sirf joda gaya. Wajah: Google Ads "Unacceptable
+                    business practices" — jo de na sako wo mat becho. */}
+                <p className="mt-1 text-xs text-navy-200">{HOURS_SHORT}</p>
             </div>
           </div>
 

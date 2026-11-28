@@ -44,7 +44,7 @@ fi
 ok "build maujood"
 
 # 🔴 28 Nov — sabotage test ne 2 chhed pakde: checks POORE page par chal rahe
-#    the, isliye BrandLogoGrid ke disclaimer aur JSON-LD ke "opens":"08:00" se
+#    the, isliye BrandLogoGrid ke disclaimer aur JSON-LD ke "opens":"05:00" se
 #    jhoothe PASS mil rahe the. Ab sirf HAMARA section nikaal kar check karte
 #    hain — SECT = section ka HTML, TXT = uska dikhne wala saaf text.
 SECT="$(mktemp)"; TXT="$(mktemp)"
@@ -201,9 +201,9 @@ grep -q 'Buddha Colony' "$TXT" \
   && ok "poora pata homepage par" \
   || no "poora pata homepage par"
 
-grep -qE '08:00.{1,3}21:00' "$TXT" \
-  && ok "working hours saaf text me (poora 08:00-21:00)" \
-  || no "working hours saaf text me (poora 08:00-21:00)"
+grep -qE '05:00.{1,3}22:00' "$TXT" \
+  && ok "working hours saaf text me (poora 05:00-22:00)" \
+  || no "working hours saaf text me (poora 05:00-22:00)"
 
 # ── 6. 🔴 JHOOTH GATE — ye sab Google ke liye turant suspension hai ──
 python3 - "$SRC" "$TXT" <<'PY'
@@ -279,6 +279,74 @@ OTHER=$(grep -rl 'BusinessPolicyBlock' src --include=*.tsx | grep -v 'BusinessPo
 grep -q 'POLICY_LINKS' src/components/layout/Footer.tsx \
   && ok "footer ke policy links jaise the waise hain" \
   || no "footer ke policy links jaise the waise hain"
+
+# ── 9. 🔴 "24×7" KABHI AKELA NAHI (28 Nov 2026) ─────────────────────────
+#
+# Sach: raat ko call/WhatsApp uth jaati hai, par technician subah hi jaata
+# hai. Dono baatein saath likhni ZAROORI hain. Agar kabhi sirf "24×7" reh
+# gaya to padhne wala samjhega ki raat 2 baje technician aayega — aur wo
+# hum de nahi sakte. Google Ads policy:
+#   "Offer products or services that you don't have or CAN'T DELIVER."
+#
+# Niyam: har availability-dawe ke 160 character ke andar visit-window
+# (05:00) ya "visit"/"technician" shabd hona hi chahiye.
+#
+# 🔴 SAVDHAAN (28 Nov 2026 ko seekha) — "24" dikhna violation NAHI hai.
+# Pehle is gate ka regex `24\s*ghant` tha aur usne 6 cheezein pakdi, chhe
+# ki chhe GALAT:
+#   • "shikayat ke 24 ghante ke andar visit"   -> AMC ka deadline
+#   • "carbon badal kar 24 ghante dekhiye"     -> customer ko salah
+#   • "24 ghante ke andar bataya gaya damage"  -> return policy ki window
+#   • "jo '24 hour service' likhte hain ... nahi uthate" -> hamara disclaimer
+# "24 ghante KE ANDAR" ek samay-seema hai; "24 ghante KHULA" availability
+# ka dawa hai. Sirf doosri wali galat hai. Isliye ab ban sirf un roopon
+# par hai jinka matlab hamesha "hamesha khula" hota hai.
+python3 - <<'PY'
+import glob, re, sys, html as H
+
+# Ye roop hamesha "hamesha khula" ka matlab dete hain — kabhi jayaz nahi.
+HARD = re.compile(r'24\s*[x/\\-]\s*7|open\s+24\s*hours?|24\s*(?:hours?|ghante?)\s+(?:khul|available|uplabdh)', re.I)
+# Ye roop jayaz ho sakte hain, par aas-paas visit ka daayra likha ho tabhi.
+SCOPED = re.compile(r'24\s*[×✕✖]\s*7|24\s*hours?\s+(?:service|seva)', re.I)
+NEAR = re.compile(r'05:00|visit|technician', re.I)
+
+pages = sorted(glob.glob('.next/server/app/**/*.html', recursive=True))
+bare, banned = [], []
+for f in pages:
+    raw = open(f, encoding='utf-8', errors='ignore').read()
+    raw = re.sub(r'<(script|style)[^>]*>.*?</\1>', ' ', raw, flags=re.S | re.I)
+    t = re.sub(r'\s+', ' ', H.unescape(re.sub(r'<[^>]+>', ' ', raw)))
+    m = HARD.search(t)
+    if m:
+        banned.append(f"{f.split('app/')[-1]} :: …{t[max(0,m.start()-60):m.end()+60].strip()}…")
+    for m in SCOPED.finditer(t):
+        if not NEAR.search(t[max(0, m.start() - 160): m.end() + 160]):
+            bare.append(f"{f.split('app/')[-1]} :: …{t[max(0,m.start()-60):m.end()+60].strip()}…")
+            break
+print(f"  ..... {len(pages)} page scan kiye — 24-availability scoping")
+for x in banned[:3]:
+    print('  FAIL  🔴 hamesha-khula ka dawa: ' + x)
+for x in bare[:3]:
+    print('  FAIL  🔴 "24×7" bina visit-window ke: ' + x)
+sys.exit(1 if (banned or bare) else 0)
+PY
+[ $? -eq 0 ] \
+  && ok '🔴 har "24×7" ke paas visit-window likha hai (koi akela 24×7 nahi)' \
+  || no '🔴 "24×7" scoping' "upar FAIL dekho"
+
+# constants me dono cheez alag-alag rakhi hain
+grep -q "callHours: '24×7'" src/lib/constants.ts \
+  && ok "CONTACT.callHours constants me hai (hardcode nahi)" \
+  || no "CONTACT.callHours constants me hai"
+
+grep -q 'export const HOURS_FULL' src/lib/constants.ts \
+  && ok "HOURS_FULL helper maujood (call+visit ek saath)" \
+  || no "HOURS_FULL helper maujood"
+
+# visit ke ghante abhi bhi wahi — GBP ke Hours field se match hone chahiye
+grep -qE "hours: 'Mon.{1,3}Sun 05:00.{1,3}22:00'" src/lib/constants.ts \
+  && ok "visit hours Mon-Sun 05:00-22:00 (GBP se match)" \
+  || no "visit hours badal gaye" "GBP ke Hours field se mismatch ho jayega"
 
 echo
 echo "  PASS: $PASS   FAIL: $FAIL"
